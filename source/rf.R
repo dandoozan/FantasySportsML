@@ -1,9 +1,11 @@
 #todo:
-#-Make initial prediction using salary: 01_rf_salary: numFeaturesUsed=1/1, Trn/CV Error=10.15385/10.16979, Train Error=10.15067
+#D-Make initial prediction using salary: 01_rf_salary: numFeaturesUsed=1/1, Trn/CV Error=10.15385/10.16979, Train Error=10.15067
+#D-Use 2014 data: NONE: 1/1, 8.888702/8.924981, 8.887228
+#D-Use train/test data and keep NAs in data: rf_keepNAs: 1/2, 8.895979/8.880356, 8.887228
 #-Use log of y
 #-Remove players who played less than 5 min or so to remove the many 0 scores
-#-Use 2014 data
-
+#-Use more features than salary
+#-Use probability that a player will do much better/much wose than expected
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -23,6 +25,7 @@ createModel = function(data, yName, xNames) {
   set.seed(754)
   return(randomForest(getFormula(yName, xNames),
                       data=data,
+                      na.action=na.omit,
                       ntree=500))
 }
 createPrediction = function(model, newData, xNames=NULL) {
@@ -34,7 +37,8 @@ computeError = function(y, yhat) {
 findBestSetOfFeatures = function(data, possibleFeatures) {
   cat('Finding best set of features to use...\n')
 
-  featuresToUse = possibleFeatures
+  #use only salary for now
+  featuresToUse = 'Salary'
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -69,25 +73,35 @@ plotImportances = function(model, save=FALSE) {
 #============= Main ================
 
 #Globals
+ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-FILENAME = '01_rf_salary'
+FILENAME = 'rf_keepNAs'
 PROD_RUN = T
 PLOT = 'lc' #lc=learning curve, fi=feature importances
 
+if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
+
 data = getData(Y_NAME, oneHotEncode=F)
-possibleFeatures = setdiff(names(data), Y_NAME)
+train = data$train
+test = data$test
+possibleFeatures = setdiff(names(train), c(ID_NAME, Y_NAME))
 
 #find best set of features to use based on cv error
-featuresToUse = findBestSetOfFeatures(data, possibleFeatures)
+featuresToUse = findBestSetOfFeatures(train, possibleFeatures)
 
 cat('Creating Model...\n')
-model = createModel(data, Y_NAME, featuresToUse)
+model = createModel(train, Y_NAME, featuresToUse)
 
 #plots
-if (PROD_RUN || PLOT=='lc') plotLearningCurve(data, Y_NAME, featuresToUse, createModel, createPrediction, computeError, save=PROD_RUN)
+if (PROD_RUN || PLOT=='lc') plotLearningCurve(train, Y_NAME, featuresToUse, createModel, createPrediction, computeError, save=PROD_RUN)
 if (PROD_RUN || PLOT=='fi') plotImportances(model, save=PROD_RUN)
 
 #print trn/cv, train error
-printTrnCvTrainErrors(model, data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
+printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
+
+if (PROD_RUN) {
+  outputFilename = paste0('prediction_', FILENAME, '.csv')
+  outputSolution(createPrediction, model, test, ID_NAME, Y_NAME, featuresToUse, outputFilename)
+}
 
 cat('Done!\n')
