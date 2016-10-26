@@ -4,7 +4,7 @@ DATE_FORMAT = '%Y%m%d'
 DATE = datetime.strptime('20151027', DATE_FORMAT)
 DATA_LOCATION = 'data/'
 Y_NAME = 'FantasyPoints'
-X_NAMES = ['Name', 'Date', 'Salary']
+X_NAMES = ['Name', 'Date', 'Salary', 'Position']
 
 def loadData():
     #get data
@@ -22,10 +22,11 @@ def loadData():
 
         #features
         date = sp[0].strip()
+        position = sp[2].strip()
         name = sp[3].strip().replace(',', '')
         salary = sp[6].strip()
         salary = '' if salary == 'N/A' else str(int(salary[1:].replace(',', '')))
-        XData.append((name, date, salary))
+        XData.append((name, date, salary, position))
     f.close()
 
     return yData, XData

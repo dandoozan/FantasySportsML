@@ -2,10 +2,12 @@
 #D-Make initial prediction using salary: 01_rf_salary: numFeaturesUsed=1/1, Trn/CV Error=10.15385/10.16979, Train Error=10.15067
 #D-Use 2014 data: NONE: 1/1, 8.888702/8.924981, 8.887228
 #D-Use train/test data and keep NAs in data: rf_keepNAs: 1/2, 8.895979/8.880356, 8.887228
+#D-Write script to create team: rf_createTeam: 1/3, 8.895979/8.880356, 8.887228
 #-Use log of y
 #-Remove players who played less than 5 min or so to remove the many 0 scores
 #-Use more features than salary
-#-Use probability that a player will do much better/much wose than expected
+#-Use probability that a player will do much better/much worse than expected
+#-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -75,7 +77,7 @@ plotImportances = function(model, save=FALSE) {
 #Globals
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-FILENAME = 'rf_keepNAs'
+FILENAME = 'rf_createTeam'
 PROD_RUN = T
 PLOT = 'lc' #lc=learning curve, fi=feature importances
 
@@ -101,7 +103,8 @@ printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPr
 
 if (PROD_RUN) {
   outputFilename = paste0('prediction_', FILENAME, '.csv')
-  outputSolution(createPrediction, model, test, ID_NAME, Y_NAME, featuresToUse, outputFilename)
+  extraColNames = c('Salary', 'Position')
+  outputSolution(createPrediction, model, test, ID_NAME, Y_NAME, featuresToUse, outputFilename, extraColNames)
 }
 
 cat('Done!\n')
