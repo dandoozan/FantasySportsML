@@ -1,0 +1,32 @@
+{
+    "name": "Bridge",
+    "version": "0.1",
+    "description": "",
+    "permissions": [
+        "tabs",
+        "*://*/*"
+    ],
+    "browser_action": {
+        "default_icon": "images/icon.jpg",
+        "default_title": "Bridge",
+        "default_popup": "popup.html"
+    },
+    "icons": {
+        "48": "images/icon.jpg",
+        "128": "images/icon.jpg"
+    },
+    "sandbox": {
+        "pages": [ "scatterplot.html", "histogram.html", "boxplot.html", "candlestick.html" ]
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google.com; object-src 'self'",
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": ["https://www.fanduel.com/games/*/contests/*/scoring"],
+            "js": [
+                "js/execScript.js",
+                "js/jquery-3.1.1.min.js"
+            ]
+        }
+    ]
+}

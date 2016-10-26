@@ -1,0 +1,175 @@
+<html>
+  <head>
+		<style>
+			body {
+				margin:0 0 0 -10;
+				padding:0;
+				overflow:hidden;
+			}
+    </style>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+			
+			var data, min, q1, median, q3, max, avg, stdev, mvAvgs, mvAvgIntrvl,net;
+			window.addEventListener('message', function(event) {
+				min=event.data.stats.min
+				q1=event.data.stats.q1
+				median=event.data.stats.median
+				q3=event.data.stats.q3
+				max=event.data.stats.max
+				avg=event.data.stats.avg
+				stdev=event.data.stats.stdev
+				mvAvgs=event.data.mvAvgs
+				mvAvgIntrvl=event.data.mvAvgIntrvl
+				net=event.data.stats.net
+				data=event.data.results
+			});
+		
+			
+			google.load("visualization", "1", {packages:["corechart"]});
+			//google.load('visualization', '1', {packages: ['annotatedtimeline']});
+			google.setOnLoadCallback(drawChart);
+			function drawChart() {
+				var intrvl = setInterval(function(){
+					if(data){
+						clearInterval(intrvl);
+						
+						var minuteSpan=(data[data.length-1].date-data[0].date)/1000/60
+						var boxplotLocation=-Math.round(minuteSpan/10); //-1200
+						var boxplotOffset=Math.round(boxplotLocation/2.4)
+		
+						var days = Math.floor(minuteSpan/60/24)
+						
+						
+						/*var chartdata=[['Date', 'MovingAvg', 'Price', 'Price', 'TopRated']]
+						var firstResultTime=data[0].date
+						var mvAvgIntrvl=Math.max(10,Math.round(data.length/10))
+						var mvAvgSum=0
+						for(var i=0; i<data.length; i++){
+							var minutes=Math.round((data[i].date-firstResultTime)/1000/60)
+							
+							mvAvgSum+=data[i].price
+							if(i>=mvAvgIntrvl){
+								mvAvgSum-=data[i-mvAvgIntrvl].price
+								if(data[i].topRated)
+									chartdata.push([minutes, Math.round(mvAvgSum/mvAvgIntrvl), null, null, data[i].price])
+								else if(data[i].price>=(avg-stdev) && data[i].price<=(avg+stdev))
+									chartdata.push([minutes, Math.round(mvAvgSum/mvAvgIntrvl), null, data[i].price, null])
+								else
+									chartdata.push([minutes, Math.round(mvAvgSum/mvAvgIntrvl), data[i].price, null, null])
+							}else{
+								if(data[i].price>=(avg-stdev) && data[i].price<=(avg+stdev))
+									chartdata.push([minutes, null, null, data[i].price, null])
+								else
+									chartdata.push([minutes, null, data[i].price, null, null])
+							}
+						}*/
+						var chartdata=[['Date', 'MovingAvg', 'Price', 'Price', 'TopRated', 'Net', '<Net']]
+						chartdata.push([-100, -100, -100, -100, -100, -100, -100])
+						chartdata.push([-100, null, null, null, null, null, null])
+						var firstResultTime=data[0].date
+						var minutes;
+						for(var i=0; i<data.length; i++){
+							minutes=Math.round((data[i].date-firstResultTime)/1000/60)
+							if(mvAvgs[i]==null){
+								/* for toprated and stdev
+								if(data[i].topRated)
+									chartdata.push([minutes, null, null, null, data[i].price, null, null])
+								else if(data[i].price>=(avg-stdev) && data[i].price<=(avg+stdev))
+									chartdata.push([minutes, null, null, data[i].price, null, null, null])
+								else
+									chartdata.push([minutes, null, data[i].price, null, null, null, null])*/
+                if(data[i].price<net)
+                  chartdata.push([minutes, null, null, null, null, null, data[i].price])
+                else
+                  chartdata.push([minutes, null, null, data[i].price, null, null, null])
+							}else{
+								/* for toprated and stdev
+								if(data[i].topRated)
+									chartdata.push([minutes, Math.round(mvAvgs[i]), null, null, data[i].price, null, null])
+								else if(data[i].price>=(avg-stdev) && data[i].price<=(avg+stdev))
+									chartdata.push([minutes, Math.round(mvAvgs[i]), null, data[i].price, null, null, null])
+								else
+									chartdata.push([minutes, Math.round(mvAvgs[i]), data[i].price, null, null, null, null])*/
+                if(data[i].price<net)
+                  chartdata.push([minutes, Math.round(mvAvgs[i]), null, null, null, null, data[i].price])
+                else
+                  chartdata.push([minutes, Math.round(mvAvgs[i]), null, data[i].price, null, null, null])
+							}
+						}
+						
+						/*var netIntrvl=Math.round(minutes/50)
+						for(var i=0;i<minutes-5;i+=netIntrvl*1.5){
+							chartdata.push([i, null, null, null, null, Math.round(net)])
+							chartdata.push([i+netIntrvl, null, null, null, null, Math.round(net)])
+							chartdata.push([null, null, null, null, null, Math.round(net)])
+						}*/
+						chartdata.push([-minutes*.05, null, null, null, null, Math.round(net), null])
+						chartdata.push([minutes*1.05, null, null, null, null, Math.round(net), null])
+					
+						//for boxplot
+						/*chartdata.push([boxplotLocation+boxplotOffset, null, null, null, null, null, null, null, q1, median-1, null])
+						chartdata.push([boxplotLocation+boxplotOffset, null, null, null, null, null, null, null, q3, median+1, null])
+						
+						var lowFence=Math.round(Math.max(min, q1-1.5*(q3-q1)))
+						var highFence=Math.round(Math.min(max, q3+1.5*(q3-q1)))
+						
+						chartdata.push([boxplotLocation, null, null, null, null, min, null, null, null, null, null])
+						chartdata.push([boxplotLocation, null, null, null, null, null, null, lowFence, null, null, null])
+						for(var i=lowFence;i < highFence;i+=8){
+							chartdata.push([boxplotLocation, null, null, null, null, null, null, null, null, null, i])
+							chartdata.push([boxplotLocation, null, null, null, null, null, null, null, null, null, i+4])
+							chartdata.push([boxplotLocation, null, null, null, null, null, null, null, null, null, null])
+						}
+						chartdata.push([boxplotLocation, null, null, null, null, null, null, highFence, null, null, null])
+						chartdata.push([boxplotLocation, null, null, null, null, null, max, null, null, null, null])
+						*/
+						
+						var gdata=google.visualization.arrayToDataTable(chartdata);
+						
+						var minValue=Math.floor(avg-3*stdev)
+						var maxValue=Math.ceil(avg+3*stdev)
+						//google blue:3366cc, red:dc3912, orange:ff9900, green:109618, purple:990099
+						var options = {
+							title: 'Historical Prices & MvAvg('+mvAvgIntrvl+')',
+							hAxis: {title:'Time (minutes)', viewWindowMode:'explicit', viewWindow:{min:-minutes*.05, max:minutes*1.05}},//, gridlines:{count:days} },
+							vAxis: {title:'Price', format:'$#', viewWindowMode:'explicit', viewWindow:{min:min, max:max}},
+							legend:'none',
+							seriesType: "line",
+							bar:{groupWidth:'90%'},
+							/*grayscale
+							series: 
+								{0:{lineWidth:3, color:'blue', curveType:'function'}, //mvavg
+								 1:{lineWidth:0, pointSize:2, color:'999'}, //color:'527DD4'}, //>1SD price
+								 2:{lineWidth:0, pointSize:2, color:'999'}, //<=1SD price
+								 3:{lineWidth:0, pointSize:2, color:'999'}, //color:'FBB117'}, //toprated price
+								 4:{lineWidth:2, color:'green'}} //net*/
+							/*blue
+							series: 
+								{0:{lineWidth:3, color:'CC0000', curveType:'function'}, //mvavg
+								 1:{lineWidth:0, pointSize:2, color:'skyblue'}, //color:'527DD4'}, //>1SD price
+								 2:{lineWidth:0, pointSize:2, color:'5C85D6'}, //<=1SD price
+								 3:{lineWidth:0, pointSize:2, color:'6699FF'}, //color:'FBB117'}, //toprated price
+								 4:{lineWidth:2, color:'orange'}} //net*/
+							series: 
+								{0:{lineWidth:3, curveType:'function', color:'dc3912'}, //mvavg
+								 1:{lineWidth:0, pointSize:2, color:'3366cc'}, //color:'527DD4'}, //>1SD price
+								 2:{lineWidth:0, pointSize:2, color:'3366cc'}, //<=1SD price
+								 3:{lineWidth:0, pointSize:2, color:'3366cc'}, //color:'FBB117'}, //toprated price
+								 4:{lineWidth:1, pointSize:4, color:'ff9900'}, //net
+								 5:{lineWidth:0, pointSize:2, color:'3366cc'}} //<net
+						};
+
+						//var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+						var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+						chart.draw(gdata, options);
+					}
+				},100);
+			}
+			
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width:315; height:175;"></div>
+  </body>
+</html>
