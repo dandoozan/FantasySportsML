@@ -3,23 +3,21 @@
 #D-Use 2014 data: NONE: 1/1, 8.888702/8.924981, 8.887228
 #D-Use train/test data and keep NAs in data: rf_keepNAs: 1/2, 8.895979/8.880356, 8.887228
 #D-Write script to create team: rf_createTeam: 1/3, 8.895979/8.880356, 8.887228
-#-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
+#D-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
+#D-Output test (tonight's predictions) error: 1/3, 9.761371/9.643101, 9.733458, testError=10.24964
+#-fix NAs in data
 #-Use log of y
 #-Remove players who played less than 5 min or so to remove the many 0 scores
 #-Use more features than salary
 #-Use probability that a player will do much better/much worse than expected
 #-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
 
-#Process to get team for today:
-#0. Download all data up to today from rotoguru (if it's not already downloaded)
-#1. python source/python_scripts/createDataFiles.py
-  #-Enter today's date (eg. 20161025)
-  #-Outputs: train.csv, test.csv
-#2. Source rf.R (this file)
+#Process to get team for day:
+#1. Change DATE (eg. 20161025)
+#2. Source this file (rf.R)
+  #-Prints RMSE for Trn/CV, Train, Test
+  #-Prints ratio of my team score/best team score
   #-Outputs: prediction_[date].csv
-#3. python source/python_scripts/createTeam.py
-  #-Enter today's date (eg. 20161025)
-  #-Outputs team to screen
 
 
 #Remove all objects from the current workspace
@@ -88,17 +86,20 @@ plotImportances = function(model, save=FALSE) {
 #============= Main ================
 
 #Globals
+PROD_RUN = F
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-FILENAME = '20161025'
-PROD_RUN = T
-PLOT = 'lc' #lc=learning curve, fi=feature importances
+DATE = '20161025'
+FILENAME = DATE
+DATE_FORMAT = '%Y%m%d'
+PLOT = '' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
-data = getData(Y_NAME, oneHotEncode=F)
-train = data$train
-test = data$test
+date = as.Date(DATE, DATE_FORMAT)
+data = getData(Y_NAME, date, DATE_FORMAT, oneHotEncode=F)
+train = data$train #train=all data leading up to tonight
+test = data$test #test=tonight's team
 possibleFeatures = setdiff(names(train), c(ID_NAME, Y_NAME))
 
 #find best set of features to use based on cv error
@@ -114,10 +115,15 @@ if (PROD_RUN || PLOT=='fi') plotImportances(model, save=PROD_RUN)
 #print trn/cv, train error
 printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
 
-if (PROD_RUN) {
-  outputFilename = paste0('prediction_', FILENAME, '.csv')
-  extraColNames = c('Salary', 'Position')
-  outputSolution(createPrediction, model, test, ID_NAME, Y_NAME, featuresToUse, outputFilename, extraColNames)
-}
+#print test error
+testError = computeError(test[, Y_NAME], createPrediction(model, test, featuresToUse))
+cat('    Tonight\'s error: ', testError, '\n', sep='')
+
+
+# if (PROD_RUN) {
+#   outputFilename = paste0('prediction_', FILENAME, '.csv')
+#   extraColNames = c('Salary', 'Position')
+#   outputSolution(createPrediction, model, test, ID_NAME, Y_NAME, featuresToUse, outputFilename, extraColNames)
+# }
 
 cat('Done!\n')

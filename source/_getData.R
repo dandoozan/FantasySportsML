@@ -1,10 +1,23 @@
 library(dplyr) #bind_rows
 
-loadData = function() {
-  train = read.csv('data/train.csv', stringsAsFactors=F, na.strings=c(''))
-  test = read.csv('data/test.csv', stringsAsFactors=F, na.strings=c(''))
-  full = bind_rows(train, test)
-  return(list(train=train, test=test, full=full))
+loadData = function(dateFormat) {
+  data = read.csv('data/data.csv', stringsAsFactors=F, na.strings=c(''))
+
+  #convert the date strings to Date objects
+  data$Date = as.Date(as.character(data$Date), dateFormat)
+
+  return(data)
+}
+
+findIndexOfDate = function(data, date) {
+  return(which(data$Date == date)[1])
+}
+
+splitDataIntoTrainTest = function(data, date) {
+  index = findIndexOfDate(data, date)
+  train = data[1:(index-1),]
+  test = data[index:nrow(data),]
+  return(list(train=train, test=test))
 }
 
 imputeMissingValues = function(data) {
@@ -25,14 +38,15 @@ oneHotEncode = function(data) {
   return(data)
 }
 
-getData = function(yName, oneHotEncode=F) {
+getData = function(yName, date, dateFormat, oneHotEncode=F) {
+  if (class(date) != 'Date') {
+    stop('ERROR: date should be of class Date\n')
+  }
+
   cat('Getting data...\n')
 
   #load data
-  data = loadData()
-  train = data$train
-  test = data$test
-  full = data$full
+  full = loadData(dateFormat)
 
   #impute missing values
   full = imputeMissingValues(full)
@@ -50,9 +64,10 @@ getData = function(yName, oneHotEncode=F) {
     full = oneHotEncode(full)
   }
 
-  #split the data back into train and test
-  train = full[1:nrow(train),]
-  test = full[(nrow(train)+1):nrow(full), names(full) != yName]
+  #split data into train, test
+  trainTest = splitDataIntoTrainTest(full, date)
+  train = trainTest$train
+  test = trainTest$test
 
   return(list(train=train, test=test, full=full))
 }
