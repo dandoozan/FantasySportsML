@@ -3,11 +3,24 @@
 #D-Use 2014 data: NONE: 1/1, 8.888702/8.924981, 8.887228
 #D-Use train/test data and keep NAs in data: rf_keepNAs: 1/2, 8.895979/8.880356, 8.887228
 #D-Write script to create team: rf_createTeam: 1/3, 8.895979/8.880356, 8.887228
+#-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
 #-Use log of y
 #-Remove players who played less than 5 min or so to remove the many 0 scores
 #-Use more features than salary
 #-Use probability that a player will do much better/much worse than expected
 #-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
+
+#Process to get team for today:
+#0. Download all data up to today from rotoguru (if it's not already downloaded)
+#1. python source/python_scripts/createDataFiles.py
+  #-Enter today's date (eg. 20161025)
+  #-Outputs: train.csv, test.csv
+#2. Source rf.R (this file)
+  #-Outputs: prediction_[date].csv
+#3. python source/python_scripts/createTeam.py
+  #-Enter today's date (eg. 20161025)
+  #-Outputs team to screen
+
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -77,7 +90,7 @@ plotImportances = function(model, save=FALSE) {
 #Globals
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-FILENAME = 'rf_createTeam'
+FILENAME = '20161025'
 PROD_RUN = T
 PLOT = 'lc' #lc=learning curve, fi=feature importances
 

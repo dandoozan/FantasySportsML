@@ -1,14 +1,15 @@
 #Usage: python createTeam.py [filename]
 #Eg. python source/python_scripts/createTeam.py prediction_rf_createTeam.csv
 
-
-import sys
-
 SALARY_CAP = 60000
 PREDICTION_LOCATION = 'predictions/'
 
+def readInput():
+    print 'Enter date (eg. 20161025):'
+    return raw_input().strip()
+
 def loadPredictions(filename):
-    f = open(PREDICTION_LOCATION + filename)
+    f = open(filename)
     f.readline()
     players = {
         'PG': [],
@@ -134,12 +135,58 @@ def computePoints(team):
 def computeAmountOverBudget(team):
     return computeCost(team) - SALARY_CAP
 
+def createFilename(dateStr):
+    return PREDICTION_LOCATION + 'prediction_' + dateStr + '.csv'
+
+def getWorseTeam(team, amountOverBudget):
+    #while amountOverBudget > 0
+    #find the next lowest ppd player for each position
+    #compute the ppd of the scoreDiff and salaryDiff for each of those players and the players that they might replace
+    #replace the players that have the lowest ppd from above
+    #repeat
+    cnt = 1
+    while amountOverBudget > 0:
+        print ' '
+        print 'Iteration', cnt, ', amountOverBudget=', amountOverBudget
+
+        #find player to replace based on ppdg
+        bestPpdg = None
+        bestOldPlayer = None
+        bestOldPlayerIndex = None
+        bestNewPlayer = None
+        bestPosition = None
+        for position in team:
+            ppdg, oldPlayer, oldPlayerIndex, newPlayer = findNextBestPlayerAtPosition(players, position, team, amountOverBudget)
+            if bestPpdg == None or ppdg < bestPpdg:
+                bestPpdg = ppdg
+                bestOldPlayer = oldPlayer
+                bestOldPlayerIndex = oldPlayerIndex
+                bestNewPlayer = newPlayer
+                bestPosition = position
+
+        #replace player in team
+        print 'Replacing', bestOldPlayer['name'], '<-', bestNewPlayer['name']
+        #printPlayer(bestOldPlayer)
+        #print 'with'
+        #printPlayer(bestNewPlayer)
+
+        team[bestPosition][bestOldPlayerIndex] = bestNewPlayer
+
+        #todo: imporove this, it should just be -= diff b/n new player and old player i think
+        amountOverBudget = computeAmountOverBudget(team)
+        printTeamStats(team)
+        cnt += 1
+
+def getBetterTeam(team, amountOverBudget):
+    #todo: fill this in
+    return
+
 #================ MAIN ===============
 
-filename = sys.argv[1]
+dateStr = readInput()
 
 #get players
-players = loadPredictions(filename)
+players = loadPredictions(createFilename(dateStr))
 
 #first, fill team with all the highest ppd players
 team = getInitialTeam(players)
@@ -147,44 +194,13 @@ print ' '
 print 'Initial team:'
 printTeam(team)
 
-#then, while i'm too high
-#find the next lowest ppd player for each position
-#compute the ppd of the scoreDiff and salaryDiff for each of those players and the players that they might replace
-#replace the players that have the lowest ppd from above
-#repeat
-cnt = 1
 amountOverBudget = computeAmountOverBudget(team)
-while amountOverBudget > 0:
-    print ' '
-    print 'Iteration', cnt, ', amountOverBudget=', amountOverBudget
-
-    #find player to replace based on ppdg
-    bestPpdg = None
-    bestOldPlayer = None
-    bestOldPlayerIndex = None
-    bestNewPlayer = None
-    bestPosition = None
-    for position in team:
-        ppdg, oldPlayer, oldPlayerIndex, newPlayer = findNextBestPlayerAtPosition(players, position, team, amountOverBudget)
-        if bestPpdg == None or ppdg < bestPpdg:
-            bestPpdg = ppdg
-            bestOldPlayer = oldPlayer
-            bestOldPlayerIndex = oldPlayerIndex
-            bestNewPlayer = newPlayer
-            bestPosition = position
-
-    #replace player in team
-    print 'Replacing', bestOldPlayer['name'], '<-', bestNewPlayer['name']
-    #printPlayer(bestOldPlayer)
-    #print 'with'
-    #printPlayer(bestNewPlayer)
-
-    team[bestPosition][bestOldPlayerIndex] = bestNewPlayer
-
-    #todo: imporove this, it should just be -= diff b/n new player and old player i think
-    amountOverBudget = computeAmountOverBudget(team)
-    printTeamStats(team)
-    cnt += 1
+if amountOverBudget > 0:
+    getWorseTeam(team, amountOverBudget)
+elif amountOverBudget < 0:
+    getBetterTeam(team, amountOverBudget)
+else:
+    print 'Wow, I got a perfect team on the first try!'
 
 print ' '
 print 'Final team:'

@@ -1,14 +1,19 @@
 from datetime import datetime, timedelta
 
 DATE_FORMAT = '%Y%m%d'
-DATE = datetime.strptime('20151027', DATE_FORMAT)
 DATA_LOCATION = 'data/'
 Y_NAME = 'FantasyPoints'
 X_NAMES = ['Name', 'Date', 'Salary', 'Position']
 
+def readInput():
+    print 'Enter date (eg. 20161025):'
+    return raw_input().strip()
+
 def loadData():
+    dataFilename = 'data/rawDataFromRotoGuru/fd_all.txt'
+    print 'Loading data from', dataFilename, '...'
     #get data
-    f = open('data/rawDataFromRotoGuru/fd_all.txt')
+    f = open(dataFilename)
     f.readline()
 
     yData = [] #vector
@@ -67,7 +72,8 @@ def getTestData(X, date):
     return X[startIndex:endIndex]
 
 def writeData(filename, XData, yData=None):
-    f = open(DATA_LOCATION + filename + '.csv', 'w')
+    print 'Writing data to:', filename
+    f = open(filename, 'w')
 
     #print col names
     if yData:
@@ -80,11 +86,18 @@ def writeData(filename, XData, yData=None):
         f.write(','.join(map(str, XData[i])) + '\n')
     f.close()
 
+def createFilename(baseFilename):
+    return DATA_LOCATION + baseFilename + '.csv'
 
 #============= MAIN =============
 
+
+dateStr = readInput()
+
+date = datetime.strptime(dateStr, DATE_FORMAT)
+
 y, X = loadData()
-train_y, train_X = getTrainData(y, X, DATE)
-test = getTestData(X, DATE)
-writeData('train', train_X, train_y)
-writeData('test', test)
+train_y, train_X = getTrainData(y, X, date)
+test = getTestData(X, date)
+writeData(createFilename('train'), train_X, train_y)
+writeData(createFilename('test'), test)
