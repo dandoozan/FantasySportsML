@@ -1,5 +1,5 @@
 {
-    "name": "Bridge",
+    "name": "DF",
     "version": "0.1",
     "description": "",
     "permissions": [
@@ -7,13 +7,14 @@
         "*://*/*"
     ],
     "browser_action": {
-        "default_icon": "images/icon.jpg",
-        "default_title": "Bridge",
+        "default_icon": "images/icon128.jpg",
+        "default_title": "DF",
         "default_popup": "popup.html"
     },
     "icons": {
-        "48": "images/icon.jpg",
-        "128": "images/icon.jpg"
+        "16": "images/icon16.jpg",
+        "48": "images/icon48.jpg",
+        "128": "images/icon128.jpg"
     },
     "sandbox": {
         "pages": [ "scatterplot.html", "histogram.html", "boxplot.html", "candlestick.html" ]
