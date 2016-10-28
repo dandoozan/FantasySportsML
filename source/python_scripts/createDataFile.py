@@ -2,7 +2,7 @@
 DATA_DIR = 'data/'
 DATA_FILE = DATA_DIR + 'rawDataFromRotoGuru/fd_2015.txt'
 Y_NAME = 'FantasyPoints'
-X_NAMES = ['Date', 'Name', 'Salary', 'Position']
+X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home']
 
 def loadData(filename):
     print 'Loading data from ' + filename + '...'
@@ -20,13 +20,15 @@ def loadData(filename):
         fantasyPoints = float(sp[5])
         salary = sp[6].strip()
         salary = '' if salary == 'N/A' else str(int(salary[1:].replace(',', '')))
+        home = sp[8].strip()
 
         data.append({
             'Date': date,
             'Position': position,
             'Name': name,
             'FantasyPoints': fantasyPoints,
-            'Salary': salary
+            'Salary': salary,
+            'Home': home
         })
     f.close()
 

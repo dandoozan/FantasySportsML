@@ -6,8 +6,8 @@
 #D-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
 #D-Output test (tonight's predictions) error: 1/3, 9.761371/9.643101, 9.733458, testError=10.24964
 #D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
-#-try all base features from rotoguru:
-  #-Position, Salary, H/A
+#D-Remove rows with Salary NAs: 20151106_removeNAs: 1/3, 8.745434/9.390104, 8.802408
+#D-try all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
 #-try features:
   #-Player upcoming game stats: Position
   #-Player season long stats: Avg fp, Avg Fppd, Avg min played, Avg fp/min, Avg points, Avg assists, Avg turnovers, Avg rebounds, Avg steals, Avg blocks
@@ -15,7 +15,7 @@
   #-Team season long stats: Win pct
   #-Opp season long stats: Win pct
   #-Player last game stats: Starter, Fp, Fppd, Minutes played, Fp/min, Fp/avg fp, Points, Assists, Tunrovers, Rebounds, Steals, Blocks
-
+#-Perhaps make Home a binary col rather than factor with 2 levels
 #-fill in getBetterTeam
 #-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
 #-fix NAs in data
@@ -63,7 +63,7 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   cat('Finding best set of features to use...\n')
 
   #use only salary for now
-  featuresToUse = 'Salary'
+  featuresToUse = c('Salary', 'Position', 'Home')
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -238,9 +238,9 @@ PROD_RUN = T
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
 DATE = '20151106'
-FILENAME = DATE
+FILENAME = paste0(DATE, '_+PositionHome')
 DATE_FORMAT = '%Y%m%d'
-PLOT = 'lc' #lc=learning curve, fi=feature importances
+PLOT = 'fi' #lc=learning curve, fi=feature importances
 SALARY_CAP = 60000
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')

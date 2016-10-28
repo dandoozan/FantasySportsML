@@ -3,8 +3,16 @@ library(dplyr) #bind_rows
 loadData = function(dateFormat) {
   data = read.csv('data/data.csv', stringsAsFactors=F, na.strings=c(''))
 
+  #remove Salary NAs because an NA means that the player was not an option to choose
+  rowsWithSalaryNA = which(is.na(data$Salary))
+  data = data[-rowsWithSalaryNA,]
+
   #convert the date strings to Date objects
   data$Date = as.Date(as.character(data$Date), dateFormat)
+
+  #Convert Position and Home to factors
+  data$Position = factor(data$Position)
+  data$Home = factor(data$Home)
 
   return(data)
 }
