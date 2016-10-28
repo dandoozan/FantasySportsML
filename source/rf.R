@@ -5,6 +5,10 @@
 #D-Write script to create team: rf_createTeam: 1/3, 8.895979/8.880356, 8.887228
 #D-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
 #D-Output test (tonight's predictions) error: 1/3, 9.761371/9.643101, 9.733458, testError=10.24964
+#-fill in getBetterTeam in createTeam python file
+#-output best team
+#-move createTeam to this file
+#-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
 #-fix NAs in data
 #-Use log of y
 #-Remove players who played less than 5 min or so to remove the many 0 scores
@@ -17,7 +21,6 @@
 #2. Source this file (rf.R)
   #-Prints RMSE for Trn/CV, Train, Test
   #-Prints ratio of my team score/best team score
-  #-Outputs: prediction_[date].csv
 
 
 #Remove all objects from the current workspace
@@ -27,7 +30,7 @@ setwd('/Users/dan/Desktop/ML/df')
 library(randomForest) #randomForest
 library(hydroGOF) #rmse
 library(ggplot2) #visualization
-library(ggthemes) # visualization
+library(ggthemes) #visualization
 source('source/_getData.R')
 source('../ml-common/plot.R')
 source('../ml-common/util.R')
@@ -83,16 +86,154 @@ plotImportances = function(model, save=FALSE) {
   if (save) dev.off()
 }
 
+writeSolution = function(data, yName, idName, prediction, filename, extraColNames) {
+  solution = data.frame(data[, idName], prediction, data[, extraColNames])
+  colnames(solution) = c(idName, yName, extraColNames)
+  cat('    Writing solution to file: ', filename, '...\n', sep='')
+  write.csv(solution, file=filename, row.names=F, quote=F)
+}
+
+getInitialTeam = function(data) {
+  #take the top 2 from each position (except C)
+  team = rbind(
+    data[data$Position == 'PG',][1:2,],
+    data[data$Position == 'SG',][1:2,],
+    data[data$Position == 'SF',][1:2,],
+    data[data$Position == 'PF',][1:2,],
+    data[data$Position == 'C',][1,]
+  )
+  return(team)
+}
+
+computePPD = function(fantasyPoints, salary) {
+  return(fantasyPoints / salary * 1000)
+}
+
+printTeam = function(team) {
+  print(team)
+}
+
+computeAmountOverBudget = function(team) {
+  return(sum(team$Salary) - SALARY_CAP)
+}
+
+replacePlayer = function(team, oldPlayer, newPlayer) {
+  #remove old player
+  playersToKeep = setdiff(rownames(team), rownames(oldPlayer))
+  team = team[playersToKeep,]
+
+  #add new player
+  team = rbind(team, newPlayer)
+
+  return(team)
+}
+
+getWorseTeam = function(data, team, amountOverBudget, verbose=F) {
+  cnt = 1
+  while (amountOverBudget > 0) {
+    if (verbose) print(paste('Iteration', cnt, ', amountOverBudget=', amountOverBudget))
+
+    bestPpdg = Inf
+    bestOldPlayer = NULL
+    bestNewPlayer = NULL
+
+    positions = c('PG', 'SG', 'SF', 'PF', 'C')
+
+    #find next best player for each position
+    for (position in positions) {
+      numPlayers = ifelse(position == 'C', 1, 2)
+
+      players = data[data$Position == position,]
+
+      #remove players currently on the team
+      playersOnTeam = team[team$Position == position,]
+      players = players[setdiff(rownames(players), rownames(playersOnTeam)),]
+
+      for (i in 1:numPlayers) {
+        teamPlayer = team[team$Position == position,][i,]
+        fpDiff = teamPlayer$FantasyPoints - players$FantasyPoints
+        salaryDiff = pmin(teamPlayer$Salary - players$Salary, amountOverBudget)
+        salaryDiff[salaryDiff <= 0] = NA
+        ppdg = computePPD(fpDiff, salaryDiff)
+        minPpdg = min(ppdg, na.rm=T)
+        if (minPpdg < bestPpdg) {
+          bestPpdg = minPpdg
+          bestOldPlayer = teamPlayer
+          bestNewPlayer = players[which.min(ppdg), ]
+        }
+      }
+    }
+
+    #i now have the next best player, replace him
+    if (verbose) cat('Replacing', oldPlayer$Name, '<-', newPlayer$Name, '\n')
+    team = replacePlayer(team, bestOldPlayer, bestNewPlayer)
+
+    amountOverBudget = computeAmountOverBudget(team)
+    cnt = cnt + 1
+  }
+  return(team)
+}
+
+getBetterTeam = function(data, team, amountOverBudget, verbose=F) {
+  #todo
+  return(team)
+}
+
+createTeam = function(data, verbose=F) {
+  #add PPD coumn
+  data$PPD = computePPD(data$FantasyPoints, data$Salary)
+
+  #sort by ppd
+  data = data[order(data$PPD, decreasing=TRUE),]
+
+  #first, fill team with all the highest ppd players
+  team = getInitialTeam(data)
+
+  if (verbose) {
+    print('Initial team')
+    printTeam(team)
+  }
+
+  amountOverBudget = computeAmountOverBudget(team)
+  if (amountOverBudget > 0) {
+    team = getWorseTeam(data, team, amountOverBudget, verbose)
+  } else if (amountOverBudget < 0) {
+    team = getBetterTeam(data, team, amountOverBudget, verbose)
+  } else {
+    cat('Wow, I got a perfect team on the first try!\n')
+  }
+
+  if (verbose) {
+    print('Final team')
+    printTeam(team)
+  }
+
+  return(team)
+}
+
+printTeamResults = function(team, bestTeam, yName) {
+  myTeamPredictedPoints = sum(myTeam[[yName]])
+  myTeamActualPoints = sum(test[rownames(myTeam), yName])
+  bestTeamPoints = sum(bestTeam[[yName]])
+
+  cat('How did my team do?\n')
+  cat('    I was expecting to get', myTeamPredictedPoints, 'points\n')
+  cat('    I actually got:', myTeamActualPoints, 'points\n')
+  cat('    Best team got:', bestTeamPoints, 'points\n')
+  cat('    My score ratio is', (myTeamActualPoints/bestTeamPoints), '\n')
+}
+
 #============= Main ================
 
 #Globals
 PROD_RUN = F
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-DATE = '20161025'
+DATE = '20151027'
 FILENAME = DATE
 DATE_FORMAT = '%Y%m%d'
 PLOT = '' #lc=learning curve, fi=feature importances
+SALARY_CAP = 60000
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
@@ -116,14 +257,34 @@ if (PROD_RUN || PLOT=='fi') plotImportances(model, save=PROD_RUN)
 printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
 
 #print test error
-testError = computeError(test[, Y_NAME], createPrediction(model, test, featuresToUse))
+prediction = createPrediction(model, test, featuresToUse)
+testError = computeError(test[, Y_NAME], prediction)
 cat('    Tonight\'s error: ', testError, '\n', sep='')
 
+cat('Creating teams...\n')
+#create my team (using prediction)
+predictionDF = test
+predictionDF[[Y_NAME]] = prediction
+myTeam = createTeam(predictionDF)
+
+#create best team (using test)
+bestTeam = createTeam(test)
+
+#print myTeam / bestTeam ratio
+printTeamResults(team, bestTeam, Y_NAME)
 
 # if (PROD_RUN) {
-#   outputFilename = paste0('prediction_', FILENAME, '.csv')
+#   cat('Outputing solution...\n')
+#
 #   extraColNames = c('Salary', 'Position')
-#   outputSolution(createPrediction, model, test, ID_NAME, Y_NAME, featuresToUse, outputFilename, extraColNames)
+#
+#   #write prediction
+#   predictionFilename = paste0('prediction_', FILENAME, '.csv')
+#   writeSolution(test, Y_NAME, ID_NAME, prediction, predictionFilename, extraColNames)
+#
+#   #write actual
+#   actualFilename = paste0('actual_', FILENAME, '.csv')
+#   writeSolution(test, Y_NAME, ID_NAME, test[[Y_NAME]], actualFilename, extraColNames)
 # }
 
 cat('Done!\n')

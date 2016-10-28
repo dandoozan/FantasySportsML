@@ -9,14 +9,20 @@ loadData = function(dateFormat) {
   return(data)
 }
 
-findIndexOfDate = function(data, date) {
+findFirstIndexOfDate = function(data, date) {
   return(which(data$Date == date)[1])
 }
 
+findLastIndexOfDate = function(data, date) {
+  dateIndices = which(data$Date == date)
+  return(dateIndices[length(dateIndices)])
+}
+
 splitDataIntoTrainTest = function(data, date) {
-  index = findIndexOfDate(data, date)
-  train = data[1:(index-1),]
-  test = data[index:nrow(data),]
+  splitIndex = findFirstIndexOfDate(data, date)
+  endIndex = findLastIndexOfDate(data, date)
+  train = data[1:(splitIndex-1),]
+  test = data[splitIndex:endIndex,]
   return(list(train=train, test=test))
 }
 

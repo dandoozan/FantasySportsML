@@ -3,6 +3,9 @@
 
 SALARY_CAP = 60000
 PREDICTION_LOCATION = 'predictions/'
+PREDICTION_PREFIX = 'prediction_'
+ACTUAL_PREFIX = 'actual_'
+
 
 def readInput():
     print 'Enter date (eg. 20161025):'
@@ -135,8 +138,8 @@ def computePoints(team):
 def computeAmountOverBudget(team):
     return computeCost(team) - SALARY_CAP
 
-def createFilename(dateStr):
-    return PREDICTION_LOCATION + 'prediction_' + dateStr + '.csv'
+def createFilename(prefix, dateStr):
+    return PREDICTION_LOCATION + prefix + dateStr + '.csv'
 
 def getWorseTeam(team, amountOverBudget):
     #while amountOverBudget > 0
@@ -181,30 +184,38 @@ def getBetterTeam(team, amountOverBudget):
     #todo: fill this in
     return
 
+def getTeam(prefix, dateStr):
+    #get players
+    players = loadPredictions(createFilename(prefix, dateStr))
+
+    #first, fill team with all the highest ppd players
+    team = getInitialTeam(players)
+
+    amountOverBudget = computeAmountOverBudget(team)
+    if amountOverBudget > 0:
+        getWorseTeam(team, amountOverBudget)
+    elif amountOverBudget < 0:
+        getBetterTeam(team, amountOverBudget)
+    else:
+        print 'Wow, I got a perfect team on the first try!'
+
+
+
+    return team
+
 #================ MAIN ===============
 
 dateStr = readInput()
 
-#get players
-players = loadPredictions(createFilename(dateStr))
+myTeam = getTeam(PREDICTION_PREFIX, dateStr)
+bestTeam = getTeam(ACTUAL_PREFIX, dateStr)
 
-#first, fill team with all the highest ppd players
-team = getInitialTeam(players)
-print ' '
-print 'Initial team:'
-printTeam(team)
 
-amountOverBudget = computeAmountOverBudget(team)
-if amountOverBudget > 0:
-    getWorseTeam(team, amountOverBudget)
-elif amountOverBudget < 0:
-    getBetterTeam(team, amountOverBudget)
-else:
-    print 'Wow, I got a perfect team on the first try!'
+print 'My Team:'
+printTeam(myTeam)
 
 print ' '
-print 'Final team:'
-printTeam(team)
-
+print 'Best Team:'
+printTeam(bestTeam)
 
 
