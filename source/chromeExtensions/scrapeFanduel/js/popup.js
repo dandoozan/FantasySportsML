@@ -15,15 +15,18 @@ function displayInfo(info) {
 }
 
 function displayResultSet(parent, results) {
-    var table = $('<table>');
     for (var i = 0; i < results.length; i++) {
-        tr = $('<tr>')
+        var str = '';
+        var cnt = 0;
         for (var item in results[i]) {
-            tr.append($('<td>').text(results[i][item]));
+            if (cnt != 0) {
+                str += ',';
+            }
+            str += results[i][item];
+            cnt++;
         }
-        table.append(tr)
+        parent.append($('<div>').text(str));
     }
-    parent.append(table);
 }
 
 function displayPage(data){
