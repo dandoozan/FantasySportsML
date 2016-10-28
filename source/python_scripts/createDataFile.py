@@ -1,6 +1,6 @@
 
 DATA_DIR = 'data/'
-DATA_FILE = DATA_DIR + 'rawDataFromRotoGuru/fd_all.txt'
+DATA_FILE = DATA_DIR + 'rawDataFromRotoGuru/fd_2015.txt'
 Y_NAME = 'FantasyPoints'
 X_NAMES = ['Date', 'Name', 'Salary', 'Position']
 

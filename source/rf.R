@@ -5,9 +5,18 @@
 #D-Write script to create team: rf_createTeam: 1/3, 8.895979/8.880356, 8.887228
 #D-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
 #D-Output test (tonight's predictions) error: 1/3, 9.761371/9.643101, 9.733458, testError=10.24964
-#-fill in getBetterTeam in createTeam python file
-#-output best team
-#-move createTeam to this file
+#D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
+#-try all base features from rotoguru:
+  #-Position, Salary, H/A
+#-try features:
+  #-Player upcoming game stats: Position
+  #-Player season long stats: Avg fp, Avg Fppd, Avg min played, Avg fp/min, Avg points, Avg assists, Avg turnovers, Avg rebounds, Avg steals, Avg blocks
+  #-Upcoming game stats: Vegas odds, H/A
+  #-Team season long stats: Win pct
+  #-Opp season long stats: Win pct
+  #-Player last game stats: Starter, Fp, Fppd, Minutes played, Fp/min, Fp/avg fp, Points, Assists, Tunrovers, Rebounds, Steals, Blocks
+
+#-fill in getBetterTeam
 #-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
 #-fix NAs in data
 #-Use log of y
@@ -104,19 +113,15 @@ getInitialTeam = function(data) {
   )
   return(team)
 }
-
 computePPD = function(fantasyPoints, salary) {
   return(fantasyPoints / salary * 1000)
 }
-
 printTeam = function(team) {
   print(team)
 }
-
 computeAmountOverBudget = function(team) {
   return(sum(team$Salary) - SALARY_CAP)
 }
-
 replacePlayer = function(team, oldPlayer, newPlayer) {
   #remove old player
   playersToKeep = setdiff(rownames(team), rownames(oldPlayer))
@@ -127,7 +132,6 @@ replacePlayer = function(team, oldPlayer, newPlayer) {
 
   return(team)
 }
-
 getWorseTeam = function(data, team, amountOverBudget, verbose=F) {
   cnt = 1
   while (amountOverBudget > 0) {
@@ -173,12 +177,10 @@ getWorseTeam = function(data, team, amountOverBudget, verbose=F) {
   }
   return(team)
 }
-
 getBetterTeam = function(data, team, amountOverBudget, verbose=F) {
   #todo
   return(team)
 }
-
 createTeam = function(data, verbose=F) {
   #add PPD coumn
   data$PPD = computePPD(data$FantasyPoints, data$Salary)
@@ -210,7 +212,6 @@ createTeam = function(data, verbose=F) {
 
   return(team)
 }
-
 printTeamResults = function(team, bestTeam, yName) {
   myTeamPredictedPoints = sum(myTeam[[yName]])
   myTeamActualPoints = sum(test[rownames(myTeam), yName])
@@ -225,14 +226,21 @@ printTeamResults = function(team, bestTeam, yName) {
 
 #============= Main ================
 
+#2015 season
+  #begin (day 1): 20151027
+  #use 10 days (day 11): 20151106 (2142 obs)
+  #10% (day 21): 20151116
+  #20% (day 42): 20151208
+  #50% (day 105): 20160210
+  #end (day 210): 20160619
 #Globals
-PROD_RUN = F
+PROD_RUN = T
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-DATE = '20151027'
+DATE = '20151106'
 FILENAME = DATE
 DATE_FORMAT = '%Y%m%d'
-PLOT = '' #lc=learning curve, fi=feature importances
+PLOT = 'lc' #lc=learning curve, fi=feature importances
 SALARY_CAP = 60000
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
@@ -256,23 +264,26 @@ if (PROD_RUN || PLOT=='fi') plotImportances(model, save=PROD_RUN)
 #print trn/cv, train error
 printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
 
+#comment this out because it doesnt mean anything
 #print test error
-prediction = createPrediction(model, test, featuresToUse)
-testError = computeError(test[, Y_NAME], prediction)
-cat('    Tonight\'s error: ', testError, '\n', sep='')
+# prediction = createPrediction(model, test, featuresToUse)
+# testError = computeError(test[, Y_NAME], prediction)
+# cat('    Tonight\'s error: ', testError, '\n', sep='')
 
-cat('Creating teams...\n')
-#create my team (using prediction)
-predictionDF = test
-predictionDF[[Y_NAME]] = prediction
-myTeam = createTeam(predictionDF)
+#comment this out until i fix createTeam
+# cat('Creating teams...\n')
+# #create my team (using prediction)
+# predictionDF = test
+# predictionDF[[Y_NAME]] = prediction
+# myTeam = createTeam(predictionDF)
+#
+# #create best team (using test)
+# bestTeam = createTeam(test)
+#
+# #print myTeam / bestTeam ratio
+# printTeamResults(team, bestTeam, Y_NAME)
 
-#create best team (using test)
-bestTeam = createTeam(test)
-
-#print myTeam / bestTeam ratio
-printTeamResults(team, bestTeam, Y_NAME)
-
+#comment this out because i think i dont need it
 # if (PROD_RUN) {
 #   cat('Outputing solution...\n')
 #
@@ -288,3 +299,20 @@ printTeamResults(team, bestTeam, Y_NAME)
 # }
 
 cat('Done!\n')
+
+
+#========================================
+#CV strategies:
+  #-Option 1:
+    #-num days in 2015: 210
+    #-starting on day 2,
+      #-split data into train (days before), and test (day of)
+      #-build model using train
+      #-predict using test
+      #-plot train and test errors
+      #-set day to next day
+  #-Option 2:
+    #-take the first 10 days of 2015
+    #-split data randomly into 80/20 (shuffled) for train/cv
+    #-plot learning curve
+    #-increase num days to take if i need more data
