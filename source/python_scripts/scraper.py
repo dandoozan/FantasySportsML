@@ -11,7 +11,7 @@ def _download(url):
     return urllib2.urlopen(req)
 
 def downloadPageSource(url):
-    return _download(url).read().split('\n')
+    return _download(url).read()
 
 def downloadJson(url):
     return json.load(_download(url))

@@ -40,7 +40,7 @@ def createFilename(parentDir, dirName, baseFilename):
 for dirName in urlsToScrape:
     print '\nScraping %s...' % dirName
 
-    pageSource = scraper.downloadPageSource(urlsToScrape[dirName])
+    pageSource = scraper.downloadPageSource(urlsToScrape[dirName]).split('\n')
     data = parseData(pageSource)
     scraper.writeJsonData(data, createFilename(PARENT_DIR, dirName, FILENAME))
 
