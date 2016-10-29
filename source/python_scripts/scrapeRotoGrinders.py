@@ -65,7 +65,7 @@ for key in urlsToScrape:
     data = parseData(rawData)
     writeData(data, createFilename(PARENT_DIR, dirName, FILENAME))
 
-    print 'Sleeping for %d seconds' % SLEEP
+    print '    Sleeping for %d seconds' % SLEEP
     time.sleep(SLEEP)
 
 

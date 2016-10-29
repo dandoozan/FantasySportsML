@@ -10,6 +10,34 @@ def loadData(filename):
     f = open(filename)
     f.readline()
 
+    #Upcoming game data
+    #D-Date
+    #D-Position
+    #D-Name
+    #D-Salary
+    #D-Home
+    #-MyTeam
+    #-OppTeam
+
+    #Future data
+    #-Starter
+    #-FantasyPoints
+    #-MyTeamScore
+    #-OppTeamScore
+    #-MinutesPlayed
+    #-Points
+    #-Rebounds
+    #-Assists
+    #-Turnovers
+    #-3PointersMade
+    #-FGMade
+    #-FGAttempts
+    #-FTMade
+    #-FTAttempts
+    #-Steals
+    #-Blocks
+
+
     data = []
     for line in f:
         sp = line.strip().split(';')

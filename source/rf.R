@@ -7,7 +7,7 @@
 #D-Output test (tonight's predictions) error: 1/3, 9.761371/9.643101, 9.733458, testError=10.24964
 #D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
 #D-Remove rows with Salary NAs: 20151106_removeNAs: 1/3, 8.745434/9.390104, 8.802408
-#D-try all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
+#D-Use all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
 #-try features:
   #-Player upcoming game stats: Position
   #-Player season long stats: Avg fp, Avg Fppd, Avg min played, Avg fp/min, Avg points, Avg assists, Avg turnovers, Avg rebounds, Avg steals, Avg blocks
@@ -24,6 +24,8 @@
 #-Use more features than salary
 #-Use probability that a player will do much better/much worse than expected
 #-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
+#-Maybe predict fp/min instead of fp
+
 
 #Process to get team for day:
 #1. Change DATE (eg. 20161025)
@@ -234,14 +236,13 @@ printTeamResults = function(team, bestTeam, yName) {
   #50% (day 105): 20160210
   #end (day 210): 20160619
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
 DATE = '20151106'
-FILENAME = paste0(DATE, '_+PositionHome')
+FILENAME = paste0(DATE, '_')
 DATE_FORMAT = '%Y%m%d'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
-SALARY_CAP = 60000
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
@@ -272,6 +273,7 @@ printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPr
 
 #comment this out until i fix createTeam
 # cat('Creating teams...\n')
+# SALARY_CAP = 60000
 # #create my team (using prediction)
 # predictionDF = test
 # predictionDF[[Y_NAME]] = prediction
