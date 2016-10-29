@@ -11,14 +11,10 @@ def _download(url):
     return urllib2.urlopen(req)
 
 def downloadPageSource(url):
-    return _download(url).read()
+    return _download(url).read().split('\n')
 
 def downloadJson(url):
     return json.load(_download(url))
-
-def parseJsonData(data):
-    print '    Parsing json data...'
-    return json.loads(data)
 
 def createUrl(baseUrl, urlParams):
     #Note: baseUrl should contain the '?' at the end
