@@ -2,19 +2,23 @@ import urllib
 import urllib2
 import json
 
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36'
 
-def _download(url):
+def _download(url, extraHeaders={}):
     print '    Downloading data...'
     print '        url:', url
-    req = urllib2.Request(url, headers={ 'User-Agent': USER_AGENT })
+
+    headers = { 'User-Agent': USER_AGENT }
+    headers.update(extraHeaders)
+
+    req = urllib2.Request(url, headers=headers)
     return urllib2.urlopen(req)
 
-def downloadPageSource(url):
-    return _download(url).read()
+def downloadPageSource(url, extraHeaders={}):
+    return _download(url, extraHeaders).read()
 
-def downloadJson(url):
-    return json.load(_download(url))
+def downloadJson(url, extraHeaders={}):
+    return json.load(_download(url, extraHeaders))
 
 def createUrl(baseUrl, urlParams):
     #Note: baseUrl should contain the '?' at the end
@@ -23,7 +27,7 @@ def createUrl(baseUrl, urlParams):
 def writeJsonData(jsonData, fullPathFilename):
     print '    Writing data to ' + fullPathFilename + '...'
     f = open(fullPathFilename, 'w')
-    json.dump(jsonData, f, indent=4, separators=(',', ': '), sort_keys=True)
+    json.dump(jsonData, f, indent=2, separators=(',', ': '), sort_keys=True)
     f.close()
 
 def createJsonFilename(fullPathDir, baseFilename):

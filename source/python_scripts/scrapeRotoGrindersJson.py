@@ -70,9 +70,9 @@ def parseData(data, jsonPrefix):
 
     for line in data:
         line = line.strip()
-        if line.find(prefix) == 0:
+        if line.find(jsonPrefix) == 0:
             #chop off the prefix
-            line = line[len(prefix):]
+            line = line[len(jsonPrefix):]
             if line[-1] == ',' or line[-1] == ';':
                 line = line[:-1]
             return json.loads(line)
