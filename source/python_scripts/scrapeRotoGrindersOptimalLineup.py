@@ -1,19 +1,9 @@
 from datetime import date
-import time
 from bs4 import BeautifulSoup
 import scraper
 
 PARENT_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
-SLEEP = 10
-
-urlsToScrape = {
-    'SalaryChartsPG': 'https://rotogrinders.com/pages/nba-player-salary-charts-point-guards-1010472',
-    'SalaryChartsSG': 'https://rotogrinders.com/pages/nba-player-salary-charts-shooting-guards-1010481',
-    'SalaryChartsSF': 'https://rotogrinders.com/pages/nba-player-salary-charts-small-forwards-1010480',
-    'SalaryChartsPF': 'https://rotogrinders.com/pages/nba-player-salary-charts-power-forwards-1010479',
-    'SalaryChartsC': 'https://rotogrinders.com/pages/nba-player-salary-charts-centers-1010477',
-}
 
 def getText(node):
     #replace funny apostrophe with regular one
@@ -37,10 +27,10 @@ def getRowData(table):
         rowData.append(thisRowData)
     return rowData
 
-def parseData(data):
+def parseData(data, tableClassName):
     print '    Parsing data...'
     soup = BeautifulSoup(data, 'html.parser')
-    table = soup.find('table', class_='data-table')
+    table = soup.find('table', class_=tableClassName)
     colNames = getColNames(table)
     rowData = getRowData(table)
     return colNames, rowData
@@ -65,16 +55,16 @@ def writeData(colNames, rowData, fullPathFilename):
 #=============== Main ================
 
 
-for dirName in urlsToScrape:
-    print '\nScraping %s...' % dirName
+dirName = 'OptimalLineup'
+url = 'https://rotogrinders.com/projected-stats/nba/lineup?site=fanduel'
+tableClassName = 'tbl'
 
-    pageSource = scraper.downloadPageSource(urlsToScrape[dirName])
-    #pageSource = open('data/rawDataFromRotoGrinders/' + dirName + '/' + FILENAME + '.html')
-    colNames, rowData = parseData(pageSource)
+print '\nScraping %s...' % dirName
 
-    writeData(colNames, rowData, createFilename(PARENT_DIR, dirName, FILENAME))
+pageSource = scraper.downloadPageSource(url)
+#pageSource = open('data/rawDataFromRotoGrinders/' + dirName + '/' + FILENAME + '.html')
+colNames, rowData = parseData(pageSource, tableClassName)
 
-    print '    Sleeping for %d seconds' % SLEEP
-    time.sleep(SLEEP)
+writeData(colNames, rowData, createFilename(PARENT_DIR, dirName, FILENAME))
 
 print 'Done!'
