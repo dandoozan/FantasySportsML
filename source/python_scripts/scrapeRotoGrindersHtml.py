@@ -5,7 +5,6 @@ import scraper
 
 PARENT_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
-#FILENAME = '2016-10-26'
 SLEEP = 10
 
 pagesToScrape = [
@@ -13,6 +12,36 @@ pagesToScrape = [
         'dirName': 'BackToBack',
         'tableClassName': 'data-table',
         'url': 'https://rotogrinders.com/pages/nba-back-to-back-tool-518716',
+    },
+    {
+        'dirName': 'OptimalLineup',
+        'url': 'https://rotogrinders.com/projected-stats/nba/lineup?site=fanduel',
+        'tableClassName': 'tbl',
+    },
+    {
+        'dirName': 'SalaryChartsPG',
+        'tableClassName': 'data-table',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-point-guards-1010472',
+    },
+    {
+        'dirName': 'SalaryChartsSG',
+        'tableClassName': 'data-table',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-shooting-guards-1010481',
+    },
+    {
+        'dirName': 'SalaryChartsSF',
+        'tableClassName': 'data-table',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-small-forwards-1010480',
+    },
+    {
+        'dirName': 'SalaryChartsPF',
+        'tableClassName': 'data-table',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-power-forwards-1010479',
+    },
+    {
+        'dirName': 'SalaryChartsC',
+        'tableClassName': 'data-table',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-centers-1010477',
     },
 ]
 
@@ -65,7 +94,6 @@ def writeData(colNames, rowData, fullPathFilename):
 
 #=============== Main ================
 
-
 for page in pagesToScrape:
     dirName = page['dirName']
     url = page['url']
@@ -74,9 +102,7 @@ for page in pagesToScrape:
     print '\nScraping %s...' % dirName
 
     pageSource = scraper.downloadPageSource(url)
-    #pageSource = open('data/rawDataFromRotoGrinders/' + dirName + '/' + FILENAME + '.html')
     colNames, rowData = parseData(pageSource, tableClassName)
-
     writeData(colNames, rowData, createFilename(PARENT_DIR, dirName, FILENAME))
 
     print '    Sleeping for %d seconds' % SLEEP
