@@ -96,8 +96,8 @@ def writeData(colNames, rowData, fullPathFilename):
 
 for page in pagesToScrape:
     dirName = page['dirName']
-    url = page['url']
     tableClassName = page['tableClassName']
+    url = page['url']
 
     print '\nScraping %s...' % dirName
 
