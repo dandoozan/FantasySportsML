@@ -45,15 +45,11 @@ pagesToScrape = [
     },
 ]
 
-def getText(node):
-    #replace funny apostrophe with regular one
-    return node.get_text().replace(u'\u2019', '\'').strip()
-
 def getColNames(table):
     colNames = []
     ths = table.thead.tr.find_all('th')
     for th in ths:
-        colNames.append(getText(th))
+        colNames.append(scraper.getText(th))
     return colNames
 
 def getRowData(table):
@@ -63,7 +59,7 @@ def getRowData(table):
         thisRowData = []
         tds = tr.find_all('td')
         for td in tds:
-            thisRowData.append(getText(td))
+            thisRowData.append(scraper.getText(td))
         rowData.append(thisRowData)
     return rowData
 

@@ -29,3 +29,8 @@ def writeJsonData(jsonData, fullPathFilename):
 def createJsonFilename(fullPathDir, baseFilename):
     #Note: fullPathDir should not contain the '/' at the end
     return fullPathDir + '/' + baseFilename + '.json'
+
+def getText(soupNode):
+    #remove all commas
+    #and replace funny apostrophe with regular one (for player E'Twaun Moore)
+    return soupNode.get_text().replace(',', '').replace(u'\u2019', '\'').strip()
