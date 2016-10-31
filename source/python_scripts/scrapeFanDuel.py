@@ -13,11 +13,19 @@ import scraper
 
 TEST = False
 
+
+FD_X_AUTH_TOKEN = '86c17eb61e879edc5cbb2000a33ee5ae34b696924783cfe3e1f7fdcec1c8e8f1'
+
 RG_FORUM_URL = 'https://rotogrinders.com/threads/category/main'
 TODAY = date.today()
 YESTERDAY = TODAY - timedelta(1)
 PARENT_DIR = 'data/rawDataFromFanDuel/Contests/' + YESTERDAY.strftime('%Y-%m-%d')
 SLEEP = 10
+
+def createDirIfNecessary(dirName):
+    if not os.path.isdir(dirName):
+        print 'Creating dir: ' + dirName + '...'
+        os.makedirs(dirName)
 
 def isContestLinksUrl(url, date):
     #https://rotogrinders.com/threads/daily-fantasy-tournament-links-saturday-october-29th-1512252
@@ -48,9 +56,6 @@ def isFanduelUrl(url):
 def isNbaContest(contestName):
     return contestName.find('NBA') > -1
 
-def getRotoGrinderContestLinksUrl():
-    return raw_input('Enter RotoGrinder Contest Links Url: ')
-
 def parseContestFromUrl(url):
     #https://www.fanduel.com/games/16754/contests/16754-202913340/scoring
     startIndex = url.find('/contests/') + 10
@@ -58,7 +63,7 @@ def parseContestFromUrl(url):
     return url[startIndex:endIndex]
 
 def scrapeContestsFromRotoGrinder(url):
-    print 'Scraping RotoGrinder Tournaments Page...'
+    print 'Scraping Contest Page...'
 
     contests = []
 
@@ -79,7 +84,7 @@ def createFanduelApiUrl(contest):
     return 'https://api.fanduel.com/contests/' + contest
 
 def parseContestGroup(contest):
-    return contest.split('-')[0]
+    return contest[:contest.find('-')]
 
 def createHeaders(contest):
     contestGroup = parseContestGroup(contest)
@@ -94,7 +99,7 @@ def createHeaders(contest):
         'Origin': 'https://www.fanduel.com',
         'Pragma': 'no-cache',
         'Referer': 'https://www.fanduel.com/games/%s/contests/%s/scoring' % (contestGroup, contest),
-        'X-Auth-Token': '975a94dbf50089faf4156964a5d0b4c986966124c77587c2fb95d8b0758bbc7a',
+        'X-Auth-Token': FD_X_AUTH_TOKEN,
     }
 
 
@@ -103,17 +108,18 @@ def createHeaders(contest):
 print 'Scraping contest results for yesterday: ', YESTERDAY
 
 #make dir
-if not os.path.isdir(PARENT_DIR):
-    os.makedirs(PARENT_DIR)
+createDirIfNecessary(PARENT_DIR)
 
 #1. scrape 'Daily Fantasy Tournament Links - [Date]' url from https://rotogrinders.com/threads/category/main
 rgTournamentLinksUrl = scrapeRotoGrinderForum(RG_FORUM_URL, YESTERDAY)
 if rgTournamentLinksUrl:
+    print '    Found contest page: ' + rgTournamentLinksUrl
     scraper.sleep(SLEEP)
 
     #2. scrape contest urls from 'Daily Fantasy Tournament Links - [Date]' page
     contests = scrapeContestsFromRotoGrinder(rgTournamentLinksUrl)
     if len(contests) > 0:
+        print '    Found %d contests' % len(contests)
         scraper.sleep(SLEEP)
 
         #3. for each contest, download its results from api.fanduel.com
@@ -121,18 +127,8 @@ if rgTournamentLinksUrl:
         for contest in contests:
             print '\nScraping Contest %s (%d / %d) ...' % (contest, cnt, len(contests))
 
-            url = createFanduelApiUrl(contest)
-            headers = createHeaders(contest)
-
-            #tbx
-            print '    url=', url
-            for h in headers:
-                print '   ', h, ':', headers[h]
-
-            jsonData = scraper.downloadJson(url, headers)
-
-            baseFilename = contest
-            scraper.writeJsonData(jsonData, scraper.createJsonFilename(PARENT_DIR, baseFilename))
+            jsonData = scraper.downloadJson(createFanduelApiUrl(contest), createHeaders(contest))
+            scraper.writeJsonData(jsonData, scraper.createJsonFilename(PARENT_DIR, contest))
 
             scraper.sleep(SLEEP)
 
