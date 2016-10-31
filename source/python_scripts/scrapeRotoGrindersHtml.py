@@ -65,10 +65,15 @@ def getRowData(table):
 
 def parseData(data, tableClassName):
     print '    Parsing data...'
+    colNames = None
+    rowData = None
     soup = BeautifulSoup(data, 'html.parser')
     table = soup.find('table', class_=tableClassName)
-    colNames = getColNames(table)
-    rowData = getRowData(table)
+    if table:
+        colNames = getColNames(table)
+        rowData = getRowData(table)
+    else:
+        scraper.headsUp('No table found')
     return colNames, rowData
 
 def createFilename(parentDir, dirName, baseFilename):
@@ -99,7 +104,10 @@ for page in pagesToScrape:
 
     pageSource = scraper.downloadPageSource(url)
     colNames, rowData = parseData(pageSource, tableClassName)
-    writeData(colNames, rowData, createFilename(PARENT_DIR, dirName, FILENAME))
+    if colNames and rowData:
+        writeData(colNames, rowData, createFilename(PARENT_DIR, dirName, FILENAME))
+    else:
+        print 'No data was parsed, not writing data'
 
     print '    Sleeping for %d seconds' % SLEEP
     time.sleep(SLEEP)
