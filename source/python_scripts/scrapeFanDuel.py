@@ -1,20 +1,49 @@
 import os
+import re
 from datetime import date, timedelta
-import time
 from bs4 import BeautifulSoup
 import json
 import scraper
 
+#This file does the following:
+#1. scrape 'Daily Fantasy Tournament Links - [Date]' url from https://rotogrinders.com/threads/category/main
+#2. scrape contest urls from 'Daily Fantasy Tournament Links - [Date]' page
+#3. for each contest
+    #-download its results from api.fanduel.com
+
 TEST = False
 
+RG_FORUM_URL = 'https://rotogrinders.com/threads/category/main'
 TODAY = date.today()
 YESTERDAY = TODAY - timedelta(1)
 PARENT_DIR = 'data/rawDataFromFanDuel/Contests/' + YESTERDAY.strftime('%Y-%m-%d')
 SLEEP = 10
 
+def isContestLinksUrl(url, date):
+    #https://rotogrinders.com/threads/daily-fantasy-tournament-links-saturday-october-29th-1512252
+    dateStr = date.strftime('%A-%B-%d').lower()
+    regexPattern = 'https://rotogrinders.com/threads/daily-fantasy-tournament-links-%s(st|nd|rd|th)-\d+' % dateStr
+    return not not re.match(regexPattern, url)
+
+def scrapeRotoGrinderForum(url, date):
+    print 'Scraping RotoGrinder Forum...'
+
+    pageSource = scraper.downloadPageSource(url)
+
+    soup = BeautifulSoup(pageSource, 'html.parser')
+    table = soup.find('table', class_='forum')
+    if table:
+        tds = table.find_all('td', class_='topic')
+        for td in tds:
+            atag = td.find_all('a', recursive=False)[0]
+            href = atag.get('href')
+            if isContestLinksUrl(href, date):
+                return href
+
 def isFanduelUrl(url):
-    #todo: imporove this by using a regex match of whole url
-    return url.find('://www.fanduel.com/games/') > -1
+    #https://www.fanduel.com/games/16754/contests/16754-202913340/scoring
+    regexPattern = 'https://www.fanduel.com/games/\d+/contests/\d+-\d+/scoring'
+    return not not re.match(regexPattern, url)
 
 def isNbaContest(contestName):
     return contestName.find('NBA') > -1
@@ -29,24 +58,20 @@ def parseContestFromUrl(url):
     return url[startIndex:endIndex]
 
 def scrapeContestsFromRotoGrinder(url):
-    print 'Scraping RotoGrinder...'
-
-    #tbx
-    print '    url=',url
-
-    pageSource = open(PARENT_DIR + '/' + YESTERDAY.strftime('%Y-%m-%d') + '.html') if TEST else scraper.downloadPageSource(url)
-
-    soup = BeautifulSoup(pageSource, 'html.parser')
-    atags = soup.find('div', class_='content').find_all('a')
+    print 'Scraping RotoGrinder Tournaments Page...'
 
     contests = []
 
-    for atag in atags:
-        href = atag.get('href')
-        text = atag.get_text().strip()
-        if isFanduelUrl(href) and isNbaContest(text):
-            print href
-            contests.append(parseContestFromUrl(href))
+    pageSource = open(PARENT_DIR + '/' + YESTERDAY.strftime('%Y-%m-%d') + '.html') if TEST else scraper.downloadPageSource(url)
+    soup = BeautifulSoup(pageSource, 'html.parser')
+    div = soup.find('div', class_='content')
+    if div:
+        atags = div.find_all('a')
+        for atag in atags:
+            href = atag.get('href')
+            text = atag.get_text().strip()
+            if isFanduelUrl(href) and isNbaContest(text):
+                contests.append(parseContestFromUrl(href))
 
     return contests
 
@@ -75,36 +100,46 @@ def createHeaders(contest):
 
 #=============== Main ================
 
+print 'Scraping contest results for yesterday: ', YESTERDAY
+
 #make dir
-#comment this out until i figure out how to make dir
-#if not os.path.isdir(PARENT_DIR):
-#    os.makedirs(PARENT_DIR)
+if not os.path.isdir(PARENT_DIR):
+    os.makedirs(PARENT_DIR)
 
-#fetch contests from RotoGrinder
-rgUrl = getRotoGrinderContestLinksUrl()
-contests = scrapeContestsFromRotoGrinder(rgUrl)
+#1. scrape 'Daily Fantasy Tournament Links - [Date]' url from https://rotogrinders.com/threads/category/main
+rgTournamentLinksUrl = scrapeRotoGrinderForum(RG_FORUM_URL, YESTERDAY)
+if rgTournamentLinksUrl:
+    scraper.sleep(SLEEP)
 
-#for each contestId, download its results
-cnt = 1
-for contest in contests:
-    print '\nScraping Contest %s (%d / %d) ...' % (contest, cnt, len(contests))
+    #2. scrape contest urls from 'Daily Fantasy Tournament Links - [Date]' page
+    contests = scrapeContestsFromRotoGrinder(rgTournamentLinksUrl)
+    if len(contests) > 0:
+        scraper.sleep(SLEEP)
 
-    url = createFanduelApiUrl(contest)
-    headers = createHeaders(contest)
+        #3. for each contest, download its results from api.fanduel.com
+        cnt = 1
+        for contest in contests:
+            print '\nScraping Contest %s (%d / %d) ...' % (contest, cnt, len(contests))
 
-    #tbx
-    print '    url=', url
-    for h in headers:
-        print '   ', h, ':', headers[h]
+            url = createFanduelApiUrl(contest)
+            headers = createHeaders(contest)
 
-    jsonData = scraper.downloadJson(url, headers)
+            #tbx
+            print '    url=', url
+            for h in headers:
+                print '   ', h, ':', headers[h]
 
-    baseFilename = contest
-    scraper.writeJsonData(jsonData, scraper.createJsonFilename(PARENT_DIR, baseFilename))
+            jsonData = scraper.downloadJson(url, headers)
 
-    print '    Sleeping for %d seconds' % SLEEP
-    time.sleep(SLEEP)
+            baseFilename = contest
+            scraper.writeJsonData(jsonData, scraper.createJsonFilename(PARENT_DIR, baseFilename))
 
-    cnt += 1
+            scraper.sleep(SLEEP)
+
+            cnt += 1
+    else:
+        scraper.headsUp('No contests found on RotoGrinder Contest Page')
+else:
+    scraper.headsUp('No contest link found on forum')
 
 print 'Done!'

@@ -1,6 +1,7 @@
 import urllib
 import urllib2
 import json
+import time
 
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36'
 
@@ -38,3 +39,12 @@ def getText(soupNode):
     #remove all commas
     #and replace funny apostrophe with regular one (for player E'Twaun Moore)
     return soupNode.get_text().replace(',', '').replace(u'\u2019', '\'').strip()
+
+def sleep(seconds):
+    print '    Sleeping for %d seconds' % seconds
+    time.sleep(seconds)
+
+def headsUp(msg):
+    print '==========================================='
+    print '***HEADS UP! ', msg
+    print '==========================================='
