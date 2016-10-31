@@ -8,13 +8,9 @@
 #D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
 #D-Remove rows with Salary NAs: 20151106_removeNAs: 1/3, 8.745434/9.390104, 8.802408
 #D-Use all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
-#-try features:
-  #-Player upcoming game stats: Position
-  #-Player season long stats: Avg fp, Avg Fppd, Avg min played, Avg fp/min, Avg points, Avg assists, Avg turnovers, Avg rebounds, Avg steals, Avg blocks
-  #-Upcoming game stats: Vegas odds, H/A
-  #-Team season long stats: Win pct
-  #-Opp season long stats: Win pct
-  #-Player last game stats: Starter, Fp, Fppd, Minutes played, Fp/min, Fp/avg fp, Points, Assists, Tunrovers, Rebounds, Steals, Blocks
+#-Get additional data from nba.com
+#-Include nba "traditional" stats
+#-Include nbs "advanced" stats
 #-Perhaps make Home a binary col rather than factor with 2 levels
 #-fill in getBetterTeam
 #-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
@@ -237,17 +233,18 @@ printTeamResults = function(team, bestTeam, yName) {
   #end (day 210): 20160619
 #Globals
 PROD_RUN = F
+SEASON = '2015'
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
 DATE = '20151106'
 FILENAME = paste0(DATE, '_')
 DATE_FORMAT = '%Y%m%d'
-PLOT = 'fi' #lc=learning curve, fi=feature importances
+PLOT = '' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
 date = as.Date(DATE, DATE_FORMAT)
-data = getData(Y_NAME, date, DATE_FORMAT, oneHotEncode=F)
+data = getData(Y_NAME, SEASON, date, DATE_FORMAT, oneHotEncode=F)
 train = data$train #train=all data leading up to tonight
 test = data$test #test=tonight's team
 possibleFeatures = setdiff(names(train), c(ID_NAME, Y_NAME))

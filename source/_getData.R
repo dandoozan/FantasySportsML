@@ -1,7 +1,8 @@
 library(dplyr) #bind_rows
 
-loadData = function(dateFormat) {
-  data = read.csv('data/data.csv', stringsAsFactors=F, na.strings=c(''))
+loadData = function(dateFormat, season) {
+  filename = paste0('data/data_', season, '.csv')
+  data = read.csv(filename, stringsAsFactors=F, na.strings=c(''))
 
   #remove Salary NAs because an NA means that the player was not an option to choose
   rowsWithSalaryNA = which(is.na(data$Salary))
@@ -52,7 +53,7 @@ oneHotEncode = function(data) {
   return(data)
 }
 
-getData = function(yName, date, dateFormat, oneHotEncode=F) {
+getData = function(yName, season, date, dateFormat, oneHotEncode=F) {
   if (class(date) != 'Date') {
     stop('ERROR: date should be of class Date\n')
   }
@@ -60,7 +61,7 @@ getData = function(yName, date, dateFormat, oneHotEncode=F) {
   cat('Getting data...\n')
 
   #load data
-  full = loadData(dateFormat)
+  full = loadData(dateFormat, season)
 
   #impute missing values
   full = imputeMissingValues(full)
