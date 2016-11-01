@@ -13,9 +13,11 @@
 #D-Use as many features as possible that don't overfit (Salary, MIN): 20160619_SalaryMin: 2/35, 10, 8.709144/9.774915, 8.742757
 #D-Add AvgFantasyPoints, DaysPlayedPercent features: 20151208_AvgFantasyPoints: 34/37, 100, 3.868784/8.450441, 3.837078
   #-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3, AvgFantasyPoints, DaysPlayedPercent
+#D-Use AvgFantasyPoints, Salary, MIN: 20160619_top3: 3/37, 10, 7.397566/9.545659, 7.284939
+#-Use all features but only from the last 5 games (rather than season), and start from game 5
+#-Verify that AvgFantasyPoints is correct
+#-Verify that DaysPlayedPercent is correct
 #-Try new model (xgboost, lm)
-#-Try new thing to predict
-#-Continue manipulating features/data with rf
 #-Remove the first 10 days or so so that winpct etc mean something
 #-Include nbs "advanced" stats
 #-Perhaps make Home a binary col rather than factor with 2 levels
@@ -26,6 +28,10 @@
 #-Use probability that a player will do much better/much worse than expected
 #-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
 #-Maybe predict fp/min instead of fp
+#-Add whether injured as a feature (i think this one is important to explain the 0 fps)
+#-Add percent of games started (to essentially figure out if player is a starter)
+#-Add avg fp/min feature
+
 
 #Process to get team for day:
 #1. Change DATE (eg. 20161025)
@@ -69,13 +75,13 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   #'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3'
 
   #use everything except Date, Team, and Opponent
-  featuresToUse = setdiff(possibleFeatures, c('Date', 'Team', 'Opponent'))
+  #featuresToUse = setdiff(possibleFeatures, c('Date', 'Team', 'Opponent'))
   #featuresToUse = setdiff(possibleFeatures,
   #    c('Date', 'Team', 'Opponent', 'TD3', 'Position', 'AGE', 'Home', 'FG3M',
   #      'DD2', 'BLKA', 'BLK', 'STL', 'FG3A', 'OREB', 'W', 'PF', 'FTM', 'FTA',
   #      'TOV', 'L', 'FG3_PCT', 'AST', 'REB', 'DREB', 'FT_PCT', 'W_PCT', 'GP',
   #      'PLUS_MINUS', 'FG_PCT', 'PFD', 'FGA', 'FGM', 'PTS'))
-  #featuresToUse = c('Salary', 'MIN')
+  featuresToUse = c('AvgFantasyPoints', 'Salary', 'MIN')
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -252,9 +258,9 @@ Y_NAME = 'FantasyPoints'
 DATE_FORMAT = '%Y%m%d'
 
 PROD_RUN = T
-SPLIT_DATE = '20151208'
-N_TREE = 100
-FILENAME = paste0(SPLIT_DATE, '_AvgFantasyPoints')
+SPLIT_DATE = '20160619'
+N_TREE = 10
+FILENAME = paste0(SPLIT_DATE, '_top3')
 PLOT = 'lc' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
