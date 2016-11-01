@@ -16,9 +16,10 @@
 #D-Use AvgFantasyPoints, Salary, MIN: 20160619_top3: 3/37, 10, 7.397566/9.545659, 7.284939
 #D-Fix AvgFantasyPoints (AvgFantasyPoints, Salary, MIN): 20160619_fixAvgFP: 3/37, 10, 7.301757/9.625992, 7.293516
 #D-Add Injured feature: 20160619_Injured: 4/38, 10, 8.910737/9.158973, 8.813595
+#D-Add FantasyPoints_PrevGame: 20160619_FantasyPointsPrevGame: 5/39, 10, 8.363092/8.940201, 8.373344
 
 #-plot correlations
-#-Add more explanatory features: Injured FP/min, FP last game
+#-Add more explanatory features: AvgFantasyPointsPerMin, PrevGameMin, PrevGameSalary, PrevGameInjured, RatioPrevGameSalaryToCurrentSalary
 #-Remove the first 10 days or so so that winpct etc mean something
 #-Figure out how to remove the 0 scores so that Y is more normal distribution
 #-Add whether injured as a feature (i think this one is important to explain the 0 fps)
@@ -87,7 +88,7 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   #      'DD2', 'BLKA', 'BLK', 'STL', 'FG3A', 'OREB', 'W', 'PF', 'FTM', 'FTA',
   #      'TOV', 'L', 'FG3_PCT', 'AST', 'REB', 'DREB', 'FT_PCT', 'W_PCT', 'GP',
   #      'PLUS_MINUS', 'FG_PCT', 'PFD', 'FGA', 'FGM', 'PTS'))
-  featuresToUse = c('AvgFantasyPoints', 'Salary', 'MIN', 'Injured')
+  featuresToUse = c('AvgFantasyPoints', 'Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame')
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -266,7 +267,7 @@ DATE_FORMAT = '%Y%m%d'
 PROD_RUN = T
 SPLIT_DATE = '20160619'
 N_TREE = 10
-FILENAME = paste0(SPLIT_DATE, '_Injured')
+FILENAME = paste0(SPLIT_DATE, '_FantasyPointsPrevGame')
 PLOT = 'lc' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')

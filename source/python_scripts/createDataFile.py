@@ -13,7 +13,7 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
-        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
+        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', #mine
 ]
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -397,7 +397,6 @@ def computeAvgFantasyPoints(data):
                     players[playerName]['totalFantasyPoints'] += playerData['FantasyPoints']
                     players[playerName]['numDays'] += 1
             else:
-                playerData['AvgFantasyPoints'] = 0.
                 if not isPlayerInjured(playerData):
                     players[playerName] = {
                         'totalFantasyPoints': playerData['FantasyPoints'],
@@ -419,7 +418,6 @@ def computeDaysPlayedPercent(data):
                         players[playerName]['numDaysPlayed'] += 1
                     players[playerName]['numDaysEligibleToPlay'] += 1
             else:
-                playerData['DaysPlayedPercent'] = 0.
                 if not isPlayerInjured(playerData):
                     players[playerName] = {
                         'numDaysPlayed': 1 if playerDidPlay(playerData) else 0,
@@ -433,11 +431,30 @@ def computeInjured(data):
             playerData = data[dateStr][playerName]
             playerData['Injured'] = int(isPlayerInjured(playerData))
 
+def computePrevGameStats(data):
+    print '    Computing PrevGameStats...'
+    players = {}
+    dateStrs = data.keys()
+    dateStrs.sort()
+    for dateStr in dateStrs:
+        for playerName in data[dateStr]:
+            playerData = data[dateStr][playerName]
+            if playerName in players:
+                playerData['FantasyPoints_PrevGame'] = players[playerName]['fantasyPoints']
+                if not isPlayerInjured(playerData):
+                    players[playerName]['fantasyPoints'] = playerData['FantasyPoints']
+            else:
+                if not isPlayerInjured(playerData):
+                    players[playerName] = {
+                        'fantasyPoints': playerData['FantasyPoints'],
+                    }
+
 def addAdditionalFeatures(data):
     print 'Adding additional features...'
     computeAvgFantasyPoints(data)
     computeDaysPlayedPercent(data)
     computeInjured(data)
+    computePrevGameStats(data)
 
 #============= MAIN =============
 

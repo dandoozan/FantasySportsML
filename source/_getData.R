@@ -55,6 +55,12 @@ splitDataIntoTrainTest = function(data, date) {
 imputeMissingValues = function(data) {
   cat('    Imputing missing values...\n')
 
+  #Set NAs to 0s in AvgFantasyPoints, DaysPlayedPercent, FantasyPoints_PrevGame (all have the same 2 occurences: 281, 17524)
+  #The NA means that the player was injured during the first game,so hadn't accumulated an avg or days played
+  data[is.na(data$AvgFantasyPoints), 'AvgFantasyPoints'] = 0
+  data[is.na(data$DaysPlayedPercent), 'DaysPlayedPercent'] = 0
+  data[is.na(data$FantasyPoints_PrevGame), 'FantasyPoints_PrevGame'] = 0
+
   return(data)
 }
 
