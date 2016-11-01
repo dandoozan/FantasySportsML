@@ -8,8 +8,9 @@
 #D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
 #D-Remove rows with Salary NAs: 20151106_removeNAs: 1/3, 8.745434/9.390104, 8.802408
 #D-Use all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
-#D-Add all features from nba: 20151208_allNba: 32/35, 4.068691/8.490935, 4.13253, ntree=100
+#D-Add all features from nba: 20151208_allNba: 32/35, ntree=100, 4.068691/8.490935, 4.13253
   #-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3
+#D-Use as many features as possible that don't overfit (Salary, MIN): 20160619_SalaryMin: 2/35, 10, 8.709144/9.774915, 8.742757
 #-Include nba season-long "traditional" stats:
 #-Include nbs "advanced" stats
 #-Perhaps make Home a binary col rather than factor with 2 levels
@@ -46,7 +47,7 @@ createModel = function(data, yName, xNames) {
   set.seed(754)
   return(randomForest(getFormula(yName, xNames),
                       data=data,
-                      ntree=100))
+                      ntree=10))
 }
 createPrediction = function(model, newData, xNames=NULL) {
   return(predict(model, newData))
@@ -64,7 +65,8 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   #'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3'
 
   #use everything except Date, Team, and Opponent
-  featuresToUse = setdiff(possibleFeatures, c('Date', 'Team', 'Opponent'))
+  #featuresToUse = setdiff(possibleFeatures, c('Date', 'Team', 'Opponent'))
+  featuresToUse = c('Salary', 'MIN')
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -239,8 +241,8 @@ PROD_RUN = T
 SEASON = '2015'
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-SPLIT_DATE = '20151208'
-FILENAME = paste0(SPLIT_DATE, '_allNba')
+SPLIT_DATE = '20160619'
+FILENAME = paste0(SPLIT_DATE, '_SalaryMin')
 DATE_FORMAT = '%Y%m%d'
 PLOT = 'lc' #lc=learning curve, fi=feature importances
 

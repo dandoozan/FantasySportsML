@@ -24,19 +24,31 @@ loadData = function(dateFormat, season) {
 }
 
 findFirstIndexOfDate = function(data, date) {
-  return(which(data$Date == date)[1])
+  index = which(data$Date == date)
+  if (length(index) > 0) {
+    return(which(data$Date == date)[1])
+  }
+  return(-1)
 }
 
 findLastIndexOfDate = function(data, date) {
   dateIndices = which(data$Date == date)
-  return(dateIndices[length(dateIndices)])
+  if (length(dateIndices) > 0) {
+    return(dateIndices[length(dateIndices)])
+  }
+  return(-1)
 }
 
 splitDataIntoTrainTest = function(data, date) {
   splitIndex = findFirstIndexOfDate(data, date)
-  endIndex = findLastIndexOfDate(data, date)
-  train = data[1:(splitIndex-1),]
-  test = data[splitIndex:endIndex,]
+  if (splitIndex > -1) {
+    endIndex = findLastIndexOfDate(data, date)
+    train = data[1:(splitIndex-1),]
+    test = data[splitIndex:endIndex,]
+  } else {
+    train = data
+    test = NULL
+  }
   return(list(train=train, test=test))
 }
 
