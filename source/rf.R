@@ -14,23 +14,27 @@
 #D-Add AvgFantasyPoints, DaysPlayedPercent features: 20151208_AvgFantasyPoints: 34/37, 100, 3.868784/8.450441, 3.837078
   #-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3, AvgFantasyPoints, DaysPlayedPercent
 #D-Use AvgFantasyPoints, Salary, MIN: 20160619_top3: 3/37, 10, 7.397566/9.545659, 7.284939
-#-Use all features but only from the last 5 games (rather than season), and start from game 5
-#-Verify that AvgFantasyPoints is correct
-#-Verify that DaysPlayedPercent is correct
-#-Try new model (xgboost, lm)
+#D-Fix AvgFantasyPoints (AvgFantasyPoints, Salary, MIN): 20160619_fixAvgFP: 3/37, 10, 7.301757/9.625992, 7.293516
+
+#-Add more explanatory features: FP last game, whether injured, whether starter,
 #-Remove the first 10 days or so so that winpct etc mean something
-#-Include nbs "advanced" stats
-#-Perhaps make Home a binary col rather than factor with 2 levels
-#-fill in getBetterTeam
-#-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
-#-Use log of y
 #-Figure out how to remove the 0 scores so that Y is more normal distribution
-#-Use probability that a player will do much better/much worse than expected
-#-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
-#-Maybe predict fp/min instead of fp
 #-Add whether injured as a feature (i think this one is important to explain the 0 fps)
 #-Add percent of games started (to essentially figure out if player is a starter)
 #-Add avg fp/min feature
+#-Add 2014 data
+
+#-Look into what 'Mean of squared residuals' and % Var explained' mean on the rf model, and perhaps record those values
+#-Maybe build a separate model for each player (or type of player (eg. high scrorers, bench players))
+#-Use all features but only from the last 5 games (rather than season), and start from game 5
+#-Try new model (xgboost, lm)
+#-Try predicting something other metric (eg. fp/min)
+#-Include nba "advanced" stats
+#-fill in getBetterTeam
+#-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
+#-Maybe use log of y
+#-Perhaps make Home a binary col rather than factor with 2 levels
+#-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
 
 
 #Process to get team for day:
@@ -260,7 +264,7 @@ DATE_FORMAT = '%Y%m%d'
 PROD_RUN = T
 SPLIT_DATE = '20160619'
 N_TREE = 10
-FILENAME = paste0(SPLIT_DATE, '_top3')
+FILENAME = paste0(SPLIT_DATE, '_fixAvgFP')
 PLOT = 'lc' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
