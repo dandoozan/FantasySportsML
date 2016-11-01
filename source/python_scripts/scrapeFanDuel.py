@@ -13,9 +13,6 @@ import scraper
 
 TEST = False
 
-
-FD_X_AUTH_TOKEN = '86c17eb61e879edc5cbb2000a33ee5ae34b696924783cfe3e1f7fdcec1c8e8f1'
-
 RG_FORUM_URL = 'https://rotogrinders.com/threads/category/main'
 TODAY = date.today()
 YESTERDAY = TODAY - timedelta(1)
@@ -29,7 +26,7 @@ def createDirIfNecessary(dirName):
 
 def isContestLinksUrl(url, date):
     #https://rotogrinders.com/threads/daily-fantasy-tournament-links-saturday-october-29th-1512252
-    dateStr = date.strftime('%A-%B-%d').lower()
+    dateStr = date.strftime('%A-%B-%-d').lower()
     regexPattern = 'https://rotogrinders.com/threads/daily-fantasy-tournament-links-%s(st|nd|rd|th)-\d+' % dateStr
     return not not re.match(regexPattern, url)
 
@@ -86,7 +83,7 @@ def createFanduelApiUrl(contest):
 def parseContestGroup(contest):
     return contest[:contest.find('-')]
 
-def createHeaders(contest):
+def createHeaders(contest, xAuthToken):
     contestGroup = parseContestGroup(contest)
     return {
         'Accept': 'application/json, text/plain, */*',
@@ -99,11 +96,13 @@ def createHeaders(contest):
         'Origin': 'https://www.fanduel.com',
         'Pragma': 'no-cache',
         'Referer': 'https://www.fanduel.com/games/%s/contests/%s/scoring' % (contestGroup, contest),
-        'X-Auth-Token': FD_X_AUTH_TOKEN,
+        'X-Auth-Token': xAuthToken,
     }
 
 
 #=============== Main ================
+
+xAuthToken = raw_input('Enter X-Auth-Token: ')
 
 print 'Scraping contest results for yesterday: ', YESTERDAY
 
@@ -127,7 +126,7 @@ if rgTournamentLinksUrl:
         for contest in contests:
             print '\nScraping Contest %s (%d / %d) ...' % (contest, cnt, len(contests))
 
-            jsonData = scraper.downloadJson(createFanduelApiUrl(contest), createHeaders(contest))
+            jsonData = scraper.downloadJson(createFanduelApiUrl(contest), createHeaders(contest, xAuthToken))
             scraper.writeJsonData(jsonData, scraper.createJsonFilename(PARENT_DIR, contest))
 
             scraper.sleep(SLEEP)
