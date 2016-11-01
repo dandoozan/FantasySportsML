@@ -13,7 +13,7 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
-        'AvgFantasyPoints', 'DaysPlayedPercent', #mine
+        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
 ]
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -426,10 +426,18 @@ def computeDaysPlayedPercent(data):
                         'numDaysEligibleToPlay': 1,
                     }
 
+def computeInjured(data):
+    print '    Computing Injured...'
+    for dateStr in data:
+        for playerName in data[dateStr]:
+            playerData = data[dateStr][playerName]
+            playerData['Injured'] = int(isPlayerInjured(playerData))
+
 def addAdditionalFeatures(data):
     print 'Adding additional features...'
     computeAvgFantasyPoints(data)
     computeDaysPlayedPercent(data)
+    computeInjured(data)
 
 #============= MAIN =============
 
