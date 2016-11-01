@@ -13,7 +13,7 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
-        'AvgFantasyPoints', 'DaysPlayedPercent', #computed
+        'AvgFantasyPoints', 'DaysPlayedPercent', #mine
 ]
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -377,57 +377,57 @@ def writeData(filename, data):
 def createFilename(season):
     return DATA_DIR + ('/data_%s.csv' % season)
 
-def computeAvgFantasyPoints(data, playerName, firstDateOfSeason, upToDate):
-    totalFantasyPoints = 0.
-    numDays = 0
-    currDate = firstDateOfSeason
-    while currDate < upToDate:
-        currDateStr = currDate.strftime(DATE_FORMAT)
-        if currDateStr in data and playerName in data[currDateStr]:
-            #only add fantasy points for days on which the player played
-            playerData = data[currDateStr][playerName]
-            if not isPlayerInjured(playerData):
-                totalFantasyPoints += playerData['FantasyPoints']
-                numDays += 1
-        currDate = currDate + ONE_DAY
-    return totalFantasyPoints / numDays if numDays > 0 else 0.
+def computeAvgFantasyPoints(data):
+    #iterate through the dates in order
+    #keep a total of fp for each player
+        #if i encounter a new player, set his avgfp to 0, add him to the obj
+        #if player already there, then compute avgfp BEFORE adding curr days fp (so that i get avgfp thru yesterday)
+        #add fp to the players obj
 
-def computeDaysPlayedPercent(data, playerName, firstDateOfSeason, upToDate):
-    numDays = 0.
-    totalDays = 0
-    currDate = firstDateOfSeason
-    while currDate < upToDate:
-        currDateStr = currDate.strftime(DATE_FORMAT)
-        if currDateStr in data and playerName in data[currDateStr]:
-            if playerDidPlay(data[currDateStr][playerName]):
-                numDays += 1
-            totalDays += 1
-        currDate = currDate + ONE_DAY
-    return numDays / totalDays if totalDays > 0 else 0.
-
-def addAdditionalFeatures(data, firstDateOfSeason):
-    print 'Adding additional features...'
-
+    print '    Computing AvgFantasyPoints...'
+    players = {}
     dateStrs = data.keys()
     dateStrs.sort()
     for dateStr in dateStrs:
-        print '    On date=', dateStr
         for playerName in data[dateStr]:
-            date = datetime.strptime(dateStr, DATE_FORMAT)
+            playerData = data[dateStr][playerName]
+            if playerName in players:
+                playerData['AvgFantasyPoints'] = players[playerName]['totalFantasyPoints'] / players[playerName]['numDays']
+                if not isPlayerInjured(playerData):
+                    players[playerName]['totalFantasyPoints'] += playerData['FantasyPoints']
+                    players[playerName]['numDays'] += 1
+            else:
+                playerData['AvgFantasyPoints'] = 0.
+                if not isPlayerInjured(playerData):
+                    players[playerName] = {
+                        'totalFantasyPoints': playerData['FantasyPoints'],
+                        'numDays': 1
+                    }
 
-            #todo: keep track of cumulative fantasy points and num days played
-            #so that i can directly compute the avg and days played percent.
-            #The below code is very inefficient (essentially O(n^2))
+def computeDaysPlayedPercent(data):
+    print '    Computing DaysPlayedPercent...'
+    players = {}
+    dateStrs = data.keys()
+    dateStrs.sort()
+    for dateStr in dateStrs:
+        for playerName in data[dateStr]:
+            playerData = data[dateStr][playerName]
+            if playerName in players:
+                playerData['DaysPlayedPercent'] = float(players[playerName]['numDaysPlayed']) / players[playerName]['totalDaysPlayed']
+                if playerDidPlay(playerData):
+                    players[playerName]['numDaysPlayed'] += 1
+                players[playerName]['totalDaysPlayed'] += 1
+            else:
+                playerData['DaysPlayedPercent'] = 0.
+                players[playerName] = {
+                    'numDaysPlayed': 1 if playerDidPlay(playerData) else 0,
+                    'totalDaysPlayed': 1,
+                }
 
-            #add AvgFantasyPoints
-            avgFantasyPoints = computeAvgFantasyPoints(data, playerName, firstDateOfSeason, date)
-            data[dateStr][playerName]['AvgFantasyPoints'] = avgFantasyPoints
-
-            #add NumDaysPlayed
-            daysPlayedPercent = computeDaysPlayedPercent(data, playerName, firstDateOfSeason, date)
-            data[dateStr][playerName]['DaysPlayedPercent'] = daysPlayedPercent
-
-
+def addAdditionalFeatures(data):
+    print 'Adding additional features...'
+    computeAvgFantasyPoints(data)
+    computeDaysPlayedPercent(data)
 
 #============= MAIN =============
 
@@ -468,8 +468,7 @@ def addAdditionalFeatures(data, firstDateOfSeason):
         #merge the nba player data into rg player data
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
-firstDateOfSeason =  FIRST_DATE_OF_SEASON[SEASON]
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
 appendDataFromNba(data, SEASON)
-addAdditionalFeatures(data, firstDateOfSeason)
+addAdditionalFeatures(data)
 writeData(createFilename(SEASON), data)
