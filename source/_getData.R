@@ -66,6 +66,10 @@ imputeMissingValues = function(data) {
 
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
+
+  #Add AvgFantasyPointsPerMin
+  data$AvgFantasyPointsPerMin = ifelse(data$MIN == 0, 0, data$AvgFantasyPoints / data$MIN)
+
   return(data)
 }
 

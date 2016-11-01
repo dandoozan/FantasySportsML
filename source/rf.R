@@ -16,10 +16,12 @@
 #D-Use AvgFantasyPoints, Salary, MIN: 20160619_top3: 3/37, 10, 7.397566/9.545659, 7.284939
 #D-Fix AvgFantasyPoints (AvgFantasyPoints, Salary, MIN): 20160619_fixAvgFP: 3/37, 10, 7.301757/9.625992, 7.293516
 #D-Add Injured feature: 20160619_Injured: 4/38, 10, 8.910737/9.158973, 8.813595
-#D-Add FantasyPoints_PrevGame: 20160619_FantasyPointsPrevGame: 5/39, 10, 8.363092/8.940201, 8.373344
+#D-Add FantasyPoints_PrevGame: 20160619_FantasyPointsPrevGame: 5/39, 10, 8.363092/8.940201, 8.373344, "Mean of squared residuals"=83.92964, "% Var explained"=56.62
+#D-Try AvgFantasyPointsPerMin (made it worse): 20160619, 6/40, 10, 4.983091/9.134001, 5.040836, 96.6889, 50.03
+#D-Replace AvgFantasyPoints with AvgFantasyPointsPerMin: 20160619_AvgFPPerMin: 5/40, 10, 8.212136/8.850639, 8.213636, 81.12534, 58.07
 
 #-plot correlations
-#-Add more explanatory features: AvgFantasyPointsPerMin, PrevGameMin, PrevGameSalary, PrevGameInjured, RatioPrevGameSalaryToCurrentSalary
+#-Add more explanatory features: AvgFantasyPointsPerMin, AvgFantasyPointsPerMin_PrevGame, PrevGameMin, PrevGameSalary, RatioPrevGameSalaryToCurrentSalary
 #-Remove the first 10 days or so so that winpct etc mean something
 #-Figure out how to remove the 0 scores so that Y is more normal distribution
 #-Add whether injured as a feature (i think this one is important to explain the 0 fps)
@@ -88,7 +90,7 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   #      'DD2', 'BLKA', 'BLK', 'STL', 'FG3A', 'OREB', 'W', 'PF', 'FTM', 'FTA',
   #      'TOV', 'L', 'FG3_PCT', 'AST', 'REB', 'DREB', 'FT_PCT', 'W_PCT', 'GP',
   #      'PLUS_MINUS', 'FG_PCT', 'PFD', 'FGA', 'FGM', 'PTS'))
-  featuresToUse = c('AvgFantasyPoints', 'Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame')
+  featuresToUse = c('Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame', 'AvgFantasyPointsPerMin')
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -267,8 +269,8 @@ DATE_FORMAT = '%Y%m%d'
 PROD_RUN = T
 SPLIT_DATE = '20160619'
 N_TREE = 10
-FILENAME = paste0(SPLIT_DATE, '_FantasyPointsPrevGame')
-PLOT = 'lc' #lc=learning curve, fi=feature importances
+FILENAME = paste0(SPLIT_DATE, '_AvgFPPerMin')
+PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
@@ -285,7 +287,7 @@ cat('Creating Model (ntree=', N_TREE, ')...\n', sep='')
 model = createModel(train, Y_NAME, featuresToUse)
 
 #plots
-if (PROD_RUN || PLOT=='lc') plotLearningCurve(train, Y_NAME, featuresToUse, createModel, createPrediction, computeError, save=PROD_RUN)
+if (PROD_RUN || PLOT=='lc') plotLearningCurve(train, Y_NAME, featuresToUse, createModel, createPrediction, computeError, ylim=c(0, 15), save=PROD_RUN)
 if (PROD_RUN || PLOT=='fi') plotImportances(model, save=PROD_RUN)
 
 #print trn/cv, train error
