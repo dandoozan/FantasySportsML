@@ -12,7 +12,9 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', #nba
         'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
-        'PLUS_MINUS', 'DD2', 'TD3' ]
+        'PLUS_MINUS', 'DD2', 'TD3', #nba
+        'AvgFantasyPoints', 'DaysPlayedPercent', #computed
+]
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
 
@@ -267,15 +269,16 @@ def findAllPlayerMatches(name, nbaData):
     #playerMatches.extend(findAllPlayersThatMatchFunction(name, nbaData, abbreviateFirstName))
     return playerMatches
 
+def playerDidPlay(playerData):
+    minutes = playerData['Minutes']
+    return minutes != 'DNP' and minutes != 'NA' and float(minutes) > 0
 def playerPlayedAnyGameUpToDate(data, playerName, date, season):
     currDate = FIRST_DATE_OF_SEASON[season]
     while currDate < date:
         currDateStr = currDate.strftime(DATE_FORMAT)
         if currDateStr in data:
             if playerName in data[currDateStr]:
-                playerData = data[currDateStr][playerName]
-                minutes = playerData['Minutes']
-                if minutes != 'DNP' and minutes != 'NA' and float(minutes) > 0:
+                if playerDidPlay(data[currDateStr][playerName]):
                     return True
         currDate = currDate + ONE_DAY
     return False
@@ -371,6 +374,58 @@ def writeData(filename, data):
 def createFilename(season):
     return DATA_DIR + ('/data_%s.csv' % season)
 
+def computeAvgFantasyPoints(data, playerName, firstDateOfSeason, upToDate):
+    totalFantasyPoints = 0.
+    numDays = 0
+    currDate = firstDateOfSeason
+    while currDate < upToDate:
+        currDateStr = currDate.strftime(DATE_FORMAT)
+        if currDateStr in data and playerName in data[currDateStr]:
+            #only add fantasy points for days on which the player played
+            playerData = data[currDateStr][playerName]
+            if playerDidPlay(playerData):
+                totalFantasyPoints += playerData['FantasyPoints']
+                numDays += 1
+        currDate = currDate + ONE_DAY
+    return totalFantasyPoints / numDays if numDays > 0 else 0.
+
+def computeDaysPlayedPercent(data, playerName, firstDateOfSeason, upToDate):
+    numDays = 0.
+    totalDays = 0
+    currDate = firstDateOfSeason
+    while currDate < upToDate:
+        currDateStr = currDate.strftime(DATE_FORMAT)
+        if currDateStr in data and playerName in data[currDateStr]:
+            if playerDidPlay(data[currDateStr][playerName]):
+                numDays += 1
+            totalDays += 1
+        currDate = currDate + ONE_DAY
+    return numDays / totalDays if totalDays > 0 else 0.
+
+def addAdditionalFeatures(data, firstDateOfSeason):
+    print 'Adding additional features...'
+
+    dateStrs = data.keys()
+    dateStrs.sort()
+    for dateStr in dateStrs:
+        print '    On date=', dateStr
+        for playerName in data[dateStr]:
+            date = datetime.strptime(dateStr, DATE_FORMAT)
+
+            #todo: keep track of cumulative fantasy points and num days played
+            #so that i can directly compute the avg and days played percent.
+            #The below code is very inefficient (essentially O(n^2))
+
+            #add AvgFantasyPoints
+            avgFantasyPoints = computeAvgFantasyPoints(data, playerName, firstDateOfSeason, date)
+            data[dateStr][playerName]['AvgFantasyPoints'] = avgFantasyPoints
+
+            #add NumDaysPlayed
+            daysPlayedPercent = computeDaysPlayedPercent(data, playerName, firstDateOfSeason, date)
+            data[dateStr][playerName]['DaysPlayedPercent'] = daysPlayedPercent
+
+
+
 #============= MAIN =============
 
 
@@ -410,6 +465,8 @@ def createFilename(season):
         #merge the nba player data into rg player data
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
+firstDateOfSeason =  FIRST_DATE_OF_SEASON[SEASON]
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
 appendDataFromNba(data, SEASON)
+addAdditionalFeatures(data, firstDateOfSeason)
 writeData(createFilename(SEASON), data)
