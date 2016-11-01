@@ -413,16 +413,18 @@ def computeDaysPlayedPercent(data):
         for playerName in data[dateStr]:
             playerData = data[dateStr][playerName]
             if playerName in players:
-                playerData['DaysPlayedPercent'] = float(players[playerName]['numDaysPlayed']) / players[playerName]['totalDaysPlayed']
-                if playerDidPlay(playerData):
-                    players[playerName]['numDaysPlayed'] += 1
-                players[playerName]['totalDaysPlayed'] += 1
+                playerData['DaysPlayedPercent'] = float(players[playerName]['numDaysPlayed']) / players[playerName]['numDaysEligibleToPlay']
+                if not isPlayerInjured(playerData):
+                    if playerDidPlay(playerData):
+                        players[playerName]['numDaysPlayed'] += 1
+                    players[playerName]['numDaysEligibleToPlay'] += 1
             else:
                 playerData['DaysPlayedPercent'] = 0.
-                players[playerName] = {
-                    'numDaysPlayed': 1 if playerDidPlay(playerData) else 0,
-                    'totalDaysPlayed': 1,
-                }
+                if not isPlayerInjured(playerData):
+                    players[playerName] = {
+                        'numDaysPlayed': 1 if playerDidPlay(playerData) else 0,
+                        'numDaysEligibleToPlay': 1,
+                    }
 
 def addAdditionalFeatures(data):
     print 'Adding additional features...'
