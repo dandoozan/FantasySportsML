@@ -269,6 +269,9 @@ def findAllPlayerMatches(name, nbaData):
     #playerMatches.extend(findAllPlayersThatMatchFunction(name, nbaData, abbreviateFirstName))
     return playerMatches
 
+def isPlayerInjured(playerData):
+    minutes = playerData['Minutes']
+    return minutes == 'NA'
 def playerDidPlay(playerData):
     minutes = playerData['Minutes']
     return minutes != 'DNP' and minutes != 'NA' and float(minutes) > 0
@@ -383,7 +386,7 @@ def computeAvgFantasyPoints(data, playerName, firstDateOfSeason, upToDate):
         if currDateStr in data and playerName in data[currDateStr]:
             #only add fantasy points for days on which the player played
             playerData = data[currDateStr][playerName]
-            if playerDidPlay(playerData):
+            if not isPlayerInjured(playerData):
                 totalFantasyPoints += playerData['FantasyPoints']
                 numDays += 1
         currDate = currDate + ONE_DAY
