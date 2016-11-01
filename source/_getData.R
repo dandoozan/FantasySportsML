@@ -8,6 +8,11 @@ loadData = function(dateFormat, season) {
   rowsWithSalaryNA = which(is.na(data$Salary))
   data = data[-rowsWithSalaryNA,]
 
+  #remove rows that don't have data from stats.nba.com
+  #it's all or nothing, so just check if one column has NAs, and I know the rest do as well
+  rowsWithNoNbaData = which(is.na(data$AGE))
+  data = data[-rowsWithNoNbaData,]
+
   #convert the date strings to Date objects
   data$Date = as.Date(as.character(data$Date), dateFormat)
 
@@ -53,8 +58,8 @@ oneHotEncode = function(data) {
   return(data)
 }
 
-getData = function(yName, season, date, dateFormat, oneHotEncode=F) {
-  if (class(date) != 'Date') {
+getData = function(yName, season, splitDate, dateFormat, oneHotEncode=F) {
+  if (class(splitDate) != 'Date') {
     stop('ERROR: date should be of class Date\n')
   }
 
@@ -80,7 +85,7 @@ getData = function(yName, season, date, dateFormat, oneHotEncode=F) {
   }
 
   #split data into train, test
-  trainTest = splitDataIntoTrainTest(full, date)
+  trainTest = splitDataIntoTrainTest(full, splitDate)
   train = trainTest$train
   test = trainTest$test
 

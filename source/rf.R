@@ -8,13 +8,13 @@
 #D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
 #D-Remove rows with Salary NAs: 20151106_removeNAs: 1/3, 8.745434/9.390104, 8.802408
 #D-Use all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
-#-Get additional data from nba.com
-#-Include nba "traditional" stats
+#D-Add all features from nba: 20151208_allNba: 32/35, 4.068691/8.490935, 4.13253, ntree=100
+  #-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3
+#-Include nba season-long "traditional" stats:
 #-Include nbs "advanced" stats
 #-Perhaps make Home a binary col rather than factor with 2 levels
 #-fill in getBetterTeam
 #-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
-#-fix NAs in data
 #-Use log of y
 #-Remove players who played less than 5 min or so to remove the many 0 scores
 #-Use more features than salary
@@ -22,13 +22,11 @@
 #-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
 #-Maybe predict fp/min instead of fp
 
-
 #Process to get team for day:
 #1. Change DATE (eg. 20161025)
 #2. Source this file (rf.R)
   #-Prints RMSE for Trn/CV, Train, Test
   #-Prints ratio of my team score/best team score
-
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -48,8 +46,7 @@ createModel = function(data, yName, xNames) {
   set.seed(754)
   return(randomForest(getFormula(yName, xNames),
                       data=data,
-                      na.action=na.omit,
-                      ntree=500))
+                      ntree=100))
 }
 createPrediction = function(model, newData, xNames=NULL) {
   return(predict(model, newData))
@@ -60,8 +57,14 @@ computeError = function(y, yhat) {
 findBestSetOfFeatures = function(data, possibleFeatures) {
   cat('Finding best set of features to use...\n')
 
-  #use only salary for now
-  featuresToUse = c('Salary', 'Position', 'Home')
+  #possible features (everything except FantasyPoints and Name):
+  #'Date', 'Salary', 'Position', 'Home', 'Team', 'Opponent',
+  #'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A',
+  #'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL',
+  #'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3'
+
+  #use everything except Date, Team, and Opponent
+  featuresToUse = setdiff(possibleFeatures, c('Date', 'Team', 'Opponent'))
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -232,19 +235,19 @@ printTeamResults = function(team, bestTeam, yName) {
   #50% (day 105): 20160210
   #end (day 210): 20160619
 #Globals
-PROD_RUN = F
+PROD_RUN = T
 SEASON = '2015'
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-DATE = '20151106'
-FILENAME = paste0(DATE, '_')
+SPLIT_DATE = '20151208'
+FILENAME = paste0(SPLIT_DATE, '_allNba')
 DATE_FORMAT = '%Y%m%d'
-PLOT = '' #lc=learning curve, fi=feature importances
+PLOT = 'lc' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
-date = as.Date(DATE, DATE_FORMAT)
-data = getData(Y_NAME, SEASON, date, DATE_FORMAT, oneHotEncode=F)
+splitDate = as.Date(SPLIT_DATE, DATE_FORMAT)
+data = getData(Y_NAME, SEASON, splitDate, DATE_FORMAT, oneHotEncode=F)
 train = data$train #train=all data leading up to tonight
 test = data$test #test=tonight's team
 possibleFeatures = setdiff(names(train), c(ID_NAME, Y_NAME))
