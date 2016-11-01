@@ -13,7 +13,8 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
-        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', #mine
+        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
+        'FantasyPoints_PrevGame', 'Minutes_PrevGame', #mine
 ]
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -118,7 +119,7 @@ def loadDataFromRotoGuru(filename):
         home = sp[8].strip()
         opponent = sp[9].strip()
 
-        minutes = sp[12].strip()
+        minutes = sp[12].strip() #this could be 'DNP', 'NA' or a float
 
         if date not in data:
             data[date] = {}
@@ -441,12 +442,15 @@ def computePrevGameStats(data):
             playerData = data[dateStr][playerName]
             if playerName in players:
                 playerData['FantasyPoints_PrevGame'] = players[playerName]['fantasyPoints']
+                playerData['Minutes_PrevGame'] = players[playerName]['minutes']
                 if not isPlayerInjured(playerData):
                     players[playerName]['fantasyPoints'] = playerData['FantasyPoints']
+                    players[playerName]['minutes'] = float(playerData['Minutes']) if playerDidPlay(playerData) else 0.
             else:
                 if not isPlayerInjured(playerData):
                     players[playerName] = {
                         'fantasyPoints': playerData['FantasyPoints'],
+                        'minutes': float(playerData['Minutes']) if playerDidPlay(playerData) else 0.,
                     }
 
 def addAdditionalFeatures(data):

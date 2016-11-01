@@ -19,9 +19,9 @@
 #D-Add FantasyPoints_PrevGame: 20160619_FantasyPointsPrevGame: 5/39, 10, 8.363092/8.940201, 8.373344, "Mean of squared residuals"=83.92964, "% Var explained"=56.62
 #D-Try AvgFantasyPointsPerMin (made it worse): 20160619, 6/40, 10, 4.983091/9.134001, 5.040836, 96.6889, 50.03
 #D-Replace AvgFantasyPoints with AvgFantasyPointsPerMin: 20160619_AvgFPPerMin: 5/40, 10, 8.212136/8.850639, 8.213636, 81.12534, 58.07
+#D-Add Minutes_PrevGame (it didn't help much, if at all; come back to it if i need to increase my results a tid bit)
 
 #-plot correlations
-#-Add more explanatory features: AvgFantasyPointsPerMin, AvgFantasyPointsPerMin_PrevGame, PrevGameMin, PrevGameSalary, RatioPrevGameSalaryToCurrentSalary
 #-Remove the first 10 days or so so that winpct etc mean something
 #-Figure out how to remove the 0 scores so that Y is more normal distribution
 #-Add whether injured as a feature (i think this one is important to explain the 0 fps)
@@ -266,7 +266,7 @@ ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
 DATE_FORMAT = '%Y%m%d'
 
-PROD_RUN = T
+PROD_RUN = F
 SPLIT_DATE = '20160619'
 N_TREE = 10
 FILENAME = paste0(SPLIT_DATE, '_AvgFPPerMin')
