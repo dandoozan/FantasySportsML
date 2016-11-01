@@ -19,19 +19,9 @@ pagesToScrape = [
         'tableClassName': 'tbl',
     },
     {
-        'dirName': 'SalaryChartsPG',
+        'dirName': 'SalaryChartsC',
         'tableClassName': 'data-table',
-        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-point-guards-1010472',
-    },
-    {
-        'dirName': 'SalaryChartsSG',
-        'tableClassName': 'data-table',
-        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-shooting-guards-1010481',
-    },
-    {
-        'dirName': 'SalaryChartsSF',
-        'tableClassName': 'data-table',
-        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-small-forwards-1010480',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-centers-1010477',
     },
     {
         'dirName': 'SalaryChartsPF',
@@ -39,9 +29,19 @@ pagesToScrape = [
         'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-power-forwards-1010479',
     },
     {
-        'dirName': 'SalaryChartsC',
+        'dirName': 'SalaryChartsPG',
         'tableClassName': 'data-table',
-        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-centers-1010477',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-point-guards-1010472',
+    },
+    {
+        'dirName': 'SalaryChartsSF',
+        'tableClassName': 'data-table',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-small-forwards-1010480',
+    },
+    {
+        'dirName': 'SalaryChartsSG',
+        'tableClassName': 'data-table',
+        'url': 'https://rotogrinders.com/pages/nba-player-salary-charts-shooting-guards-1010481',
     },
 ]
 
