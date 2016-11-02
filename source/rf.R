@@ -20,15 +20,13 @@
 #D-Try AvgFantasyPointsPerMin (made it worse): 20160619, 6/40, 10, 4.983091/9.134001, 5.040836, 96.6889, 50.03
 #D-Replace AvgFantasyPoints with AvgFantasyPointsPerMin: 20160619_AvgFPPerMin: 5/40, 10, 8.212136/8.850639, 8.213636, 81.12534, 58.07
 #D-Add Minutes_PrevGame (it didn't help much, if at all; come back to it if i need to increase my results a tid bit)
-
-#-plot correlations
 #-Remove the first 10 days or so so that winpct etc mean something
+
+#-Use top 10 features from correlations plot
 #-Figure out how to remove the 0 scores so that Y is more normal distribution
-#-Add whether injured as a feature (i think this one is important to explain the 0 fps)
-#-Add percent of games started (to essentially figure out if player is a starter)
-#-Add avg fp/min feature
 #-Add 2014 data
 
+#-Add percent of games started (to essentially figure out if player is a starter), but i think this should be covered with minutes
 #-Look into what 'Mean of squared residuals' and % Var explained' mean on the rf model, and perhaps record those values
 #-Maybe build a separate model for each player (or type of player (eg. high scrorers, bench players))
 #-Use all features but only from the last 5 games (rather than season), and start from game 5
@@ -253,29 +251,18 @@ printTeamResults = function(team, bestTeam, yName) {
 
 #============= Main ================
 
-#2015 season
-  #begin (day 1): 20151027
-  #use 10 days (day 11): 20151106 (2142 obs)
-  #10% (day 21): 20151116
-  #20% (day 42): 20151208
-  #50% (day 105): 20160210
-  #end (day 210): 20160619
 #Globals
-SEASON = '2015'
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
-DATE_FORMAT = '%Y%m%d'
 
 PROD_RUN = F
-SPLIT_DATE = '20160619'
 N_TREE = 10
 FILENAME = paste0(SPLIT_DATE, '_AvgFPPerMin')
 PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
-splitDate = as.Date(SPLIT_DATE, DATE_FORMAT)
-data = getData(Y_NAME, SEASON, splitDate, DATE_FORMAT, oneHotEncode=F)
+data = getData()
 train = data$train #train=all data leading up to tonight
 test = data$test #test=tonight's team
 possibleFeatures = setdiff(names(train), c(ID_NAME, Y_NAME))

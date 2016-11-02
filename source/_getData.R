@@ -1,7 +1,21 @@
 library(dplyr) #bind_rows
 
-loadData = function(dateFormat, season) {
-  filename = paste0('data/data_', season, '.csv')
+#2015 season
+  #begin (day 1): 20151027
+  #use 10 days (day 11): 20151106 (2142 obs)
+  #10% (day 21): 20151116
+  #20% (day 42): 20151208
+  #50% (day 105): 20160210
+  #end (day 210): 20160619
+
+SEASON = '2015'
+START_DATE = as.Date('2015-10-27')
+SPLIT_DATE = as.Date('2016-06-19')
+splitDate = as.Date(SPLIT_DATE, DATE_FORMAT)
+DATE_FORMAT = '%Y%m%d'
+
+loadData = function() {
+  filename = paste0('data/data_', SEASON, '.csv')
   data = read.csv(filename, stringsAsFactors=F, na.strings=c(''))
 
   #remove Salary NAs because an NA means that the player was not an option to choose
@@ -14,42 +28,13 @@ loadData = function(dateFormat, season) {
   data = data[-rowsWithNoNbaData,]
 
   #convert the date strings to Date objects
-  data$Date = as.Date(as.character(data$Date), dateFormat)
+  data$Date = as.Date(as.character(data$Date), DATE_FORMAT)
 
   #Convert Position and Home to factors
   data$Position = factor(data$Position)
   data$Home = factor(data$Home)
 
   return(data)
-}
-
-findFirstIndexOfDate = function(data, date) {
-  index = which(data$Date == date)
-  if (length(index) > 0) {
-    return(which(data$Date == date)[1])
-  }
-  return(-1)
-}
-
-findLastIndexOfDate = function(data, date) {
-  dateIndices = which(data$Date == date)
-  if (length(dateIndices) > 0) {
-    return(dateIndices[length(dateIndices)])
-  }
-  return(-1)
-}
-
-splitDataIntoTrainTest = function(data, date) {
-  splitIndex = findFirstIndexOfDate(data, date)
-  if (splitIndex > -1) {
-    endIndex = findLastIndexOfDate(data, date)
-    train = data[1:(splitIndex-1),]
-    test = data[splitIndex:endIndex,]
-  } else {
-    train = data
-    test = NULL
-  }
-  return(list(train=train, test=test))
 }
 
 imputeMissingValues = function(data) {
@@ -74,22 +59,38 @@ featureEngineer = function(data) {
   return(data)
 }
 
-oneHotEncode = function(data) {
-  cat('    One hot encoding variables...\n')
-  dmy = caret::dummyVars('~.', data, fullRank=T)
-  data = data.frame(predict(dmy, data))
-  return(data)
+findFirstIndexOfDate = function(data, date) {
+  index = which(data$Date == date)
+  if (length(index) > 0) {
+    return(which(data$Date == date)[1])
+  }
+  return(-1)
+}
+findLastIndexOfDate = function(data, date) {
+  dateIndices = which(data$Date == date)
+  if (length(dateIndices) > 0) {
+    return(dateIndices[length(dateIndices)])
+  }
+  return(-1)
+}
+splitDataIntoTrainTest = function(data) {
+  splitIndex = findFirstIndexOfDate(data, SPLIT_DATE)
+  if (splitIndex > -1) {
+    endIndex = findLastIndexOfDate(data, SPLIT_DATE)
+    train = data[1:(splitIndex-1),]
+    test = data[splitIndex:endIndex,]
+  } else {
+    train = data
+    test = NULL
+  }
+  return(list(train=train, test=test))
 }
 
-getData = function(yName, season, splitDate, dateFormat, oneHotEncode=F) {
-  if (class(splitDate) != 'Date') {
-    stop('ERROR: date should be of class Date\n')
-  }
-
+getData = function() {
   cat('Getting data...\n')
 
   #load data
-  full = loadData(dateFormat, season)
+  full = loadData()
 
   #impute missing values
   full = imputeMissingValues(full)
@@ -97,18 +98,8 @@ getData = function(yName, season, splitDate, dateFormat, oneHotEncode=F) {
   #do feature engineering
   full = featureEngineer(full)
 
-  #one hot encode factors
-  #todo: perhaps one-hot-encode train and test separately.  I believe the reason
-  #to do it separate is so that I don't 'leak' information to the train set when
-  #there is a factor value in test that is not in train (but this would result in
-  #an all-0s column for train, which wouldn't be used, so I'm not sure how big of
-  #a problem the leaking information is).  For now, keep one-hot-encoding them together
-  if (oneHotEncode) {
-    full = oneHotEncode(full)
-  }
-
   #split data into train, test
-  trainTest = splitDataIntoTrainTest(full, splitDate)
+  trainTest = splitDataIntoTrainTest(full)
   train = trainTest$train
   test = trainTest$test
 
