@@ -31,7 +31,10 @@
 #D-Add StartedPercent (didn't help): 5.059432/9.125127, 5.153629
 #D-Add Salary_PrevGame (it didn't immediately help)
 #D-Add SalaryIncreased (nope): 6.195253/9.04208, 6.192414
-#-Add back-to-back, 2-of-3, etc
+#-Use predict(model) for train: rf_predict: start-end, 5/44, 10, 8.9856/8.850639, 9.006961, 81.12534, 58.07 <-- use this for baseline
+  #-Features used: Salary, MIN, Injured, FantasyPoints_PrevGame, AvgFantasyPointsPerMin
+
+#-Try all features I have
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -53,7 +56,10 @@ createModel = function(data, yName, xNames) {
                       data=data,
                       ntree=N_TREE))
 }
-createPrediction = function(model, newData, xNames=NULL) {
+createPrediction = function(model, newData=NULL, xNames=NULL) {
+  if (is.null(newData)) {
+    return(predict(model))
+  }
   return(predict(model, newData))
 }
 computeError = function(y, yhat) {
@@ -242,9 +248,9 @@ printTeamResults = function(team, bestTeam, yName) {
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
 
-PROD_RUN = F
+PROD_RUN = T
 N_TREE = 10
-FILENAME = 'AvgFPPerMin'
+FILENAME = 'rf_predict'
 PLOT = '' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
