@@ -59,6 +59,9 @@ featureEngineer = function(data) {
   #Add AvgFantasyPointsPerMin
   data$AvgFantasyPointsPerMin = ifelse(data$MIN == 0, 0, data$AvgFantasyPoints / data$MIN)
 
+  #Add SalaryIncreased
+  data$SalaryIncreased = as.numeric(data$Salary > data$Salary_PrevGame)
+
   return(data)
 }
 

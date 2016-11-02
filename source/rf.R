@@ -30,11 +30,8 @@
   #-Top 10 (+FGM, FGA, MIN, PFD, AvgFantasyPointsPerMin): 4.456431/9.081288, 4.454354
 #D-Add StartedPercent (didn't help): 5.059432/9.125127, 5.153629
 #D-Add Salary_PrevGame (it didn't immediately help)
-#
-
-#-Salary moved up or down since last game
-#-back-to-back, 2-of-3, etc
-
+#D-Add SalaryIncreased (nope): 6.195253/9.04208, 6.192414
+#-Add back-to-back, 2-of-3, etc
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -78,7 +75,7 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   #      'DD2', 'BLKA', 'BLK', 'STL', 'FG3A', 'OREB', 'W', 'PF', 'FTM', 'FTA',
   #      'TOV', 'L', 'FG3_PCT', 'AST', 'REB', 'DREB', 'FT_PCT', 'W_PCT', 'GP',
   #      'PLUS_MINUS', 'FG_PCT', 'PFD', 'FGA', 'FGM', 'PTS'))
-  featuresToUse = c('AvgFantasyPoints', 'FantasyPoints_PrevGame', 'Salary', 'Injured', 'Salary_PrevGame')
+  featuresToUse = c('Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame', 'AvgFantasyPointsPerMin')
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -310,19 +307,18 @@ cat('Done!\n')
 #================= extra TODOs================
 
 #What to do next:
-  #-Use 2016 data, which possibly has better features (eg. expected fantasy points)
-  #-Try a different algorithm (eg. xgboost, lm)
+  #-Use more features:
+    #-Vegas odds
+    #-More from stats.nba.com
+    #-Opponent data
   #-Try same prediction on a subset of data (either one player, or group of similar players)
+  #-Try a different algorithm (eg. xgboost, lm)
   #-Read articles/blog posts to determine good features that I haven't thought of
   #-Try predicting something else, then using that to compute expected fantasy points
     #-FantasyPointsPerMin, MinutesWillPlay -> manually compute FantasyPoints
     #-Steals, Block, etc -> manually compute FantasyPoints
-  #-Use more features:
-    #-Vegas odds
-    #-More from stats.nba.com
-    #-Manually compute more features
-    #-Opponent data
   #-Add 2014 data
+  #-Use 2016 data, which possibly has better features (eg. expected fantasy points)
 
 
 #-Maybe build a separate model for each player (or type of player (eg. starters, bench players))
