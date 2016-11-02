@@ -10,7 +10,7 @@ library(dplyr) #bind_rows
 
 SEASON = '2015'
 START_DATE = 'start'
-SPLIT_DATE = 'end'
+SPLIT_DATE = '2015-11-16'
 DATE_FORMAT = '%Y%m%d'
 
 loadData = function() {
@@ -28,9 +28,11 @@ loadData = function() {
   #convert the date strings to Date objects
   data$Date = as.Date(as.character(data$Date), DATE_FORMAT)
 
-  #Convert Position and Home to factors
+  #Convert Position, Home, Team, Opponent to factors
   data$Position = factor(data$Position)
   data$Home = factor(data$Home)
+  data$Team = factor(data$Team)
+  data$Opponent = factor(data$Opponent)
 
   return(data)
 }

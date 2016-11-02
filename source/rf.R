@@ -1,40 +1,8 @@
 #todo:
-#D-Make initial prediction using salary: 01_rf_salary: numFeaturesUsed=1/1, Trn/CV Error=10.15385/10.16979, Train Error=10.15067
-#D-Use 2014 data: NONE: 1/1, 8.888702/8.924981, 8.887228
-#D-Use train/test data and keep NAs in data: rf_keepNAs: 1/2, 8.895979/8.880356, 8.887228
-#D-Write script to create team: rf_createTeam: 1/3, 8.895979/8.880356, 8.887228
-#D-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
-#D-Output test (tonight's predictions) error: 1/3, 9.761371/9.643101, 9.733458, testError=10.24964
-#D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
-#D-Remove rows with Salary NAs: 20151106_removeNAs: 1/3, 8.745434/9.390104, 8.802408
-#D-Use all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
-#D-Add all features from nba: 20151208_allNba: 32/35, ntree=100, 4.068691/8.490935, 4.13253
-  #-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3
-#D-Use as many features as possible that don't overfit (Salary, MIN): 20160619_SalaryMin: 2/35, 10, 8.709144/9.774915, 8.742757
-#D-Add AvgFantasyPoints, DaysPlayedPercent features: 20151208_AvgFantasyPoints: 34/37, 100, 3.868784/8.450441, 3.837078
-  #-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3, AvgFantasyPoints, DaysPlayedPercent
-#D-Use AvgFantasyPoints, Salary, MIN: 20160619_top3: 3/37, 10, 7.397566/9.545659, 7.284939
-#D-Fix AvgFantasyPoints (AvgFantasyPoints, Salary, MIN): 20160619_fixAvgFP: 3/37, 10, 7.301757/9.625992, 7.293516
-#D-Add Injured feature: 20160619_Injured: 4/38, 10, 8.910737/9.158973, 8.813595
-#D-Add FantasyPoints_PrevGame: 20160619_FantasyPointsPrevGame: 5/39, 10, 8.363092/8.940201, 8.373344, "Mean of squared residuals"=83.92964, "% Var explained"=56.62
-#D-Try AvgFantasyPointsPerMin (made it worse): 20160619, 6/40, 10, 4.983091/9.134001, 5.040836, 96.6889, 50.03
-#D-Replace AvgFantasyPoints with AvgFantasyPointsPerMin: 20160619_AvgFPPerMin: 5/40, 10, 8.212136/8.850639, 8.213636, 81.12534, 58.07
-#D-Add Minutes_PrevGame (it didn't help much, if at all; come back to it if i need to increase my results a tid bit)
-#D-Remove the first X% of data so that winpct etc mean something (it didn't help)
-#D-Try top X correlation features (with and without Injury, which majorly helps it not overfit for some reason):
-  #-Top 1 (AvgFantasyPoints): 9.329334/9.399666, 10.48611
-  #-Top 2 (+FantasyPoints_PrevGame): 8.801942/9.009306, 8.904963
-  #-Top 3 (+Salary): 8.436485/8.855896, 8.889949
-  #-Top 4 (+Minutes_PrevGame): 8.362315/8.876209, 8.154882
-  #-Top 5 (+PTS): 4.974178/9.135287, 5.133405
-  #-Top 10 (+FGM, FGA, MIN, PFD, AvgFantasyPointsPerMin): 4.456431/9.081288, 4.454354
-#D-Add StartedPercent (didn't help): 5.059432/9.125127, 5.153629
-#D-Add Salary_PrevGame (it didn't immediately help)
-#D-Add SalaryIncreased (nope): 6.195253/9.04208, 6.192414
-#-Use predict(model) for train: rf_predict: start-end, 5/44, 10, 8.9856/8.850639, 9.006961, 81.12534, 58.07 <-- use this for baseline
-  #-Features used: Salary, MIN, Injured, FantasyPoints_PrevGame, AvgFantasyPointsPerMin
+#-Use all features: rf_all: 2015-11-16, 43/44, 100, 81.80186/55.09977, 3.609911/8.349023/3.541713
 
-#-Try all features I have
+#-Try all rg + nba + mine + nba2
+#-Try boruta features from all of the above
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -47,6 +15,22 @@ library(ggthemes) #visualization
 source('source/_getData.R')
 source('../ml-common/plot.R')
 source('../ml-common/util.R')
+
+#Globals
+FEATURES.RG = c('Salary', 'Position', 'Home', 'Team', 'Opponent')
+FEATURES.NBA = c('AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3')
+FEATURES.MINE = c('AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
+FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.MINE)
+
+FEATURES_TO_USE = FEATURES.ALL
+
+PROD_RUN = T
+N_TREE = 100
+FILENAME = 'rf_all'
+PLOT = '' #lc=learning curve, fi=feature importances
+
+ID_NAME = 'Name'
+Y_NAME = 'FantasyPoints'
 
 #============== Functions ===============
 
@@ -68,20 +52,8 @@ computeError = function(y, yhat) {
 findBestSetOfFeatures = function(data, possibleFeatures) {
   cat('Finding best set of features to use...\n')
 
-  #possible features (everything except FantasyPoints and Name):
-  #'Date', 'Salary', 'Position', 'Home', 'Team', 'Opponent',
-  #'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A',
-  #'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL',
-  #'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3'
-
-  #use everything except Date, Team, and Opponent
-  #featuresToUse = setdiff(possibleFeatures, c('Date', 'Team', 'Opponent'))
-  #featuresToUse = setdiff(possibleFeatures,
-  #    c('Date', 'Team', 'Opponent', 'TD3', 'Position', 'AGE', 'Home', 'FG3M',
-  #      'DD2', 'BLKA', 'BLK', 'STL', 'FG3A', 'OREB', 'W', 'PF', 'FTM', 'FTA',
-  #      'TOV', 'L', 'FG3_PCT', 'AST', 'REB', 'DREB', 'FT_PCT', 'W_PCT', 'GP',
-  #      'PLUS_MINUS', 'FG_PCT', 'PFD', 'FGA', 'FGM', 'PTS'))
-  featuresToUse = c('Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame', 'AvgFantasyPointsPerMin')
+  #featuresToUse = c('Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame', 'AvgFantasyPointsPerMin')
+  featuresToUse = FEATURES_TO_USE
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
@@ -244,15 +216,6 @@ printTeamResults = function(team, bestTeam, yName) {
 
 #============= Main ================
 
-#Globals
-ID_NAME = 'Name'
-Y_NAME = 'FantasyPoints'
-
-PROD_RUN = T
-N_TREE = 10
-FILENAME = 'rf_predict'
-PLOT = '' #lc=learning curve, fi=feature importances
-
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
 data = getData()
@@ -264,7 +227,9 @@ possibleFeatures = setdiff(names(train), c(ID_NAME, Y_NAME))
 featuresToUse = findBestSetOfFeatures(train, possibleFeatures)
 
 cat('Creating Model (ntree=', N_TREE, ')...\n', sep='')
-model = createModel(train, Y_NAME, featuresToUse)
+timeElapsed = system.time(model <- createModel(train, Y_NAME, featuresToUse))
+cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
+cat('    MeanOfSquaredResiduals / %VarExplained: ', mean(model$mse), '/', mean(model$rsq*100), '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT=='lc') plotLearningCurve(train, Y_NAME, featuresToUse, createModel, createPrediction, computeError, ylim=c(0, 15), save=PROD_RUN)
@@ -273,6 +238,7 @@ if (PROD_RUN || PLOT=='fi') plotImportances(model, save=PROD_RUN)
 #print trn/cv, train error
 printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
 
+tbx_commentsToCollapse = function() {
 #comment this out because it doesnt mean anything
 #print test error
 # prediction = createPrediction(model, test, featuresToUse)
@@ -307,8 +273,62 @@ printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPr
 #   actualFilename = paste0('actual_', FILENAME, '.csv')
 #   writeSolution(test, Y_NAME, ID_NAME, test[[Y_NAME]], actualFilename, extraColNames)
 # }
+}
 
 cat('Done!\n')
+
+tbx_moreCommentsToCollapse = function() {
+
+#=====From above=======
+#D-Make initial prediction using salary: 01_rf_salary: numFeaturesUsed=1/1, Trn/CV Error=10.15385/10.16979, Train Error=10.15067
+#D-Use 2014 data: NONE: 1/1, 8.888702/8.924981, 8.887228
+#D-Use train/test data and keep NAs in data: rf_keepNAs: 1/2, 8.895979/8.880356, 8.887228
+#D-Write script to create team: rf_createTeam: 1/3, 8.895979/8.880356, 8.887228
+#D-Run for 20161025: 20161025: 1/3, 9.761371/9.643101, 9.733458
+#D-Output test (tonight's predictions) error: 1/3, 9.761371/9.643101, 9.733458, testError=10.24964
+#D-Use first 10 days of 2015 data: 20151106: 1/3, 8.769458/9.195576, 8.802408
+#D-Remove rows with Salary NAs: 20151106_removeNAs: 1/3, 8.745434/9.390104, 8.802408
+#D-Use all base features from rotoguru (Position, Salary, Home): 20151106_+PositionHome: 3/4, 9.614065/9.635446, 9.627315
+#D-Add all features from nba: 20151208_allNba: 32/35, ntree=100, 4.068691/8.490935, 4.13253
+#-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3
+#D-Use as many features as possible that don't overfit (Salary, MIN): 20160619_SalaryMin: 2/35, 10, 8.709144/9.774915, 8.742757
+#D-Add AvgFantasyPoints, DaysPlayedPercent features: 20151208_AvgFantasyPoints: 34/37, 100, 3.868784/8.450441, 3.837078
+#-Features used: Salary, Position, Home, AGE, GP, W, L, W_PCT, MIN, FGM, FGA, FG_PCT, FG3M, FG3A, FG3_PCT, FTM, FTA, FT_PCT, OREB, DREB, REB, AST, TOV, STL, BLK, BLKA, PF, PFD, PTS, PLUS_MINUS, DD2, TD3, AvgFantasyPoints, DaysPlayedPercent
+#D-Use AvgFantasyPoints, Salary, MIN: 20160619_top3: 3/37, 10, 7.397566/9.545659, 7.284939
+#D-Fix AvgFantasyPoints (AvgFantasyPoints, Salary, MIN): 20160619_fixAvgFP: 3/37, 10, 7.301757/9.625992, 7.293516
+#D-Add Injured feature: 20160619_Injured: 4/38, 10, 8.910737/9.158973, 8.813595
+#D-Add FantasyPoints_PrevGame: 20160619_FantasyPointsPrevGame: 5/39, 10, 8.363092/8.940201, 8.373344, "Mean of squared residuals"=83.92964, "% Var explained"=56.62
+#D-Try AvgFantasyPointsPerMin (made it worse): 20160619, 6/40, 10, 4.983091/9.134001, 5.040836, 96.6889, 50.03
+#D-Replace AvgFantasyPoints with AvgFantasyPointsPerMin: 20160619_AvgFPPerMin: 5/40, 10, 8.212136/8.850639, 8.213636, 81.12534, 58.07
+#D-Add Minutes_PrevGame (it didn't help much, if at all; come back to it if i need to increase my results a tid bit)
+#D-Remove the first X% of data so that winpct etc mean something (it didn't help)
+#D-Try top X correlation features (with and without Injury, which majorly helps it not overfit for some reason):
+#-Top 1 (AvgFantasyPoints): 9.329334/9.399666, 10.48611
+#-Top 2 (+FantasyPoints_PrevGame): 8.801942/9.009306, 8.904963
+#-Top 3 (+Salary): 8.436485/8.855896, 8.889949
+#-Top 4 (+Minutes_PrevGame): 8.362315/8.876209, 8.154882
+#-Top 5 (+PTS): 4.974178/9.135287, 5.133405
+#-Top 10 (+FGM, FGA, MIN, PFD, AvgFantasyPointsPerMin): 4.456431/9.081288, 4.454354
+#D-Add StartedPercent (didn't help): 5.059432/9.125127, 5.153629
+#D-Add Salary_PrevGame (it didn't immediately help)
+#D-Add SalaryIncreased (nope): 6.195253/9.04208, 6.192414
+#D-Use predict(model) for train: rf_predict: start-end, 5/44, 10, 8.9856/8.850639, 9.006961, 81.12534, 58.07 <-- use this for baseline
+#-Features used: Salary, MIN, Injured, FantasyPoints_PrevGame, AvgFantasyPointsPerMin
+
+#-Try all features, ignoring test/train overifitting
+  #-Try all rg + nba + mine
+    #-ntree=10, splitDate=2015-11-06: time=0.146, trn/cv=3.867389/9.298347, train=3.939142, MeanOfSquaredResiduals=91.22056, %VarExplained=47.48 (108.4268, 37.56809)
+    #-10, 2015-11-16: 0.57, 4.088721/8.889591, 4.003655, 96.57905, 46.99 (112.8018, 38.0842)
+    #-10, 2015-12-08: 2.325, 3.953117/8.453994, 3.894827, 89.84784, 51.55 (110.3565, 40.48488)
+    #-10, 2016-02-10: 23.851, 3.959874/8.817836, 3.930304, 89.95064, 52.35 (108.2765, 42.64644) <-- take too long
+
+    #-100, 2015-11-06: 1.29, 3.443206/8.770879, 3.425491, 71.39885, 58.89 (77.78406, 55.21211)
+    #-100, 2015-11-16: 5.617, 3.609911/8.349023, 3.541713, 75.32584, 58.65 (81.80186, 55.09977) <--YES
+    #-100, 2015-12-08: 23.954, 3.449412/8.140572, 3.418292, 70.74516, 61.85 (76.98727, 58.48087) <-- take too long
+
+    #-500, 2015-11-06: 6.384, 3.396569/8.733787, 3.39772, 70.60391, 59.35 (72.19504, 58.43026)
+    #-500, 2015-11-16: 27.869, 3.549393/8.354271, 3.487071, 74.28095, 59.23 (75.97834, 58.29624) <-- take too long
+
 
 #================= extra TODOs================
 
@@ -356,3 +376,4 @@ cat('Done!\n')
     #-split data randomly into 80/20 (shuffled) for train/cv
     #-plot learning curve
     #-increase num days to take if i need more data
+}
