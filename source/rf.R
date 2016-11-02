@@ -28,7 +28,9 @@
   #-Top 4 (+Minutes_PrevGame): 8.362315/8.876209, 8.154882
   #-Top 5 (+PTS): 4.974178/9.135287, 5.133405
   #-Top 10 (+FGM, FGA, MIN, PFD, AvgFantasyPointsPerMin): 4.456431/9.081288, 4.454354
-#-Add StartedPercent (didn't help): 5.059432/9.125127, 5.153629
+#D-Add StartedPercent (didn't help): 5.059432/9.125127, 5.153629
+#D-Add Salary_PrevGame (it didn't immediately help)
+#
 
 #-Salary moved up or down since last game
 #-back-to-back, 2-of-3, etc
@@ -76,7 +78,7 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   #      'DD2', 'BLKA', 'BLK', 'STL', 'FG3A', 'OREB', 'W', 'PF', 'FTM', 'FTA',
   #      'TOV', 'L', 'FG3_PCT', 'AST', 'REB', 'DREB', 'FT_PCT', 'W_PCT', 'GP',
   #      'PLUS_MINUS', 'FG_PCT', 'PFD', 'FGA', 'FGM', 'PTS'))
-  featuresToUse = c('Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame', 'AvgFantasyPointsPerMin')
+  featuresToUse = c('AvgFantasyPoints', 'FantasyPoints_PrevGame', 'Salary', 'Injured', 'Salary_PrevGame')
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
   cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')

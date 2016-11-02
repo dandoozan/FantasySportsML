@@ -46,6 +46,10 @@ imputeMissingValues = function(data) {
   data[is.na(data$Minutes_PrevGame), 'Minutes_PrevGame'] = 0
   data[is.na(data$StartedPercent), 'StartedPercent'] = 0
 
+  #Set NAs to 0s for Salary_PrevGame (there are 129 of these)
+  #If they don't have a salary, then it literally means their salary is 0
+  data[is.na(data$Salary_PrevGame), 'Salary_PrevGame'] = 0
+
   return(data)
 }
 

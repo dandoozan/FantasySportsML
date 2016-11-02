@@ -14,7 +14,7 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
-        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', #mine
+        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame' #mine
 ]
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -454,6 +454,7 @@ def computeInjured(data):
             playerData = data[dateStr][playerName]
             playerData['Injured'] = int(isPlayerInjured(playerData))
 def computePrevGameStats(data):
+    #todo: improve the below by using an obj to hold the items that i am computing
     print '    Computing PrevGameStats...'
     players = {}
     dateStrs = data.keys()
@@ -462,14 +463,17 @@ def computePrevGameStats(data):
         for playerName in data[dateStr]:
             playerData = data[dateStr][playerName]
             if playerName in players:
+                playerData['Salary_PrevGame'] = players[playerName]['salary']
                 playerData['FantasyPoints_PrevGame'] = players[playerName]['fantasyPoints']
                 playerData['Minutes_PrevGame'] = players[playerName]['minutes']
                 if not isPlayerInjured(playerData):
                     players[playerName]['fantasyPoints'] = playerData['FantasyPoints']
                     players[playerName]['minutes'] = float(playerData['Minutes']) if playerDidPlay(playerData) else 0.
+                    players[playerName]['salary'] = playerData['Salary']
             else:
                 if not isPlayerInjured(playerData):
                     players[playerName] = {
+                        'salary': playerData['Salary'],
                         'fantasyPoints': playerData['FantasyPoints'],
                         'minutes': float(playerData['Minutes']) if playerDidPlay(playerData) else 0.,
                     }
