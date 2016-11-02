@@ -1,17 +1,16 @@
 library(dplyr) #bind_rows
 
 #2015 season
-  #begin (day 1): 20151027
-  #use 10 days (day 11): 20151106 (2142 obs)
-  #10% (day 21): 20151116
-  #20% (day 42): 20151208
-  #50% (day 105): 20160210
-  #end (day 210): 20160619
+  #begin (day 1): 2015-10-27
+  #use 10 days (day 11): 2015-11-06 (2142 obs)
+  #10% (day 21): 2015-11-16
+  #20% (day 42): 2015-12-08
+  #50% (day 105): 2016-02-10
+  #end (day 210): 2016-06-19
 
 SEASON = '2015'
-START_DATE = as.Date('2015-10-27')
-SPLIT_DATE = as.Date('2016-06-19')
-splitDate = as.Date(SPLIT_DATE, DATE_FORMAT)
+START_DATE = 'start'
+SPLIT_DATE = 'end'
 DATE_FORMAT = '%Y%m%d'
 
 loadData = function() {
@@ -74,20 +73,23 @@ findLastIndexOfDate = function(data, date) {
   return(-1)
 }
 splitDataIntoTrainTest = function(data) {
-  splitIndex = findFirstIndexOfDate(data, SPLIT_DATE)
-  if (splitIndex > -1) {
-    endIndex = findLastIndexOfDate(data, SPLIT_DATE)
-    train = data[1:(splitIndex-1),]
-    test = data[splitIndex:endIndex,]
-  } else {
-    train = data
+  cat('    Splitting data into train/test...\n')
+
+  startIndex = ifelse(START_DATE == 'start', 1, findFirstIndexOfDate(data, START_DATE))
+  if (SPLIT_DATE == 'end') {
+    train = data[startIndex:nrow(data),]
     test = NULL
+  } else {
+    splitIndex = findFirstIndexOfDate(data, SPLIT_DATE)
+    endIndex = findLastIndexOfDate(data, SPLIT_DATE)
+    train = data[startIndex:(splitIndex-1),]
+    test = data[splitIndex:endIndex,]
   }
   return(list(train=train, test=test))
 }
 
 getData = function() {
-  cat('Getting data...\n')
+  cat('Getting data (start=', START_DATE, ', split=', SPLIT_DATE, ')...\n', sep='')
 
   #load data
   full = loadData()

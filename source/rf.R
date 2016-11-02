@@ -20,31 +20,17 @@
 #D-Try AvgFantasyPointsPerMin (made it worse): 20160619, 6/40, 10, 4.983091/9.134001, 5.040836, 96.6889, 50.03
 #D-Replace AvgFantasyPoints with AvgFantasyPointsPerMin: 20160619_AvgFPPerMin: 5/40, 10, 8.212136/8.850639, 8.213636, 81.12534, 58.07
 #D-Add Minutes_PrevGame (it didn't help much, if at all; come back to it if i need to increase my results a tid bit)
-#-Remove the first 10 days or so so that winpct etc mean something
+#D-Remove the first X% of data so that winpct etc mean something (it didn't help)
+#-Try top X correlation features (with and without Injury, which majorly helps it not overfit for some reason):
+  #-Top 1 (AvgFantasyPoints): 9.329334/9.399666, 10.48611
+  #-Top 2 (+FantasyPoints_PrevGame): 8.801942/9.009306, 8.904963
+  #-Top 3 (+Salary): 8.436485/8.855896, 8.889949
+  #-Top 4 (+Minutes_PrevGame): 8.362315/8.876209, 8.154882
+  #-Top 5 (+PTS): 4.974178/9.135287, 5.133405
+  #-Top 10 (+FGM, FGA, MIN, PFD, AvgFantasyPointsPerMin): 4.456431/9.081288, 4.454354
 
-#-Use top 10 features from correlations plot
 #-Figure out how to remove the 0 scores so that Y is more normal distribution
 #-Add 2014 data
-
-#-Add percent of games started (to essentially figure out if player is a starter), but i think this should be covered with minutes
-#-Look into what 'Mean of squared residuals' and % Var explained' mean on the rf model, and perhaps record those values
-#-Maybe build a separate model for each player (or type of player (eg. high scrorers, bench players))
-#-Use all features but only from the last 5 games (rather than season), and start from game 5
-#-Try new model (xgboost, lm)
-#-Try predicting something other metric (eg. fp/min)
-#-Include nba "advanced" stats
-#-fill in getBetterTeam
-#-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
-#-Maybe use log of y
-#-Perhaps make Home a binary col rather than factor with 2 levels
-#-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
-
-
-#Process to get team for day:
-#1. Change DATE (eg. 20161025)
-#2. Source this file (rf.R)
-  #-Prints RMSE for Trn/CV, Train, Test
-  #-Prints ratio of my team score/best team score
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -257,8 +243,8 @@ Y_NAME = 'FantasyPoints'
 
 PROD_RUN = F
 N_TREE = 10
-FILENAME = paste0(SPLIT_DATE, '_AvgFPPerMin')
-PLOT = 'fi' #lc=learning curve, fi=feature importances
+FILENAME = 'AvgFPPerMin'
+PLOT = '' #lc=learning curve, fi=feature importances
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
@@ -316,6 +302,29 @@ printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPr
 # }
 
 cat('Done!\n')
+
+#================= extra TODOs================
+
+#-Add percent of games started (to essentially figure out if player is a starter), but i think this should be covered with minutes
+#-Look into what 'Mean of squared residuals' and % Var explained' mean on the rf model, and perhaps record those values
+#-Maybe build a separate model for each player (or type of player (eg. high scrorers, bench players))
+#-Use all features but only from the last 5 games (rather than season), and start from game 5
+#-Try new model (xgboost, lm)
+#-Try predicting something other metric (eg. fp/min)
+#-Include nba "advanced" stats
+#-fill in getBetterTeam
+#-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
+#-Maybe use log of y
+#-Perhaps make Home a binary col rather than factor with 2 levels
+#-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
+
+
+#Process to get team for day:
+#1. Change DATE (eg. 20161025)
+#2. Source this file (rf.R)
+#-Prints RMSE for Trn/CV, Train, Test
+#-Prints ratio of my team score/best team score
+
 
 
 #========================================
