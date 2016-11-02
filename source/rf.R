@@ -21,16 +21,18 @@
 #D-Replace AvgFantasyPoints with AvgFantasyPointsPerMin: 20160619_AvgFPPerMin: 5/40, 10, 8.212136/8.850639, 8.213636, 81.12534, 58.07
 #D-Add Minutes_PrevGame (it didn't help much, if at all; come back to it if i need to increase my results a tid bit)
 #D-Remove the first X% of data so that winpct etc mean something (it didn't help)
-#-Try top X correlation features (with and without Injury, which majorly helps it not overfit for some reason):
+#D-Try top X correlation features (with and without Injury, which majorly helps it not overfit for some reason):
   #-Top 1 (AvgFantasyPoints): 9.329334/9.399666, 10.48611
   #-Top 2 (+FantasyPoints_PrevGame): 8.801942/9.009306, 8.904963
   #-Top 3 (+Salary): 8.436485/8.855896, 8.889949
   #-Top 4 (+Minutes_PrevGame): 8.362315/8.876209, 8.154882
   #-Top 5 (+PTS): 4.974178/9.135287, 5.133405
   #-Top 10 (+FGM, FGA, MIN, PFD, AvgFantasyPointsPerMin): 4.456431/9.081288, 4.454354
+#-Add StartedPercent (didn't help): 5.059432/9.125127, 5.153629
 
-#-Figure out how to remove the 0 scores so that Y is more normal distribution
-#-Add 2014 data
+#-Salary moved up or down since last game
+#-back-to-back, 2-of-3, etc
+
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -305,27 +307,35 @@ cat('Done!\n')
 
 #================= extra TODOs================
 
-#-Add percent of games started (to essentially figure out if player is a starter), but i think this should be covered with minutes
-#-Look into what 'Mean of squared residuals' and % Var explained' mean on the rf model, and perhaps record those values
-#-Maybe build a separate model for each player (or type of player (eg. high scrorers, bench players))
+#What to do next:
+  #-Use 2016 data, which possibly has better features (eg. expected fantasy points)
+  #-Try a different algorithm (eg. xgboost, lm)
+  #-Try same prediction on a subset of data (either one player, or group of similar players)
+  #-Read articles/blog posts to determine good features that I haven't thought of
+  #-Try predicting something else, then using that to compute expected fantasy points
+    #-FantasyPointsPerMin, MinutesWillPlay -> manually compute FantasyPoints
+    #-Steals, Block, etc -> manually compute FantasyPoints
+  #-Use more features:
+    #-Vegas odds
+    #-More from stats.nba.com
+    #-Manually compute more features
+    #-Opponent data
+  #-Add 2014 data
+
+
+#-Maybe build a separate model for each player (or type of player (eg. starters, bench players))
 #-Use all features but only from the last 5 games (rather than season), and start from game 5
-#-Try new model (xgboost, lm)
-#-Try predicting something other metric (eg. fp/min)
-#-Include nba "advanced" stats
 #-fill in getBetterTeam
 #-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
 #-Maybe use log of y
 #-Perhaps make Home a binary col rather than factor with 2 levels
 #-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
 
-
 #Process to get team for day:
 #1. Change DATE (eg. 20161025)
 #2. Source this file (rf.R)
 #-Prints RMSE for Trn/CV, Train, Test
 #-Prints ratio of my team score/best team score
-
-
 
 #========================================
 #CV strategies:

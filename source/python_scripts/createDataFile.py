@@ -14,7 +14,7 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
-        'FantasyPoints_PrevGame', 'Minutes_PrevGame', #mine
+        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', #mine
 ]
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -112,13 +112,14 @@ def loadDataFromRotoGuru(filename):
         name = sp[3].strip().split(', ')
         name.reverse()
         name = ' '.join(name)
+        starter = sp[4].strip() #1 or ''
+        starter = 0 if starter == '' else int(starter)
         fantasyPoints = float(sp[5])
         salary = sp[6].strip()
         salary = '' if salary == 'N/A' else str(int(salary[1:].replace(',', '')))
         team = sp[7].strip()
         home = sp[8].strip()
         opponent = sp[9].strip()
-
         minutes = sp[12].strip() #this could be 'DNP', 'NA' or a float
 
         if date not in data:
@@ -139,6 +140,7 @@ def loadDataFromRotoGuru(filename):
             'Team': team,
             'RGPlayerID': rgPlayerId,
             'Minutes': minutes,
+            'Starter': starter,
         }
 
     f.close()
@@ -276,6 +278,8 @@ def isPlayerInjured(playerData):
 def playerDidPlay(playerData):
     minutes = playerData['Minutes']
     return minutes != 'DNP' and minutes != 'NA' and float(minutes) > 0
+def playerDidStart(playerData):
+    return playerData['Starter'] == 1
 def playerPlayedAnyGameUpToDate(data, playerName, date, season):
     currDate = FIRST_DATE_OF_SEASON[season]
     while currDate < date:
@@ -403,7 +407,6 @@ def computeAvgFantasyPoints(data):
                         'totalFantasyPoints': playerData['FantasyPoints'],
                         'numDays': 1
                     }
-
 def computeDaysPlayedPercent(data):
     print '    Computing DaysPlayedPercent...'
     players = {}
@@ -424,14 +427,32 @@ def computeDaysPlayedPercent(data):
                         'numDaysPlayed': 1 if playerDidPlay(playerData) else 0,
                         'numDaysEligibleToPlay': 1,
                     }
-
+def computeStartedPercent(data):
+    print '    Computing StartedPercent...'
+    players = {}
+    dateStrs = data.keys()
+    dateStrs.sort()
+    for dateStr in dateStrs:
+        for playerName in data[dateStr]:
+            playerData = data[dateStr][playerName]
+            if playerName in players:
+                playerData['StartedPercent'] = float(players[playerName]['numDaysStarted']) / players[playerName]['numDaysEligibleToStart']
+                if not isPlayerInjured(playerData):
+                    if playerDidStart(playerData):
+                        players[playerName]['numDaysStarted'] += 1
+                    players[playerName]['numDaysEligibleToStart'] += 1
+            else:
+                if not isPlayerInjured(playerData):
+                    players[playerName] = {
+                        'numDaysStarted': 1 if playerDidStart(playerData) else 0,
+                        'numDaysEligibleToStart': 1,
+                    }
 def computeInjured(data):
     print '    Computing Injured...'
     for dateStr in data:
         for playerName in data[dateStr]:
             playerData = data[dateStr][playerName]
             playerData['Injured'] = int(isPlayerInjured(playerData))
-
 def computePrevGameStats(data):
     print '    Computing PrevGameStats...'
     players = {}
@@ -458,6 +479,7 @@ def addAdditionalFeatures(data):
     computeAvgFantasyPoints(data)
     computeDaysPlayedPercent(data)
     computeInjured(data)
+    computeStartedPercent(data)
     computePrevGameStats(data)
 
 #============= MAIN =============

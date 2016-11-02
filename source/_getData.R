@@ -14,8 +14,7 @@ SPLIT_DATE = 'end'
 DATE_FORMAT = '%Y%m%d'
 
 loadData = function() {
-  filename = paste0('data/data_', SEASON, '.csv')
-  data = read.csv(filename, stringsAsFactors=F, na.strings=c(''))
+  data = read.csv(paste0('data/data_', SEASON, '.csv'), stringsAsFactors=F, na.strings=c(''))
 
   #remove Salary NAs because an NA means that the player was not an option to choose
   rowsWithSalaryNA = which(is.na(data$Salary))
@@ -45,6 +44,7 @@ imputeMissingValues = function(data) {
   data[is.na(data$DaysPlayedPercent), 'DaysPlayedPercent'] = 0
   data[is.na(data$FantasyPoints_PrevGame), 'FantasyPoints_PrevGame'] = 0
   data[is.na(data$Minutes_PrevGame), 'Minutes_PrevGame'] = 0
+  data[is.na(data$StartedPercent), 'StartedPercent'] = 0
 
   return(data)
 }
