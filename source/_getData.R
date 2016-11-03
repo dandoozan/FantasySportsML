@@ -64,6 +64,13 @@ imputeMissingValues = function(data) {
 
   return(data)
 }
+
+computeAttendedTopXPctCollege = function(data, topPercent) {
+  #topPercent should be in decimal format (eg. .1 for 10%)
+  sortedCollegeOccurrences = sort(table(data[data$COLLEGE != 'None', 'COLLEGE']), decreasing=T)
+  topColleges = names(sortedCollegeOccurrences[1:ceiling(length(sortedCollegeOccurrences) * topPercent)])
+  return (as.numeric(data$COLLEGE %in% topColleges))
+}
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
 
@@ -72,6 +79,24 @@ featureEngineer = function(data) {
 
   #Add SalaryIncreased
   data$SalaryIncreased = as.numeric(data$Salary > data$Salary_PrevGame)
+
+  #Add WasDrafted
+  data$WasDrafted = as.numeric(data$DRAFT_YEAR != -1)
+
+  #Add AttendedTop5PctCollege (top 5%)
+  #which are: Kentucky, Kansas, Duke, North Carolina, UCLA, Arizona, Florida
+  data$AttendedTop5PctCollege = computeAttendedTopXPctCollege(data, .05)
+
+  #Add AttendedTop10PctCollege (top 10%)
+  #which are: Kentucky, Kansas, Duke, North Carolina, UCLA, Arizona, Florida, Texas, Connecticut, Wake Forest, Syracuse, Michigan, Southern California
+  data$AttendedTop10PctCollege = computeAttendedTopXPctCollege(data, .1)
+
+  #Add AttendedTop20PctCollege (top 20%)
+  #which are: Kentucky, Kansas, Duke, North Carolina, UCLA, Arizona, Florida, Texas, Connecticut, Wake Forest, Syracuse, Michigan, Southern California, Louisiana State, Georgia Tech, Georgetown, Ohio State, Washington, Michigan State, Marquette, Villanova, Stanford, Wisconsin, Tennessee, Oklahoma State
+  data$AttendedTop20PctCollege = computeAttendedTopXPctCollege(data, .2)
+
+  #Add AttendedTop50PctCollege (top 50%)
+  data$AttendedTop50PctCollege = computeAttendedTopXPctCollege(data, .5)
 
   return(data)
 }
@@ -106,7 +131,7 @@ splitDataIntoTrainTest = function(data) {
 }
 
 getData = function() {
-  cat('Getting data (start=', START_DATE, ', split=', SPLIT_DATE, ')...\n', sep='')
+  cat('Getting data (', START_DATE, '-', SPLIT_DATE, ')...\n', sep='')
 
   #load data
   full = loadData()
