@@ -1,9 +1,9 @@
-import os
 import re
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
 import json
 import scraper
+import _util as util
 
 #This file does the following:
 #1. scrape 'Daily Fantasy Tournament Links - [Date]' url from https://rotogrinders.com/threads/category/main
@@ -18,11 +18,6 @@ TODAY = date.today()
 YESTERDAY = TODAY - timedelta(1)
 PARENT_DIR = 'data/rawDataFromFanDuel/Contests/' + YESTERDAY.strftime('%Y-%m-%d')
 SLEEP = 10
-
-def createDirIfNecessary(dirName):
-    if not os.path.isdir(dirName):
-        print 'Creating dir: ' + dirName + '...'
-        os.makedirs(dirName)
 
 def isContestLinksUrl(url, date):
     #https://rotogrinders.com/threads/daily-fantasy-tournament-links-saturday-october-29th-1512252
@@ -107,7 +102,7 @@ xAuthToken = raw_input('Enter X-Auth-Token: ')
 print 'Scraping contest results for yesterday: ', YESTERDAY
 
 #make dir
-createDirIfNecessary(PARENT_DIR)
+util.createDirIfNecessary(PARENT_DIR)
 
 #1. scrape 'Daily Fantasy Tournament Links - [Date]' url from https://rotogrinders.com/threads/category/main
 rgTournamentLinksUrl = scrapeRotoGrinderForum(RG_FORUM_URL, YESTERDAY)

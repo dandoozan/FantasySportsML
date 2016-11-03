@@ -2,6 +2,7 @@ from datetime import date
 import time
 from bs4 import BeautifulSoup
 import scraper
+import _util as util
 
 PARENT_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
@@ -73,7 +74,7 @@ def parseData(data, tableClassName):
         colNames = getColNames(table)
         rowData = getRowData(table)
     else:
-        scraper.headsUp('No table found')
+        util.headsUp('No table found')
     return colNames, rowData
 
 def createFilename(parentDir, dirName, baseFilename):

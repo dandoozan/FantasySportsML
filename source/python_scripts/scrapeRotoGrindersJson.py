@@ -2,6 +2,7 @@ from datetime import date
 import time
 import json
 import scraper
+import _util as util
 
 PARENT_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
@@ -97,9 +98,7 @@ for page in pagesToScrape:
     if data:
         scraper.writeJsonData(data, createFilename(PARENT_DIR, dirName, FILENAME))
     else:
-        print '========================================='
-        print '***HEADS UP!  NO DATA FOUND FOR', dirName
-        print '========================================='
+        util.headsUp('NO DATA FOUND FOR' + dirName)
 
     print '    Sleeping for %d seconds' % SLEEP
     time.sleep(SLEEP)

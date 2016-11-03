@@ -1,3 +1,8 @@
+#todo:
+#-move headsUp to util
+#-move sleep to util
+#-rename this file to _scraper
+
 import urllib
 import urllib2
 import json
@@ -25,10 +30,13 @@ def createUrl(baseUrl, urlParams):
     #Note: baseUrl should contain the '?' at the end
     return baseUrl + urllib.urlencode(urlParams)
 
-def writeJsonData(jsonData, fullPathFilename):
+def writeJsonData(jsonData, fullPathFilename, prettyPrint=True):
     print '    Writing data to ' + fullPathFilename + '...'
     f = open(fullPathFilename, 'w')
-    json.dump(jsonData, f, indent=2, separators=(',', ': '), sort_keys=True)
+    if prettyPrint:
+        json.dump(jsonData, f, indent=2, separators=(',', ': '), sort_keys=True)
+    else:
+        json.dump(jsonData, f, sort_keys=True)
     f.close()
 
 def createJsonFilename(fullPathDir, baseFilename):
