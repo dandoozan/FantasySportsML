@@ -54,7 +54,6 @@ imputeMissingValues = function(data) {
 
   return(data)
 }
-
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
 
@@ -66,7 +65,6 @@ featureEngineer = function(data) {
 
   return(data)
 }
-
 findFirstIndexOfDate = function(data, date) {
   index = which(data$Date == date)
   if (length(index) > 0) {

@@ -1,7 +1,23 @@
 #todo:
-#-Use all features: rf_all: 2015-11-16, 43/44, 100, 81.80186/55.09977, 3.609911/8.349023/3.541713
+#D-Use all features: rf_all: start-2015-11-16, 43/44, 100, 5.479, 81.80186/55.09977, 3.609911/8.349023/3.541713
+#D-Add nba advanced: rf_adv: start-2015-11-16, 60/61, 100, 7.071, 82.36119/54.79276, 3.557412/8.356418/3.491678
+#-Add PLayerBios data:
 
 #-Try all rg + nba + mine + nba2
+#NBA data:
+  #D-traditional
+  #D-gamelogs
+  #D-player bios
+  #D-traditional (per game)
+  #D-advanced
+  #-team stats (not sure how to get)
+  #-opp team stats (ditto)
+  #-traditional, differentials on
+  #-opponent
+  #-scoring
+  #-usage
+  #-defense
+  #-misc?
 #-Try boruta features from all of the above
 
 #Remove all objects from the current workspace
@@ -19,15 +35,16 @@ source('../ml-common/util.R')
 #Globals
 FEATURES.RG = c('Salary', 'Position', 'Home', 'Team', 'Opponent')
 FEATURES.NBA = c('AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3')
+FEATURES.NBA_ADV = c('OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG')
 FEATURES.MINE = c('AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
-FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.MINE)
+FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.MINE)
 
 FEATURES_TO_USE = FEATURES.ALL
 
 PROD_RUN = T
 N_TREE = 100
-FILENAME = 'rf_all'
-PLOT = '' #lc=learning curve, fi=feature importances
+FILENAME = 'rf_adv'
+PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
@@ -36,8 +53,8 @@ Y_NAME = 'FantasyPoints'
 
 createModel = function(data, yName, xNames) {
   set.seed(754)
-  return(randomForest(getFormula(yName, xNames),
-                      data=data,
+  return(randomForest(x=data[, xNames],
+                      y=data[[yName]],
                       ntree=N_TREE))
 }
 createPrediction = function(model, newData=NULL, xNames=NULL) {
@@ -323,7 +340,7 @@ tbx_moreCommentsToCollapse = function() {
     #-10, 2016-02-10: 23.851, 3.959874/8.817836, 3.930304, 89.95064, 52.35 (108.2765, 42.64644) <-- take too long
 
     #-100, 2015-11-06: 1.29, 3.443206/8.770879, 3.425491, 71.39885, 58.89 (77.78406, 55.21211)
-    #-100, 2015-11-16: 5.617, 3.609911/8.349023, 3.541713, 75.32584, 58.65 (81.80186, 55.09977) <--YES
+    #-100, 2015-11-16: 5.617, 3.609911/8.349023, 3.541713, 75.32584, 58.65 (81.80186, 55.09977) <--Use this one
     #-100, 2015-12-08: 23.954, 3.449412/8.140572, 3.418292, 70.74516, 61.85 (76.98727, 58.48087) <-- take too long
 
     #-500, 2015-11-06: 6.384, 3.396569/8.733787, 3.39772, 70.60391, 59.35 (72.19504, 58.43026)

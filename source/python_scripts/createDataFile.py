@@ -13,9 +13,13 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
+        'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', #nba advanced
+        'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', #nba advanced
+        'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG', #nba advanced
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame' #mine
 ]
+
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
 
@@ -147,11 +151,11 @@ def loadDataFromRotoGuru(filename):
 
     return data
 
-def createNbaDataFileName(date, season):
+def createNbaDataFileName(dirName, date, season):
     year = date.year
-    return NBA_DIR + '/' + season + '/' + FIRST_DATE_OF_SEASON[season].strftime(DATE_FORMAT) + '-' + date.strftime(DATE_FORMAT) + '.json'
+    return NBA_DIR + '/' + dirName + '/' + season + '/' + date.strftime(DATE_FORMAT) + '.json'
 
-def loadNbaDataForDate(date, season):
+def loadNbaDataForDate(dirName, date, season):
     #possible stats:
     #PLAYER_ID #N
     #PLAYER_NAME #N
@@ -194,10 +198,10 @@ def loadNbaDataForDate(date, season):
     #if i dont find a file for date, then check each previous day until i find it
     usedDiffFile = False
     currDate = date
-    filename = createNbaDataFileName(date, season)
+    filename = createNbaDataFileName(dirName, date, season)
     while currDate >= FIRST_DATE_OF_SEASON[season] and not os.path.exists(filename):
         currDate = currDate - ONE_DAY
-        filename = createNbaDataFileName(currDate, season)
+        filename = createNbaDataFileName(dirName, currDate, season)
         usedDiffFile = True
 
     if usedDiffFile:
@@ -291,7 +295,7 @@ def playerPlayedAnyGameUpToDate(data, playerName, date, season):
         currDate = currDate + ONE_DAY
     return False
 
-def appendDataFromNba(data, season):
+def appendDataFromNba(dirName, data, season):
     cnt = 1
     dateStrs = data.keys()
     dateStrs.sort()
@@ -302,7 +306,7 @@ def appendDataFromNba(data, season):
         #load previous day's nba season-long data
         date = datetime.strptime(dateStr, DATE_FORMAT)
         prevDate = date - ONE_DAY
-        nbaData = loadNbaDataForDate(prevDate, season)
+        nbaData = loadNbaDataForDate(dirName, prevDate, season)
         if len(nbaData) > 0:
 
             #iterate through each player and merge nba data into player data
@@ -526,6 +530,7 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
-appendDataFromNba(data, SEASON)
+appendDataFromNba('Advanced', data, SEASON)
+appendDataFromNba('Traditional', data, SEASON)
 addAdditionalFeatures(data)
 writeData(createFilename(SEASON), data)
