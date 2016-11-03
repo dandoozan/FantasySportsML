@@ -1,8 +1,11 @@
 #todo:
 #D-Use all features: rf_all: start-2015-11-16, 43/44, 100, 5.479, 81.80186/55.09977, 3.609911/8.349023/3.541713
 #D-Add nba advanced: rf_adv: start-2015-11-16, 60/61, 100, 7.071, 82.36119/54.79276, 3.557412/8.356418/3.491678
-#-Add PLayerBios data: rf_playerbios: start-2015-11-16, 66/68, 100, 8.396, 81.48067/55.27606, 3.560697/8.388797/3.486949
-#-Add WasDrafted and AttendedTopCollege: rf_WasDrafted: start-2015-11-16, 71/73, 100, 8.189, 81.66209/55.17648, 3.518361/8.388745/3.449907
+#D-Add nba PlayerBios: rf_playerbios: start-2015-11-16, 66/68, 100, 8.396, 81.48067/55.27606, 3.560697/8.388797/3.486949
+#D-Add WasDrafted and AttendedTopCollege: rf_WasDrafted: start-2015-11-16, 71/73, 100, 8.189, 81.66209/55.17648, 3.518361/8.388745/3.449907
+#D-Data file reordered: rf_Reorder: start-2015-11-16, 71/73, 100, 8.121, 82.86294/54.51735, 3.535505/8.343658/3.475144
+#-Add nba opponent:
+#-Ad defense
 
 #NBA data to download:
   #D-traditional
@@ -10,13 +13,14 @@
   #D-player bios
   #D-traditional (per game)
   #D-advanced
+  #D-opponent
+  #D-defense
   #-team stats (not sure how to get)
   #-opp team stats (ditto)
   #-traditional, differentials on
-  #-opponent
   #-scoring
   #-usage
-  #-defense
+
   #-misc?
 #-Try boruta features from all of the above
 
@@ -45,7 +49,7 @@ FEATURES_TO_USE = FEATURES.ALL
 
 PROD_RUN = T
 N_TREE = 100
-FILENAME = 'rf_WasDrafted'
+FILENAME = 'rf_Reorder'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 ID_NAME = 'Name'
