@@ -14,14 +14,23 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
         'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
         'PLUS_MINUS', 'DD2', 'TD3', #nba
+
         'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', #nba advanced
         'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', #nba advanced
         'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG', #nba advanced
+
         'PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT', #nba player bios
         'COLLEGE','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER', #nba player bios
+
+        'OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A', #nba opponent
+        'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB', #nba opponent
+        'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL', #nba opponent
+        'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS', #nba opponent
+
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame' #mine
 ]
+
 
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -35,48 +44,61 @@ LAST_DATE_OF_SEASON = {
     '2015': datetime(2016, 4, 13),
 }
 
+VALID_SUFFICES = {'iii', 'jr.'}
+
 #rotoguru: nba
 MISMATCHED_NAMES = {
-    'Glenn Robinson III': 'Glenn Robinson',
-    'Larry Nance': 'Larry Nance Jr.',
-    'Joseph Young': 'Joe Young',
-    'Nene Hilario': 'Nene',
-    'Louis Williams': 'Lou Williams',
-    'Jose Barea': 'Jose Juan Barea',
-    'Amare Stoudemire': 'Amar\'e Stoudemire',
-    'Louis Amundson': 'Lou Amundson',
-    'Wes Matthews': 'Wesley Matthews',
-    'Ishmael Smith': 'Ish Smith',
-    'Walter Tavares': 'Edy Tavares',
-    'Maurice Williams': 'Mo Williams',
-    'Chuck Hayes': 'Charles Hayes',
+    'glenn robinson iii': 'glenn robinson',
+    'larry nance': 'larry nance jr.',
+    'joseph young': 'joe young',
+    'nene hilario': 'nene',
+    'louis williams': 'lou williams',
+    'jose barea': 'jose juan barea',
+    'amare stoudemire': 'amar\'e stoudemire',
+    'louis amundson': 'lou amundson',
+    'wes matthews': 'wesley matthews',
+    'ishmael smith': 'ish smith',
+    'walter tavares': 'edy tavares',
+    'maurice williams': 'mo williams',
+    'chuck hayes': 'charles hayes',
+}
+MISMATCHED_NAMES_REVERSED = {
+    'luc mbah a moute': 'mbah a moute, luc',
+    'metta world peace': 'world peace, metta',
 }
 
 #names that exist in rotoguru but are missing in nba for a given date
 #you'll notice most of these are after the reg season ends, and it
 #looks like the players only played in the post season, so they're legitimately missing
-MISSING_NAMES = {
-    '20151030': { 'Tibor Pleiss', 'James Ennis' },
-    '20160307': { 'Rakeem Christmas' },
-    '20160408': { 'Rakeem Christmas' },
-    '20160420': { 'Dorell Wright' },
-    '20160422': { 'John Holland' },
-    '20160423': { 'Dorell Wright' },
-    '20160424': { 'John Holland' },
-    '20160425': { 'Dorell Wright' },
-    '20160426': { 'John Holland' },
-    '20160427': { 'Dorell Wright' },
-    '20160429': { 'Dorell Wright' },
-    '20160509': { 'Dorell Wright' },
-    '20160503': { 'Dorell Wright' },
-    '20160501': { 'Dorell Wright' },
-    '20160507': { 'Dorell Wright' },
-    '20160505': { 'Dorell Wright' },
-    '20160515': { 'Dorell Wright' },
-    '20160511': { 'Dorell Wright' },
-    '20160513': { 'Dorell Wright' },
+MISSING_KEYS = {
+    '20151030': { 'tibor pleiss', 'james ennis' },
+    '20160307': { 'rakeem christmas' },
+    '20160408': { 'rakeem christmas' },
+    '20160420': { 'dorell wright' },
+    '20160422': { 'john holland' },
+    '20160423': { 'dorell wright' },
+    '20160424': { 'john holland' },
+    '20160425': { 'dorell wright' },
+    '20160426': { 'john holland' },
+    '20160427': { 'dorell wright' },
+    '20160429': { 'dorell wright' },
+    '20160509': { 'dorell wright' },
+    '20160503': { 'dorell wright' },
+    '20160501': { 'dorell wright' },
+    '20160507': { 'dorell wright' },
+    '20160505': { 'dorell wright' },
+    '20160515': { 'dorell wright' },
+    '20160511': { 'dorell wright' },
+    '20160513': { 'dorell wright' },
 }
 
+TBX_MISSING_PLAYERS = []
+TBX_DUPLICATE_NAMES = {}
+
+def createKey(name, team):
+    return name.lower()
+def parseKey(key):
+    return key, ''
 def loadDataFromRotoGuru(filename):
     print 'Loading RotoGuru data...'
 
@@ -141,7 +163,7 @@ def loadDataFromRotoGuru(filename):
             scraper.headsUp('Uh oh, got a duplicate name. Name=' + name + ', date=' + date)
             exit()
 
-        data[date][name] = {
+        data[date][createKey(name, team)] = {
             'Date': date,
             'FantasyPoints': fantasyPoints,
             'Home': home,
@@ -163,6 +185,10 @@ def createNbaDataFileName(dirName, date, season):
     year = date.year
     return NBA_DIR + '/' + dirName + '/' + season + '/' + date.strftime(DATE_FORMAT) + '.json'
 
+def getNameIndex(colNames):
+    if 'PLAYER_NAME' in colNames:
+        return colNames.index('PLAYER_NAME')
+    return colNames.index('VS_PLAYER_NAME')
 def loadDataFromJsonFile(filename):
     data = {}
 
@@ -172,14 +198,21 @@ def loadDataFromJsonFile(filename):
 
     colNames = jsonData['resultSets'][0]['headers']
     rowData = jsonData['resultSets'][0]['rowSet']
-    nameIndex = colNames.index('PLAYER_NAME')
+    nameIndex = getNameIndex(colNames)
+    teamIndex = colNames.index('TEAM_ABBREVIATION')
+    gpIndex = colNames.index('GP')
 
     for row in rowData:
-        name = row[nameIndex]
-        if name in data:
-            scraper.headsUp('Uh oh, got a duplicate name. Name=' + name + ', date=' + str(date))
-            exit()
-        data[name] = zip(colNames, row)
+        key = createKey(row[nameIndex], row[teamIndex])
+        if key in data:
+            #TBX_DUPLICATE_NAMES[name] = filename
+            #scraper.headsUp('Got a duplicate name, name=' + name + ', filename=' + filename)
+
+            #Got a duplicate name. This only happens right now in Opponent
+            #Replace it if the new GP is greater than the old GP
+            if row[gpIndex] > data[key]['GP']:
+                data[key] = dict(zip(colNames, row))
+        data[key] = dict(zip(colNames, row))
     return data
 def loadNbaDataForDate(dirName, date, season):
     #possible stats:
@@ -238,8 +271,8 @@ def loadNbaDataForDate(dirName, date, season):
 
     return data
 
-def hasExactMatch(name, nbaData):
-    return name in nbaData
+def hasExactMatch(key, nbaData):
+    return key in nbaData
 
 def splitName(name):
     return name.split(' ')
@@ -255,9 +288,8 @@ def removeSuffix(name):
     #case 2: name does not have suffix, nba name does
         #eg. name='Larry Nance' -> 'Larry Nance Jr.'
 
-    validSuffices = {'III', 'Jr.'}
     nameSp = splitName(name)
-    if nameSp[-1] in validSuffices:
+    if nameSp[-1] in VALID_SUFFICES:
         return joinName(nameSp[:-1])
     return name
 #Not used
@@ -265,19 +297,21 @@ def abbreviateFirstName(name):
     nameSp = splitName(name)
     nameSp[0] = nameSp[0][:3]
     return joinName(nameSp)
-def findAllPlayersThatMatchFunction(name, nbaData, func):
+def findAllPlayersThatMatchFunction(name, team, newData, func):
     playerMatches = []
 
     newName = func(name)
-    if hasExactMatch(newName, nbaData):
+    if newName and hasExactMatch(createKey(newName, team), newData):
         return [newName]
 
-    for nbaName in nbaData:
+    for key in newData:
+        nbaName, nbaTeam = parseKey(key)
         newNbaName = func(nbaName)
-        if newNbaName == name:
+        if newNbaName and createKey(newNbaName, nbaTeam) == createKey(name, team):
             playerMatches.append(nbaName)
+
     return playerMatches
-def findAllPlayerMatches(name, nbaData):
+def findAllPlayerMatches(name, team, nbaData):
     #Note: I'm only using remove periods, but I'm keepng the others in case i need them for other data sources
 
     #find all combinations of name permutations:
@@ -285,9 +319,14 @@ def findAllPlayerMatches(name, nbaData):
         #-remove periods
         #-use first 3 letters of first name
     playerMatches = []
-    playerMatches.extend(findAllPlayersThatMatchFunction(name, nbaData, removePeriods))
-    #playerMatches.extend(findAllPlayersThatMatchFunction(name, nbaData, removeSuffix))
-    #playerMatches.extend(findAllPlayersThatMatchFunction(name, nbaData, abbreviateFirstName))
+
+    #frist check name
+    playerMatches.extend(findAllPlayersThatMatchFunction(name, team, nbaData, removePeriods))
+
+    #then check reversed name
+    reversedName = reverseName(name)
+    playerMatches.extend(findAllPlayersThatMatchFunction(reversedName, team, nbaData, removePeriods))
+
     return playerMatches
 
 def isPlayerInjured(playerData):
@@ -298,45 +337,68 @@ def playerDidPlay(playerData):
     return minutes != 'DNP' and minutes != 'NA' and float(minutes) > 0
 def playerDidStart(playerData):
     return playerData['Starter'] == 1
-def playerPlayedAnyGameUpToDate(data, playerName, date, season):
+def playerPlayedAnyGameUpToDate(data, key, date, season):
     currDate = FIRST_DATE_OF_SEASON[season]
     while currDate < date:
         currDateStr = currDate.strftime(DATE_FORMAT)
         if currDateStr in data:
-            if playerName in data[currDateStr]:
-                if playerDidPlay(data[currDateStr][playerName]):
+            if key in data[currDateStr]:
+                if playerDidPlay(data[currDateStr][key]):
                     return True
         currDate = currDate + ONE_DAY
     return False
-def playerPlayedAnyGameInSeason(data, playerName, season):
+def playerPlayedAnyGameInSeason(data, key, season):
     endDate = LAST_DATE_OF_SEASON[season] + ONE_DAY
-    return playerPlayedAnyGameUpToDate(data, playerName, endDate, season)
+    return playerPlayedAnyGameUpToDate(data, key, endDate, season)
 
-def findMatchingName(name, newData):
+def reverseName(name):
+    #first check if name is in special cases
+    if name in MISMATCHED_NAMES_REVERSED:
+        return MISMATCHED_NAMES_REVERSED[name]
+
+    nameSp = name.split(' ')
+    if nameSp[-1] in VALID_SUFFICES:
+        return ' '.join(nameSp[1:]) + ', ' + nameSp[0]
+    return nameSp[-1] + ', ' + ' '.join(nameSp[:-1])
+def findMatchingKey(key, newData):
+
     #first, check for exact match
-    if hasExactMatch(name, newData):
-        return name
+    if hasExactMatch(key, newData):
+        return key
 
-    #then, check if it's a known mismatch name
-    if name in MISMATCHED_NAMES and MISMATCHED_NAMES[name] in newData:
-        return MISMATCHED_NAMES[name]
+    name, team = parseKey(key)
 
-    #then, check all permutations of the name
+    #then, check for exact match of reverse of the name
+    reversedNameKey = createKey(reverseName(name), team)
+    if hasExactMatch(reversedNameKey, newData):
+        return reversedNameKey
+
+    #then, check if it's a known mismatch name or its a reverse of a known mismatch name
+    if name in MISMATCHED_NAMES:
+        misMatchedName = MISMATCHED_NAMES[name]
+        misMatchedNameKey = createKey(misMatchedName, team)
+        if hasExactMatch(misMatchedNameKey, newData):
+            return misMatchedNameKey
+        reversedMisMatchedNameKey = createKey(reverseName(misMatchedName), team)
+        if hasExactMatch(reversedMisMatchedNameKey, newData):
+            return reversedMisMatchedNameKey
+
+    #then, check all permutations of the name and its reverse
     #print 'No match found for player=', name, ', searching for similar names...'
-    playerMatches = findAllPlayerMatches(name, newData)
+    playerMatches = findAllPlayerMatches(name, team, newData)
     numPlayerMatches = len(playerMatches)
     if numPlayerMatches > 1:
-        util.stop('Multiple matches found for name=' + name)
+        util.stop('Multiple matches found for name=' + name + ', matches=' + ','.join(playerMatches))
 
     if numPlayerMatches == 1:
         newName = playerMatches[0]
-        print '    Found different name: %s -> %s' % (name, newName)
+        print '    Found different name: "%s" -> "%s"' % (name, newName)
         #add it to the known mismatches
         MISMATCHED_NAMES[name] = newName
-        return newName
+        return createKey(newName, team)
     return None
-def nameIsKnownToBeMissing(name, dateStr):
-    return dateStr in MISSING_NAMES and name in MISSING_NAMES[dateStr]
+def keyIsKnownToBeMissing(key, dateStr):
+    return dateStr in MISSING_KEYS and key in MISSING_KEYS[dateStr]
 def appendNbaData(dirName, data, season):
     print 'Adding NBA Data: %s...' % dirName
 
@@ -353,15 +415,15 @@ def appendNbaData(dirName, data, season):
         nbaData = loadNbaDataForDate(dirName, prevDate, season)
         if len(nbaData) > 0:
             #iterate through each player and merge nba data into player data
-            for name in data[dateStr]:
-                if not nameIsKnownToBeMissing(name, dateStr):
-                    newName = findMatchingName(name, nbaData)
-                    if newName:
-                        data[dateStr][name].update(nbaData[newName])
+            for key in data[dateStr]:
+                if not keyIsKnownToBeMissing(key, dateStr):
+                    newKey = findMatchingKey(key, nbaData)
+                    if newKey:
+                        data[dateStr][key].update(nbaData[newKey])
                     else:
-                        if playerPlayedAnyGameUpToDate(data, name, date, season):
-                            TBX_MISSING_PLAYERS.append((dateStr, name))
-                            util.stop('Player played and was not found. player=' + name + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
+                        if playerPlayedAnyGameUpToDate(data, key, date, season):
+                            TBX_MISSING_PLAYERS.append((dateStr, key))
+                            util.stop('Player played and was not found. player=' + key + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
         cnt += 1
 def appendNbaPlayerBios(dirName, data, season):
     print 'Adding NBA Player Bios...'
@@ -377,15 +439,15 @@ def appendNbaPlayerBios(dirName, data, season):
         #print 'On date=%s (%d / %d)' % (dateStr, cnt, numDates)
 
         #iterate through each player and merge nba data into player data
-        for name in data[dateStr]:
-            if not nameIsKnownToBeMissing(name, dateStr):
-                newName = findMatchingName(name, nbaData)
-                if newName:
-                    data[dateStr][name].update(nbaData[newName])
+        for key in data[dateStr]:
+            if not keyIsKnownToBeMissing(key, dateStr):
+                newKey = findMatchingKey(key, nbaData)
+                if newKey:
+                    data[dateStr][key].update(nbaData[newKey])
                 else:
-                    if playerPlayedAnyGameInSeason(data, name, season):
-                            TBX_MISSING_PLAYERS.append((dateStr, name))
-                            util.stop('Player not found. player=' + name + ', date=' + dateStr)
+                    if playerPlayedAnyGameInSeason(data, key, season):
+                        TBX_MISSING_PLAYERS.append((dateStr, key))
+                        util.stop('Player not found. player=' + key + ', date=' + dateStr)
         cnt += 1
 
 def getValue(obj, key):
@@ -565,8 +627,12 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
+appendNbaData('Opponent', data, SEASON)
 appendNbaPlayerBios('PlayerBios', data, SEASON)
 appendNbaData('Advanced', data, SEASON)
 appendNbaData('Traditional', data, SEASON)
 addAdditionalFeatures(data)
 writeData(createFilename(SEASON), data)
+
+#for a in TBX_DUPLICATE_NAMES:
+#    print a, ':', TBX_DUPLICATE_NAMES[a]
