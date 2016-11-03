@@ -22,7 +22,7 @@ loadData = function() {
 
   #remove rows that don't have data from stats.nba.com
   #it's all or nothing, so just check if one column has NAs, and I know the rest do as well
-  rowsWithNoNbaData = which(is.na(data$AGE))
+  rowsWithNoNbaData = which(is.na(data$W))
   data = data[-rowsWithNoNbaData,]
 
   #convert the date strings to Date objects
@@ -33,6 +33,8 @@ loadData = function() {
   data$Home = factor(data$Home)
   data$Team = factor(data$Team)
   data$Opponent = factor(data$Opponent)
+  data$COLLEGE = factor(data$COLLEGE)
+  data$COUNTRY = factor(data$COUNTRY)
 
   return(data)
 }
@@ -51,6 +53,14 @@ imputeMissingValues = function(data) {
   #Set NAs to 0s for Salary_PrevGame (there are 129 of these)
   #If they don't have a salary, then it literally means their salary is 0
   data[is.na(data$Salary_PrevGame), 'Salary_PrevGame'] = 0
+
+  #Set 'Undrafted' to -1 in DRAFT_YEAR, DRAFT_ROUND and DRAFT_NUMBER
+  data[data$DRAFT_YEAR == 'Undrafted', 'DRAFT_YEAR'] = -1
+  data$DRAFT_YEAR = as.numeric(data$DRAFT_YEAR)
+  data[data$DRAFT_ROUND == 'Undrafted', 'DRAFT_ROUND'] = -1
+  data$DRAFT_ROUND = as.numeric(data$DRAFT_ROUND)
+  data[data$DRAFT_NUMBER == 'Undrafted', 'DRAFT_NUMBER'] = -1
+  data$DRAFT_NUMBER = as.numeric(data$DRAFT_NUMBER)
 
   return(data)
 }

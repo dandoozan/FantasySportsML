@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 import json
 import scraper
+import _util as util
 
 SEASON = '2015'
 DATA_DIR = 'data'
@@ -16,6 +17,8 @@ X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #ro
         'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', #nba advanced
         'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', #nba advanced
         'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG', #nba advanced
+        'PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT', #nba player bios
+        'COLLEGE','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER', #nba player bios
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame' #mine
 ]
@@ -26,6 +29,10 @@ ONE_DAY = timedelta(1)
 FIRST_DATE_OF_SEASON = {
     '2014': datetime(2014, 10, 28),
     '2015': datetime(2015, 10, 27),
+}
+LAST_DATE_OF_SEASON = {
+    '2014': datetime(2015, 4, 15),
+    '2015': datetime(2016, 4, 13),
 }
 
 #rotoguru: nba
@@ -71,7 +78,8 @@ MISSING_NAMES = {
 }
 
 def loadDataFromRotoGuru(filename):
-    print 'Loading data from ' + filename + '...'
+    print 'Loading RotoGuru data...'
+
     #get data
     f = open(filename)
     f.readline()
@@ -155,6 +163,24 @@ def createNbaDataFileName(dirName, date, season):
     year = date.year
     return NBA_DIR + '/' + dirName + '/' + season + '/' + date.strftime(DATE_FORMAT) + '.json'
 
+def loadDataFromJsonFile(filename):
+    data = {}
+
+    f = open(filename)
+    jsonData = json.load(f)
+    f.close()
+
+    colNames = jsonData['resultSets'][0]['headers']
+    rowData = jsonData['resultSets'][0]['rowSet']
+    nameIndex = colNames.index('PLAYER_NAME')
+
+    for row in rowData:
+        name = row[nameIndex]
+        if name in data:
+            scraper.headsUp('Uh oh, got a duplicate name. Name=' + name + ', date=' + str(date))
+            exit()
+        data[name] = zip(colNames, row)
+    return data
 def loadNbaDataForDate(dirName, date, season):
     #possible stats:
     #PLAYER_ID #N
@@ -204,24 +230,12 @@ def loadNbaDataForDate(dirName, date, season):
         filename = createNbaDataFileName(dirName, currDate, season)
         usedDiffFile = True
 
-    if usedDiffFile:
-        scraper.headsUp('Used different file. date=' + str(date) + ', file=' + filename)
+    #if usedDiffFile:
+        #scraper.headsUp('Used different file. date=' + str(date) + ', file=' + filename)
 
     if os.path.exists(filename):
-        f = open(filename)
-        jsonData = json.load(f)
-        f.close()
+        data = loadDataFromJsonFile(filename)
 
-        colNames = jsonData['resultSets'][0]['headers']
-        rowData = jsonData['resultSets'][0]['rowSet']
-        nameIndex = colNames.index('PLAYER_NAME')
-
-        for row in rowData:
-            name = row[nameIndex]
-            if name in data:
-                scraper.headsUp('Uh oh, got a duplicate name. Name=' + name + ', date=' + str(date))
-                exit()
-            data[name] = zip(colNames, row)
     return data
 
 def hasExactMatch(name, nbaData):
@@ -294,63 +308,84 @@ def playerPlayedAnyGameUpToDate(data, playerName, date, season):
                     return True
         currDate = currDate + ONE_DAY
     return False
+def playerPlayedAnyGameInSeason(data, playerName, season):
+    endDate = LAST_DATE_OF_SEASON[season] + ONE_DAY
+    return playerPlayedAnyGameUpToDate(data, playerName, endDate, season)
 
-def appendDataFromNba(dirName, data, season):
+def findMatchingName(name, newData):
+    #first, check for exact match
+    if hasExactMatch(name, newData):
+        return name
+
+    #then, check if it's a known mismatch name
+    if name in MISMATCHED_NAMES and MISMATCHED_NAMES[name] in newData:
+        return MISMATCHED_NAMES[name]
+
+    #then, check all permutations of the name
+    #print 'No match found for player=', name, ', searching for similar names...'
+    playerMatches = findAllPlayerMatches(name, newData)
+    numPlayerMatches = len(playerMatches)
+    if numPlayerMatches > 1:
+        util.stop('Multiple matches found for name=' + name)
+
+    if numPlayerMatches == 1:
+        newName = playerMatches[0]
+        print '    Found different name: %s -> %s' % (name, newName)
+        #add it to the known mismatches
+        MISMATCHED_NAMES[name] = newName
+        return newName
+    return None
+def nameIsKnownToBeMissing(name, dateStr):
+    return dateStr in MISSING_NAMES and name in MISSING_NAMES[dateStr]
+def appendNbaData(dirName, data, season):
+    print 'Adding NBA Data: %s...' % dirName
+
     cnt = 1
     dateStrs = data.keys()
     dateStrs.sort()
     numDates = len(dateStrs)
     for dateStr in dateStrs:
-        print 'On date=%s (%d / %d)' % (dateStr, cnt, numDates)
+        #print 'On date=%s (%d / %d)' % (dateStr, cnt, numDates)
 
         #load previous day's nba season-long data
         date = datetime.strptime(dateStr, DATE_FORMAT)
         prevDate = date - ONE_DAY
         nbaData = loadNbaDataForDate(dirName, prevDate, season)
         if len(nbaData) > 0:
-
             #iterate through each player and merge nba data into player data
             for name in data[dateStr]:
-
-                #ignore players that are missing from data
-                if dateStr in MISSING_NAMES and name in MISSING_NAMES[dateStr]:
-                    continue
-
-                #first, check for exact match
-                if hasExactMatch(name, nbaData):
-                    data[dateStr][name].update(nbaData[name])
-                #then, check if it's a known mismatch name
-                elif name in MISMATCHED_NAMES and MISMATCHED_NAMES[name] in nbaData:
-                    data[dateStr][name].update(nbaData[MISMATCHED_NAMES[name]])
-                #then, check all permutations of the name
-                else:
-                    #print 'No match found for player=', name, ', searching for similar names...'
-                    playerMatches = findAllPlayerMatches(name, nbaData)
-                    numPlayerMatches = len(playerMatches)
-                    if numPlayerMatches == 1:
-                        nbaName = playerMatches[0]
-                        print '    Found different name: %s -> %s' % (name, nbaName)
-                        #add it to the known mismatches
-                        MISMATCHED_NAMES[name] = nbaName
-                        data[dateStr][name].update(nbaData[nbaName])
-                    elif numPlayerMatches == 0:
-                        #print '    Didn\'t find player, checking that player actually played any games leading up to', dateStr
-
-                        #verify that the player played any games leading up to date
+                if not nameIsKnownToBeMissing(name, dateStr):
+                    newName = findMatchingName(name, nbaData)
+                    if newName:
+                        data[dateStr][name].update(nbaData[newName])
+                    else:
                         if playerPlayedAnyGameUpToDate(data, name, date, season):
                             TBX_MISSING_PLAYERS.append((dateStr, name))
-                            scraper.headsUp('Player played and was not found. player=' + name + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
-                            exit()
-                        else:
-                            pass
-                            #print '    Didn\'t find %s, but he didn\'t play any games' % name
-                    else:
-                        print 'Multiple matches found, matches=', playerMatches
-                        exit()
+                            util.stop('Player played and was not found. player=' + name + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
+        cnt += 1
+def appendNbaPlayerBios(dirName, data, season):
+    print 'Adding NBA Player Bios...'
 
-        else:
-            scraper.headsUp('No nba file found for date=' + dateStr + ', so not appending data')
-            #exit()
+    cnt = 1
+    dateStrs = data.keys()
+    dateStrs.sort()
+    numDates = len(dateStrs)
+
+    nbaData = loadDataFromJsonFile(NBA_DIR + '/' + dirName + '/' + season + '.json')
+
+    for dateStr in dateStrs:
+        #print 'On date=%s (%d / %d)' % (dateStr, cnt, numDates)
+
+        #iterate through each player and merge nba data into player data
+        for name in data[dateStr]:
+            if not nameIsKnownToBeMissing(name, dateStr):
+                newName = findMatchingName(name, nbaData)
+                if newName:
+                    data[dateStr][name].update(nbaData[newName])
+                else:
+                    if playerPlayedAnyGameInSeason(data, name, season):
+                            TBX_MISSING_PLAYERS.append((dateStr, name))
+                            util.stop('Player not found. player=' + name + ', date=' + dateStr)
         cnt += 1
 
 def getValue(obj, key):
@@ -530,7 +565,8 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
-appendDataFromNba('Advanced', data, SEASON)
-appendDataFromNba('Traditional', data, SEASON)
+appendNbaPlayerBios('PlayerBios', data, SEASON)
+appendNbaData('Advanced', data, SEASON)
+appendNbaData('Traditional', data, SEASON)
 addAdditionalFeatures(data)
 writeData(createFilename(SEASON), data)
