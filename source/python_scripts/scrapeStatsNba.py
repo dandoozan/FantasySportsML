@@ -4,10 +4,28 @@ import json
 import scraper
 import _util as util
 
-TYPE = 'Opponent' #Advanced
-MODE = 'Per100Possessions' #Totals
-BASE_URL = 'http://stats.nba.com/stats/leagueplayerondetails?'
-#BASE_URL = 'http://stats.nba.com/stats/leaguedashplayerstats?'
+CATEGORIES = {
+    'Traditional': {
+        'measureType': 'Base',
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
+        'perMode': 'PerGame',
+    },
+    'Advanced': {
+        'measureType': 'Advanced',
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
+        'perMode': 'Totals',
+    },
+    'Opponent': {
+        'measureType': 'Opponent',
+        'baseUrl': 'http://stats.nba.com/stats/leagueplayerondetails?',
+        'perMode': 'Per100Possessions',
+    },
+    'Defense': {
+        'measureType': 'Defense',
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
+        'perMode': 'PerGame',
+    },
+}
 
 SEASONS = {
     '2014': {
@@ -82,22 +100,27 @@ def getDataValues(data):
 
 #=============== Main ================
 
-print 'Scraping Type=%s, Mode=%s' % (TYPE, MODE)
-
+category = raw_input('Enter Category (eg. Traditional): ').strip()
 season = raw_input('Enter season (eg. 2015): ').strip()
-parentDir = 'data/rawDataFromStatsNba/' + TYPE + '/' + season
+
+parentDir = 'data/rawDataFromStatsNba/' + category + '/' + season
 util.createDirIfNecessary(parentDir)
 
 seasonObj = SEASONS[season]
 startDate = seasonObj['startDate']
 endDate = seasonObj['endDate']
 
+categoryObj = CATEGORIES[category]
+baseUrl = categoryObj['baseUrl']
+measureType = categoryObj['measureType']
+perMode = categoryObj['perMode']
+
 currDate = startDate
 prevDataValues = None
 while currDate <= endDate:
     print '\nScraping data for ' + str(currDate) + '...'
 
-    url = scraper.createUrl(BASE_URL, createUrlParams(startDate, currDate, TYPE, MODE, seasonObj['str']))
+    url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, measureType, perMode, seasonObj['str']))
 
     jsonData = scraper.downloadJson(url, createHeaders())
     #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
