@@ -9,26 +9,38 @@ DATA_DIR = 'data'
 ROTOGURU_FILE = DATA_DIR + '/rawDataFromRotoGuru/fd_%s.txt' % SEASON
 NBA_DIR = DATA_DIR + '/rawDataFromStatsNba'
 Y_NAME = 'FantasyPoints'
-X_NAMES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent', #rotoguru
-        'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', #nba
-        'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', #nba
-        'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', #nba
-        'PLUS_MINUS', 'DD2', 'TD3', #nba
+X_NAMES = [
+        #Rotoguru
+        'Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent',
 
-        'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', #nba advanced
-        'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', #nba advanced
-        'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG', #nba advanced
+        #NBA Traditional
+        'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT',
+        'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB',
+        'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS',
+        'PLUS_MINUS', 'DD2', 'TD3',
 
-        'PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT', #nba player bios
-        'COLLEGE','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER', #nba player bios
+        #NBA Advanced
+        'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO',
+        'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT',
+        'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG',
 
-        'OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A', #nba opponent
-        'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB', #nba opponent
-        'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL', #nba opponent
-        'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS', #nba opponent
+        #NBA Player Bios
+        'PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT',
+        'COLLEGE','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER',
 
-        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', #mine
-        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame' #mine
+        #NBA Opponent
+        'OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A',
+        'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB',
+        'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL',
+        'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS',
+
+        #NBA Defense
+        'PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV',
+        'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS',
+
+        #Mine
+        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
+        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame',
 ]
 
 
@@ -392,7 +404,7 @@ def findMatchingKey(key, newData):
 
     if numPlayerMatches == 1:
         newName = playerMatches[0]
-        print '    Found different name: "%s" -> "%s"' % (name, newName)
+        print '    Found different name: %s -> %s' % (name, newName)
         #add it to the known mismatches
         MISMATCHED_NAMES[name] = newName
         return createKey(newName, team)
@@ -627,6 +639,7 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
+appendNbaData('Defense', data, SEASON)
 appendNbaData('Opponent', data, SEASON)
 appendNbaPlayerBios('PlayerBios', data, SEASON)
 appendNbaData('Advanced', data, SEASON)

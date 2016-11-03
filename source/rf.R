@@ -3,9 +3,9 @@
 #D-Add nba advanced: rf_adv: start-2015-11-16, 60/61, 100, 7.071, 82.36119/54.79276, 3.557412/8.356418/3.491678
 #D-Add nba PlayerBios: rf_playerbios: start-2015-11-16, 66/68, 100, 8.396, 81.48067/55.27606, 3.560697/8.388797/3.486949
 #D-Add WasDrafted and AttendedTopCollege: rf_WasDrafted: start-2015-11-16, 71/73, 100, 8.189, 81.66209/55.17648, 3.518361/8.388745/3.449907
-#D-Data file reordered: rf_Reorder: start-2015-11-16, 71/73, 100, 8.121, 82.86294/54.51735, 3.535505/8.343658/3.475144
-#-Add nba opponent: rf_opponent: start-2015-11-16, 91/93, 100, 10.167, 82.27009/54.84276, 3.519526/8.310265/3.475451
-#-Add defense
+#D-Data file reordered: rf_Reorder: start-2015-11-16, 71/73, 100, 8.121, 82.86294/54.51735, 3.535505/8.343658/3.475144 <-- new best!
+#D-Add nba opponent: rf_opponent: start-2015-11-16, 91/93, 100, 10.167, 82.27009/54.84276, 3.519526/8.310265/3.475451 <-- new best!
+#D-Add defense: rf_defense: start-2015-11-16, 99/101, 100, 11.268, 82.89138/54.50174, 3.542588/8.280058/3.483619 <-- new best!
 
 #NBA data to download:
   #D-traditional
@@ -37,20 +37,21 @@ source('../ml-common/plot.R')
 source('../ml-common/util.R')
 
 #Globals
-FEATURES.ID = c('Date', 'Name')
+FEATURES.ID = c('Date', 'Name', 'Team')
 FEATURES.RG = c('Salary', 'Position', 'Home', 'Team', 'Opponent')
 FEATURES.NBA = c('AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3')
 FEATURES.NBA_ADV = c('OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG')
 FEATURES.NBA_PLAYERBIOS = c('PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER')
 FEATURES.NBA_OPPONENT = c('OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A', 'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB', 'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL', 'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS')
+FEATURES.NBA_DEFENSE = c('PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS')
 FEATURES.MINE = c('WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
-FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.NBA_PLAYERBIOS, FEATURES.NBA_OPPONENT, FEATURES.MINE)
+FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.NBA_PLAYERBIOS, FEATURES.NBA_OPPONENT, FEATURES.NBA_DEFENSE, FEATURES.MINE)
 
 FEATURES_TO_USE = FEATURES.ALL
 
 PROD_RUN = T
 N_TREE = 100
-FILENAME = 'rf_opponent'
+FILENAME = 'rf_defense'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 ID_NAME = 'Name'

@@ -62,6 +62,11 @@ imputeMissingValues = function(data) {
   data[data$DRAFT_NUMBER == 'Undrafted', 'DRAFT_NUMBER'] = -1
   data$DRAFT_NUMBER = as.numeric(data$DRAFT_NUMBER)
 
+  #Set 'None' to 0 in DEF_WS (there's only 1).
+  #I don't know what DEF_WS is, so i dont know if this is significant
+  data[data$DEF_WS == 'None', 'DEF_WS'] = 0
+  data$DEF_WS = as.numeric(data$DEF_WS)
+
   return(data)
 }
 
