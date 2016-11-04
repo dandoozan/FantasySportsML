@@ -63,6 +63,12 @@ X_NAMES = [
         'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL',
         'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS', 'TEAM_PLUS_MINUS',
 
+        #NBA Team Advanced
+        'TEAM_OFF_RATING', 'TEAM_DEF_RATING', 'TEAM_NET_RATING', 'TEAM_AST_PCT',
+        'TEAM_AST_TO', 'TEAM_AST_RATIO', 'TEAM_OREB_PCT', 'TEAM_DREB_PCT',
+        'TEAM_REB_PCT', 'TEAM_TM_TOV_PCT', 'TEAM_EFG_PCT', 'TEAM_TS_PCT',
+        'TEAM_PACE', 'TEAM_PIE',
+
         #Mine
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame',
@@ -739,6 +745,7 @@ def addAdditionalFeatures(data):
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
 
+appendNbaTeamData('Team_Advanced', data, SEASON, 'TEAM_')
 appendNbaTeamData('Team_Traditional', data, SEASON, 'TEAM_')
 appendNbaData('Traditional_Diff', data, SEASON, 'DIFF_')
 appendNbaData('Usage', data, SEASON)

@@ -12,10 +12,11 @@
 #D-Add traditional-diff: rf_tradDiff: start-2015-11-16, 147/149, 100, 15.763, 75.14734/58.75237, 3.506969/8.345989/3.459044
 #-Add Starter: rf_starter: start-2015-11-16, 148/150, 100, 15.644, 76.20332/58.17275, 3.515676/8.349295/3.444033
 #-Add team traditional: rf_team: start-2015-11-16, 174/176, 100, 18.482, 75.41484/58.60554, 3.497111/8.261813/3.439535 <-- new best!
-#-Add opp team traditional
+#-Add team adv: rf_teamAdv: start-2015-11-16, 188/190, 100, 19.583, 75.46155/58.5799, 3.521843/8.281854/3.435679
 #-Add team 4factor
+#-Add opp team traditional
 #-Add opp team 4factor
-
+#-Add opp team adv
 #-to test: train[findFirstIndexOfDate(train, '2015-11-15'), c(F.ID, F.NBA)]
 
 #-Build models on subset of data
@@ -71,17 +72,19 @@ F.NBA.P.SCORING = c('PCT_FGA_2PT', 'PCT_FGA_3PT', 'PCT_PTS_2PT', 'PCT_PTS_2PT_MR
 F.NBA.P.USAGE = c('PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A', 'PCT_FTM', 'PCT_FTA', 'PCT_OREB', 'PCT_REB', 'PCT_AST', 'PCT_TOV', 'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS')
 F.NBA.P.TRADITIONAL_DIFF = c('DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M', 'DIFF_FG3A', 'DIFF_FG3_PCT', 'DIFF_FTM', 'DIFF_FTA', 'DIFF_FT_PCT', 'DIFF_OREB', 'DIFF_DREB', 'DIFF_REB', 'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK', 'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD')
 F.NBA.T.TRADITIONAL = c('TEAM_GP', 'TEAM_W', 'TEAM_L', 'TEAM_W_PCT', 'TEAM_MIN', 'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3M', 'TEAM_FG3A', 'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT', 'TEAM_OREB', 'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL', 'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS', 'TEAM_PLUS_MINUS')
+F.NBA.T.ADVANCED = c('TEAM_OFF_RATING', 'TEAM_DEF_RATING', 'TEAM_NET_RATING', 'TEAM_AST_PCT', 'TEAM_AST_TO', 'TEAM_AST_RATIO', 'TEAM_OREB_PCT', 'TEAM_DREB_PCT', 'TEAM_REB_PCT', 'TEAM_TM_TOV_PCT', 'TEAM_EFG_PCT', 'TEAM_TS_PCT', 'TEAM_PACE', 'TEAM_PIE')
 F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
 F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
-          F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF, F.NBA.T.TRADITIONAL, F.MINE)
+          F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
+          F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.MINE)
 
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
+FILENAME = 'rf_teamAdv'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
-FILENAME = 'rf_team'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 ID_NAME = 'Name'
