@@ -7,7 +7,7 @@ import _util as util
 SEASON = '2015'
 DATA_DIR = 'data'
 ROTOGURU_FILE = DATA_DIR + '/rawDataFromRotoGuru/fd_%s.txt' % SEASON
-NBA_DIR = DATA_DIR + '/rawDataFromStatsNba'
+NBA_DIR = util.joinDirs(DATA_DIR, 'rawDataFromStatsNba')
 Y_NAME = 'FantasyPoints'
 X_NAMES = [
         #Rotoguru
@@ -56,11 +56,17 @@ X_NAMES = [
         'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK',
         'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD',
 
+        #NBA Team Traditional
+        'TEAM_GP', 'TEAM_W', 'TEAM_L', 'TEAM_W_PCT', 'TEAM_MIN',
+        'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3M', 'TEAM_FG3A',
+        'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT', 'TEAM_OREB',
+        'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL',
+        'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS', 'TEAM_PLUS_MINUS',
+
         #Mine
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame',
 ]
-
 
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -122,6 +128,39 @@ MISSING_KEYS = {
     '20160513': { 'dorell wright' },
 }
 
+RG_TO_NBA_TEAM_MAP = {
+    'atl': 'Atlanta Hawks',
+    'chi': 'Chicago Bulls',
+    'cle': 'Cleveland Cavaliers',
+    'bos': 'Boston Celtics',
+    'bkn': 'Brooklyn Nets',
+    'cha': 'Charlotte Hornets',
+    'dal': 'Dallas Mavericks',
+    'den': 'Denver Nuggets',
+    'det': 'Detroit Pistons',
+    'gsw': 'Golden State Warriors',
+    'hou': 'Houston Rockets',
+    'ind': 'Indiana Pacers',
+    'lac': 'LA Clippers',
+    'lal': 'Los Angeles Lakers',
+    'mem': 'Memphis Grizzlies',
+    'mia': 'Miami Heat',
+    'mil': 'Milwaukee Bucks',
+    'min': 'Minnesota Timberwolves',
+    'nor': 'New Orleans Pelicans',
+    'nyk': 'New York Knicks',
+    'okc': 'Oklahoma City Thunder',
+    'orl': 'Orlando Magic',
+    'phi': 'Philadelphia 76ers',
+    'pho': 'Phoenix Suns',
+    'por': 'Portland Trail Blazers',
+    'sac': 'Sacramento Kings',
+    'sas': 'San Antonio Spurs',
+    'tor': 'Toronto Raptors',
+    'uta': 'Utah Jazz',
+    'was': 'Washington Wizards',
+}
+
 TBX_MISSING_PLAYERS = []
 TBX_DUPLICATE_NAMES = {}
 
@@ -129,11 +168,11 @@ def createKey(name, team):
     return name.lower()
 def parseKey(key):
     return key, ''
-def loadDataFromRotoGuru(filename):
+def loadDataFromRotoGuru(fullPathFilename):
     print 'Loading RotoGuru data...'
 
     #get data
-    f = open(filename)
+    f = open(fullPathFilename)
     f.readline()
 
     #Upcoming game data:
@@ -211,18 +250,17 @@ def loadDataFromRotoGuru(filename):
 
     return data
 
-def createNbaDataFileName(dirName, date, season):
-    year = date.year
-    return NBA_DIR + '/' + dirName + '/' + season + '/' + date.strftime(DATE_FORMAT) + '.json'
+def createNbaFullPathFilename(fullPathToDir, baseFilename):
+    return util.createFullPathFilename(fullPathToDir, baseFilename + '.json')
 
 def getNameIndex(colNames, prefix=''):
     if (prefix + 'PLAYER_NAME') in colNames:
         return colNames.index(prefix + 'PLAYER_NAME')
     return colNames.index(prefix + 'VS_PLAYER_NAME')
-def loadDataFromJsonFile(filename, prefix=''):
+def loadNbaDataFromJsonFile(fullPathFilename, prefix=''):
     data = {}
 
-    f = open(filename)
+    f = open(fullPathFilename)
     jsonData = json.load(f)
     f.close()
 
@@ -235,8 +273,8 @@ def loadDataFromJsonFile(filename, prefix=''):
     for row in rowData:
         key = createKey(row[nameIndex], row[teamIndex])
         if key in data:
-            #TBX_DUPLICATE_NAMES[name] = filename
-            #scraper.headsUp('Got a duplicate name, name=' + name + ', filename=' + filename)
+            #TBX_DUPLICATE_NAMES[name] = fullPathFilename
+            #scraper.headsUp('Got a duplicate name, name=' + name + ', filename=' + fullPathFilename)
 
             #Got a duplicate name. This only happens right now in Opponent
             #Replace it if the new GP is greater than the old GP
@@ -244,61 +282,51 @@ def loadDataFromJsonFile(filename, prefix=''):
                 data[key] = dict(zip(colNames, row))
         data[key] = dict(zip(colNames, row))
     return data
-def loadNbaDataForDate(dirName, date, season, prefix=''):
-    #possible stats:
-    #PLAYER_ID #N
-    #PLAYER_NAME #N
-    #TEAM_ID #N
-    #TEAM_ABBREVIATION #N
-    #AGE
-    #GP
-    #W
-    #L
-    #W_PCT
-    #MIN
-    #FGM
-    #FGA
-    #FG_PCT
-    #FG3M
-    #FG3A
-    #FG3_PCT
-    #FTM
-    #FTA
-    #FT_PCT
-    #OREB
-    #DREB
-    #REB
-    #AST
-    #TOV
-    #STL
-    #BLK
-    #BLKA #(Blocks Against)
-    #PF
-    #PFD #(Personal Fouls Drawn)
-    #PTS
-    #PLUS_MINUS
-    #DD2
-    #TD3
-    #CFID #?
-    #CFPARAMS #?
+def loadNbaTeamDataFromJsonFile(fullPathFilename, prefix=''):
+    #load data into an obj with the teamNames as keys (rather than playerNames)
 
     data = {}
 
+    f = open(fullPathFilename)
+    jsonData = json.load(f)
+    f.close()
+
+    colNames = map(lambda x: prefix + x, jsonData['resultSets'][0]['headers'])
+    rowData = jsonData['resultSets'][0]['rowSet']
+    teamNameIndex = colNames.index(prefix + 'TEAM_NAME')
+
+    for row in rowData:
+        key = row[teamNameIndex] #just use the team name for the key
+        if key in data:
+            scraper.stop('Got a duplicate team, team=' + key + ', filename=' + fullPathFilename)
+        data[key] = dict(zip(colNames, row))
+    return data
+def findApplicableFile(fullPathToDir, date, season):
     #if i dont find a file for date, then check each previous day until i find it
     usedDiffFile = False
     currDate = date
-    filename = createNbaDataFileName(dirName, date, season)
-    while currDate >= FIRST_DATE_OF_SEASON[season] and not os.path.exists(filename):
+    fullPathFilename = createNbaFullPathFilename(fullPathToDir, date.strftime(DATE_FORMAT))
+    while currDate >= FIRST_DATE_OF_SEASON[season] and not os.path.exists(fullPathFilename):
         currDate = currDate - ONE_DAY
-        filename = createNbaDataFileName(dirName, currDate, season)
+        fullPathFilename = createNbaFullPathFilename(fullPathToDir, currDate.strftime(DATE_FORMAT))
         usedDiffFile = True
 
     #if usedDiffFile:
         #scraper.headsUp('Used different file. date=' + str(date) + ', file=' + filename)
-
-    if os.path.exists(filename):
-        data = loadDataFromJsonFile(filename, prefix)
-
+    if os.path.exists(fullPathFilename):
+        return fullPathFilename
+    return None
+def loadNbaDataForDate(fullPathToDir, date, season, prefix=''):
+    data = {}
+    fullPathFilename = findApplicableFile(fullPathToDir, date, season)
+    if fullPathFilename:
+        data = loadNbaDataFromJsonFile(fullPathFilename, prefix)
+    return data
+def loadNbaTeamDataForDate(fullPathToDir, date, season, prefix=''):
+    data = {}
+    fullPathFilename = findApplicableFile(fullPathToDir, date, season)
+    if fullPathFilename:
+        data = loadNbaTeamDataFromJsonFile(fullPathFilename, prefix)
     return data
 
 def hasExactMatch(key, nbaData):
@@ -380,6 +408,18 @@ def playerPlayedAnyGameUpToDate(data, key, date, season):
 def playerPlayedAnyGameInSeason(data, key, season):
     endDate = LAST_DATE_OF_SEASON[season] + ONE_DAY
     return playerPlayedAnyGameUpToDate(data, key, endDate, season)
+def teamPlayedAnyGameUpToDate(data, team, date, season):
+    currDate = FIRST_DATE_OF_SEASON[season]
+    while currDate < date:
+        currDateStr = currDate.strftime(DATE_FORMAT)
+        if currDateStr in data:
+            for key in data[currDateStr]:
+                playerData = data[currDateStr][key]
+                playerTeam = getTeam(playerData)
+                if playerTeam == team:
+                    return True
+        currDate = currDate + ONE_DAY
+    return False
 
 def reverseName(name):
     #first check if name is in special cases
@@ -429,8 +469,14 @@ def findMatchingKey(key, newData):
     return None
 def keyIsKnownToBeMissing(key, dateStr):
     return dateStr in MISSING_KEYS and key in MISSING_KEYS[dateStr]
-def appendNbaData(dirName, data, season, prefix=''):
-    print 'Adding NBA Data: %s...' % dirName
+def createNbaFullPathToParentDir(parentDirName, season=None):
+    if season:
+        return util.joinDirs(NBA_DIR, parentDirName, season)
+    return util.joinDirs(NBA_DIR, parentDirName)
+def appendNbaData(parentDirName, data, season, prefix=''):
+    print 'Adding NBA Data: %s...' % parentDirName
+
+    fullPathToDir = createNbaFullPathToParentDir(parentDirName, season)
 
     cnt = 1
     dateStrs = data.keys()
@@ -442,7 +488,7 @@ def appendNbaData(dirName, data, season, prefix=''):
         #load previous day's nba season-long data
         date = datetime.strptime(dateStr, DATE_FORMAT)
         prevDate = date - ONE_DAY
-        nbaData = loadNbaDataForDate(dirName, prevDate, season, prefix)
+        nbaData = loadNbaDataForDate(fullPathToDir, prevDate, season, prefix)
         if len(nbaData) > 0:
             #iterate through each player and merge nba data into player data
             for key in data[dateStr]:
@@ -455,15 +501,18 @@ def appendNbaData(dirName, data, season, prefix=''):
                             TBX_MISSING_PLAYERS.append((dateStr, key))
                             util.stop('Player played and was not found. player=' + key + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
         cnt += 1
-def appendNbaPlayerBios(dirName, data, season):
+def appendNbaPlayerBios(parentDirName, data, season):
     print 'Adding NBA Player Bios...'
+
+    fullPathToDir = createNbaFullPathToParentDir(parentDirName)
 
     cnt = 1
     dateStrs = data.keys()
     dateStrs.sort()
     numDates = len(dateStrs)
 
-    nbaData = loadDataFromJsonFile(NBA_DIR + '/' + dirName + '/' + season + '.json')
+    fullPathFilename = createNbaFullPathFilename(fullPathToDir, season)
+    nbaData = loadNbaDataFromJsonFile(fullPathFilename)
 
     for dateStr in dateStrs:
         #print 'On date=%s (%d / %d)' % (dateStr, cnt, numDates)
@@ -478,6 +527,38 @@ def appendNbaPlayerBios(dirName, data, season):
                     if playerPlayedAnyGameInSeason(data, key, season):
                         TBX_MISSING_PLAYERS.append((dateStr, key))
                         util.stop('Player not found. player=' + key + ', date=' + dateStr)
+        cnt += 1
+def getTeam(playerData):
+    return playerData['Team']
+def appendNbaTeamData(parentDirName, data, season, prefix=''):
+    print 'Adding NBA Team Data: %s...' % parentDirName
+
+    fullPathToDir = createNbaFullPathToParentDir(parentDirName, season)
+
+    cnt = 1
+    dateStrs = data.keys()
+    dateStrs.sort()
+    numDates = len(dateStrs)
+    for dateStr in dateStrs:
+        #print 'On date=%s (%d / %d)' % (dateStr, cnt, numDates)
+
+        #load previous day's nba season-long data
+        date = datetime.strptime(dateStr, DATE_FORMAT)
+        prevDate = date - ONE_DAY
+        nbaData = loadNbaTeamDataForDate(fullPathToDir, prevDate, season, prefix)
+        if len(nbaData) > 0:
+            #iterate through each player and merge nba data into player data
+            for key in data[dateStr]:
+                playerData = data[dateStr][key]
+                team = getTeam(playerData)
+
+                nbaTeam = RG_TO_NBA_TEAM_MAP[team]
+                if nbaTeam in nbaData:
+                    playerData.update(nbaData[nbaTeam])
+                else:
+                    if teamPlayedAnyGameUpToDate(data, team, date, season):
+                        #TBX_MISSING_PLAYERS.append((dateStr, key))
+                        util.stop('Team played and was not found. team=' + team + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
         cnt += 1
 
 def getValue(obj, key):
@@ -657,6 +738,8 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
+
+appendNbaTeamData('Team_Traditional', data, SEASON, 'TEAM_')
 appendNbaData('Traditional_Diff', data, SEASON, 'DIFF_')
 appendNbaData('Usage', data, SEASON)
 appendNbaData('Scoring', data, SEASON)

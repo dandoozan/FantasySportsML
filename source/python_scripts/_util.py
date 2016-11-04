@@ -16,3 +16,9 @@ def headsUp(msg):
 def stop(msg):
     headsUp(msg)
     exit()
+
+def createFullPathFilename(fullPathToParentDir, filename):
+    return os.path.join(fullPathToParentDir, filename)
+
+def joinDirs(*dirNames):
+    return os.path.join(*dirNames)
