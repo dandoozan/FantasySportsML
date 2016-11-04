@@ -8,75 +8,107 @@ SEASON = '2015'
 DATA_DIR = 'data'
 ROTOGURU_FILE = DATA_DIR + '/rawDataFromRotoGuru/fd_%s.txt' % SEASON
 NBA_DIR = util.joinDirs(DATA_DIR, 'rawDataFromStatsNba')
-Y_NAME = 'FantasyPoints'
-X_NAMES = [
-        #Rotoguru
-        'Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent',
 
-        #NBA Traditional
-        'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT',
-        'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB',
-        'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS',
-        'PLUS_MINUS', 'DD2', 'TD3',
-
-        #NBA Advanced
-        'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO',
-        'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT',
-        'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE',
-
-        #NBA Player Bios
-        'PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT',
-        'COLLEGE','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER',
-
-        #NBA Opponent
-        'OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A',
-        'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB',
-        'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL',
-        'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS',
-
-        #NBA Defense
-        'PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV',
-        'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS',
-
-        #NBA Scoring
-        'PCT_FGA_2PT', 'PCT_FGA_3PT', 'PCT_PTS_2PT', 'PCT_PTS_2PT_MR',
-        'PCT_PTS_3PT', 'PCT_PTS_FB', 'PCT_PTS_FT', 'PCT_PTS_OFF_TOV',
-        'PCT_PTS_PAINT', 'PCT_AST_2PM', 'PCT_UAST_2PM', 'PCT_AST_3PM',
-        'PCT_UAST_3PM', 'PCT_AST_FGM', 'PCT_UAST_FGM',
-
-        #NBA Usage
-        'PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A', 'PCT_FTM',
-        'PCT_FTA', 'PCT_OREB', 'PCT_REB', 'PCT_AST', 'PCT_TOV',
-        'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS',
-
-        #NBA Traditional - Differentials On
-        'DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M',
-        'DIFF_FG3A', 'DIFF_FG3_PCT', 'DIFF_FTM', 'DIFF_FTA',
-        'DIFF_FT_PCT', 'DIFF_OREB', 'DIFF_DREB', 'DIFF_REB',
-        'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK',
-        'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD',
-
-        #NBA Team Traditional
-        'TEAM_GP', 'TEAM_W', 'TEAM_L', 'TEAM_W_PCT', 'TEAM_MIN',
-        'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3M', 'TEAM_FG3A',
-        'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT', 'TEAM_OREB',
-        'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL',
-        'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS', 'TEAM_PLUS_MINUS',
-
-        #NBA Team Advanced
-        'TEAM_OFF_RATING', 'TEAM_DEF_RATING', 'TEAM_NET_RATING', 'TEAM_AST_PCT',
-        'TEAM_AST_TO', 'TEAM_AST_RATIO', 'TEAM_OREB_PCT', 'TEAM_DREB_PCT',
-        'TEAM_REB_PCT', 'TEAM_TM_TOV_PCT', 'TEAM_EFG_PCT', 'TEAM_TS_PCT',
-        'TEAM_PACE', 'TEAM_PIE',
-
-        #NBA Team Four Factors
-        'TEAM_FTA_RATE', 'TEAM_OPP_EFG_PCT', 'TEAM_OPP_FTA_RATE',
-        'TEAM_OPP_TOV_PCT', 'TEAM_OPP_OREB_PCT',
-
-        #Mine
-        'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
-        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame',
+ROTOGURU_FEATURES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent']
+ADDITIONAL_FEATURES = ['AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
+        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent',
+        'Salary_PrevGame']
+CATEGORIES_TO_USE = [
+    {
+        'dirName': 'Team_FourFactors',
+        'features': [
+            'TEAM_FTA_RATE', 'TEAM_OPP_EFG_PCT', 'TEAM_OPP_FTA_RATE',
+            'TEAM_OPP_TOV_PCT', 'TEAM_OPP_OREB_PCT'],
+        'prefix': 'TEAM_',
+        'type': 'team',
+    },
+    {
+        'dirName': 'Team_Advanced',
+        'features': [
+            'TEAM_OFF_RATING', 'TEAM_DEF_RATING', 'TEAM_NET_RATING', 'TEAM_AST_PCT',
+            'TEAM_AST_TO', 'TEAM_AST_RATIO', 'TEAM_OREB_PCT', 'TEAM_DREB_PCT',
+            'TEAM_REB_PCT', 'TEAM_TM_TOV_PCT', 'TEAM_EFG_PCT', 'TEAM_TS_PCT',
+            'TEAM_PACE', 'TEAM_PIE'],
+        'prefix': 'TEAM_',
+        'type': 'team',
+    },
+    {
+        'dirName': 'Team_Traditional',
+        'features': [
+            'TEAM_GP', 'TEAM_W', 'TEAM_L', 'TEAM_W_PCT', 'TEAM_MIN',
+            'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3M', 'TEAM_FG3A',
+            'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT', 'TEAM_OREB',
+            'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL',
+            'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS',
+            'TEAM_PLUS_MINUS'],
+        'prefix': 'TEAM_',
+        'type': 'team',
+    },
+    {
+        'dirName': 'Traditional_Diff',
+        'features': [
+            'DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M',
+            'DIFF_FG3A', 'DIFF_FG3_PCT', 'DIFF_FTM', 'DIFF_FTA',
+            'DIFF_FT_PCT', 'DIFF_OREB', 'DIFF_DREB', 'DIFF_REB',
+            'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK',
+            'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD'],
+        'prefix': 'DIFF_',
+    },
+    {
+        'dirName': 'Usage',
+        'features': [
+            'PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A', 'PCT_FTM',
+            'PCT_FTA', 'PCT_OREB', 'PCT_REB', 'PCT_AST', 'PCT_TOV',
+            'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS'],
+    },
+    {
+        'dirName': 'Scoring',
+        'features': [
+            'PCT_FGA_2PT', 'PCT_FGA_3PT', 'PCT_PTS_2PT', 'PCT_PTS_2PT_MR',
+            'PCT_PTS_3PT', 'PCT_PTS_FB', 'PCT_PTS_FT', 'PCT_PTS_OFF_TOV',
+            'PCT_PTS_PAINT', 'PCT_AST_2PM', 'PCT_UAST_2PM', 'PCT_AST_3PM',
+            'PCT_UAST_3PM', 'PCT_AST_FGM', 'PCT_UAST_FGM'],
+    },
+    {
+        'dirName': 'Defense',
+        'features': [
+            'PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV',
+            'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS'],
+    },
+    {
+        'dirName': 'Opponent',
+        'features': [
+            'OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A',
+            'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB',
+            'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL',
+            'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS'],
+    },
+    {
+        'dirName': 'PlayerBios',
+        'features': [
+            'PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT',
+            'COLLEGE','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER'],
+        'type': 'playerBios',
+    },
+    {
+        'dirName': 'Advanced',
+        'features': [
+            'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO',
+            'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT',
+            'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE'],
+    },
+    {
+        'dirName': 'Traditional',
+        'features': [
+            'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT',
+            'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB',
+            'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS',
+            'PLUS_MINUS', 'DD2', 'TD3'],
+    },
 ]
+
+Y_NAME = 'FantasyPoints'
+X_NAMES = []
 
 DATE_FORMAT = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -511,7 +543,7 @@ def appendNbaData(parentDirName, data, season, prefix=''):
                             TBX_MISSING_PLAYERS.append((dateStr, key))
                             util.stop('Player played and was not found. player=' + key + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
         cnt += 1
-def appendNbaPlayerBios(parentDirName, data, season):
+def appendNbaPlayerBios(parentDirName, data, season, prefix=''):
     print 'Adding NBA Player Bios...'
 
     fullPathToDir = createNbaFullPathToParentDir(parentDirName)
@@ -748,19 +780,27 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
+X_NAMES.extend(ROTOGURU_FEATURES)
 
-appendNbaTeamData('Team_FourFactors', data, SEASON, 'TEAM_')
-appendNbaTeamData('Team_Advanced', data, SEASON, 'TEAM_')
-appendNbaTeamData('Team_Traditional', data, SEASON, 'TEAM_')
-appendNbaData('Traditional_Diff', data, SEASON, 'DIFF_')
-appendNbaData('Usage', data, SEASON)
-appendNbaData('Scoring', data, SEASON)
-appendNbaData('Defense', data, SEASON)
-appendNbaData('Opponent', data, SEASON)
-appendNbaPlayerBios('PlayerBios', data, SEASON)
-appendNbaData('Advanced', data, SEASON)
-appendNbaData('Traditional', data, SEASON)
+categoryFeatures = []
+for category in CATEGORIES_TO_USE:
+    dirName = category['dirName']
+    features = category['features']
+    typee = category['type'] if 'type' in category else None
+    prefix = category['prefix'] if 'prefix' in category else ''
+    if typee == 'playerBios':
+        appendNbaPlayerBios(dirName, data, SEASON, prefix)
+    elif typee == 'team':
+        appendNbaTeamData(dirName, data, SEASON, prefix)
+    else:
+        appendNbaData(dirName, data, SEASON, prefix)
+    #add features to the front
+    categoryFeatures = features + categoryFeatures
+X_NAMES.extend(categoryFeatures)
+
 addAdditionalFeatures(data)
+X_NAMES.extend(ADDITIONAL_FEATURES)
+
 writeData(createFilename(SEASON), data)
 
 #for a in TBX_DUPLICATE_NAMES:
