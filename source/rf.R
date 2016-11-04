@@ -64,7 +64,7 @@ FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.NBA_PLAYE
 
 FEATURES_TO_USE = FEATURES.ALL
 
-PROD_RUN = T
+PROD_RUN = F
 N_TREE = 100
 FILENAME = 'rf_usage'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
@@ -150,11 +150,28 @@ getInitialTeam = function(data) {
 computePPD = function(fantasyPoints, salary) {
   return(fantasyPoints / salary * 1000)
 }
+printPlayer = function(player) {
+  cat('    ', as.character(player$Position), ', ', sep='')
+  cat(paste(player[, c('Name', 'Salary')], collapse=', '), sep='')
+  cat(', ', round(player$FantasyPoints, 2), sep='')
+  cat(', ', round(player$PPD, 2), sep='')
+  cat('\n')
+}
 printTeam = function(team) {
-  print(team)
+  for (i in 1:nrow(team)) {
+    printPlayer(team[i,])
+  }
+  cat('    Total Amount spent:', computeAmountSpent(team), '\n')
+  cat('    Total Fantasy Points:', computeTotalFantasyPoints(team), '\n')
+}
+computeTotalFantasyPoints = function(team) {
+  return(sum(team$FantasyPoints))
+}
+computeAmountSpent = function(team) {
+  return(sum(team$Salary))
 }
 computeAmountOverBudget = function(team) {
-  return(sum(team$Salary) - SALARY_CAP)
+  return(computeAmountSpent(team) - SALARY_CAP)
 }
 replacePlayer = function(team, oldPlayer, newPlayer) {
   #remove old player
@@ -211,8 +228,65 @@ getWorseTeam = function(data, team, amountOverBudget, verbose=F) {
   }
   return(team)
 }
-getBetterTeam = function(data, team, amountOverBudget, verbose=F) {
-  #todo
+getBetterTeam = function(data, team, amountUnderBudget, verbose=F) {
+  #while amountOverBudget < 0, look for a better match
+  #compute the next highest ppdg for each position
+  #select the matchup with the highest ppdg gained
+  cnt = 1
+  someoneWasReplaced = TRUE
+  while (amountUnderBudget > 0 && someoneWasReplaced) {
+    someoneWasReplaced = FALSE
+    if (verbose) cat(paste('Iteration', cnt, ', amountUnderBudget=', amountUnderBudget), '\n')
+
+    bestPpdg = -Inf
+    bestOldPlayer = NULL
+    bestNewPlayer = NULL
+
+    positions = c('PG', 'SG', 'SF', 'PF', 'C')
+
+    #find next best player for each position
+    for (position in positions) {
+      numPlayers = ifelse(position == 'C', 1, 2)
+
+      players = data[data$Position == position,]
+
+      #remove players currently on the team
+      playersOnTeam = team[team$Position == position,]
+      players = players[setdiff(rownames(players), rownames(playersOnTeam)),]
+
+      for (i in 1:numPlayers) {
+        teamPlayer = team[team$Position == position,][i,]
+        fpDiff = players$FantasyPoints - teamPlayer$FantasyPoints
+        salaryDiff = players$Salary - teamPlayer$Salary
+        salaryDiff[salaryDiff > amountUnderBudget] = NA
+        salaryDiff[salaryDiff < 0] = NA
+        if (sum(is.na(salaryDiff)) != length(salaryDiff)) {
+          ppdg = computePPD(fpDiff, salaryDiff)
+          maxPpdg = max(ppdg, na.rm=T)
+          if (maxPpdg > bestPpdg) {
+            bestPpdg = maxPpdg
+            bestOldPlayer = teamPlayer
+            bestNewPlayer = players[which.max(ppdg), ]
+          }
+        }
+      }
+    }
+
+    if (!is.null(bestOldPlayer)) {
+      someoneWasReplaced = TRUE
+      #i now have the next best player, replace him
+      if (verbose) cat('Replacing', bestOldPlayer$Name, '<-', bestNewPlayer$Name, '\n')
+      team = replacePlayer(team, bestOldPlayer, bestNewPlayer)
+    }
+
+    if (verbose) {
+      printTeam(team)
+      cat('\n')
+    }
+
+    amountUnderBudget = -computeAmountOverBudget(team)
+    cnt = cnt + 1
+  }
   return(team)
 }
 createTeam = function(data, verbose=F) {
@@ -226,7 +300,7 @@ createTeam = function(data, verbose=F) {
   team = getInitialTeam(data)
 
   if (verbose) {
-    print('Initial team')
+    cat('Initial team:\n')
     printTeam(team)
   }
 
@@ -234,13 +308,13 @@ createTeam = function(data, verbose=F) {
   if (amountOverBudget > 0) {
     team = getWorseTeam(data, team, amountOverBudget, verbose)
   } else if (amountOverBudget < 0) {
-    team = getBetterTeam(data, team, amountOverBudget, verbose)
+    team = getBetterTeam(data, team, -amountOverBudget, verbose)
   } else {
     cat('Wow, I got a perfect team on the first try!\n')
   }
 
   if (verbose) {
-    print('Final team')
+    cat('Final team:\n')
     printTeam(team)
   }
 
@@ -289,34 +363,38 @@ tbx_commentsToCollapse = function() {
 # testError = computeError(test[, Y_NAME], prediction)
 # cat('    Tonight\'s error: ', testError, '\n', sep='')
 
-#comment this out until i fix createTeam
+#comment this out for now
 # cat('Creating teams...\n')
 # SALARY_CAP = 60000
 # #create my team (using prediction)
 # predictionDF = test
 # predictionDF[[Y_NAME]] = prediction
 # myTeam = createTeam(predictionDF)
+# cat('My team:\n')
+# printTeam(myTeam)
 #
 # #create best team (using test)
 # bestTeam = createTeam(test)
+# cat('Best team:\n')
+# printTeam(bestTeam)
 #
 # #print myTeam / bestTeam ratio
 # printTeamResults(team, bestTeam, Y_NAME)
 
 #comment this out because i think i dont need it
-# if (PROD_RUN) {
-#   cat('Outputing solution...\n')
-#
-#   extraColNames = c('Salary', 'Position')
-#
-#   #write prediction
-#   predictionFilename = paste0('prediction_', FILENAME, '.csv')
-#   writeSolution(test, Y_NAME, ID_NAME, prediction, predictionFilename, extraColNames)
-#
-#   #write actual
-#   actualFilename = paste0('actual_', FILENAME, '.csv')
-#   writeSolution(test, Y_NAME, ID_NAME, test[[Y_NAME]], actualFilename, extraColNames)
-# }
+#if (PROD_RUN) {
+  # cat('Outputing solution...\n')
+  #
+  # extraColNames = c('Salary', 'Position')
+  #
+  # #write prediction
+  # predictionFilename = paste0('prediction_', FILENAME, '.csv')
+  # writeSolution(test, Y_NAME, ID_NAME, prediction, predictionFilename, extraColNames)
+  #
+  # #write actual
+  # actualFilename = paste0('actual_', FILENAME, '.csv')
+  # writeSolution(test, Y_NAME, ID_NAME, test[[Y_NAME]], actualFilename, extraColNames)
+#}
 }
 
 cat('Done!\n')

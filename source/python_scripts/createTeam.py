@@ -2,14 +2,12 @@
 #Eg. python source/python_scripts/createTeam.py prediction_rf_createTeam.csv
 
 SALARY_CAP = 60000
-PREDICTION_LOCATION = 'predictions/'
+PREDICTION_LOCATION = ''
 PREDICTION_PREFIX = 'prediction_'
 ACTUAL_PREFIX = 'actual_'
 
-
 def readInput():
-    print 'Enter date (eg. 20161025):'
-    return raw_input().strip()
+    return raw_input('Enter filename suffix (eg. rf_usage): ').strip()
 
 def loadPredictions(filename):
     f = open(filename)
@@ -138,8 +136,8 @@ def computePoints(team):
 def computeAmountOverBudget(team):
     return computeCost(team) - SALARY_CAP
 
-def createFilename(prefix, dateStr):
-    return PREDICTION_LOCATION + prefix + dateStr + '.csv'
+def createFilename(prefix, suffix):
+    return PREDICTION_LOCATION + prefix + suffix + '.csv'
 
 def getWorseTeam(team, amountOverBudget):
     #while amountOverBudget > 0
@@ -184,9 +182,9 @@ def getBetterTeam(team, amountOverBudget):
     #todo: fill this in
     return
 
-def getTeam(prefix, dateStr):
+def getTeam(prefix, suffix):
     #get players
-    players = loadPredictions(createFilename(prefix, dateStr))
+    players = loadPredictions(createFilename(prefix, suffix))
 
     #first, fill team with all the highest ppd players
     team = getInitialTeam(players)
@@ -199,16 +197,14 @@ def getTeam(prefix, dateStr):
     else:
         print 'Wow, I got a perfect team on the first try!'
 
-
-
     return team
 
 #================ MAIN ===============
 
-dateStr = readInput()
+suffix = readInput()
 
-myTeam = getTeam(PREDICTION_PREFIX, dateStr)
-bestTeam = getTeam(ACTUAL_PREFIX, dateStr)
+myTeam = getTeam(PREDICTION_PREFIX, suffix)
+bestTeam = getTeam(ACTUAL_PREFIX, suffix)
 
 
 print 'My Team:'
