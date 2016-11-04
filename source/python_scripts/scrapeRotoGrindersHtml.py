@@ -11,13 +11,13 @@ SLEEP = 10
 pagesToScrape = [
     {
         'dirName': 'BackToBack',
-        'tableClassName': 'data-table',
+        'tableClassName': 'tbl',
         'url': 'https://rotogrinders.com/pages/nba-back-to-back-tool-518716',
     },
     {
         'dirName': 'OptimalLineup',
-        'url': 'https://rotogrinders.com/projected-stats/nba/lineup?site=fanduel',
         'tableClassName': 'tbl',
+        'url': 'https://rotogrinders.com/projected-stats/nba/lineup?site=fanduel',
     },
     {
         'dirName': 'SalaryChartsC',
@@ -48,7 +48,13 @@ pagesToScrape = [
 
 def getColNames(table):
     colNames = []
+
+    #first look for ths
     ths = table.thead.tr.find_all('th')
+    if len(ths) == 0:
+        #if no ths, then look for tds
+        ths = table.thead.tr.find_all('td')
+
     for th in ths:
         colNames.append(scraper.getText(th))
     return colNames
