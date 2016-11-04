@@ -9,7 +9,7 @@
 #D-Add scoring: rf_scoring: start-2015-11-16, 114/116, 100, 12.438, 82.65378/54.63216, 3.496146/8.324325/3.456758
 #D-Fix mse/rsq output (everything same as above): start-2015-11-16, 114/116, 100, 12.419, 75.50643/58.55527, 3.496146/8.324325/3.456758
 #D-Add usage: rf_usage: start-2015-11-16, 128/130, 100, 17.309, 75.31835/58.6585, 3.539682/8.300316/3.470495
-#-Add traditional-diff
+#D-Add traditional-diff: rf_tradDiff: start-2015-11-16, 147/149, 100, 15.763, 75.14734/58.75237, 3.506969/8.345989/3.459044
 
 #-Build models on subset of data
   #-starter
@@ -32,9 +32,11 @@
   #D-defense
   #D-scoring
   #D-usage
-  #IP-traditional, differentials on
-  #-team traditional
+  #D-traditional, differentials on
+  #IP-team traditional
+  #-team 4 factors
   #-opp team traditional
+  #-opp team 4 factors
   #-misc?
 #-Try boruta features from all of the above
 
@@ -52,23 +54,25 @@ source('source/_getData.R')
 source('source/_createTeam.R')
 
 #Globals
-FEATURES.ID = c('Date', 'Name', 'Team')
-FEATURES.RG = c('Salary', 'Position', 'Home', 'Team', 'Opponent')
-FEATURES.NBA = c('AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3')
-FEATURES.NBA_ADV = c('OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG')
-FEATURES.NBA_PLAYERBIOS = c('PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER')
-FEATURES.NBA_OPPONENT = c('OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A', 'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB', 'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL', 'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS')
-FEATURES.NBA_DEFENSE = c('PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS')
-FEATURES.NBA_SCORING = c('PCT_FGA_2PT', 'PCT_FGA_3PT', 'PCT_PTS_2PT', 'PCT_PTS_2PT_MR', 'PCT_PTS_3PT', 'PCT_PTS_FB', 'PCT_PTS_FT', 'PCT_PTS_OFF_TOV', 'PCT_PTS_PAINT', 'PCT_AST_2PM', 'PCT_UAST_2PM', 'PCT_AST_3PM', 'PCT_UAST_3PM', 'PCT_AST_FGM', 'PCT_UAST_FGM')
-FEATURES.NBA_USAGE = c('PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A', 'PCT_FTM', 'PCT_FTA', 'PCT_OREB', 'PCT_REB', 'PCT_AST', 'PCT_TOV', 'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS')
-FEATURES.MINE = c('WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
-FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.NBA_PLAYERBIOS, FEATURES.NBA_OPPONENT, FEATURES.NBA_DEFENSE, FEATURES.NBA_SCORING, FEATURES.NBA_USAGE, FEATURES.MINE)
+F.ID = c('Date', 'Name', 'Team')
+F.RG = c('Salary', 'Position', 'Home', 'Team', 'Opponent')
+F.NBA.P.TRADITIONAL = c('AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3')
+F.NBA.P.ADVANCED = c('OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG')
+F.NBA.P.PLAYERBIOS = c('PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER')
+F.NBA.P.OPPONENT = c('OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A', 'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB', 'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL', 'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS')
+F.NBA.P.DEFENSE = c('PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS')
+F.NBA.P.SCORING = c('PCT_FGA_2PT', 'PCT_FGA_3PT', 'PCT_PTS_2PT', 'PCT_PTS_2PT_MR', 'PCT_PTS_3PT', 'PCT_PTS_FB', 'PCT_PTS_FT', 'PCT_PTS_OFF_TOV', 'PCT_PTS_PAINT', 'PCT_AST_2PM', 'PCT_UAST_2PM', 'PCT_AST_3PM', 'PCT_UAST_3PM', 'PCT_AST_FGM', 'PCT_UAST_FGM')
+F.NBA.P.USAGE = c('PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A', 'PCT_FTM', 'PCT_FTA', 'PCT_OREB', 'PCT_REB', 'PCT_AST', 'PCT_TOV', 'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS')
+F.NBA.P.TRADITIONAL_DIFF = c('DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M', 'DIFF_FG3A', 'DIFF_FG3_PCT', 'DIFF_FTM', 'DIFF_FTA', 'DIFF_FT_PCT', 'DIFF_OREB', 'DIFF_DREB', 'DIFF_REB', 'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK', 'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD')
+F.MINE = c('WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
+F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
+          F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF, F.MINE)
 
-FEATURES_TO_USE = FEATURES.ALL
+FEATURES_TO_USE = F.ALL
 
-PROD_RUN = F
+PROD_RUN = T
 N_TREE = 100
-FILENAME = 'rf_usage'
+FILENAME = 'rf_tradDiff'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 ID_NAME = 'Name'

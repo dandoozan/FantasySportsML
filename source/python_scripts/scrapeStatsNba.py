@@ -212,5 +212,4 @@ while currDate <= endDate:
     print '    Sleeping for %d seconds...' % SLEEP
     time.sleep(SLEEP)
 
-
-print 'Done!'
+print 'Done!  Finished Team: %s, Category: %s, Season: %s...' % (isTeam, category, season)

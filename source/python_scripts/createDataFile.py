@@ -49,6 +49,13 @@ X_NAMES = [
         'PCT_FTA', 'PCT_OREB', 'PCT_REB', 'PCT_AST', 'PCT_TOV',
         'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS',
 
+        #NBA Traditional - Differentials On
+        'DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M',
+        'DIFF_FG3A', 'DIFF_FG3_PCT', 'DIFF_FTM', 'DIFF_FTA',
+        'DIFF_FT_PCT', 'DIFF_OREB', 'DIFF_DREB', 'DIFF_REB',
+        'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK',
+        'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD',
+
         #Mine
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame',
@@ -208,22 +215,22 @@ def createNbaDataFileName(dirName, date, season):
     year = date.year
     return NBA_DIR + '/' + dirName + '/' + season + '/' + date.strftime(DATE_FORMAT) + '.json'
 
-def getNameIndex(colNames):
-    if 'PLAYER_NAME' in colNames:
-        return colNames.index('PLAYER_NAME')
-    return colNames.index('VS_PLAYER_NAME')
-def loadDataFromJsonFile(filename):
+def getNameIndex(colNames, prefix=''):
+    if (prefix + 'PLAYER_NAME') in colNames:
+        return colNames.index(prefix + 'PLAYER_NAME')
+    return colNames.index(prefix + 'VS_PLAYER_NAME')
+def loadDataFromJsonFile(filename, prefix=''):
     data = {}
 
     f = open(filename)
     jsonData = json.load(f)
     f.close()
 
-    colNames = jsonData['resultSets'][0]['headers']
+    colNames = map(lambda x: prefix + x, jsonData['resultSets'][0]['headers'])
     rowData = jsonData['resultSets'][0]['rowSet']
-    nameIndex = getNameIndex(colNames)
-    teamIndex = colNames.index('TEAM_ABBREVIATION')
-    gpIndex = colNames.index('GP')
+    nameIndex = getNameIndex(colNames, prefix)
+    teamIndex = colNames.index(prefix + 'TEAM_ABBREVIATION')
+    gpIndex = colNames.index(prefix + 'GP')
 
     for row in rowData:
         key = createKey(row[nameIndex], row[teamIndex])
@@ -233,11 +240,11 @@ def loadDataFromJsonFile(filename):
 
             #Got a duplicate name. This only happens right now in Opponent
             #Replace it if the new GP is greater than the old GP
-            if row[gpIndex] > data[key]['GP']:
+            if row[gpIndex] > data[key][prefix + 'GP']:
                 data[key] = dict(zip(colNames, row))
         data[key] = dict(zip(colNames, row))
     return data
-def loadNbaDataForDate(dirName, date, season):
+def loadNbaDataForDate(dirName, date, season, prefix=''):
     #possible stats:
     #PLAYER_ID #N
     #PLAYER_NAME #N
@@ -290,7 +297,7 @@ def loadNbaDataForDate(dirName, date, season):
         #scraper.headsUp('Used different file. date=' + str(date) + ', file=' + filename)
 
     if os.path.exists(filename):
-        data = loadDataFromJsonFile(filename)
+        data = loadDataFromJsonFile(filename, prefix)
 
     return data
 
@@ -422,7 +429,7 @@ def findMatchingKey(key, newData):
     return None
 def keyIsKnownToBeMissing(key, dateStr):
     return dateStr in MISSING_KEYS and key in MISSING_KEYS[dateStr]
-def appendNbaData(dirName, data, season):
+def appendNbaData(dirName, data, season, prefix=''):
     print 'Adding NBA Data: %s...' % dirName
 
     cnt = 1
@@ -435,7 +442,7 @@ def appendNbaData(dirName, data, season):
         #load previous day's nba season-long data
         date = datetime.strptime(dateStr, DATE_FORMAT)
         prevDate = date - ONE_DAY
-        nbaData = loadNbaDataForDate(dirName, prevDate, season)
+        nbaData = loadNbaDataForDate(dirName, prevDate, season, prefix)
         if len(nbaData) > 0:
             #iterate through each player and merge nba data into player data
             for key in data[dateStr]:
@@ -650,6 +657,7 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
+appendNbaData('Traditional_Diff', data, SEASON, 'DIFF_')
 appendNbaData('Usage', data, SEASON)
 appendNbaData('Scoring', data, SEASON)
 appendNbaData('Defense', data, SEASON)
