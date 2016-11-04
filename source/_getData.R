@@ -9,8 +9,6 @@ library(dplyr) #bind_rows
   #end (day 210): 2016-06-19
 
 SEASON = '2015'
-START_DATE = 'start'
-SPLIT_DATE = '2015-11-16'
 DATE_FORMAT = '%Y%m%d'
 
 loadData = function() {
@@ -103,8 +101,12 @@ featureEngineer = function(data) {
   #Add AttendedTop50PctCollege (top 50%)
   data$AttendedTop50PctCollege = computeAttendedTopXPctCollege(data, .5)
 
+  #Create Starter feature (StartedPercent >= 0.95)
+  data$Starter = as.numeric(data$StartedPercent >= 0.95)
+
   return(data)
 }
+
 findFirstIndexOfDate = function(data, date) {
   index = which(data$Date == date)
   if (length(index) > 0) {
@@ -119,24 +121,24 @@ findLastIndexOfDate = function(data, date) {
   }
   return(-1)
 }
-splitDataIntoTrainTest = function(data) {
+splitDataIntoTrainTest = function(data, startDate, splitDate) {
   cat('    Splitting data into train/test...\n')
 
-  startIndex = ifelse(START_DATE == 'start', 1, findFirstIndexOfDate(data, START_DATE))
-  if (SPLIT_DATE == 'end') {
+  startIndex = ifelse(startDate == 'start', 1, findFirstIndexOfDate(data, startDate))
+  if (splitDate == 'end') {
     train = data[startIndex:nrow(data),]
     test = NULL
   } else {
-    splitIndex = findFirstIndexOfDate(data, SPLIT_DATE)
-    endIndex = findLastIndexOfDate(data, SPLIT_DATE)
+    splitIndex = findFirstIndexOfDate(data, splitDate)
+    endIndex = findLastIndexOfDate(data, splitDate)
     train = data[startIndex:(splitIndex-1),]
     test = data[splitIndex:endIndex,]
   }
   return(list(train=train, test=test))
 }
 
-getData = function() {
-  cat('Getting data (', START_DATE, '-', SPLIT_DATE, ')...\n', sep='')
+getData = function(startDate='start', splitDate='end') {
+  cat('Getting data (', startDate, '-', splitDate, ')...\n', sep='')
 
   #load data
   full = loadData()
@@ -148,7 +150,7 @@ getData = function() {
   full = featureEngineer(full)
 
   #split data into train, test
-  trainTest = splitDataIntoTrainTest(full)
+  trainTest = splitDataIntoTrainTest(full, startDate, splitDate)
   train = trainTest$train
   test = trainTest$test
 
