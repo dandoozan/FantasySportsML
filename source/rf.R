@@ -3,10 +3,26 @@
 #D-Add nba advanced: rf_adv: start-2015-11-16, 60/61, 100, 7.071, 82.36119/54.79276, 3.557412/8.356418/3.491678
 #D-Add nba PlayerBios: rf_playerbios: start-2015-11-16, 66/68, 100, 8.396, 81.48067/55.27606, 3.560697/8.388797/3.486949
 #D-Add WasDrafted and AttendedTopCollege: rf_WasDrafted: start-2015-11-16, 71/73, 100, 8.189, 81.66209/55.17648, 3.518361/8.388745/3.449907
-#D-Data file reordered: rf_Reorder: start-2015-11-16, 71/73, 100, 8.121, 82.86294/54.51735, 3.535505/8.343658/3.475144 <-- new best!
+#D-Data file reordered (everything same as above): rf_Reorder: start-2015-11-16, 71/73, 100, 8.121, 82.86294/54.51735, 3.535505/8.343658/3.475144 <-- new best!
 #D-Add nba opponent: rf_opponent: start-2015-11-16, 91/93, 100, 10.167, 82.27009/54.84276, 3.519526/8.310265/3.475451 <-- new best!
 #D-Add defense: rf_defense: start-2015-11-16, 99/101, 100, 11.268, 82.89138/54.50174, 3.542588/8.280058/3.483619 <-- new best!
 #D-Add scoring: rf_scoring: start-2015-11-16, 114/116, 100, 12.438, 82.65378/54.63216, 3.496146/8.324325/3.456758
+#D-Fix mse/rsq output (everything same as above): start-2015-11-16, 114/116, 100, 12.419, 75.50643/58.55527, 3.496146/8.324325/3.456758
+
+
+#-Build models on subset of data
+  #-starter
+  #-position
+  #-injured
+  #-salary level?
+  #-at least 10? games played
+  #-individual player?
+  #-consistent players (based on stdev if i can compute it)
+
+#-Try changing start date
+#-Add prev day stats
+#-Add prev X days stats
+
 
 #NBA data to download:
   #D-traditional
@@ -49,7 +65,7 @@ FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.NBA_PLAYE
 
 FEATURES_TO_USE = FEATURES.ALL
 
-PROD_RUN = T
+PROD_RUN = F
 N_TREE = 100
 FILENAME = 'rf_scoring'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
@@ -258,7 +274,7 @@ featuresToUse = findBestSetOfFeatures(train, possibleFeatures)
 cat('Creating Model (ntree=', N_TREE, ')...\n', sep='')
 timeElapsed = system.time(model <- createModel(train, Y_NAME, featuresToUse))
 cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
-cat('    MeanOfSquaredResiduals / %VarExplained: ', mean(model$mse), '/', mean(model$rsq*100), '\n', sep='')
+cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[N_TREE], '/', model$rsq[N_TREE]*100, '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT=='lc') plotLearningCurve(train, Y_NAME, featuresToUse, createModel, createPrediction, computeError, ylim=c(0, 15), save=PROD_RUN)
@@ -378,8 +394,6 @@ tbx_moreCommentsToCollapse = function() {
 
 #-Maybe build a separate model for each player (or type of player (eg. starters, bench players))
 #-Use all features but only from the last 5 games (rather than season), and start from game 5
-#-fill in getBetterTeam
-#-make createTeam better (perhaps use genetic or hill-climbing or DP algorithm)
 #-Maybe use log of y
 #-Perhaps make Home a binary col rather than factor with 2 levels
 #-Identify high-risk vs low-risk player, and perhaps only choose team from players who are low-risk
