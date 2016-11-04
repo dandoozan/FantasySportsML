@@ -4,47 +4,99 @@ import json
 import scraper
 import _util as util
 
-CATEGORIES = {
+PLAYER_CATEGORIES = {
     'Traditional': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
+        'params': {
+            'College': '',
+            'Country': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
+            'Weight': '',
+        },
     },
     'Traditional_Diff': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
         'params': {
+            'College': '',
+            'Country': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
             'PlusMinus': 'Y',
+            'Weight': '',
         },
     },
     'Advanced': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
         'params': {
+            'College': '',
+            'Country': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
             'MeasureType': 'Advanced',
             'PerMode': 'Totals',
+            'Weight': '',
         },
     },
     'Opponent': {
         'baseUrl': 'http://stats.nba.com/stats/leagueplayerondetails?',
         'params': {
+            'College': '',
+            'Country': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
             'MeasureType': 'Opponent',
             'PerMode': 'Per100Possessions',
+            'Weight': '',
         },
     },
     'Defense': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
         'params': {
+            'College': '',
+            'Country': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
             'MeasureType': 'Defense',
+            'Weight': '',
         },
     },
     'Scoring': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
         'params': {
+            'College': '',
+            'Country': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
             'MeasureType': 'Scoring',
+            'Weight': '',
         },
     },
     'Usage': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
         'params': {
+            'College': '',
+            'Country': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
             'MeasureType': 'Usage',
             'PerMode': 'Totals',
+            'Weight': '',
+        },
+    },
+}
+TEAM_CATEGORIES = {
+    'Traditional': {
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashteamstats?',
+        'headers': {
+            'Referer': 'http://stats.nba.com/league/team/'
         },
     },
 }
@@ -67,17 +119,12 @@ SLEEP = 10
 
 def createUrlParams(endDate, season, params):
     urlParams = {
-        'College': '',
         'Conference': '',
-        'Country': '',
         'DateFrom': '',
         'DateTo': endDate.strftime('%m/%d/%Y'), #eg.'10/27/2015',
         'Division': '',
-        'DraftPick': '',
-        'DraftYear': '',
         'GameScope': '',
         'GameSegment': '',
-        'Height': '',
         'LastNGames': '0',
         'LeagueID': '00',
         'Location': '',
@@ -101,12 +148,11 @@ def createUrlParams(endDate, season, params):
         'TeamID': '0',
         'VsConference': '',
         'VsDivision': '',
-        'Weight': '',
     }
     urlParams.update(params)
     return urlParams
-def createHeaders():
-    return {
+def createHeaders(hdrs):
+    headers = {
         'Accept': 'application/json, text/plain, */*',
         #'Accept-Encoding': 'gzip, deflate, sdch',
         'Accept-Language': 'en-US,en;q=0.8',
@@ -117,25 +163,31 @@ def createHeaders():
         'Pragma': 'no-cache',
         'Referer': 'http://stats.nba.com/league/player/',
     }
+    headers.update(hdrs)
+    return headers
 
 def getDataValues(data):
     return data['resultSets'][0]['rowSet']
 
 #=============== Main ================
 
+isTeam = raw_input('Is this for team statistics? ').strip() == 'y'
 category = raw_input('Enter Category (eg. Traditional): ').strip()
 season = raw_input('Enter season (eg. 2015): ').strip()
 
-parentDir = 'data/rawDataFromStatsNba/' + category + '/' + season
+print 'Running Team: %s, Category: %s, Season: %s...' % (isTeam, category, season)
+
+parentDir = 'data/rawDataFromStatsNba/' + ('Team_' if isTeam else '') + category + '/' + season
 util.createDirIfNecessary(parentDir)
 
 seasonObj = SEASONS[season]
 startDate = seasonObj['startDate']
 endDate = seasonObj['endDate']
 
-categoryObj = CATEGORIES[category]
+categoryObj = TEAM_CATEGORIES[category] if isTeam else PLAYER_CATEGORIES[category]
 baseUrl = categoryObj['baseUrl']
-params = categoryObj['params']
+params = categoryObj['params'] if 'params' in categoryObj else {}
+headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
 currDate = startDate
 prevDataValues = None
@@ -144,7 +196,7 @@ while currDate <= endDate:
 
     url = scraper.createUrl(baseUrl, createUrlParams(currDate, seasonObj['str'], params))
 
-    jsonData = scraper.downloadJson(url, createHeaders())
+    jsonData = scraper.downloadJson(url, createHeaders(headers))
     #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
 
     dataValues = getDataValues(jsonData)
