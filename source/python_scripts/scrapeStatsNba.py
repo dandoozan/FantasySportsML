@@ -25,6 +25,17 @@ CATEGORIES = {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
         'perMode': 'PerGame',
     },
+    'Scoring': {
+        'measureType': 'Scoring',
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
+        'perMode': 'PerGame',
+    },
+    'Usage': {
+        'measureType': 'Usage',
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
+        'perMode': 'Totals',
+    },
+
 }
 
 SEASONS = {

@@ -6,20 +6,19 @@
 #D-Data file reordered: rf_Reorder: start-2015-11-16, 71/73, 100, 8.121, 82.86294/54.51735, 3.535505/8.343658/3.475144 <-- new best!
 #D-Add nba opponent: rf_opponent: start-2015-11-16, 91/93, 100, 10.167, 82.27009/54.84276, 3.519526/8.310265/3.475451 <-- new best!
 #D-Add defense: rf_defense: start-2015-11-16, 99/101, 100, 11.268, 82.89138/54.50174, 3.542588/8.280058/3.483619 <-- new best!
+#D-Add scoring: rf_scoring: start-2015-11-16, 114/116, 100, 12.438, 82.65378/54.63216, 3.496146/8.324325/3.456758
 
 #NBA data to download:
   #D-traditional
-  #D-gamelogs
   #D-player bios
-  #D-traditional (per game)
   #D-advanced
   #D-opponent
   #D-defense
-  #-team stats (not sure how to get)
-  #-opp team stats (ditto)
+  #D-scoring
+  #IP-usage
+  #-team traditional
+  #-opp team traditional
   #-traditional, differentials on
-  #-scoring
-  #-usage
 
   #-misc?
 #-Try boruta features from all of the above
@@ -44,14 +43,15 @@ FEATURES.NBA_ADV = c('OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_T
 FEATURES.NBA_PLAYERBIOS = c('PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER')
 FEATURES.NBA_OPPONENT = c('OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A', 'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB', 'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL', 'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS')
 FEATURES.NBA_DEFENSE = c('PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS')
+FEATURES.NBA_SCORING = c('PCT_FGA_2PT', 'PCT_FGA_3PT', 'PCT_PTS_2PT', 'PCT_PTS_2PT_MR', 'PCT_PTS_3PT', 'PCT_PTS_FB', 'PCT_PTS_FT', 'PCT_PTS_OFF_TOV', 'PCT_PTS_PAINT', 'PCT_AST_2PM', 'PCT_UAST_2PM', 'PCT_AST_3PM', 'PCT_UAST_3PM', 'PCT_AST_FGM', 'PCT_UAST_FGM')
 FEATURES.MINE = c('WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
-FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.NBA_PLAYERBIOS, FEATURES.NBA_OPPONENT, FEATURES.NBA_DEFENSE, FEATURES.MINE)
+FEATURES.ALL = c(FEATURES.RG, FEATURES.NBA, FEATURES.NBA_ADV, FEATURES.NBA_PLAYERBIOS, FEATURES.NBA_OPPONENT, FEATURES.NBA_DEFENSE, FEATURES.NBA_SCORING, FEATURES.MINE)
 
 FEATURES_TO_USE = FEATURES.ALL
 
 PROD_RUN = T
 N_TREE = 100
-FILENAME = 'rf_defense'
+FILENAME = 'rf_scoring'
 PLOT = 'fi' #lc=learning curve, fi=feature importances
 
 ID_NAME = 'Name'
@@ -91,6 +91,10 @@ plotImportances = function(model, save=FALSE) {
 
   # Get importance
   importances = randomForest::importance(model)
+
+  #DPD: take the top 20 if there are more than 20
+  importances = importances[order(-importances[, 1]), , drop = FALSE][1:min(20, nrow(importances)),, drop=F]
+
   varImportance = data.frame(Variables = row.names(importances),
                              Importance = round(importances[, 1], 2))
 

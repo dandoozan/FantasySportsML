@@ -38,6 +38,12 @@ X_NAMES = [
         'PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV',
         'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS',
 
+        #NBA Scoring
+        'PCT_FGA_2PT', 'PCT_FGA_3PT', 'PCT_PTS_2PT', 'PCT_PTS_2PT_MR',
+        'PCT_PTS_3PT', 'PCT_PTS_FB', 'PCT_PTS_FT', 'PCT_PTS_OFF_TOV',
+        'PCT_PTS_PAINT', 'PCT_AST_2PM', 'PCT_UAST_2PM', 'PCT_AST_3PM',
+        'PCT_UAST_3PM', 'PCT_AST_FGM', 'PCT_UAST_FGM',
+
         #Mine
         'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame',
@@ -639,6 +645,7 @@ def addAdditionalFeatures(data):
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
+appendNbaData('Scoring', data, SEASON)
 appendNbaData('Defense', data, SEASON)
 appendNbaData('Opponent', data, SEASON)
 appendNbaPlayerBios('PlayerBios', data, SEASON)
