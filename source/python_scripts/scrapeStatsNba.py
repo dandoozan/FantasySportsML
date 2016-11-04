@@ -6,36 +6,47 @@ import _util as util
 
 CATEGORIES = {
     'Traditional': {
-        'measureType': 'Base',
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'perMode': 'PerGame',
+    },
+    'Traditional_Diff': {
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
+        'params': {
+            'PlusMinus': 'Y',
+        },
     },
     'Advanced': {
-        'measureType': 'Advanced',
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'perMode': 'Totals',
+        'params': {
+            'MeasureType': 'Advanced',
+            'PerMode': 'Totals',
+        },
     },
     'Opponent': {
-        'measureType': 'Opponent',
         'baseUrl': 'http://stats.nba.com/stats/leagueplayerondetails?',
-        'perMode': 'Per100Possessions',
+        'params': {
+            'MeasureType': 'Opponent',
+            'PerMode': 'Per100Possessions',
+        },
     },
     'Defense': {
-        'measureType': 'Defense',
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'perMode': 'PerGame',
+        'params': {
+            'MeasureType': 'Defense',
+        },
     },
     'Scoring': {
-        'measureType': 'Scoring',
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'perMode': 'PerGame',
+        'params': {
+            'MeasureType': 'Scoring',
+        },
     },
     'Usage': {
-        'measureType': 'Usage',
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'perMode': 'Totals',
+        'params': {
+            'MeasureType': 'Usage',
+            'PerMode': 'Totals',
+        },
     },
-
 }
 
 SEASONS = {
@@ -54,14 +65,13 @@ DATE_FORMAT_FILENAME = '%Y%m%d'
 ONE_DAY = timedelta(1)
 SLEEP = 10
 
-def createUrlParams(startDate, endDate, measureType, perMode, season):
-    dateFormat = '%m/%d/%Y'
-    return {
+def createUrlParams(endDate, season, params):
+    urlParams = {
         'College': '',
         'Conference': '',
         'Country': '',
-        'DateFrom': startDate.strftime(dateFormat), #eg.'10/27/2015',
-        'DateTo': endDate.strftime(dateFormat), #eg.'10/27/2015',
+        'DateFrom': '',
+        'DateTo': endDate.strftime('%m/%d/%Y'), #eg.'10/27/2015',
         'Division': '',
         'DraftPick': '',
         'DraftYear': '',
@@ -71,13 +81,13 @@ def createUrlParams(startDate, endDate, measureType, perMode, season):
         'LastNGames': '0',
         'LeagueID': '00',
         'Location': '',
-        'MeasureType': measureType, #'Advanced', 'Base',
+        'MeasureType': 'Base',
         'Month': '0',
         'OpponentTeamID': '0',
         'Outcome': '',
         'PORound': '0',
         'PaceAdjust': 'N',
-        'PerMode': perMode, #'Totals', 'PerGame',
+        'PerMode': 'PerGame',
         'Period': '0',
         'PlayerExperience': '',
         'PlayerPosition': '',
@@ -93,6 +103,8 @@ def createUrlParams(startDate, endDate, measureType, perMode, season):
         'VsDivision': '',
         'Weight': '',
     }
+    urlParams.update(params)
+    return urlParams
 def createHeaders():
     return {
         'Accept': 'application/json, text/plain, */*',
@@ -123,15 +135,14 @@ endDate = seasonObj['endDate']
 
 categoryObj = CATEGORIES[category]
 baseUrl = categoryObj['baseUrl']
-measureType = categoryObj['measureType']
-perMode = categoryObj['perMode']
+params = categoryObj['params']
 
 currDate = startDate
 prevDataValues = None
 while currDate <= endDate:
     print '\nScraping data for ' + str(currDate) + '...'
 
-    url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, measureType, perMode, seasonObj['str']))
+    url = scraper.createUrl(baseUrl, createUrlParams(currDate, seasonObj['str'], params))
 
     jsonData = scraper.downloadJson(url, createHeaders())
     #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))

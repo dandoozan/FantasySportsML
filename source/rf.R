@@ -23,7 +23,6 @@
 #-Add prev day stats
 #-Add prev X days stats
 
-
 #NBA data to download:
   #D-traditional
   #D-player bios
@@ -31,11 +30,10 @@
   #D-opponent
   #D-defense
   #D-scoring
-  #IP-usage
+  #D-usage
+  #IP-traditional, differentials on
   #-team traditional
   #-opp team traditional
-  #-traditional, differentials on
-
   #-misc?
 #-Try boruta features from all of the above
 
