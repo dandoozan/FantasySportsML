@@ -10,10 +10,10 @@
 #D-Fix mse/rsq output (everything same as above): start-2015-11-16, 114/116, 100, 12.419, 75.50643/58.55527, 3.496146/8.324325/3.456758
 #D-Add usage: rf_usage: start-2015-11-16, 128/130, 100, 17.309, 75.31835/58.6585, 3.539682/8.300316/3.470495
 #D-Add traditional-diff: rf_tradDiff: start-2015-11-16, 147/149, 100, 15.763, 75.14734/58.75237, 3.506969/8.345989/3.459044
-#-Add Starter: rf_starter: start-2015-11-16, 148/150, 100, 15.644, 76.20332/58.17275, 3.515676/8.349295/3.444033
-#-Add team traditional: rf_team: start-2015-11-16, 174/176, 100, 18.482, 75.41484/58.60554, 3.497111/8.261813/3.439535 <-- new best!
-#-Add team adv: rf_teamAdv: start-2015-11-16, 188/190, 100, 19.583, 75.46155/58.5799, 3.521843/8.281854/3.435679
-#-Add team 4factor
+#D-Add Starter: rf_starter: start-2015-11-16, 148/150, 100, 15.644, 76.20332/58.17275, 3.515676/8.349295/3.444033
+#D-Add team traditional: rf_team: start-2015-11-16, 174/176, 100, 18.482, 75.41484/58.60554, 3.497111/8.261813/3.439535 <-- new best!
+#D-Add team adv: rf_teamAdv: start-2015-11-16, 188/190, 100, 19.583, 75.46155/58.5799, 3.521843/8.281854/3.435679
+#D-Add team 4factor: rf_4factor: start-2015-11-16, 193/195, 100, 19.747, 76.0708/58.24549, 3.481958/8.354231/3.469764
 #-Add opp team traditional
 #-Add opp team 4factor
 #-Add opp team adv
@@ -73,15 +73,16 @@ F.NBA.P.USAGE = c('PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A', 'PCT_FTM', 'PCT_
 F.NBA.P.TRADITIONAL_DIFF = c('DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M', 'DIFF_FG3A', 'DIFF_FG3_PCT', 'DIFF_FTM', 'DIFF_FTA', 'DIFF_FT_PCT', 'DIFF_OREB', 'DIFF_DREB', 'DIFF_REB', 'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK', 'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD')
 F.NBA.T.TRADITIONAL = c('TEAM_GP', 'TEAM_W', 'TEAM_L', 'TEAM_W_PCT', 'TEAM_MIN', 'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3M', 'TEAM_FG3A', 'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT', 'TEAM_OREB', 'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL', 'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS', 'TEAM_PLUS_MINUS')
 F.NBA.T.ADVANCED = c('TEAM_OFF_RATING', 'TEAM_DEF_RATING', 'TEAM_NET_RATING', 'TEAM_AST_PCT', 'TEAM_AST_TO', 'TEAM_AST_RATIO', 'TEAM_OREB_PCT', 'TEAM_DREB_PCT', 'TEAM_REB_PCT', 'TEAM_TM_TOV_PCT', 'TEAM_EFG_PCT', 'TEAM_TS_PCT', 'TEAM_PACE', 'TEAM_PIE')
+F.NBA.T.FOURFACTORS = c('TEAM_FTA_RATE', 'TEAM_OPP_EFG_PCT', 'TEAM_OPP_FTA_RATE', 'TEAM_OPP_TOV_PCT', 'TEAM_OPP_OREB_PCT')
 F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
 F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
           F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
-          F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.MINE)
+          F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS, F.MINE)
 
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_teamAdv'
+FILENAME = 'rf_4factor'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
