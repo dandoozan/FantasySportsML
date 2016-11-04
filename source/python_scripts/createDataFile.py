@@ -22,7 +22,7 @@ X_NAMES = [
         #NBA Advanced
         'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO',
         'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT',
-        'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG',
+        'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE',
 
         #NBA Player Bios
         'PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT',

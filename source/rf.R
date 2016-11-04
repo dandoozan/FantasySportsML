@@ -14,10 +14,15 @@
 #D-Add team traditional: rf_team: start-2015-11-16, 174/176, 100, 18.482, 75.41484/58.60554, 3.497111/8.261813/3.439535 <-- new best!
 #D-Add team adv: rf_teamAdv: start-2015-11-16, 188/190, 100, 19.583, 75.46155/58.5799, 3.521843/8.281854/3.435679
 #D-Add team 4factor: rf_4factor: start-2015-11-16, 193/195, 100, 19.747, 76.0708/58.24549, 3.481958/8.354231/3.469764
+#D-Removing FGM_PG, FGA_PG: rf_rmFG_PG: start-2015-11-16, 191/193, 100, 18.931, 75.22574/58.70933, 3.48194/8.304678/3.449578
 #-Add opp team traditional
 #-Add opp team 4factor
 #-Add opp team adv
 #-to test: train[findFirstIndexOfDate(train, '2015-11-15'), c(F.ID, F.NBA)]
+
+#-verify team adv
+#-verify team 4factor
+
 
 #-Build models on subset of data
   #-starter
@@ -64,7 +69,7 @@ source('source/_createTeam.R')
 F.ID = c('Date', 'Name', 'Team')
 F.RG = c('Salary', 'Position', 'Home', 'Team', 'Opponent')
 F.NBA.P.TRADITIONAL = c('AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS', 'DD2', 'TD3')
-F.NBA.P.ADVANCED = c('OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE', 'FGM_PG', 'FGA_PG')
+F.NBA.P.ADVANCED = c('OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE')
 F.NBA.P.PLAYERBIOS = c('PLAYER_HEIGHT_INCHES','PLAYER_WEIGHT','COUNTRY','DRAFT_YEAR','DRAFT_ROUND','DRAFT_NUMBER')
 F.NBA.P.OPPONENT = c('OPP_FGM', 'OPP_FGA', 'OPP_FG_PCT', 'OPP_FG3M', 'OPP_FG3A', 'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB', 'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL', 'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS')
 F.NBA.P.DEFENSE = c('PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS')
@@ -82,7 +87,7 @@ F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_4factor'
+FILENAME = 'rf_rmFG_PG'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
@@ -120,14 +125,14 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
 }
 
 #I do not understand any of this code, I borrowed it from a kaggler
-plotImportances = function(model, save=FALSE) {
+plotImportances = function(model, max=20, save=FALSE) {
   cat('Plotting Feature Importances...\n')
 
   # Get importance
   importances = randomForest::importance(model)
 
   #DPD: take the top 20 if there are more than 20
-  importances = importances[order(-importances[, 1]), , drop = FALSE][1:min(20, nrow(importances)),, drop=F]
+  importances = importances[order(-importances[, 1]), , drop = FALSE][1:min(max, nrow(importances)),, drop=F]
 
   varImportance = data.frame(Variables = row.names(importances),
                              Importance = round(importances[, 1], 2))
