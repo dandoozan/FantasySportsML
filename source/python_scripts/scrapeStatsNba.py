@@ -4,6 +4,7 @@ import json
 import scraper
 import _util as util
 
+NBA_DIR = 'data/rawDataFromStatsNba'
 PLAYER_CATEGORIES = {
     'Traditional': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
@@ -137,11 +138,12 @@ DATE_FORMAT_FILENAME = '%Y%m%d'
 ONE_DAY = timedelta(1)
 SLEEP = 10
 
-def createUrlParams(endDate, season, params):
+def createUrlParams(startDate, endDate, season, params):
+    dateFormat = '%m/%d/%Y'
     urlParams = {
         'Conference': '',
-        'DateFrom': '',
-        'DateTo': endDate.strftime('%m/%d/%Y'), #eg.'10/27/2015',
+        'DateFrom': startDate.strftime(dateFormat), #eg.'10/27/2015',
+        'DateTo': endDate.strftime(dateFormat),
         'Division': '',
         'GameScope': '',
         'GameSegment': '',
@@ -191,30 +193,32 @@ def getDataValues(data):
 
 #=============== Main ================
 
-isTeam = raw_input('Is this for team statistics? ').strip() == 'y'
+isDaily = raw_input('Daily? ').strip() == 'y'
+isTeam = raw_input('Team? ').strip() == 'y'
 category = raw_input('Enter Category (eg. Traditional): ').strip()
 season = raw_input('Enter season (eg. 2015): ').strip()
 
-print 'Running Team: %s, Category: %s, Season: %s...' % (isTeam, category, season)
+print 'Running Daily: %s, Team: %s, Category: %s, Season: %s...' % (isDaily, isTeam, category, season)
 
-parentDir = 'data/rawDataFromStatsNba/' + ('Team_' if isTeam else '') + category + '/' + season
+parentDir = util.joinDirs(NBA_DIR, 'Daily' if isDaily else 'Season', ('Team_' if isTeam else '') + category, season)
 util.createDirIfNecessary(parentDir)
 
 seasonObj = SEASONS[season]
-startDate = seasonObj['startDate']
-endDate = seasonObj['endDate']
+seasonStartDate = seasonObj['startDate']
+seasonEndDate = seasonObj['endDate']
 
 categoryObj = TEAM_CATEGORIES[category] if isTeam else PLAYER_CATEGORIES[category]
 baseUrl = categoryObj['baseUrl']
 params = categoryObj['params'] if 'params' in categoryObj else {}
 headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
-currDate = startDate
+currDate = seasonStartDate
 prevDataValues = None
-while currDate <= endDate:
+while currDate <= seasonEndDate:
     print '\nScraping data for ' + str(currDate) + '...'
 
-    url = scraper.createUrl(baseUrl, createUrlParams(currDate, seasonObj['str'], params))
+    startDate = currDate if isDaily else seasonStartDate
+    url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], params))
 
     jsonData = scraper.downloadJson(url, createHeaders(headers))
     #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))

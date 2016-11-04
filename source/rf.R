@@ -18,6 +18,7 @@
 #-Add opp team traditional
 #-Add opp team 4factor
 #-Add opp team adv
+#-Add traditional prevday
 #-to test: train[findFirstIndexOfDate(train, '2015-11-15'), c(F.ID, F.NBA)]
 
 #-verify team adv
