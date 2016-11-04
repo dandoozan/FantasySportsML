@@ -99,6 +99,16 @@ TEAM_CATEGORIES = {
             'Referer': 'http://stats.nba.com/league/team/'
         },
     },
+    'FourFactors': {
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashteamstats?',
+        'headers': {
+            'Referer': 'http://stats.nba.com/league/team/'
+        },
+        'params': {
+            'MeasureType': 'Four Factors',
+            'PerMode': 'Totals',
+        },
+    },
 }
 
 SEASONS = {
