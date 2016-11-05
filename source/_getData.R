@@ -82,11 +82,15 @@ imputeMissingValues = function(data) {
   return(data)
 }
 
+
+convertBinaryToFactor = function(binaryCol, label) {
+  return(factor(ifelse(binaryCol, label, paste0('Not', label))))
+}
 computeAttendedTopXPctCollege = function(data, topPercent) {
   #topPercent should be in decimal format (eg. .1 for 10%)
   sortedCollegeOccurrences = sort(table(data[data$COLLEGE != 'None', 'COLLEGE']), decreasing=T)
   topColleges = names(sortedCollegeOccurrences[1:ceiling(length(sortedCollegeOccurrences) * topPercent)])
-  return (as.numeric(data$COLLEGE %in% topColleges))
+  return (data$COLLEGE %in% topColleges)
 }
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
@@ -95,28 +99,28 @@ featureEngineer = function(data) {
   data$AvgFantasyPointsPerMin = ifelse(data$SEASON_MIN == 0, 0, data$AvgFantasyPoints / data$SEASON_MIN)
 
   #Add SalaryIncreased
-  data$SalaryIncreased = as.numeric(data$Salary > data$Salary_PrevGame)
+  data$SalaryIncreased = convertBinaryToFactor(data$Salary > data$Salary_PrevGame, 'SalaryIncreased')
 
   #Add WasDrafted
-  data$WasDrafted = as.numeric(data$DRAFT_YEAR != -1)
+  data$WasDrafted = convertBinaryToFactor(data$DRAFT_YEAR != -1, 'Drafted')
 
   #Add AttendedTop5PctCollege (top 5%)
   #which are: Kentucky, Kansas, Duke, North Carolina, UCLA, Arizona, Florida
-  data$AttendedTop5PctCollege = computeAttendedTopXPctCollege(data, .05)
+  data$AttendedTop5PctCollege = convertBinaryToFactor(computeAttendedTopXPctCollege(data, .05), 'Attended')
 
   #Add AttendedTop10PctCollege (top 10%)
   #which are: Kentucky, Kansas, Duke, North Carolina, UCLA, Arizona, Florida, Texas, Connecticut, Wake Forest, Syracuse, Michigan, Southern California
-  data$AttendedTop10PctCollege = computeAttendedTopXPctCollege(data, .1)
+  data$AttendedTop10PctCollege = convertBinaryToFactor(computeAttendedTopXPctCollege(data, .1), 'Attended')
 
   #Add AttendedTop20PctCollege (top 20%)
   #which are: Kentucky, Kansas, Duke, North Carolina, UCLA, Arizona, Florida, Texas, Connecticut, Wake Forest, Syracuse, Michigan, Southern California, Louisiana State, Georgia Tech, Georgetown, Ohio State, Washington, Michigan State, Marquette, Villanova, Stanford, Wisconsin, Tennessee, Oklahoma State
-  data$AttendedTop20PctCollege = computeAttendedTopXPctCollege(data, .2)
+  data$AttendedTop20PctCollege = convertBinaryToFactor(computeAttendedTopXPctCollege(data, .2), 'Attended')
 
   #Add AttendedTop50PctCollege (top 50%)
-  data$AttendedTop50PctCollege = computeAttendedTopXPctCollege(data, .5)
+  data$AttendedTop50PctCollege = convertBinaryToFactor(computeAttendedTopXPctCollege(data, .5), 'Attended')
 
   #Create Starter feature (StartedPercent >= 0.95)
-  data$Starter = as.numeric(data$StartedPercent >= 0.95)
+  data$Starter = convertBinaryToFactor(data$StartedPercent >= 0.95, 'Starter')
 
   return(data)
 }

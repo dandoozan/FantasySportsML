@@ -22,11 +22,16 @@
 #D-Add prevgame advanced: rf_prevGameAdv: start-2015-11-16, 280/290, 100, 27.901, 75.84301/58.37052, 3.520104/8.34741/3.436957
 #D-Add prevgame defense: rf_prevGameDef: start-2015-11-16, 288/290, 100, 28.606, 75.34841/58.642, 3.485228/8.311185/3.419689
 #D-Remove Minutes_PrevGame: rf_rmMinPrevGame: start-2015-11-16, 287/289, 100, 28.244, 74.67363/59.01238, 3.448102/8.292937/3.438265
+#D-Convert binary cols to factors: rf_binToFactor: start-2015-11-16, 287/289, 100, 33.157, 75.69991/58.44907, 3.470923/8.261393/3.456092
+#-Convert Injured to factor
+
+#-Add AttendedCollege feature
 
 #-Somehow get top features
   #-use top features from correlation
   #-use top features from rf importances
   #-use boruta
+  #-use lm pvalues
 
 #-Build models on subset of data
   #-starter
@@ -87,7 +92,7 @@ F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_rmMinPrevGame'
+FILENAME = 'rf_binToFactor'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
