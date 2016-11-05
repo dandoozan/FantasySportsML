@@ -4,18 +4,18 @@ import json
 import scraper
 import _util as util
 
-PARENT_DIR = 'data/rawDataFromRotoGrinders'
+ROTO_GRINDER_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
 SLEEP = 10
 
-pagesToScrape = [
+PAGES_TO_SCRAPE = [
     {
         'dirName': 'AdvancedPlayerStats',
         'jsonPrefix': 'data = ',
         'url': 'https://rotogrinders.com/grids/nba-advanced-stats-1494397',
     },
     {
-        'dirName': 'DefenseVsPosition',
+        'dirName': 'DefenseVsPositionCheatSheet',
         'jsonPrefix': 'data = ',
         'url': 'https://rotogrinders.com/grids/nba-defense-vs-position-cheat-sheet-1493632',
     },
@@ -65,6 +65,52 @@ pagesToScrape = [
         'url': 'https://rotogrinders.com/schedules/nba',
     },
 ]
+TEAM_STATS_PAGES_TO_SCRAPE = [
+    {
+        'baseUrl': 'https://rotogrinders.com/team-stats/nba-earned?',
+        'dirName': 'TeamStats',
+        'jsonPrefix': 'data = ',
+        'urlParams': {
+            'site': 'fanduel',
+        },
+        'positions': [
+            { 'name': 'C', 'urlParams': { 'position': 'C', 'sport': 'nba' } },
+            { 'name': 'PF', 'urlParams': { 'position': 'PF', 'sport': 'nba' } },
+            { 'name': 'PG', 'urlParams': { 'position': 'PG', 'sport': 'nba' } },
+            { 'name': 'SF', 'urlParams': { 'position': 'SF', 'sport': 'nba' } },
+            { 'name': 'SG', 'urlParams': { 'position': 'SG', 'sport': 'nba' } },
+        ],
+        'ranges': [
+            { 'name': '4weeks', 'urlParams': { 'range': '4weeks' } },
+            { 'name': 'LastSeason', 'urlParams': { 'range': 'last-season' } },
+            { 'name': 'LastWeek', 'urlParams': { 'range': '1week' } },
+            { 'name': 'Season', 'urlParams': { 'range': 'season' } },
+            { 'name': 'Yesterday', 'urlParams': { 'range': 'yesterday' } },
+        ],
+    },
+    {
+        'baseUrl': 'https://rotogrinders.com/team-stats/nba-allowed?',
+        'dirName': 'DefenseVsPosition',
+        'jsonPrefix': 'data = ',
+        'urlParams': {
+            'site': 'fanduel',
+        },
+        'positions': [
+            { 'name': 'C', 'urlParams': { 'position': 'C', 'sport': 'nba' } },
+            { 'name': 'PF', 'urlParams': { 'position': 'PF', 'sport': 'nba' } },
+            { 'name': 'PG', 'urlParams': { 'position': 'PG', 'sport': 'nba' } },
+            { 'name': 'SF', 'urlParams': { 'position': 'SF', 'sport': 'nba' } },
+            { 'name': 'SG', 'urlParams': { 'position': 'SG', 'sport': 'nba' } },
+        ],
+        'ranges': [
+            { 'name': '4weeks', 'urlParams': { 'range': '4weeks' } },
+            { 'name': 'LastSeason', 'urlParams': { 'range': 'last-season' } },
+            { 'name': 'LastWeek', 'urlParams': { 'range': '1week' } },
+            { 'name': 'Season', 'urlParams': { 'range': 'season' } },
+            { 'name': 'Yesterday', 'urlParams': { 'range': 'yesterday' } },
+        ],
+    }
+]
 
 def parseData(data, jsonPrefix):
     print '    Parsing data...'
@@ -81,27 +127,72 @@ def parseData(data, jsonPrefix):
     #if i get here, i didnt find the data
     return None
 
-def createFilename(parentDir, dirName, baseFilename):
-    return parentDir + '/' + dirName + '/' + baseFilename + '.json'
-
-#=============== Main ================
-
-for page in pagesToScrape:
-    dirName = page['dirName']
-    jsonPrefix = page['jsonPrefix']
-    url = page['url']
-
+def scrapePage(dirName, url, jsonPrefix):
     print '\nScraping %s...' % dirName
+
+    fullPathDirName = util.joinDirs(ROTO_GRINDER_DIR, dirName)
+    #util.createDirIfNecessary(fullPathDirName)
 
     pageSource = scraper.downloadPageSource(url).split('\n')
     data = parseData(pageSource, jsonPrefix)
     if data:
-        scraper.writeJsonData(data, createFilename(PARENT_DIR, dirName, FILENAME))
+        scraper.writeJsonData(data, scraper.createJsonFilename(fullPathDirName, FILENAME))
     else:
         util.headsUp('NO DATA FOUND FOR' + dirName)
 
     print '    Sleeping for %d seconds' % SLEEP
     time.sleep(SLEEP)
 
+#=============== Main ================
+for page in PAGES_TO_SCRAPE:
+    dirName = page['dirName']
+    jsonPrefix = page['jsonPrefix']
+    url = page['url']
+    scrapePage(dirName, url, jsonPrefix)
+
+#tbx
+urls = {}
+
+#scrape team stats
+for page in TEAM_STATS_PAGES_TO_SCRAPE:
+    baseUrl = page['baseUrl']
+    dirName = page['dirName']
+    jsonPrefix = page['jsonPrefix']
+    baseUrlParams = page['urlParams']
+    for rnge in page['ranges']:
+        rangeName = rnge['name']
+        rangeUrlParams = rnge['urlParams']
+
+        rangeDirName = dirName + rangeName
+        urlParams = dict(baseUrlParams)
+        urlParams.update(rangeUrlParams)
+
+        #first scrape with no position (to get stat totals)
+        url = scraper.createUrl(baseUrl, urlParams)
+        urls[rangeDirName] = url #tbx
+        scrapePage(rangeDirName, url, jsonPrefix)
+
+        #then scrape for each position
+        for position in page['positions']:
+            positionName = position['name']
+            positionUrlParams = position['urlParams']
+
+            positionDirName = rangeDirName + positionName
+            urlParams.update(positionUrlParams)
+            url = scraper.createUrl(baseUrl, urlParams)
+            urls[positionDirName] = url #tbx
+            scrapePage(positionDirName, url, jsonPrefix)
+
+
+'''
+#tbx
+keys = urls.keys()
+keys.sort()
+for key in keys:
+    print key
+
+for key in keys:
+    print urls[key]
+'''
 
 print 'Done!'
