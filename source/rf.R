@@ -17,7 +17,7 @@
 #D-Removing FGM_PG, FGA_PG: rf_rmFG_PG: start-2015-11-16, 191/193, 100, 18.931, 75.22574/58.70933, 3.48194/8.304678/3.449578
 #-Add opp team traditional: rf_oppTeamTraditional: start-2015-11-16, 217/238, 100, 23.322, 75.52434/58.54544, 3.472347/8.343084/3.461793
 #-Add opp team adv: rf_oppTeamAdvanced: start-2015-11-16, 231/238, 100, 23.449, 74.63901/59.03139, 3.476982/8.323181/3.418769
-#-Add opp team 4factor:
+#-Add opp team 4factor: rf_oppTeam4Factor: start-2015-11-16, 236/238, 100, 23.465, 75.26318/58.68878, 3.52854/8.220664/3.435185 <-- new best!
 #-Add prevday traditional
 
 #-verify all team and all opp team
@@ -87,12 +87,13 @@ F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctC
 F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
           F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
           F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS,
-          F.NBA.T.OPP.TRADITIONAL, F.NBA.T.OPP.ADVANCED, F.MINE)
+          F.NBA.T.OPP.TRADITIONAL, F.NBA.T.OPP.ADVANCED, F.NBA.T.OPP.FOURFACTORS,
+          F.MINE)
 
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_oppTeamAdvanced'
+FILENAME = 'rf_oppTeam4Factor'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
