@@ -24,8 +24,8 @@
 #D-Remove Minutes_PrevGame: rf_rmMinPrevGame: start-2015-11-16, 287/289, 100, 28.244, 74.67363/59.01238, 3.448102/8.292937/3.438265
 #D-Convert binary cols to factors: rf_binToFactor: start-2015-11-16, 287/289, 100, 33.157, 75.69991/58.44907, 3.470923/8.261393/3.456092
 #D-Convert Injured to factor: rf_factorInjured: start-2015-11-16, Train/Test Sizes=3473/169, 287/289, 100, 33.827, 75.5749/58.51768, 3.465513/8.314567/3.460662
-#-Use only Starters: rf_starters: start-2015-11-16, Train/Test Sizes=1176/40, 287/289, 100, 6.623, 102.7658/44.4516, 3.952941/11.01027/3.958078
-#-Use Starters with more data:
+#D-Use only Starters: rf_starters: start-2015-11-16, 1176/40, 287/289, 100, 6.623, 102.7658/44.4516, 3.952941/11.01027/3.958078
+#D-Use non-Starters: rf_nonStarters: start-2015-11-16, 2297/129, 287/289, 100, 17.156, 62.57288/38.46687, 3.09537/8.271726/3.159816
 
 #-Somehow get top features
   #-use top features from correlation
@@ -92,7 +92,7 @@ F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_starters'
+FILENAME = 'rf_nonStarters'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
@@ -186,7 +186,7 @@ createTeams = function(testData, prediction, yName) {
 
 filterData = function(data) {
   cat('    Filtering data...\n')
-  return(data[data$Starter == 'Starter',])
+  return(data[data$Starter != 'Starter',])
 }
 
 #============= Main ================
