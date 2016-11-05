@@ -20,7 +20,7 @@ loadData = function() {
 
   #remove rows that don't have data from stats.nba.com
   #it's all or nothing, so just check if one column has NAs, and I know the rest do as well
-  rowsWithNoNbaData = which(is.na(data$W))
+  rowsWithNoNbaData = which(is.na(data$SEASON_W))
   data = data[-rowsWithNoNbaData,]
 
   #convert the date strings to Date objects
@@ -75,8 +75,8 @@ imputeMissingValues = function(data) {
 
   #Set 'None' to 0 in DEF_WS (there's only 1 DEF_WS, but there are 138 PREV_GAME_DEF_WS).
   #I don't know what DEF_WS is, so i dont know if this is significant
-  data[data$DEF_WS == 'None', 'DEF_WS'] = 0
-  data$DEF_WS = as.numeric(data$DEF_WS)
+  data[data$SEASON_DEF_WS == 'None', 'SEASON_DEF_WS'] = 0
+  data$SEASON_DEF_WS = as.numeric(data$SEASON_DEF_WS)
   data[data$PREV_GAME_DEF_WS == 'None', 'PREV_GAME_DEF_WS'] = 0
   data$PREV_GAME_DEF_WS = as.numeric(data$PREV_GAME_DEF_WS)
 
@@ -93,7 +93,7 @@ featureEngineer = function(data) {
   cat('    Feature engineering...\n')
 
   #Add AvgFantasyPointsPerMin
-  data$AvgFantasyPointsPerMin = ifelse(data$MIN == 0, 0, data$AvgFantasyPoints / data$MIN)
+  data$AvgFantasyPointsPerMin = ifelse(data$SEASON_MIN == 0, 0, data$AvgFantasyPoints / data$SEASON_MIN)
 
   #Add SalaryIncreased
   data$SalaryIncreased = as.numeric(data$Salary > data$Salary_PrevGame)

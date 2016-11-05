@@ -51,7 +51,7 @@ NBA_CATEGORIES = [
             'FTA_RATE', 'OPP_EFG_PCT', 'OPP_FTA_RATE',
             'OPP_TOV_PCT', 'OPP_OREB_PCT'],
         'isOppTeam': True,
-        'prefix': 'OPP_TEAM_',
+        'prefix': 'OPP_TEAM_SEASON_',
         'type': 'team',
     },
     {
@@ -62,7 +62,7 @@ NBA_CATEGORIES = [
             'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT',
             'PACE', 'PIE'],
         'isOppTeam': True,
-        'prefix': 'OPP_TEAM_',
+        'prefix': 'OPP_TEAM_SEASON_',
         'type': 'team',
     },
     {
@@ -73,7 +73,7 @@ NBA_CATEGORIES = [
             'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK',
             'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS'],
         'isOppTeam': True,
-        'prefix': 'OPP_TEAM_',
+        'prefix': 'OPP_TEAM_SEASON_',
         'type': 'team',
     },
     {
@@ -81,7 +81,7 @@ NBA_CATEGORIES = [
         'features': [
             'FTA_RATE', 'OPP_EFG_PCT', 'OPP_FTA_RATE',
             'OPP_TOV_PCT', 'OPP_OREB_PCT'],
-        'prefix': 'TEAM_',
+        'prefix': 'TEAM_SEASON_',
         'type': 'team',
     },
     {
@@ -91,7 +91,7 @@ NBA_CATEGORIES = [
             'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT',
             'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT',
             'PACE', 'PIE'],
-        'prefix': 'TEAM_',
+        'prefix': 'TEAM_SEASON_',
         'type': 'team',
     },
     {
@@ -101,7 +101,7 @@ NBA_CATEGORIES = [
             'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
             'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK',
             'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS'],
-        'prefix': 'TEAM_',
+        'prefix': 'TEAM_SEASON_',
         'type': 'team',
     },
     {
@@ -110,7 +110,7 @@ NBA_CATEGORIES = [
             'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT',
             'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB',
             'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD'],
-        'prefix': 'DIFF_',
+        'prefix': 'DIFF_SEASON_',
     },
     {
         'dirName': 'Usage',
@@ -118,6 +118,7 @@ NBA_CATEGORIES = [
             'PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A', 'PCT_FTM',
             'PCT_FTA', 'PCT_OREB', 'PCT_REB', 'PCT_AST', 'PCT_TOV',
             'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS'],
+        'prefix': 'SEASON_',
     },
     {
         'dirName': 'Scoring',
@@ -126,12 +127,14 @@ NBA_CATEGORIES = [
             'PCT_PTS_3PT', 'PCT_PTS_FB', 'PCT_PTS_FT', 'PCT_PTS_OFF_TOV',
             'PCT_PTS_PAINT', 'PCT_AST_2PM', 'PCT_UAST_2PM', 'PCT_AST_3PM',
             'PCT_UAST_3PM', 'PCT_AST_FGM', 'PCT_UAST_FGM'],
+        'prefix': 'SEASON_',
     },
     {
         'dirName': 'Defense',
         'features': [
             'PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV',
             'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT', 'DEF_WS'],
+        'prefix': 'SEASON_',
     },
     {
         'dirName': 'Opponent',
@@ -140,6 +143,7 @@ NBA_CATEGORIES = [
             'OPP_FG3_PCT', 'OPP_FTM', 'OPP_FTA', 'OPP_FT_PCT', 'OPP_OREB',
             'OPP_DREB', 'OPP_REB', 'OPP_AST', 'OPP_TOV', 'OPP_STL',
             'OPP_BLK', 'OPP_BLKA', 'OPP_PF', 'OPP_PFD', 'OPP_PTS'],
+        'prefix': 'SEASON_',
     },
     {
         'dirName': 'PlayerBios',
@@ -154,6 +158,7 @@ NBA_CATEGORIES = [
             'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO',
             'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT',
             'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE'],
+        'prefix': 'SEASON_',
     },
     {
         'dirName': 'Traditional',
@@ -162,6 +167,7 @@ NBA_CATEGORIES = [
             'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB',
             'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD', 'PTS',
             'PLUS_MINUS', 'DD2', 'TD3'],
+        'prefix': 'SEASON_',
     },
 ]
 
