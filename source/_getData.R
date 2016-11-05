@@ -83,7 +83,6 @@ imputeMissingValues = function(data) {
   return(data)
 }
 
-
 convertBinaryToFactor = function(binaryCol, label) {
   return(factor(ifelse(binaryCol, label, paste0('Not', label))))
 }
@@ -156,7 +155,7 @@ splitDataIntoTrainTest = function(data, startDate, splitDate) {
   return(list(train=train, test=test))
 }
 
-getData = function(startDate='start', splitDate='end') {
+getData = function(startDate='start', splitDate='end', filterData=NULL) {
   cat('Getting data (', startDate, '-', splitDate, ')...\n', sep='')
 
   #load data
@@ -168,10 +167,17 @@ getData = function(startDate='start', splitDate='end') {
   #do feature engineering
   full = featureEngineer(full)
 
+  #filter if a filterData function is provided
+  if (!is.null(filterData)) {
+    full = filterData(full)
+  }
+
   #split data into train, test
   trainTest = splitDataIntoTrainTest(full, startDate, splitDate)
   train = trainTest$train
   test = trainTest$test
+
+  cat('    Train/Test sizes: ', nrow(train), '/', nrow(test), '\n', sep='')
 
   return(list(train=train, test=test, full=full))
 }

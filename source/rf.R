@@ -23,10 +23,9 @@
 #D-Add prevgame defense: rf_prevGameDef: start-2015-11-16, 288/290, 100, 28.606, 75.34841/58.642, 3.485228/8.311185/3.419689
 #D-Remove Minutes_PrevGame: rf_rmMinPrevGame: start-2015-11-16, 287/289, 100, 28.244, 74.67363/59.01238, 3.448102/8.292937/3.438265
 #D-Convert binary cols to factors: rf_binToFactor: start-2015-11-16, 287/289, 100, 33.157, 75.69991/58.44907, 3.470923/8.261393/3.456092
-#D-Convert Injured to factor: rf_factorInjured: start-2015-11-16, 287/289, 100, 33.827, 75.5749/58.51768, 3.465513/8.314567/3.460662
-
-#-Add AttendedCollege feature
-#-Look into country
+#D-Convert Injured to factor: rf_factorInjured: start-2015-11-16, Train/Test Sizes=3473/169, 287/289, 100, 33.827, 75.5749/58.51768, 3.465513/8.314567/3.460662
+#-Use only Starters: rf_starters: start-2015-11-16, Train/Test Sizes=1176/40, 287/289, 100, 6.623, 102.7658/44.4516, 3.952941/11.01027/3.958078
+#-Use Starters with more data:
 
 #-Somehow get top features
   #-use top features from correlation
@@ -93,7 +92,7 @@ F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_factorInjured'
+FILENAME = 'rf_starters'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
@@ -125,7 +124,7 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   #featuresToUse = c('Salary', 'MIN', 'Injured', 'FantasyPoints_PrevGame', 'AvgFantasyPointsPerMin')
   featuresToUse = FEATURES_TO_USE
 
-  cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
+  cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n', sep='')
   #cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
   return(featuresToUse)
 }
@@ -185,11 +184,16 @@ createTeams = function(testData, prediction, yName) {
   printTeamResults(myTeam, bestTeam, yName)
 }
 
+filterData = function(data) {
+  cat('    Filtering data...\n')
+  return(data[data$Starter == 'Starter',])
+}
+
 #============= Main ================
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
-data = getData(START_DATE, SPLIT_DATE)
+data = getData(START_DATE, SPLIT_DATE, filterData)
 train = data$train #train=all data leading up to tonight
 test = data$test #test=tonight's team
 possibleFeatures = setdiff(names(train), c(ID_NAME, Y_NAME))
@@ -239,6 +243,10 @@ cat('Done!\n')
 tbx_moreCommentsToCollapse = function() {
 
 #=====From above=======
+
+#-Add AttendedCollege feature
+#-Look into country
+
 #D-Make initial prediction using salary: 01_rf_salary: numFeaturesUsed=1/1, Trn/CV Error=10.15385/10.16979, Train Error=10.15067
 #D-Use 2014 data: NONE: 1/1, 8.888702/8.924981, 8.887228
 #D-Use train/test data and keep NAs in data: rf_keepNAs: 1/2, 8.895979/8.880356, 8.887228
