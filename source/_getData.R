@@ -26,13 +26,14 @@ loadData = function() {
   #convert the date strings to Date objects
   data$Date = as.Date(as.character(data$Date), DATE_FORMAT)
 
-  #Convert Position, Home, Team, Opponent to factors
+  #Convert Position, Home, Team, Opponent, etc to factors
   data$Position = factor(data$Position)
   data$Home = factor(data$Home)
   data$Team = factor(data$Team)
   data$Opponent = factor(data$Opponent)
   data$COLLEGE = factor(data$COLLEGE)
   data$COUNTRY = factor(data$COUNTRY)
+  data$Injured = factor(data$Injured)
 
   return(data)
 }
