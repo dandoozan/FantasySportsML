@@ -11,8 +11,7 @@ NBA_DIR = util.joinDirs(DATA_DIR, 'rawDataFromStatsNba')
 
 ROTOGURU_FEATURES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Opponent']
 ADDITIONAL_FEATURES = ['AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
-        'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent',
-        'Salary_PrevGame']
+        'FantasyPoints_PrevGame', 'StartedPercent', 'Salary_PrevGame']
 NBA_CATEGORIES = [
     {
         'dirName': 'Defense',
@@ -814,17 +813,14 @@ def computePrevGameStats(data):
             if playerName in players:
                 playerData['Salary_PrevGame'] = players[playerName]['salary']
                 playerData['FantasyPoints_PrevGame'] = players[playerName]['fantasyPoints']
-                playerData['Minutes_PrevGame'] = players[playerName]['minutes']
                 if not isPlayerInjured(playerData):
                     players[playerName]['fantasyPoints'] = playerData['FantasyPoints']
-                    players[playerName]['minutes'] = float(playerData['Minutes']) if playerDidPlay(playerData) else 0.
                     players[playerName]['salary'] = playerData['Salary']
             else:
                 if not isPlayerInjured(playerData):
                     players[playerName] = {
                         'salary': playerData['Salary'],
                         'fantasyPoints': playerData['FantasyPoints'],
-                        'minutes': float(playerData['Minutes']) if playerDidPlay(playerData) else 0.,
                     }
 
 def addAdditionalFeatures(data):

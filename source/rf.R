@@ -15,14 +15,13 @@
 #D-Add team adv: rf_teamAdv: start-2015-11-16, 188/190, 100, 19.583, 75.46155/58.5799, 3.521843/8.281854/3.435679
 #D-Add team 4factor: rf_4factor: start-2015-11-16, 193/195, 100, 19.747, 76.0708/58.24549, 3.481958/8.354231/3.469764
 #D-Removing FGM_PG, FGA_PG: rf_rmFG_PG: start-2015-11-16, 191/193, 100, 18.931, 75.22574/58.70933, 3.48194/8.304678/3.449578
-#-Add opp team traditional: rf_oppTeamTraditional: start-2015-11-16, 217/238, 100, 23.322, 75.52434/58.54544, 3.472347/8.343084/3.461793
-#-Add opp team adv: rf_oppTeamAdvanced: start-2015-11-16, 231/238, 100, 23.449, 74.63901/59.03139, 3.476982/8.323181/3.418769
-#-Add opp team 4factor: rf_oppTeam4Factor: start-2015-11-16, 236/238, 100, 23.465, 75.26318/58.68878, 3.52854/8.220664/3.435185 <-- new best!
-#-Add prevgame traditional: rf_prevGame: start-2015-11-16, 265/267, 100, 26.645, 75.0749/58.79213, 3.50504/8.325245/3.432752
-#-Add prevgame advanced: rf_prevGameAdv: start-2015-11-16, 280/290, 100, 27.901, 75.84301/58.37052, 3.520104/8.34741/3.436957
-#-Add prevgame defense: rf_prevGameDef: start-2015-11-16, 288/290, 100, 28.606, 75.34841/58.642, 3.485228/8.311185/3.419689
-#-verify all prev game features
-#-to test: train[findFirstIndexOfDate(train, '2015-11-15'), c(F.ID, F.NBA)]
+#D-Add opp team traditional: rf_oppTeamTraditional: start-2015-11-16, 217/238, 100, 23.322, 75.52434/58.54544, 3.472347/8.343084/3.461793
+#D-Add opp team adv: rf_oppTeamAdvanced: start-2015-11-16, 231/238, 100, 23.449, 74.63901/59.03139, 3.476982/8.323181/3.418769
+#D-Add opp team 4factor: rf_oppTeam4Factor: start-2015-11-16, 236/238, 100, 23.465, 75.26318/58.68878, 3.52854/8.220664/3.435185 <-- new best!
+#D-Add prevgame traditional: rf_prevGame: start-2015-11-16, 265/267, 100, 26.645, 75.0749/58.79213, 3.50504/8.325245/3.432752
+#D-Add prevgame advanced: rf_prevGameAdv: start-2015-11-16, 280/290, 100, 27.901, 75.84301/58.37052, 3.520104/8.34741/3.436957
+#D-Add prevgame defense: rf_prevGameDef: start-2015-11-16, 288/290, 100, 28.606, 75.34841/58.642, 3.485228/8.311185/3.419689
+#D-Remove Minutes_PrevGame: rf_rmMinPrevGame: start-2015-11-16, 287/289, 100, 28.244, 74.67363/59.01238, 3.448102/8.292937/3.438265
 
 #-Somehow get top features
   #-use top features from correlation
@@ -77,7 +76,7 @@ F.NBA.T.OPP.FOURFACTORS = c('OPP_TEAM_SEASON_FTA_RATE', 'OPP_TEAM_SEASON_OPP_EFG
 F.NBA.P.PREV1.TRADITIONAL = c('PREV_GAME_AGE', 'PREV_GAME_GP', 'PREV_GAME_W', 'PREV_GAME_L', 'PREV_GAME_W_PCT', 'PREV_GAME_MIN', 'PREV_GAME_FGM', 'PREV_GAME_FGA', 'PREV_GAME_FG_PCT', 'PREV_GAME_FG3M', 'PREV_GAME_FG3A', 'PREV_GAME_FG3_PCT', 'PREV_GAME_FTM', 'PREV_GAME_FTA', 'PREV_GAME_FT_PCT', 'PREV_GAME_OREB', 'PREV_GAME_DREB', 'PREV_GAME_REB', 'PREV_GAME_AST', 'PREV_GAME_TOV', 'PREV_GAME_STL', 'PREV_GAME_BLK', 'PREV_GAME_BLKA', 'PREV_GAME_PF', 'PREV_GAME_PFD', 'PREV_GAME_PTS', 'PREV_GAME_PLUS_MINUS', 'PREV_GAME_DD2', 'PREV_GAME_TD3')
 F.NBA.P.PREV1.ADVANCED = c('PREV_GAME_OFF_RATING', 'PREV_GAME_DEF_RATING', 'PREV_GAME_NET_RATING', 'PREV_GAME_AST_PCT', 'PREV_GAME_AST_TO', 'PREV_GAME_AST_RATIO', 'PREV_GAME_OREB_PCT', 'PREV_GAME_DREB_PCT', 'PREV_GAME_REB_PCT', 'PREV_GAME_TM_TOV_PCT', 'PREV_GAME_EFG_PCT', 'PREV_GAME_TS_PCT', 'PREV_GAME_USG_PCT', 'PREV_GAME_PACE', 'PREV_GAME_PIE')
 F.NBA.P.PREV1.DEFENSE = c('PREV_GAME_PCT_DREB', 'PREV_GAME_PCT_STL', 'PREV_GAME_PCT_BLK', 'PREV_GAME_OPP_PTS_OFF_TOV', 'PREV_GAME_OPP_PTS_2ND_CHANCE', 'PREV_GAME_OPP_PTS_FB', 'PREV_GAME_OPP_PTS_PAINT', 'PREV_GAME_DEF_WS')
-F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
+F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
 F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
           F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
           F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS,
@@ -87,8 +86,8 @@ F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA
 
 FEATURES_TO_USE = F.ALL
 
-PROD_RUN = F
-FILENAME = 'rf_prevGameDef'
+PROD_RUN = T
+FILENAME = 'rf_rmMinPrevGame'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
