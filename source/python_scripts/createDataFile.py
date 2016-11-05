@@ -15,6 +15,26 @@ ADDITIONAL_FEATURES = ['AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
         'Salary_PrevGame']
 NBA_CATEGORIES = [
     {
+        'dirName': 'Defense',
+        'features': [
+            'PCT_DREB', 'PCT_STL', 'PCT_BLK', 'OPP_PTS_OFF_TOV',
+            'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 'OPP_PTS_PAINT',
+            'DEF_WS'],
+        'prefix': 'PREV_GAME_',
+        'timePeriod': 'Daily',
+        'type': 'daily',
+    },
+    {
+        'dirName': 'Advanced',
+        'features': [
+            'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT', 'AST_TO',
+            'AST_RATIO', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'TM_TOV_PCT',
+            'EFG_PCT', 'TS_PCT', 'USG_PCT', 'PACE', 'PIE'],
+        'prefix': 'PREV_GAME_',
+        'timePeriod': 'Daily',
+        'type': 'daily',
+    },
+    {
         'dirName': 'Traditional',
         'features': [
             'AGE', 'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT',
