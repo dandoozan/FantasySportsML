@@ -18,7 +18,7 @@
 #-Add opp team traditional: rf_oppTeamTraditional: start-2015-11-16, 217/238, 100, 23.322, 75.52434/58.54544, 3.472347/8.343084/3.461793
 #-Add opp team adv: rf_oppTeamAdvanced: start-2015-11-16, 231/238, 100, 23.449, 74.63901/59.03139, 3.476982/8.323181/3.418769
 #-Add opp team 4factor: rf_oppTeam4Factor: start-2015-11-16, 236/238, 100, 23.465, 75.26318/58.68878, 3.52854/8.220664/3.435185 <-- new best!
-#-Add prevday traditional
+#-Add prevgame traditional: rf_prevGame: start-2015-11-16, 265/267, 100, 26.645, 75.0749/58.79213, 3.50504/8.325245/3.432752
 
 #-Somehow get top features
   #-use top features from correlation
@@ -53,6 +53,7 @@
   #D-team traditional
   #D-team 4 factors
   #D-team advanced
+  #D-tradional daily
   #D-advanced daily
   #D-defense daily
 #-Try boruta features from all of the above
@@ -87,17 +88,19 @@ F.NBA.T.FOURFACTORS = c('TEAM_FTA_RATE', 'TEAM_OPP_EFG_PCT', 'TEAM_OPP_FTA_RATE'
 F.NBA.T.OPP.TRADITIONAL = c('OPP_TEAM_GP', 'OPP_TEAM_W', 'OPP_TEAM_L', 'OPP_TEAM_W_PCT', 'OPP_TEAM_MIN', 'OPP_TEAM_FGM', 'OPP_TEAM_FGA', 'OPP_TEAM_FG_PCT', 'OPP_TEAM_FG3M', 'OPP_TEAM_FG3A', 'OPP_TEAM_FG3_PCT', 'OPP_TEAM_FTM', 'OPP_TEAM_FTA', 'OPP_TEAM_FT_PCT', 'OPP_TEAM_OREB', 'OPP_TEAM_DREB', 'OPP_TEAM_REB', 'OPP_TEAM_AST', 'OPP_TEAM_TOV', 'OPP_TEAM_STL', 'OPP_TEAM_BLK', 'OPP_TEAM_BLKA', 'OPP_TEAM_PF', 'OPP_TEAM_PFD', 'OPP_TEAM_PTS', 'OPP_TEAM_PLUS_MINUS')
 F.NBA.T.OPP.ADVANCED = c('OPP_TEAM_OFF_RATING', 'OPP_TEAM_DEF_RATING', 'OPP_TEAM_NET_RATING', 'OPP_TEAM_AST_PCT', 'OPP_TEAM_AST_TO', 'OPP_TEAM_AST_RATIO', 'OPP_TEAM_OREB_PCT', 'OPP_TEAM_DREB_PCT', 'OPP_TEAM_REB_PCT', 'OPP_TEAM_TM_TOV_PCT', 'OPP_TEAM_EFG_PCT', 'OPP_TEAM_TS_PCT', 'OPP_TEAM_PACE', 'OPP_TEAM_PIE')
 F.NBA.T.OPP.FOURFACTORS = c('OPP_TEAM_FTA_RATE', 'OPP_TEAM_OPP_EFG_PCT', 'OPP_TEAM_OPP_FTA_RATE', 'OPP_TEAM_OPP_TOV_PCT', 'OPP_TEAM_OPP_OREB_PCT')
+F.NBA.P.PREV1.TRADITIONAL = c('PREV_GAME_AGE', 'PREV_GAME_GP', 'PREV_GAME_W', 'PREV_GAME_L', 'PREV_GAME_W_PCT', 'PREV_GAME_MIN', 'PREV_GAME_FGM', 'PREV_GAME_FGA', 'PREV_GAME_FG_PCT', 'PREV_GAME_FG3M', 'PREV_GAME_FG3A', 'PREV_GAME_FG3_PCT', 'PREV_GAME_FTM', 'PREV_GAME_FTA', 'PREV_GAME_FT_PCT', 'PREV_GAME_OREB', 'PREV_GAME_DREB', 'PREV_GAME_REB', 'PREV_GAME_AST', 'PREV_GAME_TOV', 'PREV_GAME_STL', 'PREV_GAME_BLK', 'PREV_GAME_BLKA', 'PREV_GAME_PF', 'PREV_GAME_PFD', 'PREV_GAME_PTS', 'PREV_GAME_PLUS_MINUS', 'PREV_GAME_DD2', 'PREV_GAME_TD3')
 F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
 F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
           F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
           F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS,
           F.NBA.T.OPP.TRADITIONAL, F.NBA.T.OPP.ADVANCED, F.NBA.T.OPP.FOURFACTORS,
+          F.NBA.P.PREV1.TRADITIONAL,
           F.MINE)
 
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_oppTeam4Factor'
+FILENAME = 'rf_prevGame'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
@@ -130,7 +133,7 @@ findBestSetOfFeatures = function(data, possibleFeatures) {
   featuresToUse = FEATURES_TO_USE
 
   cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n')
-  cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
+  #cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
   return(featuresToUse)
 }
 

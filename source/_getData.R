@@ -72,6 +72,9 @@ imputeMissingValues = function(data) {
   data[is.na(data[[F.NBA.T.OPP.ADVANCED[1]]]), c(F.NBA.T.OPP.ADVANCED)] = 0
   data[is.na(data[[F.NBA.T.OPP.FOURFACTORS[1]]]), c(F.NBA.T.OPP.FOURFACTORS)] = 0
 
+  #Manually fill in the 1 NA in PREV_GAME_ data with 0s (it was one guy who played only 1 min and got no stats)
+  data[is.na(data$PREV_GAME_MIN), F.NBA.P.PREV1.TRADITIONAL] = 0
+
   return(data)
 }
 
