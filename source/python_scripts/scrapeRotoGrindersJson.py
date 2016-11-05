@@ -82,7 +82,6 @@ TEAM_STATS_PAGES_TO_SCRAPE = [
         ],
         'ranges': [
             { 'name': '4weeks', 'urlParams': { 'range': '4weeks' } },
-            { 'name': 'LastSeason', 'urlParams': { 'range': 'last-season' } },
             { 'name': 'LastWeek', 'urlParams': { 'range': '1week' } },
             { 'name': 'Season', 'urlParams': { 'range': 'season' } },
             { 'name': 'Yesterday', 'urlParams': { 'range': 'yesterday' } },
@@ -104,7 +103,6 @@ TEAM_STATS_PAGES_TO_SCRAPE = [
         ],
         'ranges': [
             { 'name': '4weeks', 'urlParams': { 'range': '4weeks' } },
-            { 'name': 'LastSeason', 'urlParams': { 'range': 'last-season' } },
             { 'name': 'LastWeek', 'urlParams': { 'range': '1week' } },
             { 'name': 'Season', 'urlParams': { 'range': 'season' } },
             { 'name': 'Yesterday', 'urlParams': { 'range': 'yesterday' } },
