@@ -6,7 +6,7 @@ import _util as util
 
 PARENT_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
-SLEEP = 10
+SLEEP = 5
 
 pagesToScrape = [
     {

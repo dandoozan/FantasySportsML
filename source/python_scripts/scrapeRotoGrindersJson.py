@@ -6,7 +6,7 @@ import _util as util
 
 ROTO_GRINDER_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
-SLEEP = 10
+SLEEP = 5
 
 PAGES_TO_SCRAPE = [
     {
@@ -180,7 +180,6 @@ for page in TEAM_STATS_PAGES_TO_SCRAPE:
             url = scraper.createUrl(baseUrl, urlParams)
             urls[positionDirName] = url #tbx
             scrapePage(positionDirName, url, jsonPrefix)
-
 
 '''
 #tbx
