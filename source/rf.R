@@ -20,7 +20,7 @@
 #-Add opp team 4factor: rf_oppTeam4Factor: start-2015-11-16, 236/238, 100, 23.465, 75.26318/58.68878, 3.52854/8.220664/3.435185 <-- new best!
 #-Add prevgame traditional: rf_prevGame: start-2015-11-16, 265/267, 100, 26.645, 75.0749/58.79213, 3.50504/8.325245/3.432752
 #-Add prevgame advanced: rf_prevGameAdv: start-2015-11-16, 280/290, 100, 27.901, 75.84301/58.37052, 3.520104/8.34741/3.436957
-#-Add prevgame defense:
+#-Add prevgame defense: rf_prevGameDef: start-2015-11-16, 288/290, 100, 28.606, 75.34841/58.642, 3.485228/8.311185/3.419689
 
 #-Somehow get top features
   #-use top features from correlation
@@ -99,13 +99,13 @@ F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA
           F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
           F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS,
           F.NBA.T.OPP.TRADITIONAL, F.NBA.T.OPP.ADVANCED, F.NBA.T.OPP.FOURFACTORS,
-          F.NBA.P.PREV1.TRADITIONAL, F.NBA.P.PREV1.ADVANCED,
+          F.NBA.P.PREV1.TRADITIONAL, F.NBA.P.PREV1.ADVANCED, F.NBA.P.PREV1.DEFENSE,
           F.MINE)
 
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_prevGameAdv'
+FILENAME = 'rf_prevGameDef'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100

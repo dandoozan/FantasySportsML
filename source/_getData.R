@@ -60,11 +60,6 @@ imputeMissingValues = function(data) {
   data[data$DRAFT_NUMBER == 'Undrafted', 'DRAFT_NUMBER'] = -1
   data$DRAFT_NUMBER = as.numeric(data$DRAFT_NUMBER)
 
-  #Set 'None' to 0 in DEF_WS (there's only 1).
-  #I don't know what DEF_WS is, so i dont know if this is significant
-  data[data$DEF_WS == 'None', 'DEF_WS'] = 0
-  data$DEF_WS = as.numeric(data$DEF_WS)
-
   #Set NAs to 0s in OPP_TEAM_ features (they all have the same 38 NAs)
   #Set to 0 because the NA means that the opposing team hadn't played a game yet in
   #the season, so there wasn't any opposing team data available
@@ -77,6 +72,13 @@ imputeMissingValues = function(data) {
   #them to 0 if i use the post season data someday). The 2 that are in the reg season
   #are for players that only played 1 min in their previous game)
   data[is.na(data$PREV_GAME_MIN), c(F.NBA.P.PREV1.TRADITIONAL, F.NBA.P.PREV1.ADVANCED, F.NBA.P.PREV1.DEFENSE)] = 0
+
+  #Set 'None' to 0 in DEF_WS (there's only 1 DEF_WS, but there are 138 PREV_GAME_DEF_WS).
+  #I don't know what DEF_WS is, so i dont know if this is significant
+  data[data$DEF_WS == 'None', 'DEF_WS'] = 0
+  data$DEF_WS = as.numeric(data$DEF_WS)
+  data[data$PREV_GAME_DEF_WS == 'None', 'PREV_GAME_DEF_WS'] = 0
+  data$PREV_GAME_DEF_WS = as.numeric(data$PREV_GAME_DEF_WS)
 
   return(data)
 }
