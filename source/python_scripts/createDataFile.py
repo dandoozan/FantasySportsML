@@ -19,6 +19,37 @@ CATEGORIES_TO_USE = [
         'features': [
             'FTA_RATE', 'OPP_EFG_PCT', 'OPP_FTA_RATE',
             'OPP_TOV_PCT', 'OPP_OREB_PCT'],
+        'isOppTeam': True,
+        'prefix': 'OPP_TEAM_',
+        'type': 'team',
+    },
+    {
+        'dirName': 'Team_Advanced',
+        'features': [
+            'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT',
+            'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT',
+            'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT',
+            'PACE', 'PIE'],
+        'isOppTeam': True,
+        'prefix': 'OPP_TEAM_',
+        'type': 'team',
+    },
+    {
+        'dirName': 'Team_Traditional',
+        'features': [
+            'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT',
+            'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
+            'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK',
+            'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS'],
+        'isOppTeam': True,
+        'prefix': 'OPP_TEAM_',
+        'type': 'team',
+    },
+    {
+        'dirName': 'Team_FourFactors',
+        'features': [
+            'FTA_RATE', 'OPP_EFG_PCT', 'OPP_FTA_RATE',
+            'OPP_TOV_PCT', 'OPP_OREB_PCT'],
         'prefix': 'TEAM_',
         'type': 'team',
     },
