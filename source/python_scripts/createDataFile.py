@@ -540,14 +540,14 @@ def findMatchingKey(key, newData):
     return None
 def keyIsKnownToBeMissing(key, dateStr):
     return dateStr in MISSING_KEYS and key in MISSING_KEYS[dateStr]
-def createNbaFullPathToParentDir(parentDirName, season=None):
+def createNbaFullPathToParentDir(timePeriod, parentDirName, season=None):
     if season:
-        return util.joinDirs(NBA_DIR, parentDirName, season)
-    return util.joinDirs(NBA_DIR, parentDirName)
-def appendNbaData(parentDirName, data, season, prefix=''):
+        return util.joinDirs(NBA_DIR, timePeriod, parentDirName, season)
+    return util.joinDirs(NBA_DIR, timePeriod, parentDirName)
+def appendNbaData(timePeriod, parentDirName, data, season, prefix=''):
     print 'Adding NBA Data: %s...' % parentDirName
 
-    fullPathToDir = createNbaFullPathToParentDir(parentDirName, season)
+    fullPathToDir = createNbaFullPathToParentDir(timePeriod, parentDirName, season)
 
     cnt = 1
     dateStrs = data.keys()
@@ -572,10 +572,10 @@ def appendNbaData(parentDirName, data, season, prefix=''):
                             TBX_MISSING_PLAYERS.append((dateStr, key))
                             util.stop('Player played and was not found. player=' + key + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
         cnt += 1
-def appendNbaPlayerBios(parentDirName, data, season, prefix=''):
+def appendNbaPlayerBios(timePeriod, parentDirName, data, season, prefix=''):
     print 'Adding NBA Player Bios...'
 
-    fullPathToDir = createNbaFullPathToParentDir(parentDirName)
+    fullPathToDir = createNbaFullPathToParentDir(timePeriod, parentDirName)
 
     cnt = 1
     dateStrs = data.keys()
@@ -603,10 +603,10 @@ def getTeam(playerData):
     return playerData['Team']
 def getOppTeam(playerData):
     return playerData['Opponent']
-def appendNbaTeamData(parentDirName, data, season, prefix, isOppTeam):
+def appendNbaTeamData(timePeriod, parentDirName, data, season, prefix, isOppTeam):
     print 'Adding NBA Team Data: %s...' % parentDirName
 
-    fullPathToDir = createNbaFullPathToParentDir(parentDirName, season)
+    fullPathToDir = createNbaFullPathToParentDir(timePeriod, parentDirName, season)
 
     cnt = 1
     dateStrs = data.keys()
@@ -821,15 +821,16 @@ categoryFeatures = []
 for category in CATEGORIES_TO_USE:
     dirName = category['dirName']
     features = category['features']
-    typee = category['type'] if 'type' in category else None
-    prefix = category['prefix'] if 'prefix' in category else ''
+    timePeriod = util.getObjValue(category, 'timePeriod', 'Season')
+    typee = util.getObjValue(category, 'type')
+    prefix = util.getObjValue(category, 'prefix', '')
     if typee == 'playerBios':
-        appendNbaPlayerBios(dirName, data, SEASON, prefix)
+        appendNbaPlayerBios(timePeriod, dirName, data, SEASON, prefix)
     elif typee == 'team':
-        isOppTeam = category['isOppTeam'] if 'isOppTeam' in category else False
-        appendNbaTeamData(dirName, data, SEASON, prefix, isOppTeam)
+        isOppTeam = util.getObjValue(category, 'isOppTeam', False)
+        appendNbaTeamData(timePeriod, dirName, data, SEASON, prefix, isOppTeam)
     else:
-        appendNbaData(dirName, data, SEASON, prefix)
+        appendNbaData(timePeriod, dirName, data, SEASON, prefix)
     #add features to the front
     categoryFeatures = prependPrefix(features, prefix) + categoryFeatures
 X_NAMES.extend(categoryFeatures)

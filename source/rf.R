@@ -20,7 +20,11 @@
 #-Add opp team 4factor: rf_oppTeam4Factor: start-2015-11-16, 236/238, 100, 23.465, 75.26318/58.68878, 3.52854/8.220664/3.435185 <-- new best!
 #-Add prevday traditional
 
-#-verify all team and all opp team
+#-Somehow get top features
+  #-use top features from correlation
+  #-use top features from rf importances
+  #-use boruta
+
 #-to test: train[findFirstIndexOfDate(train, '2015-11-15'), c(F.ID, F.NBA)]
 
 #-Build models on subset of data
@@ -50,7 +54,7 @@
   #D-team 4 factors
   #D-team advanced
   #D-advanced daily
-  #IP-defense daily
+  #D-defense daily
 #-Try boruta features from all of the above
 
 #Remove all objects from the current workspace

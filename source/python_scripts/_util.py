@@ -22,3 +22,6 @@ def createFullPathFilename(fullPathToParentDir, filename):
 
 def joinDirs(*dirNames):
     return os.path.join(*dirNames)
+
+def getObjValue(obj, key, default=None):
+    return obj[key] if key in obj else default
