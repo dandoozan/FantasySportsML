@@ -17,41 +17,37 @@ CATEGORIES_TO_USE = [
     {
         'dirName': 'Team_FourFactors',
         'features': [
-            'TEAM_FTA_RATE', 'TEAM_OPP_EFG_PCT', 'TEAM_OPP_FTA_RATE',
-            'TEAM_OPP_TOV_PCT', 'TEAM_OPP_OREB_PCT'],
+            'FTA_RATE', 'OPP_EFG_PCT', 'OPP_FTA_RATE',
+            'OPP_TOV_PCT', 'OPP_OREB_PCT'],
         'prefix': 'TEAM_',
         'type': 'team',
     },
     {
         'dirName': 'Team_Advanced',
         'features': [
-            'TEAM_OFF_RATING', 'TEAM_DEF_RATING', 'TEAM_NET_RATING', 'TEAM_AST_PCT',
-            'TEAM_AST_TO', 'TEAM_AST_RATIO', 'TEAM_OREB_PCT', 'TEAM_DREB_PCT',
-            'TEAM_REB_PCT', 'TEAM_TM_TOV_PCT', 'TEAM_EFG_PCT', 'TEAM_TS_PCT',
-            'TEAM_PACE', 'TEAM_PIE'],
+            'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'AST_PCT',
+            'AST_TO', 'AST_RATIO', 'OREB_PCT', 'DREB_PCT',
+            'REB_PCT', 'TM_TOV_PCT', 'EFG_PCT', 'TS_PCT',
+            'PACE', 'PIE'],
         'prefix': 'TEAM_',
         'type': 'team',
     },
     {
         'dirName': 'Team_Traditional',
         'features': [
-            'TEAM_GP', 'TEAM_W', 'TEAM_L', 'TEAM_W_PCT', 'TEAM_MIN',
-            'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3M', 'TEAM_FG3A',
-            'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT', 'TEAM_OREB',
-            'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL',
-            'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS',
-            'TEAM_PLUS_MINUS'],
+            'GP', 'W', 'L', 'W_PCT', 'MIN', 'FGM', 'FGA', 'FG_PCT',
+            'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
+            'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK',
+            'BLKA', 'PF', 'PFD', 'PTS', 'PLUS_MINUS'],
         'prefix': 'TEAM_',
         'type': 'team',
     },
     {
         'dirName': 'Traditional_Diff',
         'features': [
-            'DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M',
-            'DIFF_FG3A', 'DIFF_FG3_PCT', 'DIFF_FTM', 'DIFF_FTA',
-            'DIFF_FT_PCT', 'DIFF_OREB', 'DIFF_DREB', 'DIFF_REB',
-            'DIFF_AST', 'DIFF_TOV', 'DIFF_STL', 'DIFF_BLK',
-            'DIFF_BLKA', 'DIFF_PF', 'DIFF_PFD'],
+            'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT',
+            'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB',
+            'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD'],
         'prefix': 'DIFF_',
     },
     {
@@ -299,6 +295,8 @@ def getNameIndex(colNames, prefix=''):
     if (prefix + 'PLAYER_NAME') in colNames:
         return colNames.index(prefix + 'PLAYER_NAME')
     return colNames.index(prefix + 'VS_PLAYER_NAME')
+def prependPrefix(values, prefix):
+    return map(lambda x: prefix + x, values)
 def loadNbaDataFromJsonFile(fullPathFilename, prefix=''):
     data = {}
 
@@ -306,7 +304,7 @@ def loadNbaDataFromJsonFile(fullPathFilename, prefix=''):
     jsonData = json.load(f)
     f.close()
 
-    colNames = map(lambda x: prefix + x, jsonData['resultSets'][0]['headers'])
+    colNames = prependPrefix(jsonData['resultSets'][0]['headers'], prefix)
     rowData = jsonData['resultSets'][0]['rowSet']
     nameIndex = getNameIndex(colNames, prefix)
     teamIndex = colNames.index(prefix + 'TEAM_ABBREVIATION')
@@ -333,7 +331,7 @@ def loadNbaTeamDataFromJsonFile(fullPathFilename, prefix=''):
     jsonData = json.load(f)
     f.close()
 
-    colNames = map(lambda x: prefix + x, jsonData['resultSets'][0]['headers'])
+    colNames = prependPrefix(jsonData['resultSets'][0]['headers'], prefix)
     rowData = jsonData['resultSets'][0]['rowSet']
     teamNameIndex = colNames.index(prefix + 'TEAM_NAME')
 
@@ -572,7 +570,9 @@ def appendNbaPlayerBios(parentDirName, data, season, prefix=''):
         cnt += 1
 def getTeam(playerData):
     return playerData['Team']
-def appendNbaTeamData(parentDirName, data, season, prefix=''):
+def getOppTeam(playerData):
+    return playerData['Opponent']
+def appendNbaTeamData(parentDirName, data, season, prefix, isOppTeam):
     print 'Adding NBA Team Data: %s...' % parentDirName
 
     fullPathToDir = createNbaFullPathToParentDir(parentDirName, season)
@@ -592,15 +592,18 @@ def appendNbaTeamData(parentDirName, data, season, prefix=''):
             #iterate through each player and merge nba data into player data
             for key in data[dateStr]:
                 playerData = data[dateStr][key]
-                team = getTeam(playerData)
+                team = getOppTeam(playerData) if isOppTeam else getTeam(playerData)
 
-                nbaTeam = RG_TO_NBA_TEAM_MAP[team]
-                if nbaTeam in nbaData:
-                    playerData.update(nbaData[nbaTeam])
+                if team in RG_TO_NBA_TEAM_MAP:
+                    nbaTeam = RG_TO_NBA_TEAM_MAP[team]
+                    if nbaTeam in nbaData:
+                        playerData.update(nbaData[nbaTeam])
+                    else:
+                        if teamPlayedAnyGameUpToDate(data, team, date, season):
+                            #TBX_MISSING_PLAYERS.append((dateStr, key))
+                            util.stop('Team played and was not found. team=' + team + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
                 else:
-                    if teamPlayedAnyGameUpToDate(data, team, date, season):
-                        #TBX_MISSING_PLAYERS.append((dateStr, key))
-                        util.stop('Team played and was not found. team=' + team + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
+                    util.headsUp('Team not found in RG_TO_NBA_TEAM_MAP, team=' + team)
         cnt += 1
 
 def getValue(obj, key):
@@ -740,6 +743,7 @@ def addAdditionalFeatures(data):
     computeStartedPercent(data)
     computePrevGameStats(data)
 
+
 #============= MAIN =============
 
 
@@ -791,11 +795,12 @@ for category in CATEGORIES_TO_USE:
     if typee == 'playerBios':
         appendNbaPlayerBios(dirName, data, SEASON, prefix)
     elif typee == 'team':
-        appendNbaTeamData(dirName, data, SEASON, prefix)
+        isOppTeam = category['isOppTeam'] if 'isOppTeam' in category else False
+        appendNbaTeamData(dirName, data, SEASON, prefix, isOppTeam)
     else:
         appendNbaData(dirName, data, SEASON, prefix)
     #add features to the front
-    categoryFeatures = features + categoryFeatures
+    categoryFeatures = prependPrefix(features, prefix) + categoryFeatures
 X_NAMES.extend(categoryFeatures)
 
 addAdditionalFeatures(data)
