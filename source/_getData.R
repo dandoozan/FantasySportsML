@@ -65,6 +65,13 @@ imputeMissingValues = function(data) {
   data[data$DEF_WS == 'None', 'DEF_WS'] = 0
   data$DEF_WS = as.numeric(data$DEF_WS)
 
+  #Set NAs to 0s in OPP_TEAM_ features (they all have the same 38 NAs)
+  #Set to 0 because the NA means that the opposing team hadn't played a game yet in
+  #the season, so there wasn't any opposing team data available
+  data[is.na(data[[F.NBA.T.OPP.TRADITIONAL[1]]]), c(F.NBA.T.OPP.TRADITIONAL)] = 0
+  data[is.na(data[[F.NBA.T.OPP.ADVANCED[1]]]), c(F.NBA.T.OPP.ADVANCED)] = 0
+  data[is.na(data[[F.NBA.T.OPP.FOURFACTORS[1]]]), c(F.NBA.T.OPP.FOURFACTORS)] = 0
+
   return(data)
 }
 

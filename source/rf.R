@@ -15,10 +15,10 @@
 #D-Add team adv: rf_teamAdv: start-2015-11-16, 188/190, 100, 19.583, 75.46155/58.5799, 3.521843/8.281854/3.435679
 #D-Add team 4factor: rf_4factor: start-2015-11-16, 193/195, 100, 19.747, 76.0708/58.24549, 3.481958/8.354231/3.469764
 #D-Removing FGM_PG, FGA_PG: rf_rmFG_PG: start-2015-11-16, 191/193, 100, 18.931, 75.22574/58.70933, 3.48194/8.304678/3.449578
-#-Add opp team traditional
+#-Add opp team traditional: rf_oppTeamTraditional: start-2015-11-16, 217/238, 100, 23.322, 75.52434/58.54544, 3.472347/8.343084/3.461793
 #-Add opp team 4factor
 #-Add opp team adv
-#-Add traditional prevday
+#-Add prevday traditional
 #-to test: train[findFirstIndexOfDate(train, '2015-11-15'), c(F.ID, F.NBA)]
 
 #-verify team adv
@@ -51,6 +51,8 @@
   #D-team traditional
   #D-team 4 factors
   #D-team advanced
+  #D-advanced daily
+  #IP-defense daily
 #-Try boruta features from all of the above
 
 #Remove all objects from the current workspace
@@ -80,15 +82,19 @@ F.NBA.P.TRADITIONAL_DIFF = c('DIFF_FGM', 'DIFF_FGA', 'DIFF_FG_PCT', 'DIFF_FG3M',
 F.NBA.T.TRADITIONAL = c('TEAM_GP', 'TEAM_W', 'TEAM_L', 'TEAM_W_PCT', 'TEAM_MIN', 'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3M', 'TEAM_FG3A', 'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT', 'TEAM_OREB', 'TEAM_DREB', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_STL', 'TEAM_BLK', 'TEAM_BLKA', 'TEAM_PF', 'TEAM_PFD', 'TEAM_PTS', 'TEAM_PLUS_MINUS')
 F.NBA.T.ADVANCED = c('TEAM_OFF_RATING', 'TEAM_DEF_RATING', 'TEAM_NET_RATING', 'TEAM_AST_PCT', 'TEAM_AST_TO', 'TEAM_AST_RATIO', 'TEAM_OREB_PCT', 'TEAM_DREB_PCT', 'TEAM_REB_PCT', 'TEAM_TM_TOV_PCT', 'TEAM_EFG_PCT', 'TEAM_TS_PCT', 'TEAM_PACE', 'TEAM_PIE')
 F.NBA.T.FOURFACTORS = c('TEAM_FTA_RATE', 'TEAM_OPP_EFG_PCT', 'TEAM_OPP_FTA_RATE', 'TEAM_OPP_TOV_PCT', 'TEAM_OPP_OREB_PCT')
+F.NBA.T.OPP.TRADITIONAL = c('OPP_TEAM_GP', 'OPP_TEAM_W', 'OPP_TEAM_L', 'OPP_TEAM_W_PCT', 'OPP_TEAM_MIN', 'OPP_TEAM_FGM', 'OPP_TEAM_FGA', 'OPP_TEAM_FG_PCT', 'OPP_TEAM_FG3M', 'OPP_TEAM_FG3A', 'OPP_TEAM_FG3_PCT', 'OPP_TEAM_FTM', 'OPP_TEAM_FTA', 'OPP_TEAM_FT_PCT', 'OPP_TEAM_OREB', 'OPP_TEAM_DREB', 'OPP_TEAM_REB', 'OPP_TEAM_AST', 'OPP_TEAM_TOV', 'OPP_TEAM_STL', 'OPP_TEAM_BLK', 'OPP_TEAM_BLKA', 'OPP_TEAM_PF', 'OPP_TEAM_PFD', 'OPP_TEAM_PTS', 'OPP_TEAM_PLUS_MINUS')
+F.NBA.T.OPP.ADVANCED = c('OPP_TEAM_OFF_RATING', 'OPP_TEAM_DEF_RATING', 'OPP_TEAM_NET_RATING', 'OPP_TEAM_AST_PCT', 'OPP_TEAM_AST_TO', 'OPP_TEAM_AST_RATIO', 'OPP_TEAM_OREB_PCT', 'OPP_TEAM_DREB_PCT', 'OPP_TEAM_REB_PCT', 'OPP_TEAM_TM_TOV_PCT', 'OPP_TEAM_EFG_PCT', 'OPP_TEAM_TS_PCT', 'OPP_TEAM_PACE', 'OPP_TEAM_PIE')
+F.NBA.T.OPP.FOURFACTORS = c('OPP_TEAM_FTA_RATE', 'OPP_TEAM_OPP_EFG_PCT', 'OPP_TEAM_OPP_FTA_RATE', 'OPP_TEAM_OPP_TOV_PCT', 'OPP_TEAM_OPP_OREB_PCT')
 F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctCollege', 'AttendedTop20PctCollege', 'AttendedTop50PctCollege', 'AvgFantasyPoints', 'DaysPlayedPercent', 'Injured', 'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent', 'Salary_PrevGame', 'AvgFantasyPointsPerMin', 'SalaryIncreased')
 F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
           F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
-          F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS, F.MINE)
+          F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS,
+          F.NBA.T.OPP.TRADITIONAL, F.MINE)
 
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_rmFG_PG'
+FILENAME = 'rf_oppTeamTraditional'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
