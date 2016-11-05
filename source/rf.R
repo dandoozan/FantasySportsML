@@ -16,14 +16,12 @@
 #D-Add team 4factor: rf_4factor: start-2015-11-16, 193/195, 100, 19.747, 76.0708/58.24549, 3.481958/8.354231/3.469764
 #D-Removing FGM_PG, FGA_PG: rf_rmFG_PG: start-2015-11-16, 191/193, 100, 18.931, 75.22574/58.70933, 3.48194/8.304678/3.449578
 #-Add opp team traditional: rf_oppTeamTraditional: start-2015-11-16, 217/238, 100, 23.322, 75.52434/58.54544, 3.472347/8.343084/3.461793
-#-Add opp team 4factor
-#-Add opp team adv
+#-Add opp team adv: rf_oppTeamAdvanced: start-2015-11-16, 231/238, 100, 23.449, 74.63901/59.03139, 3.476982/8.323181/3.418769
+#-Add opp team 4factor:
 #-Add prevday traditional
+
+#-verify all team and all opp team
 #-to test: train[findFirstIndexOfDate(train, '2015-11-15'), c(F.ID, F.NBA)]
-
-#-verify team adv
-#-verify team 4factor
-
 
 #-Build models on subset of data
   #-starter
@@ -89,12 +87,12 @@ F.MINE = c('Starter', 'WasDrafted', 'AttendedTop5PctCollege', 'AttendedTop10PctC
 F.ALL = c(F.RG, F.NBA.P.TRADITIONAL, F.NBA.P.ADVANCED, F.NBA.P.PLAYERBIOS, F.NBA.P.OPPONENT,
           F.NBA.P.DEFENSE, F.NBA.P.SCORING, F.NBA.P.USAGE, F.NBA.P.TRADITIONAL_DIFF,
           F.NBA.T.TRADITIONAL, F.NBA.T.ADVANCED, F.NBA.T.FOURFACTORS,
-          F.NBA.T.OPP.TRADITIONAL, F.MINE)
+          F.NBA.T.OPP.TRADITIONAL, F.NBA.T.OPP.ADVANCED, F.MINE)
 
 FEATURES_TO_USE = F.ALL
 
 PROD_RUN = T
-FILENAME = 'rf_oppTeamTraditional'
+FILENAME = 'rf_oppTeamAdvanced'
 START_DATE = 'start'
 SPLIT_DATE = '2015-11-16'
 N_TREE = 100
