@@ -13,7 +13,7 @@ ROTOGURU_FEATURES = ['Date', 'Name', 'Salary', 'Position', 'Home', 'Team', 'Oppo
 ADDITIONAL_FEATURES = ['AvgFantasyPoints', 'DaysPlayedPercent', 'Injured',
         'FantasyPoints_PrevGame', 'Minutes_PrevGame', 'StartedPercent',
         'Salary_PrevGame']
-CATEGORIES_TO_USE = [
+NBA_CATEGORIES = [
     {
         'dirName': 'Team_FourFactors',
         'features': [
@@ -377,14 +377,14 @@ def findApplicableFile(fullPathToDir, date, season):
     usedDiffFile = False
     currDate = date
     fullPathFilename = createNbaFullPathFilename(fullPathToDir, date.strftime(DATE_FORMAT))
-    while currDate >= FIRST_DATE_OF_SEASON[season] and not os.path.exists(fullPathFilename):
+    while currDate >= FIRST_DATE_OF_SEASON[season] and not util.fileExists(fullPathFilename):
         currDate = currDate - ONE_DAY
         fullPathFilename = createNbaFullPathFilename(fullPathToDir, currDate.strftime(DATE_FORMAT))
         usedDiffFile = True
 
     #if usedDiffFile:
         #scraper.headsUp('Used different file. date=' + str(date) + ', file=' + filename)
-    if os.path.exists(fullPathFilename):
+    if util.fileExists(fullPathFilename):
         return fullPathFilename
     return None
 def loadNbaDataForDate(fullPathToDir, date, season, prefix=''):
@@ -399,7 +399,6 @@ def loadNbaTeamDataForDate(fullPathToDir, date, season, prefix=''):
     if fullPathFilename:
         data = loadNbaTeamDataFromJsonFile(fullPathFilename, prefix)
     return data
-
 def hasExactMatch(key, nbaData):
     return key in nbaData
 
@@ -466,19 +465,19 @@ def playerDidPlay(playerData):
     return minutes != 'DNP' and minutes != 'NA' and float(minutes) > 0
 def playerDidStart(playerData):
     return playerData['Starter'] == 1
-def playerPlayedAnyGameUpToDate(data, key, date, season):
-    currDate = FIRST_DATE_OF_SEASON[season]
-    while currDate < date:
-        currDateStr = currDate.strftime(DATE_FORMAT)
-        if currDateStr in data:
-            if key in data[currDateStr]:
-                if playerDidPlay(data[currDateStr][key]):
-                    return True
-        currDate = currDate + ONE_DAY
-    return False
+def findPrevGameDateStrForPlayer(data, key, dateStr, season):
+    date = datetime.strptime(dateStr, DATE_FORMAT)
+    prevDate = date - ONE_DAY
+    while prevDate >= FIRST_DATE_OF_SEASON[season]:
+        prevDateStr = prevDate.strftime(DATE_FORMAT)
+        if prevDateStr in data:
+            if key in data[prevDateStr]:
+                if playerDidPlay(data[prevDateStr][key]):
+                    return prevDateStr
+        prevDate = prevDate - ONE_DAY
 def playerPlayedAnyGameInSeason(data, key, season):
-    endDate = LAST_DATE_OF_SEASON[season] + ONE_DAY
-    return playerPlayedAnyGameUpToDate(data, key, endDate, season)
+    endDateStr = (LAST_DATE_OF_SEASON[season] + ONE_DAY).strftime(DATE_FORMAT)
+    return not not findPrevGameDateStrForPlayer(data, key, endDateStr, season)
 def teamPlayedAnyGameUpToDate(data, team, date, season):
     currDate = FIRST_DATE_OF_SEASON[season]
     while currDate < date:
@@ -568,9 +567,34 @@ def appendNbaData(timePeriod, parentDirName, data, season, prefix=''):
                     if newKey:
                         data[dateStr][key].update(nbaData[newKey])
                     else:
-                        if playerPlayedAnyGameUpToDate(data, key, date, season):
-                            TBX_MISSING_PLAYERS.append((dateStr, key))
+                        if findPrevGameDateStrForPlayer(data, key, dateStr, season):
+                            #TBX_MISSING_PLAYERS.append((dateStr, key))
                             util.stop('Player played and was not found. player=' + key + ', date(rg)=' + dateStr + ', prevDate(nba)=' + prevDate.strftime(DATE_FORMAT))
+        cnt += 1
+def appendNbaDailyData(timePeriod, parentDirName, data, season, prefix=''):
+    print 'Adding NBA Daily Data: %s...' % parentDirName
+
+    fullPathToDir = createNbaFullPathToParentDir(timePeriod, parentDirName, season)
+
+    cnt = 1
+    dateStrs = data.keys()
+    dateStrs.sort()
+    numDates = len(dateStrs)
+    for dateStr in dateStrs:
+        #print 'On date=%s (%d / %d)' % (dateStr, cnt, numDates)
+        for key in data[dateStr]:
+            prevGameDateStr = findPrevGameDateStrForPlayer(data, key, dateStr, season)
+            if prevGameDateStr:
+                prevGameFullPathFilename = createNbaFullPathFilename(fullPathToDir, prevGameDateStr)
+                if util.fileExists(prevGameFullPathFilename):
+                    newData = loadNbaDataFromJsonFile(prevGameFullPathFilename, prefix)
+                    newKey = findMatchingKey(key, newData)
+                    if newKey in newData:
+                        data[dateStr][key].update(newData[newKey])
+                    else:
+                        util.stop('Prev game data not found for player=' + key + ', date(rg)=' + dateStr)
+                #else:
+                    #util.stop('File not found, filename=' + prevGameFullPathFilename)
         cnt += 1
 def appendNbaPlayerBios(timePeriod, parentDirName, data, season, prefix=''):
     print 'Adding NBA Player Bios...'
@@ -814,11 +838,13 @@ def addAdditionalFeatures(data):
         #merge the nba player data into rg player data
 #3.Print the data in tabular format (perhaps sort by day if i want the data in chronological order)
 
+#load rotoguru data
 data = loadDataFromRotoGuru(ROTOGURU_FILE)
 X_NAMES.extend(ROTOGURU_FEATURES)
 
+#load nba data
 categoryFeatures = []
-for category in CATEGORIES_TO_USE:
+for category in NBA_CATEGORIES:
     dirName = category['dirName']
     features = category['features']
     timePeriod = util.getObjValue(category, 'timePeriod', 'Season')
@@ -829,12 +855,15 @@ for category in CATEGORIES_TO_USE:
     elif typee == 'team':
         isOppTeam = util.getObjValue(category, 'isOppTeam', False)
         appendNbaTeamData(timePeriod, dirName, data, SEASON, prefix, isOppTeam)
+    elif typee == 'daily':
+        appendNbaDailyData(timePeriod, dirName, data, SEASON, prefix)
     else:
         appendNbaData(timePeriod, dirName, data, SEASON, prefix)
     #add features to the front
     categoryFeatures = prependPrefix(features, prefix) + categoryFeatures
 X_NAMES.extend(categoryFeatures)
 
+#compute additional features
 addAdditionalFeatures(data)
 X_NAMES.extend(ADDITIONAL_FEATURES)
 

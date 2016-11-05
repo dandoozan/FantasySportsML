@@ -25,3 +25,6 @@ def joinDirs(*dirNames):
 
 def getObjValue(obj, key, default=None):
     return obj[key] if key in obj else default
+
+def fileExists(fullPathFilename):
+    return os.path.exists(fullPathFilename)
