@@ -2,8 +2,16 @@ library(dplyr) #bind_rows
 
 DATE_FORMAT = '%Y%m%d'
 
+FACTOR_COLS = c('Position', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
+
 loadData = function() {
   data = read.csv(paste0('data/data_2016.csv'), stringsAsFactors=F, na.strings=c(''))
+
+  #convert cols to factors
+  for (col in FACTOR_COLS) {
+    data[[col]] = factor(data[[col]])
+  }
+
   return(data)
 }
 

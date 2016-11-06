@@ -1,13 +1,6 @@
 #todo:
 #-try fanduel features (salary, injury, ?)
-
-#for each day in day 2 - now
-  #load all data from beginning up to currday (call it train)
-  #load data for currday (as test)
-  #build model on train
-  #predict on test
-  #add rmse of prediction to rmses
-#plot all rmses
+#-Compute FantasyPoints from nba.com rather than get it from rotoguru
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -102,8 +95,6 @@ findLastIndexOfDate = function(data, date) {
   return(-1)
 }
 splitDataIntoTrainTest = function(data, startDate, splitDate) {
-  cat('    Splitting data into train/test...\n')
-
   startIndex = ifelse(startDate == 'start', 1, findFirstIndexOfDate(data, startDate))
   if (splitDate == 'end') {
     train = data[startIndex:nrow(data),]
@@ -115,13 +106,6 @@ splitDataIntoTrainTest = function(data, startDate, splitDate) {
     test = data[splitIndex:endIndex,]
   }
   return(list(train=train, test=test))
-}
-
-writeSolution = function(data, yName, idName, prediction, filename, extraColNames) {
-  solution = data.frame(data[, idName], prediction, data[, extraColNames])
-  colnames(solution) = c(idName, yName, extraColNames)
-  cat('    Writing solution to file: ', filename, '...\n', sep='')
-  write.csv(solution, file=filename, row.names=F, quote=F)
 }
 
 createTeams = function(testData, prediction, yName) {
@@ -143,40 +127,66 @@ createTeams = function(testData, prediction, yName) {
   printTeamResults(myTeam, bestTeam, yName)
 }
 
+plotRMSEs = function(dateStrs, rmseValues, percentVarExplaineds=NULL) {
+  dates = as.Date(dateStrs)
+
+  if (is.null(percentVarExplaineds)) {
+    par(mar=c(5, 4, 4, 2) + 0.1)
+  } else {
+    par(mar=c(5, 4, 4, 5) + 0.1) #make the margin wider on side 4 (right side)
+  }
+
+  plot(dates, rmseValues, type='l', col='red', main='RMSE by Date', xlab='Date', ylab='RMSE', xaxt="n")
+  axis.Date(side=1, dates, format="%m/%d")
+
+  if (!is.null(percentVarExplaineds)) {
+    #par(mar=c(5,4,4,5)+.1)
+    #plot(dates, rmseValues, type='l', col='red', main='RMSE by Date', xlab='Date', ylab='RMSE', xaxt="n")
+    par(new=TRUE)
+    plot(dates, percentVarExplaineds, type='l', col='blue', xaxt='n', yaxt='n', xlab='', ylab='')
+    #axis.Date(side=1, dates, format='%m/%d')
+    axis(side=4)
+    mtext('PercentVarExplained', side=4, line=3)
+  }
+}
 #============= Main ================
 
-ID_NAME = 'Name'
 Y_NAME = 'FantasyPoints'
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
 data = getData()
-possibleFeatures = setdiff(names(data), c(ID_NAME, Y_NAME))
+possibleFeatures = setdiff(names(data), c('Name', 'Date', Y_NAME))
+featuresToUse = findBestSetOfFeatures(train, possibleFeatures)
 
+cat('Making predictions...\n')
+
+percentVarExplaineds = c()
 testErrors = c()
 
-dates = unique(data$Date)
-for (i in 2:length(dates)) {
-  cat('Predicting fantasy scrore for date: ', dates[i], '\n')
-  splitData = splitDataIntoTrainTest(data, 'start', dates[i])
+dateStrs = sort(unique(data$Date))[-1]
+for (dateStr in dateStrs) {
+  cat('    ', dateStr, ': ', sep='')
+  splitData = splitDataIntoTrainTest(data, 'start', dateStr)
   train = splitData$train
   test = splitData$test
 
-  #find best set of features to use
-  featuresToUse = findBestSetOfFeatures(train, possibleFeatures)
-
-  cat('Creating Model (ntree=', N_TREE, ')...\n', sep='')
+  #cat('    Creating Model (ntree=', N_TREE, ')...\n', sep='')
   timeElapsed = system.time(model <- createModel(train, Y_NAME, featuresToUse))
-  cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
-  cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[N_TREE], '/', model$rsq[N_TREE]*100, '\n', sep='')
+  meanOfSquaredResiduals = model$mse[N_TREE]
+  percentVarExplained = model$rsq[N_TREE]*100
+  #cat('        Time to compute model: ', timeElapsed[3], '\n', sep='')
+  #cat('    MeanOfSquaredResiduals / %VarExplained: ', meanOfSquaredResiduals, '/', percentVarExplained, '\n', sep='')
 
   #print test error
   prediction = createPrediction(model, test, featuresToUse)
   testError = computeError(test[[Y_NAME]], prediction)
-  cat('    Tonight\'s error: ', testError, '\n', sep='')
+  cat('MSR, %VarExplained, RMSE: ', meanOfSquaredResiduals, ', ', percentVarExplained, ', ', testError, '\n', sep='')
+
+  percentVarExplaineds = c(percentVarExplaineds, percentVarExplained)
   testErrors = c(testErrors, testError)
 }
 
-plot(testErrors)
+plotRMSEs(dateStrs, testErrors, percentVarExplaineds)
 
 cat('Done!\n')

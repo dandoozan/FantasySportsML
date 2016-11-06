@@ -27,6 +27,14 @@
 #D-Use only Starters: rf_starters: start-2015-11-16, 1176/40, 287/289, 100, 6.623, 102.7658/44.4516, 3.952941/11.01027/3.958078
 #D-Use non-Starters: rf_nonStarters: start-2015-11-16, 2297/129, 287/289, 100, 17.156, 62.57288/38.46687, 3.09537/8.271726/3.159816
 
+#-Do feature selection
+  #-Try many features, short time period, weak algorithm
+  #-Try medium features, medium time period, weak algorithm
+  #-Try medium features, short time period, medium algorithm
+  #-Try few features, long time period, weak algorithm
+  #-Try few features, medium time period, medium algorithm
+  #-Try few features, short time period, strong algorithm
+
 #-Somehow get top features
   #-use top features from correlation
   #-use top features from rf importances
