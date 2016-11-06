@@ -73,12 +73,14 @@ getWorseTeam = function(data, team, amountOverBudget, verbose=F) {
         fpDiff = teamPlayer$FantasyPoints - players$FantasyPoints
         salaryDiff = pmin(teamPlayer$Salary - players$Salary, amountOverBudget)
         salaryDiff[salaryDiff <= 0] = NA
-        ppdg = computePPD(fpDiff, salaryDiff)
-        minPpdg = min(ppdg, na.rm=T)
-        if (minPpdg < bestPpdg) {
-          bestPpdg = minPpdg
-          bestOldPlayer = teamPlayer
-          bestNewPlayer = players[which.min(ppdg), ]
+        if (sum(!is.na(salaryDiff)) > 0) {
+          ppdg = computePPD(fpDiff, salaryDiff)
+          minPpdg = min(ppdg, na.rm=T)
+          if (minPpdg < bestPpdg) {
+            bestPpdg = minPpdg
+            bestOldPlayer = teamPlayer
+            bestNewPlayer = players[which.min(ppdg), ]
+          }
         }
       }
     }
@@ -124,7 +126,7 @@ getBetterTeam = function(data, team, amountUnderBudget, verbose=F) {
         salaryDiff = players$Salary - teamPlayer$Salary
         salaryDiff[salaryDiff > amountUnderBudget] = NA
         salaryDiff[salaryDiff < 0] = NA
-        if (sum(is.na(salaryDiff)) != length(salaryDiff)) {
+        if (sum(!is.na(salaryDiff)) > 0) {
           ppdg = computePPD(fpDiff, salaryDiff)
           maxPpdg = max(ppdg, na.rm=T)
           if (maxPpdg > bestPpdg) {
@@ -185,13 +187,49 @@ createTeam = function(data, verbose=F) {
   return(team)
 }
 printTeamResults = function(myTeam, bestTeam, yName) {
-  myTeamPredictedPoints = sum(myTeam[[yName]])
-  myTeamActualPoints = sum(test[rownames(myTeam), yName])
-  bestTeamPoints = sum(bestTeam[[yName]])
+  myTeamPredictedPoints = computeTotalFantasyPoints(myTeam)
+  myTeamActualPoints = computeTotalFantasyPoints(test[rownames(myTeam),])
+  bestTeamPoints = computeTotalFantasyPoints(bestTeam)
 
   cat('How did my team do?\n')
   cat('    I was expecting to get', round(myTeamPredictedPoints, 2), 'points\n')
   cat('    I actually got:', round(myTeamActualPoints, 2), 'points\n')
   cat('    Best team got:', round(bestTeamPoints, 2), 'points\n')
   cat('    My score ratio is', round(myTeamActualPoints/bestTeamPoints, 4), '\n')
+}
+
+createTeams = function(testData, prediction, yName, verbose=F) {
+  if (verbose) cat('Creating my team...\n')
+
+  #create my team (using prediction)
+  predictionDF = testData
+  predictionDF[[yName]] = prediction
+  myTeam = createTeam(predictionDF)
+  if (verbose) {
+    cat('My team:\n')
+    printTeam(myTeam)
+  }
+
+  #create best team (using test)
+  bestTeam = createTeam(testData)
+  if (verbose) {
+    cat('Best team:\n')
+    printTeam(bestTeam)
+  }
+
+  if (verbose) printTeamResults(myTeam, bestTeam, yName)
+
+  myTeamActualFantasyPoints = computeTotalFantasyPoints(testData[rownames(myTeam),])
+  bestTeamFantasyPoints = computeTotalFantasyPoints(bestTeam)
+
+  return(list(
+    myTeam=list(
+      expectedFantasyPoints=computeTotalFantasyPoints(myTeam),
+      fantasyPoints=myTeamActualFantasyPoints
+    ),
+    bestTeam=list(
+      fantasyPoints=bestTeamFantasyPoints
+    ),
+    ratio=myTeamActualFantasyPoints/bestTeamFantasyPoints
+    ))
 }

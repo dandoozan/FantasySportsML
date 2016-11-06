@@ -108,45 +108,24 @@ splitDataIntoTrainTest = function(data, startDate, splitDate) {
   return(list(train=train, test=test))
 }
 
-createTeams = function(testData, prediction, yName) {
-  cat('Creating teams...\n')
-
-  #create my team (using prediction)
-  predictionDF = testData
-  predictionDF[[yName]] = prediction
-  myTeam = createTeam(predictionDF)
-  cat('My team:\n')
-  printTeam(myTeam)
-
-  #create best team (using test)
-  bestTeam = createTeam(testData)
-  cat('Best team:\n')
-  printTeam(bestTeam)
-
-  #print myTeam / bestTeam ratio
-  printTeamResults(myTeam, bestTeam, yName)
-}
-
-plotRMSEs = function(dateStrs, rmseValues, percentVarExplaineds=NULL) {
+plotRMSEs = function(dateStrs, rmseValues, y2=NULL, y2lab='', y2lim=NULL) {
   dates = as.Date(dateStrs)
 
-  if (is.null(percentVarExplaineds)) {
+  #make the margin wider on side 4 (right side) if there is a second y
+  if (is.null(y2)) {
     par(mar=c(5, 4, 4, 2) + 0.1)
   } else {
-    par(mar=c(5, 4, 4, 5) + 0.1) #make the margin wider on side 4 (right side)
+    par(mar=c(5, 4, 4, 5) + 0.1)
   }
 
   plot(dates, rmseValues, type='l', col='red', main='RMSE by Date', xlab='Date', ylab='RMSE', xaxt="n")
   axis.Date(side=1, dates, format="%m/%d")
 
   if (!is.null(percentVarExplaineds)) {
-    #par(mar=c(5,4,4,5)+.1)
-    #plot(dates, rmseValues, type='l', col='red', main='RMSE by Date', xlab='Date', ylab='RMSE', xaxt="n")
     par(new=TRUE)
-    plot(dates, percentVarExplaineds, type='l', col='blue', xaxt='n', yaxt='n', xlab='', ylab='')
-    #axis.Date(side=1, dates, format='%m/%d')
+    plot(dates, y2, ylim=y2lim, type='l', col='blue', xaxt='n', yaxt='n', xlab='', ylab='')
     axis(side=4)
-    mtext('PercentVarExplained', side=4, line=3)
+    mtext(y2lab, side=4, line=3)
   }
 }
 #============= Main ================
@@ -163,6 +142,7 @@ cat('Making predictions...\n')
 
 percentVarExplaineds = c()
 testErrors = c()
+teamRatios = c()
 
 dateStrs = sort(unique(data$Date))[-1]
 for (dateStr in dateStrs) {
@@ -181,12 +161,23 @@ for (dateStr in dateStrs) {
   #print test error
   prediction = createPrediction(model, test, featuresToUse)
   testError = computeError(test[[Y_NAME]], prediction)
-  cat('MSR, %VarExplained, RMSE: ', meanOfSquaredResiduals, ', ', percentVarExplained, ', ', testError, '\n', sep='')
+  cat('MSR, %VarExplained, RMSE: ', meanOfSquaredResiduals, ', ', percentVarExplained, ', ', testError, sep='')
+
+  teams = createTeams(test, prediction, Y_NAME)
+  myTeam = teams$myTeam
+  bestTeam = teams$bestTeam
+  teamRatio = teams$ratio
+  #cat('    My team expected score=', round(myTeam$expectedFantasyPoints, 2), sep='')
+  #cat(', actual=', round(myTeam$fantasyPoints, 2), sep='')
+  #cat(', best=', round(bestTeam$fantasyPoints, 2), sep='')
+  cat(', TeamRatio=', round(teamRatio*100, 2), '%', sep='')
+  cat('\n')
 
   percentVarExplaineds = c(percentVarExplaineds, percentVarExplained)
   testErrors = c(testErrors, testError)
+  teamRatios = c(teamRatios, teamRatio)
 }
 
-plotRMSEs(dateStrs, testErrors, percentVarExplaineds)
+plotRMSEs(dateStrs, testErrors, y2=teamRatios, y2lab='Team Ratios', y2lim=c(0, 1))
 
 cat('Done!\n')
