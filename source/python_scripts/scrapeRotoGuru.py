@@ -4,8 +4,8 @@ from time import sleep
 from datetime import datetime, date, timedelta
 
 SITE = 'fd'
-START_DATE = date(2015, 10, 1)
-END_DATE = date(2016, 6, 30)
+START_DATE = date(2016, 10, 25)
+END_DATE = date(2016, 11, 5)
 ONE_DAY = timedelta(1)
 f = open('%s_%s.txt' % (SITE, START_DATE.strftime('%Y')), 'a')
 
