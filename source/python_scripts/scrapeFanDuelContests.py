@@ -36,6 +36,6 @@ print 'Downloading contest file for date: %s...' % TODAY_STR
 util.createDirIfNecessary(FULL_PATH_DIR_NAME)
 
 jsonData = scraper.downloadJson(createFanduelApiUrl(fixtureList), createHeaders(xAuthToken))
-util.writeJsonData(jsonData, util.createFullPathFilename(FULL_PATH_DIR_NAME, util.createJsonFilename(TODAY_STR)), prettyPrint=False)
+util.writeJsonData(jsonData, util.createFullPathFilename(FULL_PATH_DIR_NAME, util.createJsonFilename(TODAY_STR)))
 
 print 'Done!'
