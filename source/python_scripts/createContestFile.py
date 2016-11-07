@@ -44,15 +44,21 @@ def loadDataFromTxtFile(fullPathFilename):
     data['EntryFee'] = int(lines[entryIndex].strip().split(' ')[0].strip().replace('$', '').replace(',', ''))
 
     #set the highestScore and lastWinningScore
-    prevSp = None
-    for line in lines:
-        spSpaces = filter(None, line.strip().split(' '))
-        spCommas = line.strip().split(',')
+    #find start of lines with scores
+    startIndex = 0
+    while lines[startIndex][:3] != '1st':
+        startIndex += 1
 
-        if line.strip() == '' or (spSpaces[0] != '1st' and spCommas[0] != '1st'):
+    prevSp = None
+    for i in xrange(startIndex, len(lines)):
+        line  = lines[i].strip()
+        spSpaces = filter(None, line.split(' '))
+        spCommas = line.split(',')
+
+        if line == '...':
             continue
 
-        sp = spSpaces if spSpaces[0] == '1st' else spCommas
+        sp = spSpaces if len(spSpaces) == 5 else spCommas
 
         #find the first '1st'
         if sp[0] == '1st':
@@ -60,7 +66,7 @@ def loadDataFromTxtFile(fullPathFilename):
                 data['HighestScore'] = float(sp[-1].strip())
 
         #find last winning rank and score
-        elif sp[2] == '$0':
+        elif sp[2].split(' ')[0] == '$0':
             break
         prevSp = sp
 

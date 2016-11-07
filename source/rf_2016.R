@@ -1,7 +1,5 @@
 #todo:
-#-use all fanduel features: rf_initial: 9/12, 100, 1.783, 73.34114/61.859, 3.968405/8.834827/3.965828, 8.92789, 0.8931035
-#-verify that contest data is correct
-
+#D-use all fanduel features: rf_initial: 9/12, 100, 1.846, 73.34114/61.859, 3.968405/8.834827/3.965828, 8.92789, 0.9321584
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Remove all first date rows from data
 #-change ntree to 500
