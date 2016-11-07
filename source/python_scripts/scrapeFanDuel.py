@@ -16,7 +16,7 @@ TEST = False
 RG_FORUM_URL = 'https://rotogrinders.com/threads/category/main'
 TODAY = date.today()
 YESTERDAY = TODAY - timedelta(1)
-PARENT_DIR = 'data/rawDataFromFanDuel/Contests/' + YESTERDAY.strftime('%Y-%m-%d')
+PARENT_DIR = 'data/rawDataFromFanDuel/ContestResults/' + YESTERDAY.strftime('%Y-%m-%d')
 SLEEP = 10
 
 def isContestLinksUrl(url, date):

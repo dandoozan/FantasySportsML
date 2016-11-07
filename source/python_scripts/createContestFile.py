@@ -4,7 +4,7 @@ import json
 import _util as util
 
 DATA_DIR = 'data'
-CONTESTS_DIR = util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Contests')
+CONTESTS_DIR = util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'ContestResults')
 OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_contests_2016.csv')
 SEASON_START_DATE = datetime.date(2016, 10, 25)
 TODAY = datetime.date.today()

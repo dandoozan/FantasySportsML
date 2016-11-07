@@ -38,6 +38,8 @@ def dirExists(fullPathToDir):
 
 def createCsvFilename(baseFilename):
     return baseFilename + '.csv'
+def createJsonFilename(baseFilename):
+    return baseFilename + '.json'
 
 def printObj(obj):
     keys = obj.keys()
@@ -98,3 +100,12 @@ def writeCsvFile(colNames, dataArr, fullPathFilename):
         writer = csv.DictWriter(f, fieldnames=colNames)
         writer.writeheader()
         writer.writerows(dataArr)
+def writeJsonData(jsonData, fullPathFilename, prettyPrint=True):
+    import json
+    print '    Writing data to ' + fullPathFilename + '...'
+    f = open(fullPathFilename, 'w')
+    if prettyPrint:
+        json.dump(jsonData, f, indent=2, separators=(',', ': '), sort_keys=True)
+    else:
+        json.dump(jsonData, f, sort_keys=True)
+    f.close()
