@@ -1,7 +1,10 @@
 #todo:
+#-use all fanduel features: rf_initial: 9/12, 100, 1.783, 73.34114/61.859, 3.968405/8.834827/3.965828, 8.92789, 0.8931035
 #-verify that contest data is correct
-#-try fanduel features (salary, injury, ?)
+
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
+#-Remove all first date rows from data
+#-change ntree to 500
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -17,13 +20,16 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-
-PROD_RUN = F
+PROD_RUN = T
 FILENAME = 'rf_initial'
-START_DATE = 'start'
-SPLIT_DATE = 'end'
 N_TREE = 100
-PLOT = 'fi' #lc=learning curve, fi=feature importances
+PLOT = 'Scores'
+Y_NAME = 'FantasyPoints'
+
+#features excluded: FantasyPoints, Date, Name
+F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
+              'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
+FEATURES_TO_USE = c(F.FANDUEL)
 
 #============== Functions ===============
 
@@ -41,15 +47,6 @@ createPrediction = function(model, newData=NULL, xNames=NULL) {
 }
 computeError = function(y, yhat) {
   return(rmse(y, yhat))
-}
-findBestSetOfFeatures = function(data, possibleFeatures) {
-  cat('Finding best set of features to use...\n')
-
-  featuresToUse = possibleFeatures
-
-  cat('    Number of features to use: ', length(featuresToUse), '/', length(possibleFeatures), '\n', sep='')
-  #cat('    Features to use:', paste(featuresToUse, collapse=', '), '\n')
-  return(featuresToUse)
 }
 
 #I do not understand any of this code, I borrowed it from a kaggler
@@ -118,7 +115,9 @@ getLowestWinningScore = function(contestData, dateStr) {
   return(min(contestData[contestData$Date == dateStr, 'LastWinningScore'], na.rm=T))
 }
 
-plotScores = function(dateStrs, y, yLow, yHigh, ...) {
+plotScores = function(dateStrs, y, yLow, yHigh, save=FALSE, name=NULL, ...) {
+  if (save) png(paste0(name, '.png'), width=500, height=350)
+
   dates = as.Date(dateStrs)
 
   plot(dates, y, type='n', ylim=c(min(y, yLow, na.rm=T), max(y, yHigh, na.rm=T)),
@@ -131,86 +130,94 @@ plotScores = function(dateStrs, y, yLow, yHigh, ...) {
   lines(dates, y, col='red')
 
   axis.Date(side=1, dates, format="%m/%d")
+
+  if (save) dev.off()
 }
 
 #============= Main ================
-
-Y_NAME = 'FantasyPoints'
-PLOT = 'Scores'
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
 #load data
 data = getData()
-possibleFeatures = setdiff(names(data), c('Name', 'Date', Y_NAME))
-featuresToUse = findBestSetOfFeatures(train, possibleFeatures)
-
-#load contest data
 contestData = getContestData()
 
-cat('Making predictions...\n')
+#print number of feature to use
+cat('Number of features to use: ', length(FEATURES_TO_USE), '/', length(names(data)), '\n', sep='')
+
+#create model
+cat('Creating Model (ntree=', N_TREE, ')...\n', sep='')
+timeElapsed = system.time(model <- createModel(data, Y_NAME, FEATURES_TO_USE))
+cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
+cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[N_TREE], '/', model$rsq[N_TREE]*100, '\n', sep='')
+
+#print trn/cv, train error
+printTrnCvTrainErrors(model, data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
+
+cat('Now let\'s see how I would\'ve done each day...\n')
 
 #these are arrays to plot later
 percentVarExplaineds = c()
+meanOfSquaredResidualss = c()
 testErrors = c()
 teamRatios = c()
 myTeamActualFantasyPointss = c()
 highestWinningScores = c()
 lowestWinningScores = c()
 
-dateStrs = sort(unique(data$Date))[-1]
+dateStrs = sort(unique(data$Date))[-1] #-1 uses all but the first element
 for (dateStr in dateStrs) {
   cat('    ', dateStr, ': ', sep='')
 
   #split data into train, test
-  splitData = splitDataIntoTrainTest(data, 'start', dateStr)
-  train = splitData$train
-  test = splitData$test
+  trainTest = splitDataIntoTrainTest(data, 'start', dateStr)
+  train = trainTest$train
+  test = trainTest$test
 
   #create model
-  #cat('    Creating Model (ntree=', N_TREE, ')...\n', sep='')
-  timeElapsed = system.time(model <- createModel(train, Y_NAME, featuresToUse))
+  model = createModel(train, Y_NAME, FEATURES_TO_USE)
   meanOfSquaredResiduals = model$mse[N_TREE]
-  percentVarExplained = model$rsq[N_TREE]*100
-  #cat('        Time to compute model: ', timeElapsed[3], '\n', sep='')
-  #cat('    MeanOfSquaredResiduals / %VarExplained: ', meanOfSquaredResiduals, '/', percentVarExplained, '\n', sep='')
+  percentVarExplained = model$rsq[N_TREE] * 100
 
   #create prediction
-  prediction = createPrediction(model, test, featuresToUse)
+  prediction = createPrediction(model, test, FEATURES_TO_USE)
   testError = computeError(test[[Y_NAME]], prediction)
-  #cat('MSR, %VarExplained, RMSE: ', meanOfSquaredResiduals, ', ', percentVarExplained, ', ', testError, sep='')
 
-  #create teams for today
-  teams = createTeams(test, prediction, Y_NAME)
-  myTeam = teams$myTeam
-  bestTeam = teams$bestTeam
-  teamRatio = teams$ratio
+  #create my team for today
+  myTeam = createTeams(test, prediction, Y_NAME)$myTeam
 
   #get actual fanduel winning score for currday
   highestWinningScore = getHighestWinningScore(contestData, dateStr)
   lowestWinningScore = getLowestWinningScore(contestData, dateStr)
 
   #print results
-  cat(' Expected score=', round(myTeam$expectedFantasyPoints, 2), sep='')
+  cat('RMSE=', testError, sep='')
+  cat(', expected=', round(myTeam$expectedFantasyPoints, 2), sep='')
   cat(', actual=', round(myTeam$fantasyPoints, 2), sep='')
-  #cat(', best=', round(bestTeam$fantasyPoints, 2), sep='')
   cat(', low=', round(lowestWinningScore, 2), sep='')
   cat(', high=', round(highestWinningScore, 2), sep='')
-  #cat(', TeamRatio=', round(teamRatio*100, 2), '%', sep='')
   cat('\n')
 
   #add data to arrays to plot
-  percentVarExplaineds = c(percentVarExplaineds, percentVarExplained)
+  meanOfSquaredResidualss = c(meanOfSquaredResidualss, model$mse[N_TREE])
+  percentVarExplaineds = c(percentVarExplaineds, model$rsq[N_TREE])
   testErrors = c(testErrors, testError)
-  teamRatios = c(teamRatios, teamRatio)
   myTeamActualFantasyPointss = c(myTeamActualFantasyPointss, myTeam$fantasyPoints)
   highestWinningScores = c(highestWinningScores, highestWinningScore)
   lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
 }
 
-if (PLOT == 'Scores') plotScores(dateStrs, myTeamActualFantasyPointss, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison')
-if (PLOT == 'Mine&Lowest') plotByDate(dateStrs, myTeamActualFantasyPointss, y2=lowestWinningScores, main='Fantasy Point Comparison', ylab='Fantasy Points', y2lab='Lowest Winning Score')
-if (PLOT == 'RMSE') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE')
-if (PLOT == 'RMSE&TeamRatios') plotByDate2Axis(dateStrs, testErrors, y2=teamRatios, y2lab='Team Ratios', y2lim=c(0, 1), main='RMSE and Team Ratios', ylab='RMSE')
+#print mean of rmses
+cat('Mean of daily RMSEs: ', mean(testErrors), '\n', sep='')
+
+#print myteam score / lowestWinningScore ratio, call it "scoreRatios"
+scoreRatios = myTeamActualFantasyPointss/lowestWinningScores
+cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
+
+#plots
+if (PROD_RUN || PLOT == 'Scores') plotScores(dateStrs, myTeamActualFantasyPointss, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
+#if (PROD_RUN || PLOT == 'RMSE') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
+#if (PROD_RUN || PLOT == 'ScoreRatios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
+if (PROD_RUN || PLOT == 'RMSE_ScoreRatios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
 
 cat('Done!\n')
