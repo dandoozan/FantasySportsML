@@ -9,9 +9,9 @@ def getFilesInDir(fullPathToDir):
     import os
     return [f for f in os.listdir(fullPathToDir) if (os.path.isfile(os.path.join(fullPathToDir, f)) and f[:1] != '.')]
 
-def headsUp(msg):
+def headsUp(msg, *strings):
     print '==========================================='
-    print '***HEADS UP! ', msg
+    print '***HEADS UP! ', msg, strings
     print '==========================================='
 
 def stop(msg):
@@ -32,6 +32,9 @@ def getObjValue(obj, key, default=None):
 def fileExists(fullPathFilename):
     import os
     return os.path.exists(fullPathFilename)
+def dirExists(fullPathToDir):
+    import os
+    return os.path.exists(fullPathToDir)
 
 def createCsvFilename(baseFilename):
     return baseFilename + '.csv'
@@ -61,7 +64,10 @@ def loadCsvFile(fullPathFilename, keyRenameMap={}, delimiter=','):
 
             data.append(rowAsObj)
     return data
-
+def loadJsonFile(fullPathFilename):
+    import json
+    with open(fullPathFilename) as f:
+        return json.load(f)
 def removeKey(key, obj):
     obj.pop(key, None)
 
@@ -79,3 +85,16 @@ def filterObj(validKeys, obj):
         if key not in validKeys:
             removeKey(key, obj)
     return obj
+
+def isJsonFile(filename):
+    return len(filename) > 5 and filename[-5:] == '.json'
+def isTxtFile(filename):
+    return len(filename) > 4 and filename[-4:] == '.txt'
+
+def writeCsvFile(colNames, dataArr, fullPathFilename):
+    print 'Writing Csv File: ' + fullPathFilename + '...'
+    import csv
+    with open(fullPathFilename, 'w') as f:
+        writer = csv.DictWriter(f, fieldnames=colNames)
+        writer.writeheader()
+        writer.writerows(dataArr)
