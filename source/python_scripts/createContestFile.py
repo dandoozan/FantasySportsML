@@ -5,7 +5,7 @@ import _util as util
 
 DATA_DIR = 'data'
 CONTESTS_DIR = util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Contests')
-OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_contests.csv')
+OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_contests_2016.csv')
 SEASON_START_DATE = datetime.date(2016, 10, 25)
 TODAY = datetime.date.today()
 ONE_DAY = datetime.timedelta(1)
@@ -46,20 +46,27 @@ def loadDataFromTxtFile(fullPathFilename):
     #set the highestScore and lastWinningScore
     prevSp = None
     for line in lines:
-        sp = filter(None, line.strip().split(' '))
-        if len(sp) != 5:
+        spSpaces = filter(None, line.strip().split(' '))
+        spCommas = line.strip().split(',')
+
+        if line.strip() == '' or (spSpaces[0] != '1st' and spCommas[0] != '1st'):
             continue
+
+        sp = spSpaces if spSpaces[0] == '1st' else spCommas
 
         #find the first '1st'
         if sp[0] == '1st':
-            data['HighestScore'] = float(sp[-1].strip())
+            if 'HighestScore' not in data:
+                data['HighestScore'] = float(sp[-1].strip())
 
         #find last winning rank and score
         elif sp[2] == '$0':
-            data['LastWinningRank'] = int(re.sub(r'(st|nd|rd|th)', '', prevSp[0].strip()))
-            data['LastWinningScore'] = float(prevSp[-1].strip())
             break
         prevSp = sp
+
+    #set last winning rank and score
+    data['LastWinningRank'] = int(re.sub(r'(st|nd|rd|th)', '', prevSp[0].strip()))
+    data['LastWinningScore'] = float(prevSp[-1].strip())
 
     return data
 

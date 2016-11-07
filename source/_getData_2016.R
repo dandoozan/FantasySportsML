@@ -1,6 +1,3 @@
-library(dplyr) #bind_rows
-
-DATE_FORMAT = '%Y%m%d'
 
 FACTOR_COLS = c('Position', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 
@@ -38,4 +35,9 @@ getData = function() {
   full = featureEngineer(full)
 
   return(full)
+}
+
+getContestData = function() {
+  cat('Getting contest data...\n')
+  return(read.csv(paste0('data/data_contests_2016.csv'), stringsAsFactors=F, na.strings=c('')))
 }
