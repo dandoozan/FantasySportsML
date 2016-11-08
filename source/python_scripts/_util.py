@@ -9,9 +9,9 @@ def getFilesInDir(fullPathToDir):
     import os
     return [f for f in os.listdir(fullPathToDir) if (os.path.isfile(os.path.join(fullPathToDir, f)) and f[:1] != '.')]
 
-def headsUp(msg, *strings):
+def headsUp(msg):
     print '==========================================='
-    print '***HEADS UP! ', msg, strings
+    print '***HEADS UP! ', msg
     print '==========================================='
 
 def stop(msg):
@@ -51,14 +51,20 @@ def printArray(arr):
     for a in arr:
         print a
 
-def loadCsvFile(fullPathFilename, keyRenameMap={}, delimiter=','):
+def loadCsvFile(fullPathFilename, keyRenameMap=None, delimiter=',', prefix=''):
     import csv
     data = []
     with open(fullPathFilename) as f:
         reader = csv.DictReader(f, delimiter=delimiter)
         for rowAsObj in reader:
             #Map keys to the ones I want to use
-            renameKeys(keyRenameMap, rowAsObj)
+            if keyRenameMap:
+                renameKeys(keyRenameMap, rowAsObj)
+
+            #add prefix to each key
+            if prefix:
+                #note: use obj.keys() because renameKeys alters the obj
+                map(lambda x: renameKey(rowAsObj, x, prefix + x), rowAsObj.keys())
 
             #strip whitespace from each value
             for key in rowAsObj:
@@ -109,3 +115,6 @@ def writeJsonData(jsonData, fullPathFilename, prettyPrint=True):
     else:
         json.dump(jsonData, f, sort_keys=True)
     f.close()
+
+def addPrefixToEachElement(arr, prefix):
+    return map(lambda x: prefix + x, arr)

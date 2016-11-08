@@ -2,6 +2,8 @@
 #D-use all fanduel features: rf_initial: 9/12, 100, 1.846, 73.34114/61.859, 3.968405/8.834827/3.965828, 8.92789, 0.9321584
 #D-set ntree=20: rf_ntree20: 9/12, 20, 0.375, 80.54763/58.11127, 4.207119/8.824238/4.083524, 9.068537, 0.9347183
 #D-Remove first date: rf_sansday1: 9/12, 20, 0.341, 79.55694/58.34918, 4.049431/9.295638/4.167405, 8.991759, 0.9588696
+#-add numberfire features
+
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 
 
