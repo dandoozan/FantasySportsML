@@ -6,6 +6,9 @@ import _util as util
 
 PARENT_DIR = util.joinDirs('data', 'rawDataFromRotoGuru')
 DATE_FORMAT = '%Y-%m-%d'
+ONE_DAY = util.getOneDay()
+YESTERDAY = util.getYesterdayAsDate()
+SLEEP = 2
 
 def downloadData(date):
     url = 'http://rotoguru1.com/cgi-bin/hyday.pl?game=fd&mon=%d&day=%d&year=%d&scsv=1' % (date.month, date.day, date.year)
@@ -33,14 +36,15 @@ def writeData(data, fullPathFilename):
 
 #=============== Main ================
 
-date = util.getYesterdayAsDate()
-dateStr = util.formatDate(date, DATE_FORMAT)
-shouldScrapeYesterday = raw_input(('Scrape yesterday (%s)? ' % dateStr)).strip() == 'y'
-if not shouldScrapeYesterday:
-    dateStr = raw_input('Enter date (eg. 2016-11-06): ').strip()
-    date = util.parseDate(dateStr, DATE_FORMAT)
+dateInput = raw_input('Enter start date if different than yesterday (eg. 2016-10-25): ').strip()
+startDate = YESTERDAY if dateInput == '' else util.parseDate(dateInput)
 
-data = downloadData(date)
-writeData(data, util.createFullPathFilename(PARENT_DIR, util.createTxtFilename(dateStr)))
+currDate = startDate
+while currDate <= YESTERDAY:
+    currDateStr = util.formatDate(currDate)
+    data = downloadData(currDate)
+    writeData(data, util.createFullPathFilename(PARENT_DIR, util.createTxtFilename(currDateStr)))
+    currDate = currDate + ONE_DAY
+    scraper.sleep(SLEEP)
 
 print 'Done!'

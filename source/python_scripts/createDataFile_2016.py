@@ -3,9 +3,6 @@ import scraper
 import _util as util
 
 DATA_DIR = 'data'
-ROTOGURU_FILE = util.createFullPathFilename(util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru'), 'fd_2016.txt')
-FANDUEL_DIR = util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded')
-NUMBERFIRE_DIR = util.joinDirs(DATA_DIR, 'rawDataFromNumberFire')
 OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = datetime(2016, 10, 25)
@@ -13,266 +10,64 @@ TODAY = datetime.today()
 ONE_DAY = timedelta(1)
 YESTERDAY = TODAY - ONE_DAY
 
-FANDUEL_FEATURES = ['Date', 'Name','Position','FPPG','GamesPlayed',
-        'Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails']
-ROTOGURU_FEATURES = ['FantasyPoints']
-NUMBERFIRE_FEATURES = ['NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP']
-
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
 
-FANDUEL_TO_ROTOGURU_NAME_MAP = {
-    'luc richard mbah a moute': 'luc mbah a moute',
-    'derrick jones jr.': 'derrick jones',
-    'deandre\' bembry': 'deandre bembry',
-    'juancho hernangomez': 'juan hernangomez',
-    'lou williams': 'louis williams',
-    'timothe luwawu-cabarrot': 'timothe luwawu',
-    'ish smith': 'ishmael smith',
-    'joe young': 'joseph young',
-    'maurice ndour': 'maurice n\'dour',
-    'j.j. barea': 'jose barea',
-    'wesley matthews': 'wes matthews',
-    'kelly oubre jr.': 'kelly oubre',
-    'wade baldwin iv': 'wade baldwin',
-    'larry nance jr.': 'larry nance',
-    'stephen zimmerman jr.': 'stephen zimmerman',
-    'john lucas iii': 'john lucas',
-}
-FANDUEL_TO_NUMBERFIRE_NAME_MAP = {
-    'patty mills': 'patrick mills',
-    'j.j. barea': 'jose juan barea',
-    'lou williams': 'louis williams',
-    'joe young': 'joseph young',
-    'ish smith': 'ishmael smith',
-    'juancho hernangomez': 'juan hernangomez',
-    'luc richard mbah a moute': 'luc mbah a moute',
-    'deandre\' bembry': 'deandre bembry',
-    'kelly oubre jr.': 'kelly oubre',
-}
-
-PLAYERS_MISSING_FROM_ROTOGURU = {
-    '2016-10-25': {
-        'cory jefferson', #he didn't play according to stats.nba.com
-        'louis amundson', #he didn't play according to stats.nba.com
-        'damien inglis', #he didn't play according to stats.nba.com
-        'phil pressey', #he didn't play according to stats.nba.com
-        'greg stiemsma', #he didn't play according to stats.nba.com
-        'patricio garino', #this guy isn't even on nba.com
-        'chasson randle', #this guy isn't even on nba.com
-        'j.p. tokoto', #this guy isn't even on nba.com
-        'livio jean-charles', #this guy isn't even on nba.com
-        'markel brown', #he didn't play according to stats.nba.com
-        'joel anthony', #he didn't play according to stats.nba.com
-        'grant jerrett', #he didn't play according to stats.nba.com
-        'henry sims', #he didn't play according to stats.nba.com
-        'chris johnson', #he didn't play according to stats.nba.com
-        'dahntay jones', #he didn't play according to stats.nba.com
-        'elliot williams', #he didn't play according to stats.nba.com
-        'john holland', #he didn't play according to stats.nba.com
-        'cameron jones', #this guy isn't even on nba.com
-        'jonathan holmes', #this guy isn't even on nba.com
-    },'2016-10-31': {
-        'taurean prince', #he didn't play according to stats.nba.com
-        'walter tavares', #he didn't play according to stats.nba.com
-    },
-    '2016-11-01': {
-        'jerami grant', #he didn't play according to stats.nba.com
-    },
-    '2016-11-02': {
-        'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
-        'walter tavares', #he didn't play according to stats.nba.com
-    },
-    '2016-11-04': {
-        'taurean prince', #he didn't play according to stats.nba.com
-        'walter tavares', #he didn't play according to stats.nba.com
-        'joel bolomboy', #he didn't play according to stats.nba.com
-    },
-    '2016-11-05': {
-        'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
-        'walter tavares', #he didn't play according to stats.nba.com
-    },
-}
-
-PLAYERS_MISSING_FROM_NUMBERFIRE = {
-    'cory jefferson', #he didn't play according to stats.nba.com
-    'tim quarterman', #he didn't play according to stats.nba.com
-    'davis bertans',
-    'nicolas laprovittola',
-    'damien inglis',
-    'phil pressey',
-    'deandre liggins',
-    'cameron jones',
-    'chasson randle',
-    'grant jerrett',
-    'ron baker',
-    'mindaugas kuzminskas',
-    'bryn forbes',
-    'john holland',
-    'j.p. tokoto',
-    'jonathan holmes',
-    'marshall plumlee',
-    'patricio garino',
-    'greg stiemsma',
-    'rodney mcgruder',
-    'metta world peace',
-    'georgios papagiannis',
-    'josh huestis',
-    'kevin seraphin',
-    'nerlens noel',
-    'nicolas brussino',
-    'timothe luwawu-cabarrot',
-    'derrick jones jr.',
-    'chris mccullough',
-    'treveon graham',
-    'chinanu onuaku',
-    'demetrius jackson',
-    'troy williams',
-    'john jenkins',
-    'john lucas iii',
-    'bobby brown',
-    'michael gbinije',
-    'rakeem christmas',
-    'beno udrih',
-    'kyle wiltjer',
-    'fred vanvleet',
-    'dorian finney-smith',
-    'sheldon mcclellan',
-    'daniel ochefu',
-    'walter tavares',
-    'paul zipser',
-    'dejounte murray',
-    'danuel house',
-    'darren collison',
-    'r.j. hunter',
-    'alec burks',
-    'jeremy lamb',
-    'mike scott',
-    'bismack biyombo',
-    'frank kaminsky',
-    'michael carter-williams',
-}
-
-
 TBX_MISSING_PLAYERS = {}
 
-def loadFanDuelDataFromFile(fullPathFilename, dateStr, keyRenameMap):
-    print '    Loading FanDuel file: ', fullPathFilename
+def parseFanDuelRow(row, dateStr):
+    #add Name, which is a join of firstname and lastname
+    row['Name'] = ' '.join([row['First Name'], row['Last Name']])
+
+    #add date to row
+    row['Date'] = dateStr
+
+    #add IsHome
+    row['Home'] = 'Home' if (row['Game'].split('@')[1] == row['Team']) else 'Away'
+
+    #set '' to 'None' in injury cols
+    if row['InjuryIndicator'] == '':
+        row['InjuryIndicator'] = 'None'
+    if row['InjuryDetails'] == '':
+        row['InjuryDetails'] = 'None'
+
+    playerName = row['Name'].lower()
+    return playerName, row
+def parseRotoGuruRow(row, dateStr):
+    #convert to float just to make sure all values can be parsed to floats
+    row['FantasyPoints'] = float(row['FantasyPoints'])
+
+    #reverse name bc it's in format: "lastname, firstname"
+    playerName = row['Name'].split(', ')
+    playerName.reverse()
+    playerName = ' '.join(playerName).lower()
+
+    return playerName, row
+def parseNumberFireRow(row, dateStr):
+    return row['NF_Name'].lower(), row
+def loadDataFromFile(fullPathFilename, parseRowFunction, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
+    print '    Loading file: %s...' % fullPathFilename
 
     data = {}
 
-    dataArr = util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap)
-    for playerData in dataArr:
-        #add Name
-        #get player name as a join of firstname and lastname
-        playerName = ' '.join([playerData['First Name'], playerData['Last Name']])
-        playerData['Name'] = playerName
-
-        #add date to playerData
-        playerData['Date'] = dateStr
-
-        #add IsHome
-        playerData['Home'] = 'Home' if (playerData['Game'].split('@')[1] == playerData['Team']) else 'Away'
-
-        #set '' to 'None' in injury cols
-        if playerData['InjuryIndicator'] == '':
-            playerData['InjuryIndicator'] = 'None'
-        if playerData['InjuryDetails'] == '':
-            playerData['InjuryDetails'] = 'None'
-
-        playerName = playerData['Name'].lower()
+    csvData = util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
+    for row in csvData:
+        playerName, playerData = parseRowFunction(row, dateStr)
         if playerName in data:
-            util.stop('Got a duplicate name in fanduel data, name=' + playerName)
-
-        data[playerName] = util.filterObj(FANDUEL_FEATURES, playerData)
-
+            util.stop('Got a duplicate name: ' + playerName)
+        data[playerName] = util.filterObj(features, playerData)
     return data
-def loadFanDuelData(fullPathToDir, startDate, endDate):
-    print 'Loading FanDuel data...'
-
-    keyRenameMap = {
-        'Played': 'GamesPlayed',
-        'Injury Indicator': 'InjuryIndicator',
-        'Injury Details': 'InjuryDetails',
-    }
-
+def loadDataFromDir(fullPathToDir, parseRowFunction, features, keyRenameMap={}, delimiter=',', prefix=''):
     data = {}
-    currDate = startDate
-    while currDate <= endDate:
-        currDateStr = currDate.strftime(DATE_FORMAT)
+    currDate = SEASON_START_DATE
+    while currDate <= YESTERDAY:
+        currDateStr = util.formatDate(currDate)
         fullPathFilename = util.createFullPathFilename(fullPathToDir, util.createCsvFilename(currDateStr))
         if util.fileExists(fullPathFilename):
-            dateData = loadFanDuelDataFromFile(fullPathFilename, currDateStr, keyRenameMap)
+            dateData = loadDataFromFile(fullPathFilename, parseRowFunction, features, currDateStr, keyRenameMap, delimiter, prefix)
             data[currDateStr] = dateData
         else:
-            util.stop('File not found for date=' + currDateStr)
-        currDate = currDate + ONE_DAY
-
-    return data
-
-def loadDataFromRotoGuru(fullPathFilename):
-    print 'Loading RotoGuru data...'
-
-    keyRenameMap = {
-        'FD Pts': 'FantasyPoints',
-    }
-
-    data = {}
-
-    dataArr = util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=';')
-    for playerData in dataArr:
-
-        #reverse name bc it's in format: "lastname, firstname"
-        playerName = playerData['Name'].split(', ')
-        playerName.reverse()
-        playerData['Name'] = ' '.join(playerName)
-
-        #convert date to right format ("20161025" -> "2016-10-25")
-        playerData['Date'] = datetime.strptime(playerData['Date'], '%Y%m%d').strftime(DATE_FORMAT)
-
-        #convert to float just to make sure all values can be parsed to floats
-        playerData['FantasyPoints'] = float(playerData['FantasyPoints'])
-
-        #add playerData to data
-        dateStr = playerData['Date']
-        playerName = playerData['Name'].lower()
-
-        if dateStr not in data:
-            data[dateStr] = {}
-
-        if playerName in data[dateStr]:
-            util.stop('Got a duplicate name in rotoguru data, name=' + playerName)
-        data[dateStr][playerName] = util.filterObj(ROTOGURU_FEATURES, playerData)
-
-    return data
-
-def loadNumberFireDataFromFile(fullPathFilename, dateStr, prefix):
-    print '    Loading NumberFire file: ', fullPathFilename
-
-    data = {}
-
-    dataArr = util.loadCsvFile(fullPathFilename, prefix=prefix)
-    for playerData in dataArr:
-        playerName = playerData[prefix + 'Name'].lower()
-        if playerName in data:
-            util.stop('Got a duplicate name in numberfire data, name=' + playerName)
-
-        data[playerName] = util.filterObj(NUMBERFIRE_FEATURES, playerData)
-
-    return data
-def loadNumberFireData(fullPathToDir, startDate, endDate, prefix):
-    print 'Loading NumberFire data...'
-
-    data = {}
-    currDate = startDate
-    while currDate <= endDate:
-        currDateStr = currDate.strftime(DATE_FORMAT)
-        fullPathFilename = util.createFullPathFilename(fullPathToDir, util.createCsvFilename(currDateStr))
-        if util.fileExists(fullPathFilename):
-            dateData = loadNumberFireDataFromFile(fullPathFilename, currDateStr, prefix)
-            data[currDateStr] = dateData
-        else:
-            util.stop('NumberFire file not found for date=' + currDateStr)
+            util.headsUp('File not found for date=' + currDateStr)
         currDate = currDate + ONE_DAY
 
     return data
@@ -333,7 +128,8 @@ def findMatchingName(name, newData, nameMap={}):
     return None
 def playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
     return (dateStr in knownMissingObj and name in knownMissingObj[dateStr]) or name in knownMissingObj
-def mergeData(obj1, obj2, nameMap={}, knownMissingObj={}, setFP=False):
+def mergeData(obj1, obj2, nameMap, knownMissingObj, containsY):
+    print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
     for dateStr in dateStrs:
@@ -353,59 +149,212 @@ def mergeData(obj1, obj2, nameMap={}, knownMissingObj={}, setFP=False):
                         util.headsUp('Name not found in obj2, date=' + dateStr + ', name=' + name)
                     else:
                         #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
-                        if setFP:
+                        if containsY:
                             #set FantasyPoints to 0 for these people who are known to be missing
                             obj1[dateStr][name].update({ 'FantasyPoints': 0 })
 
         else:
             util.headsUp('Date not found in obj2, date=' + dateStr)
 
-def writeData(filename, data):
-    print 'Writing data to: ' + filename + '...'
+def writeData(fullPathFilename, data):
+    colNames = [Y_NAME]
+    colNames.extend(filter(lambda x: x != Y_NAME, X_NAMES))
+    dataArr = []
 
-    f = open(filename, 'w')
-
-    #print col names
-    f.write(Y_NAME + ',')
-    f.write(','.join(filter(lambda x: x != Y_NAME, X_NAMES)) + '\n')
-
-    dates = data.keys()
-    dates.sort() #sort by date
-    for date in dates:
-        names = data[date].keys()
+    dateStrs = data.keys()
+    dateStrs.sort() #sort by date
+    for dateStr in dateStrs:
+        names = data[dateStr].keys()
         names.sort() #sort by name
         for name in names:
-            #write y
-            f.write(str(util.getObjValue(data[date][name], Y_NAME, '')) + ',')
+            dataArr.append(data[dateStr][name])
 
-            #write first x
-
-            #write the rest
-            for i in xrange(0, len(X_NAMES)):
-                colName = X_NAMES[i]
-                if colName != Y_NAME:
-                    if i > 0:
-                        f.write(',')
-                    f.write(str(util.getObjValue(data[date][name], colName, '')))
-
-            f.write('\n')
-    f.close()
+    util.writeCsvFile(colNames, dataArr, fullPathFilename)
 
 #============= MAIN =============
 
+EXTRA_DATA_SOURCES = [
+    {
+        'name': 'FanDuel',
+        'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded'),
+        'keyRenameMap': {
+            'Played': 'GamesPlayed',
+            'Injury Indicator': 'InjuryIndicator',
+            'Injury Details': 'InjuryDetails',
+        },
+        'parseRowFunction': parseFanDuelRow,
+    },
+    {
+        'name': 'RotoGuru',
+        'containsY': True,
+        'delimiter': ';',
+        'features': ['FantasyPoints'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru'),
+        'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
+        'knownMissingObj': {
+            '2016-10-25': {
+                'cory jefferson', #he didn't play according to stats.nba.com
+                'louis amundson', #he didn't play according to stats.nba.com
+                'damien inglis', #he didn't play according to stats.nba.com
+                'phil pressey', #he didn't play according to stats.nba.com
+                'greg stiemsma', #he didn't play according to stats.nba.com
+                'patricio garino', #this guy isn't even on nba.com
+                'chasson randle', #this guy isn't even on nba.com
+                'j.p. tokoto', #this guy isn't even on nba.com
+                'livio jean-charles', #this guy isn't even on nba.com
+                'markel brown', #he didn't play according to stats.nba.com
+                'joel anthony', #he didn't play according to stats.nba.com
+                'grant jerrett', #he didn't play according to stats.nba.com
+                'henry sims', #he didn't play according to stats.nba.com
+                'chris johnson', #he didn't play according to stats.nba.com
+                'dahntay jones', #he didn't play according to stats.nba.com
+                'elliot williams', #he didn't play according to stats.nba.com
+                'john holland', #he didn't play according to stats.nba.com
+                'cameron jones', #this guy isn't even on nba.com
+                'jonathan holmes', #this guy isn't even on nba.com
+            },'2016-10-31': {
+                'taurean prince', #he didn't play according to stats.nba.com
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-01': {
+                'jerami grant', #he didn't play according to stats.nba.com
+            },
+            '2016-11-02': {
+                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-04': {
+                'taurean prince', #he didn't play according to stats.nba.com
+                'walter tavares', #he didn't play according to stats.nba.com
+                'joel bolomboy', #he didn't play according to stats.nba.com
+            },
+            '2016-11-05': {
+                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+        },
+        'nameMap': {
+            'luc richard mbah a moute': 'luc mbah a moute',
+            'derrick jones jr.': 'derrick jones',
+            'deandre\' bembry': 'deandre bembry',
+            'juancho hernangomez': 'juan hernangomez',
+            'lou williams': 'louis williams',
+            'timothe luwawu-cabarrot': 'timothe luwawu',
+            'ish smith': 'ishmael smith',
+            'joe young': 'joseph young',
+            'maurice ndour': 'maurice n\'dour',
+            'j.j. barea': 'jose barea',
+            'wesley matthews': 'wes matthews',
+            'kelly oubre jr.': 'kelly oubre',
+            'wade baldwin iv': 'wade baldwin',
+            'larry nance jr.': 'larry nance',
+            'stephen zimmerman jr.': 'stephen zimmerman',
+            'john lucas iii': 'john lucas',
+        },
+        'parseRowFunction': parseRotoGuruRow,
+    },
+    {
+        'name': 'NumberFire',
+        'features': ['NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromNumberFire'),
+        'knownMissingObj': {
+            'cory jefferson', #he didn't play according to stats.nba.com
+            'tim quarterman', #he didn't play according to stats.nba.com
+            'davis bertans',
+            'nicolas laprovittola',
+            'damien inglis',
+            'phil pressey',
+            'deandre liggins',
+            'cameron jones',
+            'chasson randle',
+            'grant jerrett',
+            'ron baker',
+            'mindaugas kuzminskas',
+            'bryn forbes',
+            'john holland',
+            'j.p. tokoto',
+            'jonathan holmes',
+            'marshall plumlee',
+            'patricio garino',
+            'greg stiemsma',
+            'rodney mcgruder',
+            'metta world peace',
+            'georgios papagiannis',
+            'josh huestis',
+            'kevin seraphin',
+            'nerlens noel',
+            'nicolas brussino',
+            'timothe luwawu-cabarrot',
+            'derrick jones jr.',
+            'chris mccullough',
+            'treveon graham',
+            'chinanu onuaku',
+            'demetrius jackson',
+            'troy williams',
+            'john jenkins',
+            'john lucas iii',
+            'bobby brown',
+            'michael gbinije',
+            'rakeem christmas',
+            'beno udrih',
+            'kyle wiltjer',
+            'fred vanvleet',
+            'dorian finney-smith',
+            'sheldon mcclellan',
+            'daniel ochefu',
+            'walter tavares',
+            'paul zipser',
+            'dejounte murray',
+            'danuel house',
+            'darren collison',
+            'r.j. hunter',
+            'alec burks',
+            'jeremy lamb',
+            'mike scott',
+            'bismack biyombo',
+            'frank kaminsky',
+            'michael carter-williams',
+        },
+        'nameMap': {
+            'patty mills': 'patrick mills',
+            'j.j. barea': 'jose juan barea',
+            'lou williams': 'louis williams',
+            'joe young': 'joseph young',
+            'ish smith': 'ishmael smith',
+            'juancho hernangomez': 'juan hernangomez',
+            'luc richard mbah a moute': 'luc mbah a moute',
+            'deandre\' bembry': 'deandre bembry',
+            'kelly oubre jr.': 'kelly oubre',
+        },
+        'parseRowFunction': parseNumberFireRow,
+        'prefix': 'NF_',
+    },
+]
+
 #load fanduel data
-data = loadFanDuelData(FANDUEL_DIR, SEASON_START_DATE, YESTERDAY)
-X_NAMES.extend(FANDUEL_FEATURES)
+data = None
 
-#load rotoguru data
-rgData = loadDataFromRotoGuru(ROTOGURU_FILE)
-mergeData(data, rgData, nameMap=FANDUEL_TO_ROTOGURU_NAME_MAP, knownMissingObj=PLAYERS_MISSING_FROM_ROTOGURU, setFP=True)
-X_NAMES.extend(ROTOGURU_FEATURES)
+for dataSource in EXTRA_DATA_SOURCES:
+    print 'Loading data for %s...' % dataSource['name']
 
-#load numberfire data
-nfData = loadNumberFireData(NUMBERFIRE_DIR, SEASON_START_DATE, YESTERDAY, 'NF_')
-mergeData(data, nfData, nameMap=FANDUEL_TO_NUMBERFIRE_NAME_MAP, knownMissingObj=PLAYERS_MISSING_FROM_NUMBERFIRE)
-X_NAMES.extend(NUMBERFIRE_FEATURES)
+    containsY = util.getObjValue(dataSource, 'containsY', False)
+    delimiter = util.getObjValue(dataSource, 'delimiter', ',')
+    features = dataSource['features']
+    fullPathToDir = dataSource['fullPathToDir']
+    keyRenameMap = util.getObjValue(dataSource, 'keyRenameMap', {})
+    knownMissingObj = util.getObjValue(dataSource, 'knownMissingObj', {})
+    nameMap = util.getObjValue(dataSource, 'nameMap', {})
+    parseRowFunction = dataSource['parseRowFunction']
+    prefix = util.getObjValue(dataSource, 'prefix', '')
+
+    newData = loadDataFromDir(fullPathToDir, parseRowFunction, features, keyRenameMap, delimiter, prefix)
+    X_NAMES.extend(features)
+
+    if data == None:
+        data = newData
+    else:
+        mergeData(data, newData, nameMap, knownMissingObj, containsY)
 
 writeData(OUTPUT_FILE, data)
 

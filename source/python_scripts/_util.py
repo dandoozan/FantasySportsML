@@ -85,7 +85,9 @@ def renameKey(obj, oldKey, newKey):
     obj[newKey] = obj.pop(oldKey)
 
 def renameKeys(keyMap, obj):
-    for key in obj:
+    #note: use keys bc renameKey alters obj
+    keys = obj.keys()
+    for key in keys:
         if key in keyMap:
             renameKey(obj, key, keyMap[key])
 
@@ -123,12 +125,14 @@ def addPrefixToEachElement(arr, prefix):
 
 
 #================= date stuff ===================
-def parseDate(dateStr, dateFormat):
+def parseDate(dateStr, dateFormat='%Y-%m-%d'):
     from datetime import datetime
     return datetime.strptime(dateStr, dateFormat)
-def formatDate(date, dateFormat):
-    #from datetime import date
+def formatDate(date, dateFormat='%Y-%m-%d'):
     return date.strftime(dateFormat)
+def getOneDay():
+    from datetime import timedelta
+    return timedelta(1)
 def getYesterdayAsDate():
-    from datetime import date, timedelta
-    return date.today() - timedelta(1)
+    from datetime import datetime
+    return datetime.today() - getOneDay()
