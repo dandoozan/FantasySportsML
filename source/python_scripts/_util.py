@@ -45,7 +45,7 @@ def printObj(obj):
     keys = obj.keys()
     keys.sort()
     for key in keys:
-        print key + ':' + str(obj[key])
+        print key + ': ' + str(obj[key])
 
 def printArray(arr):
     for a in arr:
