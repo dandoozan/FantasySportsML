@@ -20,11 +20,11 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 FILENAME = 'rf_numberfire'
 END_DATE = '2016-11-05'
 N_TREE = 20
-PLOT = 'Scores'
+PLOT = 'RMSE_ScoreRatios'
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
@@ -220,6 +220,6 @@ cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 if (PROD_RUN || PLOT == 'Scores') plotScores(dateStrs, myTeamActualFantasyPointss, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
 #if (PROD_RUN || PLOT == 'RMSE') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 #if (PROD_RUN || PLOT == 'ScoreRatios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
-if (PROD_RUN || PLOT == 'RMSE_ScoreRatios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
+if (PROD_RUN || PLOT == 'RMSE_ScoreRatios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
 
 cat('Done!\n')
