@@ -3,8 +3,26 @@
 #D-set ntree=20: rf_ntree20: 9/12, 20, 0.375, 80.54763/58.11127, 4.207119/8.824238/4.083524, 9.068537, 0.9347183
 #D-Remove first date: rf_sansday1: 9/12, 20, 0.341, 79.55694/58.34918, 4.049431/9.295638/4.167405, 8.991759, 0.9588696
 #D-add numberfire features: rf_numberfire: 17/20, 20, 0.428, 74.71894/60.88204, 3.654075/8.507217/3.711897, 8.580198, 0.9484206
+#-add up to 11/7
+#-add rotogrinder PlayerProjections:
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
+
+#-add rotogrinder individual stats:
+  #-PlayerProjections
+  #-AdvancedPlayerStats
+  #-Touches
+  #-OptimalLineup (perhaps do 0 or 1 if player is in the optimal lineup)
+  #-StartingLineups
+  #-SalaryCharts (multiple)
+  #-MarketWatch
+#-rotogrinder team stats:
+  #-OffenseVsDefense... (multiple)
+  #-DefenseVsPosition (multiple)
+  #-TeamStats (multiple)
+  #-VegasOdds
+  #-BackToBack
+
 
 #Remove all objects from the current workspace
 rm(list = ls())

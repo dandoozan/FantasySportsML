@@ -1,21 +1,17 @@
 import urllib2
 from bs4 import BeautifulSoup
 from datetime import datetime
+import scraper
+import _util as util
 
-DATE_FORMAT = '%Y%m%d'
-SITE = 'fd'
-FILENAME = 'data/rawDataFromRotoGuru/fd_all.txt'
+PARENT_DIR = util.joinDirs('data', 'rawDataFromRotoGuru')
+DATE_FORMAT = '%Y-%m-%d'
 
-def getInput():
-    print 'Enter date (eg. 20161025):'
-    return raw_input().strip()
+def downloadData(date):
+    url = 'http://rotoguru1.com/cgi-bin/hyday.pl?game=fd&mon=%d&day=%d&year=%d&scsv=1' % (date.month, date.day, date.year)
+    pageSource = scraper.downloadPageSource(url)
 
-def downloadData(site, year, month, day):
-    print 'Downloading data...'
-    url = 'http://rotoguru1.com/cgi-bin/hyday.pl?game=%s&mon=%d&day=%d&year=%d&scsv=1' % (site, month, day, year)
-    print '    url:', url
-
-    soup = BeautifulSoup(urllib2.urlopen(url).read(), 'html.parser')
+    soup = BeautifulSoup(pageSource, 'html.parser')
     #soup = BeautifulSoup(open('data/rawDataFromRotoGuru/tbx_2016-10-25.txt'), 'html.parser')
 
     data = soup.pre.string.strip().split('\n')
@@ -25,23 +21,26 @@ def downloadData(site, year, month, day):
         print '    ERROR: I didn\'t get a header like expected. See if the website changed their data format. Stopping.'
         exit()
 
-    #Remove header
-    data = data[1:]
-
     return data
 
-def appendData(data, filename):
-    print 'Appending %d lines of data to %s' %(len(data), filename)
-    f = open(filename, 'a')
+def writeData(data, fullPathFilename):
+    print 'Writing %d lines of data to %s' %(len(data), fullPathFilename)
+
+    f = open(fullPathFilename, 'w')
     for line in data:
         f.write(line + '\n')
     f.close()
 
 #=============== Main ================
 
-dateStr = getInput()
-date = datetime.strptime(dateStr, DATE_FORMAT)
-data = downloadData(SITE, date.year, date.month, date.day)
-appendData(data, FILENAME)
+date = util.getYesterdayAsDate()
+dateStr = util.formatDate(date, DATE_FORMAT)
+shouldScrapeYesterday = raw_input(('Scrape yesterday (%s)? ' % dateStr)).strip() == 'y'
+if not shouldScrapeYesterday:
+    dateStr = raw_input('Enter date (eg. 2016-11-06): ').strip()
+    date = util.parseDate(dateStr, DATE_FORMAT)
+
+data = downloadData(date)
+writeData(data, util.createFullPathFilename(PARENT_DIR, util.createTxtFilename(dateStr)))
 
 print 'Done!'
