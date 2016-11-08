@@ -14,17 +14,18 @@ library(randomForest) #randomForest
 library(hydroGOF) #rmse
 library(ggplot2) #visualization
 library(ggthemes) #visualization
+library(dplyr) #%>%
 source('../ml-common/plot.R')
 source('../ml-common/util.R')
 source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = F
+PROD_RUN = T
 FILENAME = 'rf_numberfire'
 END_DATE = '2016-11-05'
 N_TREE = 20
-PLOT = 'RMSE_ScoreRatios'
+PLOT = 'fi'
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
@@ -149,12 +150,12 @@ cat('Number of features to use: ', length(FEATURES_TO_USE), '/', length(names(da
 
 #create model
 cat('Creating Model (ntree=', N_TREE, ')...\n', sep='')
-timeElapsed = system.time(model <- createModel(data, Y_NAME, FEATURES_TO_USE))
+timeElapsed = system.time(baseModel <- createModel(data, Y_NAME, FEATURES_TO_USE))
 cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
-cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[N_TREE], '/', model$rsq[N_TREE]*100, '\n', sep='')
+cat('    MeanOfSquaredResiduals / %VarExplained: ', baseModel$mse[N_TREE], '/', baseModel$rsq[N_TREE]*100, '\n', sep='')
 
 #print trn/cv, train error
-printTrnCvTrainErrors(model, data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
+printTrnCvTrainErrors(baseModel, data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
 
 cat('Now let\'s see how I would\'ve done each day...\n')
 
@@ -217,6 +218,7 @@ scoreRatios = myTeamActualFantasyPointss/lowestWinningScores
 cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
 #plots
+if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, save=PROD_RUN)
 if (PROD_RUN || PLOT == 'Scores') plotScores(dateStrs, myTeamActualFantasyPointss, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
 #if (PROD_RUN || PLOT == 'RMSE') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 #if (PROD_RUN || PLOT == 'ScoreRatios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
