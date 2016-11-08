@@ -18,6 +18,14 @@ loadData = function() {
 
 imputeMissingValues = function(data) {
   cat('    Imputing missing values...\n')
+
+  #set all NAs to 0 in NumberFire cols (all the cols are predictive cols,
+  #so if they dont have a value for a player, i think it's safe to assume
+  #they're 'predicting' he'll get 0 in it
+  for (colName in F.NUMBERFIRE) {
+    data[is.na(data[[colName]]), colName] = 0
+  }
+
   return(data)
 }
 
@@ -26,11 +34,16 @@ featureEngineer = function(data) {
   return(data)
 }
 
-getData = function() {
+getData = function(endDate=NULL) {
   cat('Getting data...\n')
 
   #load data
   full = loadData()
+
+  #remove any data after endDate
+  if (!is.null(endDate)) {
+    full = full[full$Date <= endDate,]
+  }
 
   #impute missing values
   full = imputeMissingValues(full)

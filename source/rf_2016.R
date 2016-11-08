@@ -2,10 +2,9 @@
 #D-use all fanduel features: rf_initial: 9/12, 100, 1.846, 73.34114/61.859, 3.968405/8.834827/3.965828, 8.92789, 0.9321584
 #D-set ntree=20: rf_ntree20: 9/12, 20, 0.375, 80.54763/58.11127, 4.207119/8.824238/4.083524, 9.068537, 0.9347183
 #D-Remove first date: rf_sansday1: 9/12, 20, 0.341, 79.55694/58.34918, 4.049431/9.295638/4.167405, 8.991759, 0.9588696
-#-add numberfire features
-
+#D-add numberfire features: rf_numberfire: 17/20, 20, 0.428, 74.71894/60.88204, 3.654075/8.507217/3.711897, 8.580198, 0.9484206
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
-
+#-Compute FPPD (FP/Salary*1000)
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -22,7 +21,8 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_sansday1'
+FILENAME = 'rf_numberfire'
+END_DATE = '2016-11-05'
 N_TREE = 20
 PLOT = 'Scores'
 Y_NAME = 'FantasyPoints'
@@ -30,7 +30,8 @@ Y_NAME = 'FantasyPoints'
 #features excluded: FantasyPoints, Date, Name
 F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
-FEATURES_TO_USE = c(F.FANDUEL)
+F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE)
 
 #============== Functions ===============
 
@@ -140,7 +141,7 @@ plotScores = function(dateStrs, y, yLow, yHigh, save=FALSE, name=NULL, ...) {
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
 #load data
-data = getData()
+data = getData(END_DATE)
 contestData = getContestData()
 
 #print number of feature to use

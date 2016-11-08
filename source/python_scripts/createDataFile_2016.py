@@ -16,7 +16,7 @@ YESTERDAY = TODAY - ONE_DAY
 FANDUEL_FEATURES = ['Date', 'Name','Position','FPPG','GamesPlayed',
         'Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails']
 ROTOGURU_FEATURES = ['FantasyPoints']
-NUMBERFIRE_FEATURES = ['NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP', 'NF_Cost', 'NF_Value']
+NUMBERFIRE_FEATURES = ['NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP']
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -253,10 +253,6 @@ def loadNumberFireDataFromFile(fullPathFilename, dateStr, prefix):
 
     dataArr = util.loadCsvFile(fullPathFilename, prefix=prefix)
     for playerData in dataArr:
-        #remove '$' from cost
-        cost = playerData[prefix + 'Cost']
-        playerData[prefix + 'Cost'] = int(cost[1:]) if cost != 'N/A' else ''
-
         playerName = playerData[prefix + 'Name'].lower()
         if playerName in data:
             util.stop('Got a duplicate name in numberfire data, name=' + playerName)
@@ -337,7 +333,7 @@ def findMatchingName(name, newData, nameMap={}):
     return None
 def playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
     return (dateStr in knownMissingObj and name in knownMissingObj[dateStr]) or name in knownMissingObj
-def mergeData(obj1, obj2, nameMap={}, knownMissingObj={}):
+def mergeData(obj1, obj2, nameMap={}, knownMissingObj={}, setFP=False):
     dateStrs = obj1.keys()
     dateStrs.sort()
     for dateStr in dateStrs:
@@ -348,16 +344,18 @@ def mergeData(obj1, obj2, nameMap={}, knownMissingObj={}):
                     obj1[dateStr][name].update(obj2[dateStr][obj2Name])
                 else:
                     if not playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
+                        #tbx
                         if dateStr in TBX_MISSING_PLAYERS:
                             TBX_MISSING_PLAYERS[dateStr].append(name)
                         else:
                             TBX_MISSING_PLAYERS[dateStr] = [name]
+
                         util.headsUp('Name not found in obj2, date=' + dateStr + ', name=' + name)
                     else:
-                        #set FantasyPoints to 0 for these people who are known to be missing
-                        obj1[dateStr][name].update({ 'FantasyPoints': 0 })
-                        pass
                         #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
+                        if setFP:
+                            #set FantasyPoints to 0 for these people who are known to be missing
+                            obj1[dateStr][name].update({ 'FantasyPoints': 0 })
 
         else:
             util.headsUp('Date not found in obj2, date=' + dateStr)
@@ -401,7 +399,7 @@ X_NAMES.extend(FANDUEL_FEATURES)
 
 #load rotoguru data
 rgData = loadDataFromRotoGuru(ROTOGURU_FILE)
-mergeData(data, rgData, nameMap=FANDUEL_TO_ROTOGURU_NAME_MAP, knownMissingObj=PLAYERS_MISSING_FROM_ROTOGURU)
+mergeData(data, rgData, nameMap=FANDUEL_TO_ROTOGURU_NAME_MAP, knownMissingObj=PLAYERS_MISSING_FROM_ROTOGURU, setFP=True)
 X_NAMES.extend(ROTOGURU_FEATURES)
 
 #load numberfire data
