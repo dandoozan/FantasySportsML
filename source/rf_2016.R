@@ -19,7 +19,7 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 FILENAME = 'rf_ntree20'
 N_TREE = 20
 PLOT = 'Scores'
