@@ -5,9 +5,8 @@ FACTOR_COLS = c('Position', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'Inju
 loadData = function() {
   data = read.csv(paste0('data/data_2016.csv'), stringsAsFactors=F, na.strings=c(''))
 
-  #todo: uncomment this later after ive established a baseline with the first date
   #remove first date (2016-10-25) since it has GamesPlayed at like 76, and FPPG was based on last season
-  #data = data[data$Date != SEASON_START_DATE,]
+  data = data[data$Date != SEASON_START_DATE,]
 
   #convert cols to factors
   for (col in FACTOR_COLS) {
