@@ -173,7 +173,7 @@ def writeData(fullPathFilename, data):
 
 #============= MAIN =============
 
-EXTRA_DATA_SOURCES = [
+DATA_SOURCES = [
     {
         'name': 'FanDuel',
         'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
@@ -335,7 +335,7 @@ EXTRA_DATA_SOURCES = [
 #load fanduel data
 data = None
 
-for dataSource in EXTRA_DATA_SOURCES:
+for dataSource in DATA_SOURCES:
     print 'Loading data for %s...' % dataSource['name']
 
     containsY = util.getObjValue(dataSource, 'containsY', False)
