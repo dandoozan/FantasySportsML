@@ -4,10 +4,7 @@
 #D-Remove first date: rf_sansday1: 10/27-11/5, 9/12, 20, 0.341, 79.55694/58.34918, 4.049431/9.295638/4.167405, 8.991759, 0.9588696
 #D-add numberfire features: rf_numberfire: 10/27-11/5, 17/20, 20, 0.428, 74.71894/60.88204, 3.654075/8.507217/3.711897, 8.580198, 0.9484206
 #D-fixed bad rotoguru data: rf_fixrotoguru: 10/27-11/5, 17/20, 20, 0.417, 76.52583/59.93656, 3.609373/8.581317/3.778761, 8.573306, 0.9521481
-
-#-10/27-11/4 orig: 77.91822/60.023, 3.669589/8.881773/3.783004, 8.725159, 0.9383253
-
-#-add up to 11/7
+#D-add 11/6: rf_nov6: 10/27-11/5, 17/20, 20, 0.462, 77.185/59.41379, 3.735602/8.460795/3.687973, 8.555099, 0.9583455
 #-add rotogrinder PlayerProjections:
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -44,10 +41,10 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_fixrotoguru'
-END_DATE = '2016-11-05'
+FILENAME = 'rf_nov6'
+END_DATE = '2016-11-06'
 N_TREE = 20
-PLOT = 'fi'
+PLOT = 'Scores'
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
