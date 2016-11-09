@@ -26,6 +26,12 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
+  #set RG rank NAs to 0, but maybe consider something else (Inf?) since
+  #generally lower rank is better, and since these don't have a rank, it
+  #probably means that they're a bad player
+  data[is.na(data$RG_rank), 'RG_rank'] = 0
+  data[is.na(data$RG_rank20), 'RG_rank20'] = 0
+
   #set all NAs to 0 in RotoGrinder cols (same reason as above)
   for (colName in F.ROTOGRINDER) {
     data[is.na(data[[colName]]), colName] = 0

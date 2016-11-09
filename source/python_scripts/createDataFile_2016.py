@@ -75,25 +75,29 @@ def parseRotoGrinderRow(row, dateStr):
     intCols = ['RG_line', 'RG_movement']
     floatCols = ['RG_overunder', 'RG_points', 'RG_ppdk',
         'RG_total', 'RG_contr', 'RG_minutes',
-        'RG_2', 'RG_15', 'RG_19', 'RG_20', 'RG_28',
-        'RG_43', 'RG_50', 'RG_51', 'RG_58']
-
+        'RG_points15', 'RG_points19', 'RG_points20',
+        'RG_points28', 'RG_points43',
+        'RG_points50', 'RG_points51', 'RG_points58']
     for col in intCols:
-        try:
-            row[col] = int(row[col])
-        except Exception as e:
-            print col
-            util.printObj(row)
-            raise(e)
-
+        row[col] = int(row[col])
     for col in floatCols:
-        try:
-            row[col] = float(row[col])
-        except Exception as e:
-            print col
-            util.printObj(row)
-            raise(e)
+        row[col] = float(row[col])
 
+    #now, add the extra data under salaries obj (which is other sites' salary, rank info)
+    salaries = row['RG_schedule']['data']['salaries']['collection']
+    for salaryObj in salaries:
+        dataObj = salaryObj['data']
+        siteId = str(int(dataObj['site_id']))
+
+        if siteId == '2': #fanduel
+            row['RG_rank'] = int(dataObj['rank'])
+        elif siteId == '20': #draftkings i think
+            row['RG_rank20'] = int(dataObj['rank'])
+            row['RG_rank_diff20'] = int(dataObj['rank_diff'])
+            row['RG_salary20'] = float(dataObj['salary'])
+            row['RG_diff20'] = int(dataObj['diff'])
+        else:
+            row['RG_salary' + siteId] = float(dataObj['salary'])
     return row['RG_player_name'].strip().lower(), row
 
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
@@ -451,23 +455,27 @@ DATA_SOURCES = [
             'RG_deviation', #i suspect this is stdev of score, but im not sure
             'RG_minutes', #? im not sure if this is projected minutes or actual average or something else
 
-            #inside player obj
-            #'RG_hand',
-
             #inside schedule -> salaries obj
-            #figure out what to do with these, they dont fit in the keyRenameMap structure
-            #'RG_rank2', 'RG_diff2', 'RG_rank_diff2', 'RG_salary2',
-            #'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
-            #'RG_salary50',
-            #'RG_salary58',
-            #'RG_salary28',
-            #'RG_salary15', #some
-            #'RG_salary19', #some
-            #'RG_salary43',
-            #maybe other salary#s?
+            'RG_rank', #fanduel
+            'RG_salary15',
+            'RG_salary19',
+            'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
+            'RG_salary28',
+            'RG_salary43',
+            'RG_salary50',
+            #'RG_salary51', #no salary51 for some reason
+            'RG_salary58',
 
-            #im not sure what these numbers are
-            'RG_2', 'RG_15', 'RG_19', 'RG_20', 'RG_28', 'RG_43', 'RG_50', 'RG_51', 'RG_58',
+            #projected points from other sites
+            #'RG_points2', #fanduel (same as 'points')
+            'RG_points15',
+            'RG_points19',
+            'RG_points20', #draftkings?
+            'RG_points28',
+            'RG_points43',
+            'RG_points50',
+            'RG_points51',
+            'RG_points58',
         ],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'PlayerProjections'),
         'isJson': True,
@@ -475,6 +483,14 @@ DATA_SOURCES = [
             'pown%': 'pownpct',
             'pt/$/k': 'ppdk',
             'o/u': 'overunder',
+            '15': 'points15',
+            '19': 'points19',
+            '20': 'points20',
+            '28': 'points28',
+            '43': 'points43',
+            '50': 'points50',
+            '51': 'points51',
+            '58': 'points58',
         },
         'knownMissingObj': {
             'cory jefferson',
