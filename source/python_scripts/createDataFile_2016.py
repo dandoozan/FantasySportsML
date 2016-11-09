@@ -6,9 +6,8 @@ DATA_DIR = 'data'
 OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = datetime(2016, 10, 25)
-TODAY = datetime.today()
 ONE_DAY = timedelta(1)
-YESTERDAY = TODAY - ONE_DAY
+END_DATE = datetime(2016, 11, 6)
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -57,12 +56,18 @@ def handleRotoGrinderDuplicates(oldMatch, newMatch):
         return newMatch
     util.stop('In handleDuplicates for RotoGrinder, and dont know which to return')
 
-def loadJsonFile(fullPathFilename, prefix=''):
+def loadJsonFile(fullPathFilename, keyRenameMap=None, prefix=''):
     jsonData = util.loadJsonFile(fullPathFilename)
 
     #append prefix to all keys
     for item in jsonData:
-        util.addPrefixToObj(item, prefix)
+        #first, rename the keys
+        if keyRenameMap:
+            util.renameKeys(keyRenameMap, item)
+
+        #then, add the prefix
+        if prefix:
+            util.addPrefixToObj(item, prefix)
 
     return jsonData
 
@@ -74,7 +79,7 @@ def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features
 
     fullPathFilename = util.createFullPathFilename(fullPathToDir, filename)
     if util.fileExists(fullPathFilename):
-        rows = loadJsonFile(fullPathFilename, prefix) if isJson else util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
+        rows = loadJsonFile(fullPathFilename, keyRenameMap, prefix) if isJson else util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
         for row in rows:
             playerName, playerData = parseRowFunction(row, dateStr)
             if playerName in data:
@@ -99,7 +104,7 @@ def loadDataFromDir(fullPathToDir, parseRowFunction, handleDuplicates, features,
     print '    Loading dir:', fullPathToDir
     data = {}
     currDate = SEASON_START_DATE
-    while currDate <= YESTERDAY:
+    while currDate <= END_DATE:
         currDateStr = util.formatDate(currDate)
         dateData = loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features, currDateStr, isJson, keyRenameMap, delimiter, prefix)
         if dateData:
@@ -371,9 +376,40 @@ DATA_SOURCES = [
     {
         'name': 'RotoGrinder PlayerProjections',
         'handleDuplicates': handleRotoGrinderDuplicates,
-        'features': ['RG_points'],
+        'features': [
+            'RG_points', 'RG_ppdk', 'RG_contr',
+            'RG_movement', 'RG_line', 'RG_total', 'RG_overunder', 'RG_minutes',
+
+            #these have NAs, explore them more before adding them as features
+            #'RG_deviation', 'RG_saldiff', 'RG_rankdiff', #677 NAs
+            #'RG_ceil', 'RG_floor', #696 NAs
+            #'RG_pownpct', #711 NAs
+
+            #inside player obj
+            #'RG_hand',
+
+            #inside schedule -> salaries obj
+            #figure out what to do with these, they dont fit in the keyRenameMap structure
+            #'RG_rank2', 'RG_diff2', 'RG_rank_diff2', 'RG_salary2',
+            #'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
+            #'RG_salary50',
+            #'RG_salary58',
+            #'RG_salary28',
+            #'RG_salary15', #some
+            #'RG_salary19', #some
+            #'RG_salary43',
+            #maybe other salary#s?
+
+            #im not sure what these numbers are
+            'RG_2', 'RG_15', 'RG_19', 'RG_20', 'RG_28', 'RG_43', 'RG_50', 'RG_51', 'RG_58',
+        ],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'PlayerProjections'),
         'isJson': True,
+        'keyRenameMap': {
+            'pown%': 'pownpct',
+            'pt/$/k': 'ppdk',
+            'o/u': 'overunder',
+        },
         'knownMissingObj': {
             'cory jefferson',
             'louis amundson',

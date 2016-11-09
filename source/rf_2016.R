@@ -1,11 +1,12 @@
 #todo:
-#D-use all fanduel features: rf_initial: 10/27-11/5, 9/12, 100, 1.846, 73.34114/61.859, 3.968405/8.834827/3.965828, 8.92789, 0.9321584
-#D-set ntree=20: rf_ntree20: 10/27-11/5, 9/12, 20, 0.375, 80.54763/58.11127, 4.207119/8.824238/4.083524, 9.068537, 0.9347183
-#D-Remove first date: rf_sansday1: 10/27-11/5, 9/12, 20, 0.341, 79.55694/58.34918, 4.049431/9.295638/4.167405, 8.991759, 0.9588696
-#D-add numberfire features: rf_numberfire: 10/27-11/5, 17/20, 20, 0.428, 74.71894/60.88204, 3.654075/8.507217/3.711897, 8.580198, 0.9484206
-#D-fixed bad rotoguru data: rf_fixrotoguru: 10/27-11/5, 17/20, 20, 0.417, 76.52583/59.93656, 3.609373/8.581317/3.778761, 8.573306, 0.9521481
-#D-add 11/6: rf_nov6: 10/27-11/5, 17/20, 20, 0.462, 77.185/59.41379, 3.735602/8.460795/3.687973, 8.555099, 0.9583455
-#D-add rotogrinder points: 10/27-11/6, 18/21, 20, 0.496, 69.95476/63.21567, 3.4776/8.341828/3.509083, 8.280576, 0.9873654
+#D-use all fanduel features: rf_01initial: 10/27-11/5, 9/12, 100, 1.846, 73.34114/61.859, 3.968405/8.834827/3.965828, 8.92789, 0.9321584
+#D-set ntree=20: rf_02ntree20: 10/27-11/5, 9/12, 20, 0.375, 80.54763/58.11127, 4.207119/8.824238/4.083524, 9.068537, 0.9347183
+#D-Remove first date: rf_03sansday1: 10/27-11/5, 9/12, 20, 0.341, 79.55694/58.34918, 4.049431/9.295638/4.167405, 8.991759, 0.9588696
+#D-add numberfire features: rf_04numberfire: 10/27-11/5, 17/20, 20, 0.428, 74.71894/60.88204, 3.654075/8.507217/3.711897, 8.580198, 0.9484206
+#D-fixed bad rotoguru data: rf_05fixrotoguru: 10/27-11/5, 17/20, 20, 0.417, 76.52583/59.93656, 3.609373/8.581317/3.778761, 8.573306, 0.9521481
+#D-add 11/6: rf_06nov6: 10/27-11/5, 17/20, 20, 0.462, 77.185/59.41379, 3.735602/8.460795/3.687973, 8.555099, 0.9583455
+#D-add rotogrinder points: rf_07RGpoints: 10/27-11/6, 18/21, 20, 0.496, 69.95476/63.21567, 3.4776/8.341828/3.509083, 8.280576, 0.9873654
+#D-add more RG features: rf_08moreRG: 10/27-11/6, 34/37, 20, 0.653, 71.34992/62.48205, 3.530176/8.411089/3.506541, 8.114273, 0.9488803
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
 
@@ -41,17 +42,19 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_RGpoints'
+FILENAME = 'rf_moreRG'
 END_DATE = '2016-11-06'
 N_TREE = 20
-PLOT = 'fi'
+PLOT = 'Scores' #fi, Scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
 F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
-F.ROTOGRINDER = c('RG_points')
+F.ROTOGRINDER = c('RG_points', 'RG_ppdk', 'RG_contr',
+                  'RG_movement', 'RG_line', 'RG_total', 'RG_overunder', 'RG_minutes',
+                  'RG_2', 'RG_15', 'RG_19', 'RG_20', 'RG_28', 'RG_43', 'RG_50', 'RG_51', 'RG_58')
 FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.ROTOGRINDER)
 
 #============== Functions ===============
@@ -73,7 +76,7 @@ computeError = function(y, yhat) {
 }
 
 #I do not understand any of this code, I borrowed it from a kaggler
-plotImportances = function(model, max=20, save=FALSE) {
+plotImportances = function(model, max=50, save=FALSE) {
   cat('Plotting Feature Importances...\n')
 
   # Get importance
