@@ -7,6 +7,8 @@
 #D-add 11/6: rf_06nov6: 10/27-11/5, 17/20, 20, 0.462, 77.185/59.41379, 3.735602/8.460795/3.687973, 8.555099, 0.9583455
 #D-add rotogrinder points: rf_07RGpoints: 10/27-11/6, 18/21, 20, 0.496, 69.95476/63.21567, 3.4776/8.341828/3.509083, 8.280576, 0.9873654
 #D-add more RG features: rf_08moreRG: 10/27-11/6, 34/37, 20, 0.653, 71.34992/62.48205, 3.530176/8.411089/3.506541, 8.114273, 0.9488803
+#D-add even more RG PlayerProjections: rf_09moreRG2: 10/27-11/6, 40/43, 20, 0.683, 70.67087/62.83912, 3.423439/8.424967/3.462286, 8.162732, 0.9589351
+
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
 
@@ -42,19 +44,23 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_moreRG'
+FILENAME = 'rf_09moreRG2'
 END_DATE = '2016-11-06'
 N_TREE = 20
-PLOT = 'Scores' #fi, Scores,
+PLOT = 'fi' #fi, Scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
 F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
-F.ROTOGRINDER = c('RG_points', 'RG_ppdk', 'RG_contr',
-                  'RG_movement', 'RG_line', 'RG_total', 'RG_overunder', 'RG_minutes',
+F.ROTOGRINDER = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
+                  'RG_line',  'RG_movement', 'RG_overunder', 'RG_total',
+                  'RG_contr', 'RG_pownpct',
+                  'RG_rankdiff', 'RG_saldiff',
+                  'RG_deviation', 'RG_minutes',
                   'RG_2', 'RG_15', 'RG_19', 'RG_20', 'RG_28', 'RG_43', 'RG_50', 'RG_51', 'RG_58')
+
 FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.ROTOGRINDER)
 
 #============== Functions ===============
@@ -76,7 +82,7 @@ computeError = function(y, yhat) {
 }
 
 #I do not understand any of this code, I borrowed it from a kaggler
-plotImportances = function(model, max=50, save=FALSE) {
+plotImportances = function(model, max=100, save=FALSE) {
   cat('Plotting Feature Importances...\n')
 
   # Get importance
@@ -92,7 +98,7 @@ plotImportances = function(model, max=50, save=FALSE) {
   rankImportance = varImportance %>%
     mutate(Rank = paste0('#',dense_rank(desc(Importance))))
 
-  if (save) png(paste0('Importances_', FILENAME, '.png'), width=500, height=350)
+  if (save) png(paste0('plots/Importances_', FILENAME, '.png'), width=500, height=nrow(importances)*10)
   print(ggplot(rankImportance, aes(x = reorder(Variables, Importance),
                                    y = Importance, fill = Importance)) +
           geom_bar(stat='identity') +
@@ -142,7 +148,7 @@ getLowestWinningScore = function(contestData, dateStr) {
 }
 
 plotScores = function(dateStrs, y, yLow, yHigh, save=FALSE, name=NULL, ...) {
-  if (save) png(paste0(name, '.png'), width=500, height=350)
+  if (save) png(paste0('plots/', name, '.png'), width=500, height=350)
 
   dates = as.Date(dateStrs)
 
@@ -242,9 +248,9 @@ cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, save=PROD_RUN)
-if (PROD_RUN || PLOT == 'Scores') plotScores(dateStrs, myTeamActualFantasyPointss, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
-#if (PROD_RUN || PLOT == 'RMSE') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
-#if (PROD_RUN || PLOT == 'ScoreRatios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
-if (PROD_RUN || PLOT == 'RMSE_ScoreRatios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
+if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, myTeamActualFantasyPointss, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
+#if (PROD_RUN || PLOT == 'rmse') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
+#if (PROD_RUN || PLOT == 'scoreratios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
+if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
 
 cat('Done!\n')

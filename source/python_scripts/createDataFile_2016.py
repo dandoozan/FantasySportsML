@@ -45,6 +45,55 @@ def parseRotoGuruRow(row, dateStr):
 def parseNumberFireRow(row, dateStr):
     return row['NF_Name'].lower(), row
 def parseRotoGrinderRow(row, dateStr):
+    #handle pownpct
+    #remove the '%' from pownpct (eg. '25.00%' -> 25.00)
+    #set to 0 if pownpct is null
+    row['RG_pownpct'] = float(row['RG_pownpct'][:-1]) if (row['RG_pownpct'] and row['RG_pownpct'][-1] == '%') else 0.
+
+    #handle deviation, ceil, and floor
+    #first, set deviation to 0 if it is null
+    if row['RG_deviation'] == None:
+        #also verify that ceil and lower both equal null here
+        if row['RG_ceil'] != None or row['RG_floor'] != None:
+            util.stop('deviation is null, but ceil or floor are not.')
+        row['RG_deviation'] = 0.
+    else:
+        row['RG_deviation'] = float(row['RG_deviation'])
+    #now, for ceil and floor, set them to +/- devation if
+    #they are null (there are more of these nulls than deviation nulls)
+    row['RG_ceil'] = (float(row['RG_points']) + row['RG_deviation']) if row['RG_ceil'] == None else float(row['RG_ceil'])
+    row['RG_floor'] = (float(row['RG_points']) - row['RG_deviation']) if row['RG_floor'] == None else float(row['RG_floor'])
+
+    #handle saldiff and rankdiff
+    #set salarydiff and rankdiff to 0 if they are null for now, but manually compute
+    #it in the future when i get DK salary and rank
+    row['RG_saldiff'] = 0 if row['RG_saldiff'] == None else int(row['RG_saldiff'])
+    row['RG_rankdiff'] = 0 if row['RG_rankdiff'] == None else int(row['RG_rankdiff'])
+
+    #parse everything else to int/float to make sure
+    #they're all in the right format
+    intCols = ['RG_line', 'RG_movement']
+    floatCols = ['RG_overunder', 'RG_points', 'RG_ppdk',
+        'RG_total', 'RG_contr', 'RG_minutes',
+        'RG_2', 'RG_15', 'RG_19', 'RG_20', 'RG_28',
+        'RG_43', 'RG_50', 'RG_51', 'RG_58']
+
+    for col in intCols:
+        try:
+            row[col] = int(row[col])
+        except Exception as e:
+            print col
+            util.printObj(row)
+            raise(e)
+
+    for col in floatCols:
+        try:
+            row[col] = float(row[col])
+        except Exception as e:
+            print col
+            util.printObj(row)
+            raise(e)
+
     return row['RG_player_name'].strip().lower(), row
 
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
@@ -377,13 +426,30 @@ DATA_SOURCES = [
         'name': 'RotoGrinder PlayerProjections',
         'handleDuplicates': handleRotoGrinderDuplicates,
         'features': [
-            'RG_points', 'RG_ppdk', 'RG_contr',
-            'RG_movement', 'RG_line', 'RG_total', 'RG_overunder', 'RG_minutes',
+            #Projection
+            'RG_ceil',
+            'RG_floor',
+            'RG_points',
+            'RG_ppdk',
 
-            #these have NAs, explore them more before adding them as features
-            #'RG_deviation', 'RG_saldiff', 'RG_rankdiff', #677 NAs
-            #'RG_ceil', 'RG_floor', #696 NAs
-            #'RG_pownpct', #711 NAs
+            #Vegas Lines
+            'RG_line', #chance that this player's team will win, lower number = higher chance
+            'RG_movement', #diff between current 'total' and original 'total' when the vegas line opened (this changes by the minute/hour)
+            'RG_overunder', #total points scored in the game
+            'RG_total', #total points scored by player's team
+
+            #Premium
+            #'RG_rank', #rank at fanduel #always null
+            'RG_contr', #contrarian rating (projected points / pown%)
+            'RG_pownpct', #projected ownership percentage in large field tournaments
+
+            #FD vs DK
+            'RG_rankdiff', #diff between FD and DK rank (FD - DK)
+            'RG_saldiff', #diff between FD and DK salaries (FD - DK)
+
+            #Other
+            'RG_deviation', #i suspect this is stdev of score, but im not sure
+            'RG_minutes', #? im not sure if this is projected minutes or actual average or something else
 
             #inside player obj
             #'RG_hand',
