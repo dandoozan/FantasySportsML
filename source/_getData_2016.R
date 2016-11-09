@@ -33,7 +33,7 @@ imputeMissingValues = function(data) {
   data[is.na(data$RG_rank20), 'RG_rank20'] = 0
 
   #set all NAs to 0 in RotoGrinder cols (same reason as above)
-  for (colName in F.ROTOGRINDER) {
+  for (colName in F.RG.PP) {
     data[is.na(data[[colName]]), colName] = 0
   }
 

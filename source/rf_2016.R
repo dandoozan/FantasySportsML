@@ -6,12 +6,15 @@
 #D-fixed bad rotoguru data: rf_05fixrotoguru: 10/27-11/5, 17/20, 20, 0.417, 76.52583/59.93656, 3.609373/8.581317/3.778761, 8.573306, 0.9521481
 #D-add 11/6: rf_06nov6: 10/27-11/5, 17/20, 20, 0.462, 77.185/59.41379, 3.735602/8.460795/3.687973, 8.555099, 0.9583455
 #D-add rotogrinder points: rf_07RGpoints: 10/27-11/6, 18/21, 20, 0.496, 69.95476/63.21567, 3.4776/8.341828/3.509083, 8.280576, 0.9873654
-#D-add more RG features: rf_08moreRG: 10/27-11/6, 34/37, 20, 0.653, 71.34992/62.48205, 3.530176/8.411089/3.506541, 8.114273, 0.9488803
+#D-add more RG features: rf_08moreRG: 10/27-11/6, 34/37, 20, 0.653, 71.34992/62.48205, 3.530176/8.411089/3.506541, 8.114273, 0.9488803 <-- new best!
 #D-add even more RG PlayerProjections: rf_09moreRG2: 10/27-11/6, 40/43, 20, 0.769, 73.0322/61.59746, 3.566091/8.167627/3.516046, 8.156932, 0.9746103
 #D-add rest of RG PlayerProjections features: rf_10moreRG3: 10/27-11/6, 50/53, 20, 0.851, 70.92486/62.70556, 3.356778/8.357909/3.521121, 8.126946, 0.9400258
+#-add RG defense vs position: rf_11DvP: 10/27-11/6, 60/63, 20, 0.928, 72.85086/61.69281, 3.3672/8.387346/3.446881, 8.104879, 0.9684187 <-- new best!
+#-add def vs my position and remove the rest of def vs position cols
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
+#-add first day back
 
 #-add rotogrinder individual stats:
   #-PlayerProjections
@@ -45,7 +48,7 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_10moreRG3'
+FILENAME = 'rf_11DvP'
 END_DATE = '2016-11-06'
 N_TREE = 20
 PLOT = 'scores' #fi, Scores,
@@ -55,7 +58,7 @@ Y_NAME = 'FantasyPoints'
 F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
-F.ROTOGRINDER = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
+F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
                   'RG_line',  'RG_movement', 'RG_overunder', 'RG_total',
                   'RG_contr', 'RG_pownpct', 'RG_rank',
                   'RG_rankdiff', 'RG_saldiff',
@@ -63,8 +66,10 @@ F.ROTOGRINDER = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
                   'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
                   'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58',
                   'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
+F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG',
+             'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.ROTOGRINDER)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.DVP)
 
 #============== Functions ===============
 

@@ -128,6 +128,10 @@ def addPrefixToObj(obj, prefix):
     map(lambda x: renameKey(obj, x, prefix + x), obj.keys())
 
 
+def mapSome(func, obj, keyNames):
+    for key in keyNames:
+        obj[key] = func(obj[key])
+
 #================= date stuff ===================
 def parseDate(dateStr, dateFormat='%Y-%m-%d'):
     from datetime import datetime

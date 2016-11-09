@@ -14,7 +14,7 @@ X_NAMES = []
 
 TBX_MISSING_PLAYERS = {}
 
-def parseFanDuelRow(row, dateStr):
+def parseFanDuelRow(row, dateStr, prefix):
     #add Name, which is a join of firstname and lastname
     row['Name'] = ' '.join([row['First Name'], row['Last Name']])
 
@@ -32,19 +32,19 @@ def parseFanDuelRow(row, dateStr):
 
     playerName = row['Name'].lower()
     return playerName, row
-def parseRotoGuruRow(row, dateStr):
+def parseRotoGuruRow(row, dateStr, prefix):
     #convert to float just to make sure all values can be parsed to floats
     row['FantasyPoints'] = float(row['FantasyPoints'])
 
-    #reverse name bc it's in format: "lastname, firstname"
+    #reverse name bc it's in format: 'lastname, firstname'
     playerName = row['Name'].split(', ')
     playerName.reverse()
     playerName = ' '.join(playerName).lower()
 
     return playerName, row
-def parseNumberFireRow(row, dateStr):
+def parseNumberFireRow(row, dateStr, prefix):
     return row['NF_Name'].lower(), row
-def parseRotoGrinderRow(row, dateStr):
+def parseRotoGrinderPlayerProjectionsRow(row, dateStr, prefix):
     #handle pownpct
     #remove the '%' from pownpct (eg. '25.00%' -> 25.00)
     #set to 0 if pownpct is null
@@ -78,10 +78,8 @@ def parseRotoGrinderRow(row, dateStr):
         'RG_points15', 'RG_points19', 'RG_points20',
         'RG_points28', 'RG_points43',
         'RG_points50', 'RG_points51', 'RG_points58']
-    for col in intCols:
-        row[col] = int(row[col])
-    for col in floatCols:
-        row[col] = float(row[col])
+    util.mapSome(int, row, intCols)
+    util.mapSome(float, row, floatCols)
 
     #now, add the extra data under salaries obj (which is other sites' salary, rank info)
     salaries = row['RG_schedule']['data']['salaries']['collection']
@@ -99,6 +97,25 @@ def parseRotoGrinderRow(row, dateStr):
         else:
             row['RG_salary' + siteId] = float(dataObj['salary'])
     return row['RG_player_name'].strip().lower(), row
+def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
+    #convert each to int/float
+    util.mapSome(int, row, [
+        prefix + 'CRK',
+        prefix + 'SFRK',
+        prefix + 'SGRK',
+        prefix + 'PFRK',
+        prefix + 'PGRK',
+    ])
+    util.mapSome(float, row, [
+        prefix + 'CFPPG',
+        prefix + 'SFFPPG',
+        prefix + 'SGFPPG',
+        prefix + 'PFFPPG',
+        prefix + 'PGFPPG',
+    ])
+
+    team = row[prefix + 'TEAM'].strip()
+    return team, row
 
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
     oldMatchPoints = float(oldMatch['RG_points'])
@@ -123,7 +140,6 @@ def loadJsonFile(fullPathFilename, keyRenameMap=None, prefix=''):
             util.addPrefixToObj(item, prefix)
 
     return jsonData
-
 def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features, dateStr, isJson, keyRenameMap={}, delimiter=',', prefix=''):
     data = {}
 
@@ -134,7 +150,7 @@ def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features
     if util.fileExists(fullPathFilename):
         rows = loadJsonFile(fullPathFilename, keyRenameMap, prefix) if isJson else util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
         for row in rows:
-            playerName, playerData = parseRowFunction(row, dateStr)
+            playerName, playerData = parseRowFunction(row, dateStr, prefix)
             if playerName in data:
                 if handleDuplicates:
                     util.headsUp('Found duplicate name: ' + playerName)
@@ -149,10 +165,10 @@ def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features
             #    print playerData
             data[playerName] = util.filterObj(features, playerData)
     else:
-        util.headsUp('File not found: ' + fullPathFilename)
+        #util.headsUp('File not found: ' + fullPathFilename)
+        pass
 
     return data
-
 def loadDataFromDir(fullPathToDir, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap={}, delimiter=',', prefix=''):
     print '    Loading dir:', fullPathToDir
     data = {}
@@ -163,7 +179,8 @@ def loadDataFromDir(fullPathToDir, parseRowFunction, handleDuplicates, features,
         if dateData:
             data[currDateStr] = dateData
         else:
-            util.headsUp('Data not found for date=' + currDateStr)
+            #util.headsUp('Data not found for date=' + currDateStr)
+            pass
         currDate = currDate + ONE_DAY
 
     return data
@@ -224,16 +241,23 @@ def findMatchingName(name, newData, nameMap={}):
     return None
 def playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
     return (dateStr in knownMissingObj and name in knownMissingObj[dateStr]) or name in knownMissingObj
-def mergeData(obj1, obj2, nameMap, knownMissingObj, containsY):
+def getTeam(playerData):
+    return playerData['Team']
+def getOppTeam(playerData):
+    return playerData['Opponent']
+def mergeData(obj1, obj2, isTeam, isOpp, nameMap, knownMissingObj, containsY):
     print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
     for dateStr in dateStrs:
         if dateStr in obj2:
             for name in obj1[dateStr]:
+                playerData = obj1[dateStr][name]
+                if isTeam:
+                    name = getOppTeam(playerData) if isOpp else getTeam(playerData)
                 obj2Name = findMatchingName(name, obj2[dateStr], nameMap)
                 if obj2Name and obj2Name in obj2[dateStr]:
-                    obj1[dateStr][name].update(obj2[dateStr][obj2Name])
+                    playerData.update(obj2[dateStr][obj2Name])
                 else:
                     if not playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
                         #tbx
@@ -247,7 +271,7 @@ def mergeData(obj1, obj2, nameMap, knownMissingObj, containsY):
                         #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
                         if containsY:
                             #set FantasyPoints to 0 for these people who are known to be missing
-                            obj1[dateStr][name].update({ 'FantasyPoints': 0 })
+                            playerData.update({ 'FantasyPoints': 0 })
 
         else:
             util.headsUp('Date not found in obj2, date=' + dateStr)
@@ -427,7 +451,7 @@ DATA_SOURCES = [
         'prefix': 'NF_',
     },
     {
-        'name': 'RotoGrinder PlayerProjections',
+        'name': 'RotoGrinderPlayerProjections',
         'handleDuplicates': handleRotoGrinderDuplicates,
         'features': [
             #Projection
@@ -551,8 +575,73 @@ DATA_SOURCES = [
             'glenn robinson iii': 'glenn robinson',
             'kelly oubre jr.': 'kelly oubre',
         },
-        'parseRowFunction': parseRotoGrinderRow,
+        'parseRowFunction': parseRotoGrinderPlayerProjectionsRow,
         'prefix': 'RG_',
+    },
+    {
+        'name': 'RotoGrinderDefenseVsPositionCheatSheet',
+        'features': [
+            'RG_OPP_DVP_CFPPG',
+            'RG_OPP_DVP_CRK',
+            'RG_OPP_DVP_PFFPPG',
+            'RG_OPP_DVP_PFRK',
+            'RG_OPP_DVP_PGFPPG',
+            'RG_OPP_DVP_PGRK',
+            'RG_OPP_DVP_SFFPPG',
+            'RG_OPP_DVP_SFRK',
+            'RG_OPP_DVP_SGFPPG',
+            'RG_OPP_DVP_SGRK',
+        ],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'DefenseVsPositionCheatSheet'),
+        'isJson': True,
+        'isOpp': True,
+        'isTeam': True,
+        'keyRenameMap': {
+            'C FPPG': 'CFPPG',
+            'C RK': 'CRK',
+            'PF FPPG': 'PFFPPG',
+            'PF RK': 'PFRK',
+            'PG FPPG': 'PGFPPG',
+            'PG RK': 'PGRK',
+            'SF FPPG': 'SFFPPG',
+            'SF RK': 'SFRK',
+            'SG FPPG': 'SGFPPG',
+            'SG RK': 'SGRK'
+        },
+        'nameMap': {
+            'ATL': 'Atlanta Hawks',
+            'CHI': 'Chicago Bulls',
+            'CLE': 'Cleveland Cavaliers',
+            'BOS': 'Boston Celtics',
+            'BKN': 'Brooklyn Nets',
+            'CHA': 'Charlotte Hornets',
+            'DAL': 'Dallas Mavericks',
+            'DEN': 'Denver Nuggets',
+            'DET': 'Detroit Pistons',
+            'GS': 'Golden State Warriors',
+            'HOU': 'Houston Rockets',
+            'IND': 'Indiana Pacers',
+            'LAC': 'Los Angeles Clippers',
+            'LAL': 'Los Angeles Lakers',
+            'MEM': 'Memphis Grizzlies',
+            'MIA': 'Miami Heat',
+            'MIL': 'Milwaukee Bucks',
+            'MIN': 'Minnesota Timberwolves',
+            'NO': 'New Orleans Pelicans',
+            'NY': 'New York Knicks',
+            'OKC': 'Oklahoma City Thunder',
+            'ORL': 'Orlando Magic',
+            'PHI': 'Philadelphia 76ers',
+            'PHO': 'Phoenix Suns',
+            'POR': 'Portland Trail Blazers',
+            'SAC': 'Sacramento Kings',
+            'SA': 'San Antonio Spurs',
+            'TOR': 'Toronto Raptors',
+            'UTA': 'Utah Jazz',
+            'WAS': 'Washington Wizards',
+        },
+        'parseRowFunction': parseRotoGrinderDefenseVsPositionCheatSheetRow,
+        'prefix': 'RG_OPP_DVP_',
     },
 ]
 
@@ -568,6 +657,8 @@ for dataSource in DATA_SOURCES:
     fullPathToDir = dataSource['fullPathToDir']
     handleDuplicates = util.getObjValue(dataSource, 'handleDuplicates', None)
     isJson = util.getObjValue(dataSource, 'isJson', False)
+    isOpp = util.getObjValue(dataSource, 'isOpp', False)
+    isTeam = util.getObjValue(dataSource, 'isTeam', False)
     keyRenameMap = util.getObjValue(dataSource, 'keyRenameMap', {})
     knownMissingObj = util.getObjValue(dataSource, 'knownMissingObj', {})
     nameMap = util.getObjValue(dataSource, 'nameMap', {})
@@ -580,7 +671,7 @@ for dataSource in DATA_SOURCES:
     if data == None:
         data = newData
     else:
-        mergeData(data, newData, nameMap, knownMissingObj, containsY)
+        mergeData(data, newData, isTeam, isOpp, nameMap, knownMissingObj, containsY)
 
 writeData(OUTPUT_FILE, data)
 
