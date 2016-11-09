@@ -6,7 +6,7 @@ import _util as util
 
 ROTO_GRINDER_DIR = 'data/rawDataFromRotoGrinders'
 FILENAME = date.today().strftime('%Y-%m-%d')
-SLEEP = 5
+SLEEP = 10
 
 PAGES_TO_SCRAPE = [
     {
