@@ -7,7 +7,7 @@
 #D-add 11/6: rf_06nov6: 10/27-11/5, 17/20, 20, 0.462, 77.185/59.41379, 3.735602/8.460795/3.687973, 8.555099, 0.9583455
 #D-add rotogrinder points: rf_07RGpoints: 10/27-11/6, 18/21, 20, 0.496, 69.95476/63.21567, 3.4776/8.341828/3.509083, 8.280576, 0.9873654
 #D-add more RG features: rf_08moreRG: 10/27-11/6, 34/37, 20, 0.653, 71.34992/62.48205, 3.530176/8.411089/3.506541, 8.114273, 0.9488803
-#D-add even more RG PlayerProjections: rf_09moreRG2: 10/27-11/6, 40/43, 20, 0.683, 70.67087/62.83912, 3.423439/8.424967/3.462286, 8.162732, 0.9589351
+#D-add even more RG PlayerProjections: rf_09moreRG2: 10/27-11/6, 40/43, 20, 0.769, 73.0322/61.59746, 3.566091/8.167627/3.516046, 8.156932, 0.9746103
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
