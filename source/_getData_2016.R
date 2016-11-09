@@ -42,6 +42,17 @@ imputeMissingValues = function(data) {
 
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
+
+  #create OPP_DVP_FPPG and OPP_DVP_RANK, which is the opponent's
+  #defense vs position points allowed and rank, respectively against
+  #each player's own position
+  data$OPP_DVP_FPPG = NA
+  data$OPP_DVP_RANK = NA
+  for (position in levels(data$Position)) {
+    data[data$Position == position, 'OPP_DVP_FPPG'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'FPPG')]
+    data[data$Position == position, 'OPP_DVP_RANK'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'RK')]
+  }
+
   return(data)
 }
 

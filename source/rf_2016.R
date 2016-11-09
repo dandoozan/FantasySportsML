@@ -9,8 +9,8 @@
 #D-add more RG features: rf_08moreRG: 10/27-11/6, 34/37, 20, 0.653, 71.34992/62.48205, 3.530176/8.411089/3.506541, 8.114273, 0.9488803 <-- new best!
 #D-add even more RG PlayerProjections: rf_09moreRG2: 10/27-11/6, 40/43, 20, 0.769, 73.0322/61.59746, 3.566091/8.167627/3.516046, 8.156932, 0.9746103
 #D-add rest of RG PlayerProjections features: rf_10moreRG3: 10/27-11/6, 50/53, 20, 0.851, 70.92486/62.70556, 3.356778/8.357909/3.521121, 8.126946, 0.9400258
-#-add RG defense vs position: rf_11DvP: 10/27-11/6, 60/63, 20, 0.928, 72.85086/61.69281, 3.3672/8.387346/3.446881, 8.104879, 0.9684187 <-- new best!
-#-add def vs my position and remove the rest of def vs position cols
+#D-add RG defense vs position: rf_11DvP: 10/27-11/6, 60/63, 20, 0.928, 72.85086/61.69281, 3.3672/8.387346/3.446881, 8.104879, 0.9684187 <-- new best!
+#D-add def vs my position: rf_12mydvp: 10/27-11/6, 52/65, 20, 0.819, 70.92388/62.70608, 3.426565/8.297581/3.437354, 8.078652, 0.9607791 <-- new best!
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -48,13 +48,14 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_11DvP'
+FILENAME = 'rf_12mydvp'
 END_DATE = '2016-11-06'
 N_TREE = 20
 PLOT = 'scores' #fi, Scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
+F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent')
 F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
@@ -66,10 +67,10 @@ F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
                   'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
                   'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58',
                   'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
-F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG',
-             'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
+#F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
+F.MINE = c('OPP_DVP_FPPG', 'OPP_DVP_RANK')
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.DVP)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.MINE)
 
 #============== Functions ===============
 
