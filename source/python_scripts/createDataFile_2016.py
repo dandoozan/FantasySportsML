@@ -45,29 +45,67 @@ def parseRotoGuruRow(row, dateStr):
     return playerName, row
 def parseNumberFireRow(row, dateStr):
     return row['NF_Name'].lower(), row
-def loadDataFromFile(fullPathFilename, parseRowFunction, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
-    print '    Loading file: %s...' % fullPathFilename
+def parseRotoGrinderRow(row, dateStr):
+    return row['RG_player_name'].strip().lower(), row
 
+def handleRotoGrinderDuplicates(oldMatch, newMatch):
+    oldMatchPoints = float(oldMatch['RG_points'])
+    newMatchPoints = float(newMatch['RG_points'])
+    if oldMatchPoints > 0 and newMatchPoints == 0:
+        return oldMatch
+    if newMatchPoints > 0 and oldMatchPoints == 0:
+        return newMatch
+    util.stop('In handleDuplicates for RotoGrinder, and dont know which to return')
+
+def loadJsonFile(fullPathFilename, prefix=''):
+    jsonData = util.loadJsonFile(fullPathFilename)
+
+    #append prefix to all keys
+    for item in jsonData:
+        util.addPrefixToObj(item, prefix)
+
+    return jsonData
+
+def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features, dateStr, isJson, keyRenameMap={}, delimiter=',', prefix=''):
     data = {}
 
-    csvData = util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
-    for row in csvData:
-        playerName, playerData = parseRowFunction(row, dateStr)
-        if playerName in data:
-            util.stop('Got a duplicate name: ' + playerName)
-        data[playerName] = util.filterObj(features, playerData)
+    filename = util.createJsonFilename(dateStr) if isJson else util.createCsvFilename(dateStr)
+    print '    Loading file: %s...' % filename
+
+    fullPathFilename = util.createFullPathFilename(fullPathToDir, filename)
+    if util.fileExists(fullPathFilename):
+        rows = loadJsonFile(fullPathFilename, prefix) if isJson else util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
+        for row in rows:
+            playerName, playerData = parseRowFunction(row, dateStr)
+            if playerName in data:
+                if handleDuplicates:
+                    util.headsUp('Found duplicate name: ' + playerName)
+                    newPlayerData = handleDuplicates(data[playerName], playerData)
+                    if newPlayerData:
+                        data[playerName] = newPlayerData
+                    else:
+                        util.stop('Handle duplicates failed to give back new data')
+                else:
+                    util.stop('Got a duplicate name: ' + playerName)
+            #if fullPathFilename == 'data/rawDataFromRotoGrinders/PlayerProjections/2016-10-26.json':
+            #    print playerData
+            data[playerName] = util.filterObj(features, playerData)
+    else:
+        util.headsUp('File not found: ' + fullPathFilename)
+
     return data
-def loadDataFromDir(fullPathToDir, parseRowFunction, features, keyRenameMap={}, delimiter=',', prefix=''):
+
+def loadDataFromDir(fullPathToDir, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap={}, delimiter=',', prefix=''):
+    print '    Loading dir:', fullPathToDir
     data = {}
     currDate = SEASON_START_DATE
     while currDate <= YESTERDAY:
         currDateStr = util.formatDate(currDate)
-        fullPathFilename = util.createFullPathFilename(fullPathToDir, util.createCsvFilename(currDateStr))
-        if util.fileExists(fullPathFilename):
-            dateData = loadDataFromFile(fullPathFilename, parseRowFunction, features, currDateStr, keyRenameMap, delimiter, prefix)
+        dateData = loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features, currDateStr, isJson, keyRenameMap, delimiter, prefix)
+        if dateData:
             data[currDateStr] = dateData
         else:
-            util.headsUp('File not found for date=' + currDateStr)
+            util.headsUp('Data not found for date=' + currDateStr)
         currDate = currDate + ONE_DAY
 
     return data
@@ -330,6 +368,74 @@ DATA_SOURCES = [
         'parseRowFunction': parseNumberFireRow,
         'prefix': 'NF_',
     },
+    {
+        'name': 'RotoGrinder PlayerProjections',
+        'handleDuplicates': handleRotoGrinderDuplicates,
+        'features': ['RG_points'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'PlayerProjections'),
+        'isJson': True,
+        'knownMissingObj': {
+            'cory jefferson',
+            'louis amundson',
+            'derrick favors',
+            'kevon looney',
+            'tim quarterman',
+            'alec burks',
+            'davis bertans',
+            'nicolas laprovittola',
+            'damien inglis',
+            'guillermo hernangomez',
+            'phil pressey',
+            'damian jones',
+            'raul neto',
+            'livio jean-charles',
+            'henry sims',
+            'dahntay jones',
+            'cameron jones',
+            'pat connaughton',
+            'chasson randle',
+            'grant jerrett',
+            'mindaugas kuzminskas',
+            'bryn forbes',
+            'joel bolomboy',
+            'maurice ndour',
+            'john holland',
+            'jake layman', 'javale mcgee', 'j.p. tokoto', 'joel anthony', 'shabazz napier', 'danny green', 'dejounte murray', 'jonathan holmes', 'marshall plumlee', 'patricio garino', 'elliot williams', 'greg stiemsma', 'markel brown', 'kay felder', 'festus ezeli', 'chris johnson',
+            'skal labissiere', 'brian roberts', 'adreian payne', 'tony allen', 'brandan wright', 'darrell arthur', 'nick collison', 'sam dekker', 'jarell martin', 'georges niang', 'tyus jones',
+            'lucas nogueira', 'bismack biyombo', 'caris levert', 'thon maker', 'georgios papagiannis', 'josh huestis', 'christian wood', 'henry ellenson', 'udonis haslem', 'wayne ellington', 'mike miller', 'josh mcroberts', 'kevin seraphin', 'jose calderon',
+            'nerlens noel', 'ivica zubac', 'a.j. hammons', 'timothe luwawu-cabarrot', 'isaiah whitehead', 'devin harris', 'derrick jones jr.', 'josh richardson', 'malachi richardson', 'steve novak', 'quincy acy', 'jordan mickey', 'patrick beverley', 'treveon graham', 'malik beasley', 'chinanu onuaku', 'arinze onuaku', 'demetrius jackson', 'jordan hill', 'james young', 'john jenkins', 'anthony bennett', 'john lucas iii', 'bruno caboclo', 'bobby brown', 'chandler parsons', 'marcus smart', 'kelly olynyk', 'gary harris', 'michael gbinije', 'alan williams', 'jrue holiday', 'randy foye', 'rakeem christmas', 'darrun hilliard', 'dragan bender', 'kyle wiltjer', 'jakob poeltl', 'frank kaminsky', 'fred vanvleet', 'boban marjanovic',
+            'jarnell stokes',
+            'dorian finney-smith', 'aaron harrison', 'tony snell', 'cheick diallo',
+            'roy hibbert', 'james michael mcadoo', 'lance stephenson', 'paul zipser', 'jeremy lamb', 'sheldon mcclellan', 'damjan rudez', 'michael carter-williams', 'alan anderson', 'anderson varejao', 'brice johnson', 'paul pierce', 'reggie bullock', 'rodney stuckey', 'stephen zimmerman jr.', 'daniel ochefu', 'c.j. wilcox', 'patrick mccaw', 'george hill', 'diamond stone',
+            'danuel house', 'derrick williams', 'r.j. hunter', 'boris diaw',
+            'anthony tolliver', 'darren collison', 'metta world peace', 'will barton', 'deron williams', 'leandro barbosa', 'nicolas brussino', 'jae crowder', 'marcelo huertas', 'gerald green', 'al horford', 'miles plumlee', 'thomas robinson', 'dirk nowitzki', 'michael beasley',
+            'tiago splitter', 'cole aldrich', 'ricky rubio', 'rudy gay', 'chris andersen', 'deandre\' bembry', 'jordan farmar', 'mike scott', 'tony parker', 'anthony morrow', 'john wall', 'jerian grant', 'walter tavares', 'taurean prince', 'james jones',
+            'sasha vujacic', 'troy williams', 'chris mccullough', 'greivis vasquez', 'dante cunningham', 'tomas satoransky', 'jeremy lin', 'troy daniels', 'gordon hayward',
+            'omri casspi', 'jordan mcrae', 'juancho hernangomez',
+            'joel embiid', 'brandon bass', 'ron baker', 'jerami grant', 'timofey mozgov', 'nene hilario',
+            'john henson', 'channing frye', 'c.j. watson', 'jeff withey', 'jahlil okafor', 'deyonta davis',
+            'bobby portis',
+            'jason terry', 'lamarcus aldridge', 'montrezl harrell', 'salah mejri',
+            'denzel valentine', 'glenn robinson iii', 'brook lopez', 'rashad vaughn', 'cristiano felicio',
+            'aaron brooks', 'joffrey lauvergne',
+        },
+        'nameMap': {
+            'maurice harkless': 'moe harkless',
+            'james michael mcadoo': 'james mcadoo',
+            'lou williams': 'louis williams',
+            'joe young': 'joseph young',
+            'juancho hernangomez': 'juan hernangomez',
+            'cristiano felicio': 'cristiano da silva felicio',
+            'deandre\' bembry': 'deandre bembry',
+            'wade baldwin iv': 'wade baldwin',
+            'larry nance jr.': 'larry nance',
+            'stephen zimmerman jr.': 'stephen zimmerman',
+            'glenn robinson iii': 'glenn robinson',
+            'kelly oubre jr.': 'kelly oubre',
+        },
+        'parseRowFunction': parseRotoGrinderRow,
+        'prefix': 'RG_',
+    },
 ]
 
 #load fanduel data
@@ -342,13 +448,15 @@ for dataSource in DATA_SOURCES:
     delimiter = util.getObjValue(dataSource, 'delimiter', ',')
     features = dataSource['features']
     fullPathToDir = dataSource['fullPathToDir']
+    handleDuplicates = util.getObjValue(dataSource, 'handleDuplicates', None)
+    isJson = util.getObjValue(dataSource, 'isJson', False)
     keyRenameMap = util.getObjValue(dataSource, 'keyRenameMap', {})
     knownMissingObj = util.getObjValue(dataSource, 'knownMissingObj', {})
     nameMap = util.getObjValue(dataSource, 'nameMap', {})
     parseRowFunction = dataSource['parseRowFunction']
     prefix = util.getObjValue(dataSource, 'prefix', '')
 
-    newData = loadDataFromDir(fullPathToDir, parseRowFunction, features, keyRenameMap, delimiter, prefix)
+    newData = loadDataFromDir(fullPathToDir, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap, delimiter, prefix)
     X_NAMES.extend(features)
 
     if data == None:

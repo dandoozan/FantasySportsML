@@ -28,9 +28,9 @@ def createHeaders(xAuthToken, referer, customHeaders={}):
     return headers
 def downloadData(url, xAuthToken, referer, customHeaders={}):
     #print 'Not downloading data, but here\'s:'
-    print 'url=', url
-    print 'headers:'
-    util.printObj(createHeaders(xAuthToken, referer, customHeaders))
+    #print 'url=', url
+    #print 'headers:'
+    #util.printObj(createHeaders(xAuthToken, referer, customHeaders))
     return scraper.downloadJson(url, createHeaders(xAuthToken, referer, customHeaders))
 def createFullPathFilename(dirName, prefix=''):
     return util.createFullPathFilename(util.joinDirs(PARENT_DIR, dirName), prefix + util.createJsonFilename(TODAY_STR))

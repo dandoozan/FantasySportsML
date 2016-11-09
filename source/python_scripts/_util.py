@@ -65,8 +65,7 @@ def loadCsvFile(fullPathFilename, keyRenameMap=None, delimiter=',', prefix=''):
 
             #add prefix to each key
             if prefix:
-                #note: use obj.keys() because renameKeys alters the obj
-                map(lambda x: renameKey(rowAsObj, x, prefix + x), rowAsObj.keys())
+                addPrefixToObj(rowAsObj, prefix)
 
             #strip whitespace from each value
             for key in rowAsObj:
@@ -120,8 +119,13 @@ def writeJsonData(jsonData, fullPathFilename, prettyPrint=True):
         json.dump(jsonData, f, sort_keys=True)
     f.close()
 
-def addPrefixToEachElement(arr, prefix):
+def addPrefixToArray(arr, prefix):
     return map(lambda x: prefix + x, arr)
+
+#This adds a prefix to all TOP LEVEL key names
+def addPrefixToObj(obj, prefix):
+    #note: use obj.keys() because renameKeys alters the obj
+    map(lambda x: renameKey(obj, x, prefix + x), obj.keys())
 
 
 #================= date stuff ===================

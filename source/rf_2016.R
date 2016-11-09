@@ -5,7 +5,7 @@
 #D-add numberfire features: rf_numberfire: 10/27-11/5, 17/20, 20, 0.428, 74.71894/60.88204, 3.654075/8.507217/3.711897, 8.580198, 0.9484206
 #D-fixed bad rotoguru data: rf_fixrotoguru: 10/27-11/5, 17/20, 20, 0.417, 76.52583/59.93656, 3.609373/8.581317/3.778761, 8.573306, 0.9521481
 #D-add 11/6: rf_nov6: 10/27-11/5, 17/20, 20, 0.462, 77.185/59.41379, 3.735602/8.460795/3.687973, 8.555099, 0.9583455
-#-add rotogrinder PlayerProjections:
+#D-add rotogrinder points: 10/27-11/6, 18/21, 20, 0.496, 69.95476/63.21567, 3.4776/8.341828/3.509083, 8.280576, 0.9873654
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
 
@@ -18,8 +18,8 @@
   #-SalaryCharts (multiple)
   #-MarketWatch
 #-rotogrinder team stats:
-  #-OffenseVsDefense... (multiple)
   #-DefenseVsPosition (multiple)
+  #-OffenseVsDefense... (multiple)
   #-TeamStats (multiple)
   #-VegasOdds
   #-BackToBack
@@ -41,17 +41,18 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_nov6'
+FILENAME = 'rf_RGpoints'
 END_DATE = '2016-11-06'
 N_TREE = 20
-PLOT = 'Scores'
+PLOT = 'fi'
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
 F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE)
+F.ROTOGRINDER = c('RG_points')
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.ROTOGRINDER)
 
 #============== Functions ===============
 
