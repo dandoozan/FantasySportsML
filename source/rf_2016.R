@@ -11,9 +11,8 @@
 #D-add rest of RG PlayerProjections features: rf_10moreRG3: 10/27-11/6, 50/53, 20, 0.851, 70.92486/62.70556, 3.356778/8.357909/3.521121, 8.126946, 0.9400258
 #D-add RG defense vs position: rf_11DvP: 10/27-11/6, 60/63, 20, 0.928, 72.85086/61.69281, 3.3672/8.387346/3.446881, 8.104879, 0.9684187 <-- new best!
 #D-add def vs my position: rf_12mydvp: 10/27-11/6, 52/65, 20, 0.819, 70.92388/62.70608, 3.426565/8.297581/3.437354, 8.078652, 0.9607791 <-- new best!
-#D-add nba player season-long features: rf_13nba: 10/27-11/6, 80/93, 20, 1.07, 49.71302/73.85939, 2.827531/6.956564/2.852913, 6.878917, 1.109224 <-- new best!
-
-#tbx: 70.14722/63.11447, 3.368216/8.329456/3.451713, 8.064409, 0.9656348
+#D-add nba player season-long features: rf_13nba: 10/27-11/6, 80/93, 20, 1.07, 49.71302/73.85939, 2.827531/6.956564/2.852913, 6.878917, 1.109224 <-- WRONG
+#D-fix nba data (using prevday's data): rf_14fixnba: 10/27-11/6, 80/93, 20, 1.041, 72.91909/61.65693, 3.394206/8.340627/3.441368, 8.065771, 0.955393 <-- new best
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -50,10 +49,10 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_13nba'
+FILENAME = 'rf_14fixnba'
 END_DATE = '2016-11-06'
 N_TREE = 20
-PLOT = 'fi' #fi, Scores,
+PLOT = 'scores' #fi, Scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name

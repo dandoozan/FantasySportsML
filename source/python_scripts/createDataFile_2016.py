@@ -50,9 +50,426 @@ KNOWN_ALIASES = {
     'a.j. hammons': 'aj hammons',
     'c.j. wilcox': 'cj wilcox',
     'c.j. watson': 'cj watson',
+
+    #from createDataFile.py, investigate these
+    #'amare stoudemire': 'amar\'e stoudemire',
+    #'louis amundson': 'lou amundson',
+    #'maurice williams': 'mo williams',
+    #'chuck hayes': 'charles hayes',
+}
+
+PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
+    '2016-10-26': {
+        'aaron gordon',
+        'al horford',
+        'al jefferson',
+        'alex abrines',
+        'alex len',
+        'alexis ajinca',
+        'amir johnson',
+        'andre drummond',
+        'andre roberson',
+        'andrew bogut',
+        'andrew harrison',
+        'andrew wiggins',
+        'anthony davis',
+        'anthony tolliver',
+        'aron baynes',
+        'arron afflalo',
+        'avery bradley',
+        'ben mclemore',
+        'beno udrih',
+        'boban marjanovic',
+        'bojan bogdanovic',
+        'brandon ingram',
+        'brandon knight',
+        'brandon rush',
+        'brook lopez',
+        'buddy hield',
+        'c.j. miles',
+        'chris mccullough',
+        'clint capela',
+        'cody zeller',
+        'cole aldrich',
+        'corey brewer',
+        'cory joseph',
+        'd\'angelo russell',
+        'd.j. augustin',
+        'danilo gallinari',
+        'dante cunningham',
+        'dario saric',
+        'demar derozan',
+        'demarcus cousins',
+        'demarre carroll',
+        'deron williams',
+        'devin booker',
+        'deyonta davis',
+        'dion waiters',
+        'dirk nowitzki',
+        'domantas sabonis',
+        'dorian finney-smith',
+        'dragan bender',
+        'dwight powell',
+        'e\'twaun moore',
+        'elfrid payton',
+        'emmanuel mudiay',
+        'enes kanter',
+        'eric bledsoe',
+        'eric gordon',
+        'ersan ilyasova',
+        'evan fournier',
+        'garrett temple',
+        'gerald green',
+        'gerald henderson',
+        'giannis antetokounmpo',
+        'glenn robinson iii',
+        'goran dragic',
+        'gorgui dieng',
+        'greg monroe',
+        'greivis vasquez',
+        'harrison barnes',
+        'hassan whiteside',
+        'henry ellenson',
+        'hollis thompson',
+        'isaiah thomas',
+        'isaiah whitehead',
+        'ish smith',
+        'j.j. barea',
+        'jabari parker',
+        'jae crowder',
+        'jahlil okafor',
+        'jakob poeltl',
+        'jamal murray',
+        'jameer nelson',
+        'james ennis',
+        'james harden',
+        'james johnson',
+        'jamychal green',
+        'jared dudley',
+        'jason terry',
+        'jaylen brown',
+        'jeff green',
+        'jeff teague',
+        'jerami grant',
+        'jeremy lamb',
+        'jeremy lin',
+        'joe harris',
+        'joe young',
+        'joel embiid',
+        'john henson',
+        'jon leuer',
+        'jonas jerebko',
+        'jonas valanciunas',
+        'jordan clarkson',
+        'juancho hernangomez',
+        'julius randle',
+        'justin anderson',
+        'justin hamilton',
+        'justise winslow',
+        'jusuf nurkic',
+        'k.j. mcdaniels',
+        'karl-anthony towns',
+        'kemba walker',
+        'kenneth faried',
+        'kentavious caldwell-pope',
+        'kosta koufos',
+        'kris dunn',
+        'kyle lowry',
+        'kyle singler',
+        'lance stephenson',
+        'langston galloway',
+        'larry nance jr.',
+        'lavoy allen',
+        'leandro barbosa',
+        'lou williams',
+        'luis scola',
+        'luke babbitt',
+        'luol deng',
+        'malachi richardson',
+        'malcolm brogdon',
+        'marc gasol',
+        'marcelo huertas',
+        'marco belinelli',
+        'marcus morris',
+        'mario hezonja',
+        'marquese chriss',
+        'marvin williams',
+        'matt barnes',
+        'matthew dellavedova',
+        'metta world peace',
+        'michael beasley',
+        'michael gbinije',
+        'michael kidd-gilchrist',
+        'mike conley',
+        'miles plumlee',
+        'mirza teletovic',
+        'monta ellis',
+        'myles turner',
+        'nemanja bjelica',
+        'nene hilario',
+        'nick young',
+        'nicolas batum',
+        'nicolas brussino',
+        'nik stauskas',
+        'nikola jokic',
+        'nikola vucevic',
+        'norman powell',
+        'omer asik',
+        'omri casspi',
+        'p.j. tucker',
+        'pascal siakam',
+        'patrick patterson',
+        'paul george',
+        'quincy acy',
+        'ramon sessions',
+        'rashad vaughn',
+        'richaun holmes',
+        'ricky rubio',
+        'robert covington',
+        'rodney mcgruder',
+        'rodney stuckey',
+        'rondae hollis-jefferson',
+        'roy hibbert',
+        'rudy gay',
+        'russell westbrook',
+        'ryan anderson',
+        'sam dekker',
+        'sean kilpatrick',
+        'semaj christon',
+        'serge ibaka',
+        'sergio rodriguez',
+        'seth curry',
+        'shabazz muhammad',
+        'solomon hill',
+        'spencer hawes',
+        'stanley johnson',
+        'steven adams',
+        't.j. mcconnell',
+        't.j. warren',
+        'tarik black',
+        'terrence jones',
+        'terrence ross',
+        'terry rozier',
+        'thaddeus young',
+        'tim frazier',
+        'timofey mozgov',
+        'timothe luwawu-cabarrot',
+        'tobias harris',
+        'trevor ariza',
+        'trevor booker',
+        'ty lawson',
+        'tyler ennis',
+        'tyler johnson',
+        'tyler ulis',
+        'tyler zeller',
+        'tyson chandler',
+        'victor oladipo',
+        'vince carter',
+        'wade baldwin iv',
+        'wesley matthews',
+        'will barton',
+        'willie cauley-stein',
+        'willie reed',
+        'wilson chandler',
+        'zach lavine',
+        'zach randolph',
+    },
+    '2016-10-27': {
+        'andrew nicholson',
+        'austin rivers',
+        'blake griffin',
+        'bradley beal',
+        'brandon bass',
+        'chris paul',
+        'cristiano felicio',
+        'daniel ochefu',
+        'deandre jordan',
+        'deandre\' bembry',
+        'dennis schroder',
+        'diamond stone',
+        'doug mcdermott',
+        'dwight howard',
+        'dwyane wade',
+        'isaiah canaan',
+        'j.j. redick',
+        'jamal crawford',
+        'jason smith',
+        'jimmy butler',
+        'john wall',
+        'kelly oubre jr.',
+        'kent bazemore',
+        'kris humphries',
+        'kyle korver',
+        'luc richard mbah a moute',
+        'malcolm delaney',
+        'marcin gortat',
+        'marcus thornton',
+        'markieff morris',
+        'marreese speights',
+        'michael carter-williams',
+        'mike muscala',
+        'nikola mirotic',
+        'otto porter',
+        'paul millsap',
+        'rajon rondo',
+        'raymond felton',
+        'robin lopez',
+        'shabazz napier',
+        'sheldon mcclellan',
+        'taj gibson',
+        'taurean prince',
+        'thabo sefolosha',
+        'tim hardaway jr.',
+        'tomas satoransky',
+        'trey burke',
+        'walter tavares',
+        'wesley johnson',
+    },
+    '2016-10-28': {
+        'a.j. hammons',
+        'bismack biyombo',
+        'bobby brown',
+        'c.j. watson',
+        'c.j. wilcox',
+        'darrun hilliard',
+        'derrick favors',
+        'georges niang',
+        'joel bolomboy',
+        'joffrey lauvergne',
+        'kevin seraphin',
+        'kyle wiltjer',
+        'montrezl harrell',
+        'raul neto',
+        'salah mejri',
+        'stephen zimmerman jr.',
+        'thomas robinson',
+    },
+    '2016-10-29': {
+        'anthony bennett',
+        'bobby portis',
+        'cheick diallo',
+        'dejounte murray',
+        'denzel valentine',
+        'frank kaminsky',
+        'jarell martin',
+        'jordan mickey',
+        'kay felder',
+        'paul zipser',
+        'rakeem christmas',
+        'tony snell',
+        'troy daniels',
+        'troy williams',
+    },
+    '2016-10-30': {
+        'anthony morrow',
+        'jose calderon',
+        'thon maker',
+    },
+    '2016-10-31': {
+        'alan williams',
+    },
+    '2016-11-01': {
+        'aaron brooks',
+        'jake layman',
+        'james michael mcadoo',
+        'jordan hill',
+        'maurice ndour',
+        'pat connaughton',
+        'tony allen',
+        'tyus jones',
+        'udonis haslem',
+    },
+    '2016-11-02': {
+        'ivica zubac',
+        'james young',
+        'jerian grant',
+        'marcus smart',
+        'nick collison',
+        'treveon graham',
+    },
+    '2016-11-03': {
+        'darrell arthur',
+    },
+    '2016-11-04': {
+        'aaron harrison',
+        'alec burks',
+        'brandan wright',
+        'brian roberts',
+        'caris levert',
+        'chandler parsons',
+        'christian wood',
+        'damian jones',
+        'derrick williams',
+        'festus ezeli',
+        'gordon hayward',
+        'josh mcroberts',
+        'josh richardson',
+        'jrue holiday',
+        'marshall plumlee',
+        'randy foye',
+        'tim quarterman',
+        'wayne ellington',
+    },
+    '2016-11-05': {
+        'adreian payne',
+        'alan anderson',
+        'arinze onuaku',
+        'brice johnson',
+        'chinanu onuaku',
+        'damjan rudez',
+        'danny green',
+        'danuel house',
+        'gary harris',
+        'georgios papagiannis',
+        'john lucas iii',
+        'jordan farmar',
+        'josh huestis',
+        'malik beasley',
+        'mike miller',
+        'mike scott',
+        'nerlens noel',
+        'patrick beverley',
+        'paul pierce',
+        'r.j. hunter',
+        'reggie bullock',
+        'skal labissiere',
+        'steve novak',
+        'tiago splitter',
+    },
+    '2016-11-06': {
+        'bruno caboclo',
+        'darren collison',
+        'demetrius jackson',
+        'derrick jones jr.',
+        'devin harris',
+        'fred vanvleet',
+        'jarnell stokes',
+        'john jenkins',
+        'kelly olynyk',
+        'lucas nogueira',
+    },
 }
 
 TBX_MISSING_PLAYERS = {}
+
+def findCsvFile(fullPathToDir, dateStr):
+    return util.createFullPathFilename(fullPathToDir, util.createCsvFilename(dateStr))
+def findJsonFile(fullPathToDir, dateStr):
+    return util.createFullPathFilename(fullPathToDir, util.createJsonFilename(dateStr))
+def findNbaFile(fullPathToDir, dateStr):
+    #get previous day's file
+    #if i dont find it, then check each previous day until i find it
+    usedDiffFile = False
+    currDate = util.parseDate(dateStr)
+    while currDate > SEASON_START_DATE:
+        currDate = currDate - ONE_DAY
+        fullPathFilename = util.createFullPathFilename(fullPathToDir, util.createJsonFilename(util.formatDate(currDate)))
+        if util.fileExists(fullPathFilename):
+            if usedDiffFile:
+                scraper.headsUp('Used different file for date=' + dateStr + ', file used=' + fullPathFilename)
+            return fullPathFilename
+        usedDiffFile = True
+    return None
 
 def parseFanDuelRow(row, dateStr, prefix):
     #add Name, which is a join of firstname and lastname
@@ -216,14 +633,15 @@ def loadNbaJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
         rows.append(dict(zip(colNames, row)))
     return rows
 
-def loadDataFromFile(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, isJson, keyRenameMap={}, delimiter=',', prefix=''):
+def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
     data = {}
 
-    filename = util.createJsonFilename(dateStr) if isJson else util.createCsvFilename(dateStr)
-    print '    Loading file: %s...' % filename
+    #filename = util.createJsonFilename(dateStr) if isJson else util.createCsvFilename(dateStr)
+    fullPathFilename = findFileFunction(fullPathToDir, dateStr)
 
-    fullPathFilename = util.createFullPathFilename(fullPathToDir, filename)
-    if util.fileExists(fullPathFilename):
+    print '    Loading file: %s...' % fullPathFilename
+
+    if fullPathFilename and util.fileExists(fullPathFilename):
         rows = loadFileFunction(fullPathFilename, keyRenameMap, prefix, delimiter)
         for row in rows:
             playerName, playerData = parseRowFunction(row, dateStr, prefix)
@@ -241,17 +659,17 @@ def loadDataFromFile(fullPathToDir, loadFileFunction, parseRowFunction, handleDu
             #    print playerData
             data[playerName] = util.filterObj(features, playerData)
     else:
-        #util.headsUp('File not found: ' + fullPathFilename)
+        util.headsUp('File not found for date=' + dateStr)
         pass
 
     return data
-def loadDataFromDir(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap={}, delimiter=',', prefix=''):
+def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, keyRenameMap={}, delimiter=',', prefix=''):
     print '    Loading dir:', fullPathToDir
     data = {}
     currDate = SEASON_START_DATE
     while currDate <= END_DATE:
         currDateStr = util.formatDate(currDate)
-        dateData = loadDataFromFile(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, isJson, keyRenameMap, delimiter, prefix)
+        dateData = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
         if dateData:
             data[currDateStr] = dateData
         else:
@@ -321,7 +739,15 @@ def findMatchingName(name, newData, nameMap={}):
         return newName
     return None
 def playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
-    return (dateStr in knownMissingObj and name in knownMissingObj[dateStr]) or name in knownMissingObj
+    return name in knownMissingObj or (dateStr in knownMissingObj and name in knownMissingObj[dateStr])
+def playerDidPlay(dateStr, name):
+    currDate = util.parseDate(dateStr)
+    while currDate <= END_DATE:
+        currDateStr = util.formatDate(currDate)
+        if currDateStr in PLAYERS_WHO_DID_NOT_PLAY_UP_TO and name in PLAYERS_WHO_DID_NOT_PLAY_UP_TO[currDateStr]:
+            return False
+        currDate = currDate + ONE_DAY
+    return True
 def getTeam(playerData):
     return playerData['Team']
 def getOppTeam(playerData):
@@ -340,7 +766,7 @@ def mergeData(obj1, obj2, isTeam, isOpp, nameMap, knownMissingObj, containsY):
                 if obj2Name and obj2Name in obj2[dateStr]:
                     playerData.update(obj2[dateStr][obj2Name])
                 else:
-                    if not playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
+                    if not playerIsKnownToBeMissing(dateStr, name, knownMissingObj) and playerDidPlay(dateStr, name):
                         #tbx
                         if dateStr in TBX_MISSING_PLAYERS:
                             TBX_MISSING_PLAYERS[dateStr].append(name)
@@ -553,8 +979,8 @@ DATA_SOURCES = [
             'RG_points51',
             'RG_points58',
         ],
+        'findFileFunction': findJsonFile,
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'PlayerProjections'),
-        'isJson': True,
         'keyRenameMap': {
             'pown%': 'pownpct',
             'pt/$/k': 'ppdk',
@@ -613,6 +1039,7 @@ DATA_SOURCES = [
             'denzel valentine', 'glenn robinson iii', 'brook lopez', 'rashad vaughn', 'cristiano felicio',
             'aaron brooks', 'joffrey lauvergne',
         },
+        'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderPlayerProjectionsRow,
         'prefix': 'RG_',
     },
@@ -630,8 +1057,8 @@ DATA_SOURCES = [
             'RG_OPP_DVP_SGFPPG',
             'RG_OPP_DVP_SGRK',
         ],
+        'findFileFunction': findJsonFile,
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'DefenseVsPositionCheatSheet'),
-        'isJson': True,
         'isOpp': True,
         'isTeam': True,
         'keyRenameMap': {
@@ -646,6 +1073,7 @@ DATA_SOURCES = [
             'SG FPPG': 'SGFPPG',
             'SG RK': 'SGRK'
         },
+        'loadFileFunction': loadJsonFile,
         'nameMap': {
             'ATL': 'Atlanta Hawks',
             'CHI': 'Chicago Bulls',
@@ -713,54 +1141,8 @@ DATA_SOURCES = [
             'NBA_SEASON_DD2',
             'NBA_SEASON_TD3',
         ],
+        'findFileFunction': findNbaFile,
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'Traditional', '2016'),
-        'isJson': True,
-        'knownMissingObj': {
-            #2016-11-06
-            'darren collison',
-            'devin harris',
-            'derrick jones jr.',
-            'john jenkins',
-            'bruno caboclo',
-            'kelly olynyk',
-            'fred vanvleet',
-            'jarnell stokes',
-
-            #2016-11-05
-            'brice johnson', 'tiago splitter', 'damjan rudez', 'alan anderson', 'nerlens noel', 'paul pierce', 'patrick beverley', 'mike scott', 'chinanu onuaku', 'arinze onuaku', 'josh huestis',
-            'reggie bullock', 'r.j. hunter', 'danny green', 'danuel house',
-
-            #2016-11-04
-            'brandan wright', 'tim quarterman', 'alec burks', 'lucas nogueira', 'christian wood',
-            'damian jones', 'wayne ellington', 'derrick williams', 'chandler parsons', 'josh mcroberts', 'jrue holiday', 'randy foye', 'brian roberts', 'marshall plumlee', 'gordon hayward', 'festus ezeli', 'aaron harrison', 'caris levert',
-
-            #2016-11-03
-            'malik beasley', 'skal labissiere', 'adreian payne', 'georgios papagiannis', 'gary harris', 'steve novak', 'demetrius jackson', 'john lucas iii', 'mike miller',
-
-            #2016-11-01
-            'josh richardson', 'ivica zubac',
-
-            #2016-10-31
-            'darrell arthur', 'jerian grant',
-
-            #2016-10-30
-            'tony allen', 'james michael mcadoo', 'nick collison', 'udonis haslem', 'alan williams',
-
-            #2016-10-29
-            'jordan hill', 'treveon graham', 'aaron brooks', 'pat connaughton', 'tyus jones', 'james young', 'maurice ndour', 'marcus smart', 'jake layman', 'thon maker',
-
-            #2016-10-28
-            'anthony morrow', 'jose calderon', 'kay felder', 'raul neto', 'anthony bennett', 'joel bolomboy', 'rakeem christmas', 'frank kaminsky', 'cheick diallo',
-
-            #2016-10-27
-            'denzel valentine', 'brandon bass', 'jordan mickey', 'walter tavares', 'bobby portis', 'paul zipser', 'dejounte murray', 'diamond stone',
-
-            #2016-10-26
-            'jarell martin', 'georges niang', 'bismack biyombo', 'kevin seraphin', 'a.j. hammons', 'timothe luwawu-cabarrot', 'stephen zimmerman jr.', 'montrezl harrell', 'troy williams', 'troy daniels', 'c.j. wilcox', 'bobby brown', 'thomas robinson', 'c.j. watson', 'darrun hilliard', 'kyle wiltjer', 'joffrey lauvergne', 'salah mejri', 'tony snell',
-
-            #2016-10-25
-            'cory jefferson', 'louis amundson', 'derrick favors', 'damien inglis', 'phil pressey', 'livio jean-charles', 'henry sims', 'dahntay jones', 'cameron jones', 'chasson randle', 'grant jerrett', 'john holland', 'j.p. tokoto', 'joel anthony', 'shabazz napier', 'jonathan holmes', 'patricio garino', 'elliot williams', 'greg stiemsma', 'markel brown', 'chris johnson',
-        },
         'loadFileFunction': loadNbaJsonFile,
         'parseRowFunction': parseNbaRow,
         'prefix': 'NBA_SEASON_',
@@ -783,19 +1165,19 @@ for dataSource in DATA_SOURCES:
     containsY = util.getObjValue(dataSource, 'containsY', False)
     delimiter = util.getObjValue(dataSource, 'delimiter', ',')
     features = dataSource['features']
+    findFileFunction = util.getObjValue(dataSource, 'findFileFunction', findCsvFile)
     fullPathToDir = dataSource['fullPathToDir']
     handleDuplicates = util.getObjValue(dataSource, 'handleDuplicates', None)
-    isJson = util.getObjValue(dataSource, 'isJson', False)
     isOpp = util.getObjValue(dataSource, 'isOpp', False)
     isTeam = util.getObjValue(dataSource, 'isTeam', False)
     keyRenameMap = util.getObjValue(dataSource, 'keyRenameMap', {})
     knownMissingObj = util.getObjValue(dataSource, 'knownMissingObj', {})
-    loadFileFunction = util.getObjValue(dataSource, 'loadFileFunction', (loadJsonFile if isJson else loadCsvFile))
+    loadFileFunction = util.getObjValue(dataSource, 'loadFileFunction', loadCsvFile)
     nameMap = util.getObjValue(dataSource, 'nameMap', KNOWN_ALIASES)
     parseRowFunction = dataSource['parseRowFunction']
     prefix = util.getObjValue(dataSource, 'prefix', '')
 
-    newData = loadDataFromDir(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap, delimiter, prefix)
+    newData = loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, keyRenameMap, delimiter, prefix)
     X_NAMES.extend(features)
 
     if data == None:
@@ -805,5 +1187,14 @@ for dataSource in DATA_SOURCES:
 
 writeData(OUTPUT_FILE, data)
 
-print 'Missing players:'
-util.printObj(TBX_MISSING_PLAYERS)
+if len(TBX_MISSING_PLAYERS) > 0:
+    print 'Missing players:'
+    keys = TBX_MISSING_PLAYERS.keys()
+    keys.sort()
+    for key in keys:
+        TBX_MISSING_PLAYERS[key].sort()
+        print ' '
+        print key
+        for name in TBX_MISSING_PLAYERS[key]:
+            print '\'' + name + '\','
+    #util.printObj(TBX_MISSING_PLAYERS)
