@@ -12,6 +12,46 @@ END_DATE = datetime(2016, 11, 6)
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
 
+KNOWN_ALIASES = {
+    'maurice harkless': 'moe harkless',
+    'james michael mcadoo': 'james mcadoo',
+    'lou williams': 'louis williams',
+    'joe young': 'joseph young',
+    'juancho hernangomez': 'juan hernangomez',
+    'cristiano felicio': 'cristiano da silva felicio',
+    'deandre\' bembry': 'deandre bembry',
+    'wade baldwin iv': 'wade baldwin',
+    'larry nance jr.': 'larry nance',
+    'stephen zimmerman jr.': 'stephen zimmerman',
+    'glenn robinson iii': 'glenn robinson',
+    'kelly oubre jr.': 'kelly oubre',
+    'patty mills': 'patrick mills',
+    'j.j. barea': ['jose juan barea', 'jose barea'],
+    'ish smith': 'ishmael smith',
+    'luc richard mbah a moute': 'luc mbah a moute',
+    'derrick jones jr.': 'derrick jones',
+    'timothe luwawu-cabarrot': 'timothe luwawu',
+    'maurice ndour': 'maurice n\'dour',
+    'wesley matthews': 'wes matthews',
+    'john lucas iii': 'john lucas',
+
+    #nba
+    'nene hilario': 'nene',
+    'walter tavares': 'edy tavares',
+    'guillermo hernangomez': 'willy hernangomez',
+    'j.r. smith': 'jr smith',
+    'c.j. mccollum': 'cj mccollum',
+    'c.j. miles': 'cj miles',
+    't.j. warren': 'tj warren',
+    'p.j. tucker': 'pj tucker',
+    'k.j. mcdaniels': 'kj mcdaniels',
+    't.j. mcconnell': 'tj mcconnell',
+    'j.j. redick': 'jj redick',
+    'a.j. hammons': 'aj hammons',
+    'c.j. wilcox': 'cj wilcox',
+    'c.j. watson': 'cj watson',
+}
+
 TBX_MISSING_PLAYERS = {}
 
 def parseFanDuelRow(row, dateStr, prefix):
@@ -99,23 +139,48 @@ def parseRotoGrinderPlayerProjectionsRow(row, dateStr, prefix):
     return row['RG_player_name'].strip().lower(), row
 def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     #convert each to int/float
-    util.mapSome(int, row, [
-        prefix + 'CRK',
-        prefix + 'SFRK',
-        prefix + 'SGRK',
-        prefix + 'PFRK',
-        prefix + 'PGRK',
-    ])
-    util.mapSome(float, row, [
-        prefix + 'CFPPG',
-        prefix + 'SFFPPG',
-        prefix + 'SGFPPG',
-        prefix + 'PFFPPG',
-        prefix + 'PGFPPG',
-    ])
+    util.mapSome(int, row, util.addPrefixToArray([ 'CRK', 'SFRK', 'SGRK', 'PFRK', 'PGRK'], prefix))
+    util.mapSome(float, row, util.addPrefixToArray(['CFPPG', 'SFFPPG', 'SGFPPG', 'PFFPPG', 'PGFPPG'], prefix))
+    return row[prefix + 'TEAM'].strip(), row
+def parseNbaRow(row, dateStr, prefix):
+    intCols = util.addPrefixToArray([
+        'W',
+        'L',
+        'DD2',
+        'TD3',
+    ], prefix)
+    floatCols = util.addPrefixToArray([
+        'AGE',
+        'W_PCT',
+        'MIN',
+        'FGM',
+        'FGA',
+        'FG_PCT',
+        'FG3M',
+        'FG3A',
+        'FG3_PCT',
+        'FTM',
+        'FTA',
+        'FT_PCT',
+        'OREB',
+        'DREB',
+        'REB',
+        'AST',
+        'TOV',
+        'STL',
+        'BLK',
+        'BLKA',
+        'PF',
+        'PFD',
+        'PTS',
+        'PLUS_MINUS',
+    ], prefix)
 
-    team = row[prefix + 'TEAM'].strip()
-    return team, row
+    #convert each to int/float
+    util.mapSome(int, row, intCols)
+    util.mapSome(float, row, floatCols)
+
+    return row[prefix + 'PLAYER_NAME'].lower(), row
 
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
     oldMatchPoints = float(oldMatch['RG_points'])
@@ -126,7 +191,9 @@ def handleRotoGrinderDuplicates(oldMatch, newMatch):
         return newMatch
     util.stop('In handleDuplicates for RotoGrinder, and dont know which to return')
 
-def loadJsonFile(fullPathFilename, keyRenameMap=None, prefix=''):
+def loadCsvFile(fullPathFilename, keyRenameMap, prefix, delimiter):
+    return util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
+def loadJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
     jsonData = util.loadJsonFile(fullPathFilename)
 
     #append prefix to all keys
@@ -140,7 +207,16 @@ def loadJsonFile(fullPathFilename, keyRenameMap=None, prefix=''):
             util.addPrefixToObj(item, prefix)
 
     return jsonData
-def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features, dateStr, isJson, keyRenameMap={}, delimiter=',', prefix=''):
+def loadNbaJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
+    rows = []
+    jsonData = util.loadJsonFile(fullPathFilename)
+    colNames = util.addPrefixToArray(jsonData['resultSets'][0]['headers'], prefix)
+    rowData = jsonData['resultSets'][0]['rowSet']
+    for row in rowData:
+        rows.append(dict(zip(colNames, row)))
+    return rows
+
+def loadDataFromFile(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, isJson, keyRenameMap={}, delimiter=',', prefix=''):
     data = {}
 
     filename = util.createJsonFilename(dateStr) if isJson else util.createCsvFilename(dateStr)
@@ -148,7 +224,7 @@ def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features
 
     fullPathFilename = util.createFullPathFilename(fullPathToDir, filename)
     if util.fileExists(fullPathFilename):
-        rows = loadJsonFile(fullPathFilename, keyRenameMap, prefix) if isJson else util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
+        rows = loadFileFunction(fullPathFilename, keyRenameMap, prefix, delimiter)
         for row in rows:
             playerName, playerData = parseRowFunction(row, dateStr, prefix)
             if playerName in data:
@@ -169,13 +245,13 @@ def loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features
         pass
 
     return data
-def loadDataFromDir(fullPathToDir, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap={}, delimiter=',', prefix=''):
+def loadDataFromDir(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap={}, delimiter=',', prefix=''):
     print '    Loading dir:', fullPathToDir
     data = {}
     currDate = SEASON_START_DATE
     while currDate <= END_DATE:
         currDateStr = util.formatDate(currDate)
-        dateData = loadDataFromFile(fullPathToDir, parseRowFunction, handleDuplicates, features, currDateStr, isJson, keyRenameMap, delimiter, prefix)
+        dateData = loadDataFromFile(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, isJson, keyRenameMap, delimiter, prefix)
         if dateData:
             data[currDateStr] = dateData
         else:
@@ -219,11 +295,16 @@ def findMatchingName(name, newData, nameMap={}):
     if hasExactMatch(name, newData):
         return name
 
-    #then, check if it's a known mismatch name or its a reverse of a known mismatch name
+    #then, check if it's a known mismatch name
     if name in nameMap:
         misMatchedName = nameMap[name]
-        if hasExactMatch(misMatchedName, newData):
-            return misMatchedName
+        if isinstance(misMatchedName, list):
+            for mmName in misMatchedName:
+                if hasExactMatch(mmName, newData):
+                    return mmName
+        else:
+            if hasExactMatch(misMatchedName, newData):
+                return misMatchedName
 
     #then, check all permutations of the name and its reverse
     #print 'No match found for player=', name, ', searching for similar names...'
@@ -354,24 +435,6 @@ DATA_SOURCES = [
                 'walter tavares', #he didn't play according to stats.nba.com
             },
         },
-        'nameMap': {
-            'luc richard mbah a moute': 'luc mbah a moute',
-            'derrick jones jr.': 'derrick jones',
-            'deandre\' bembry': 'deandre bembry',
-            'juancho hernangomez': 'juan hernangomez',
-            'lou williams': 'louis williams',
-            'timothe luwawu-cabarrot': 'timothe luwawu',
-            'ish smith': 'ishmael smith',
-            'joe young': 'joseph young',
-            'maurice ndour': 'maurice n\'dour',
-            'j.j. barea': 'jose barea',
-            'wesley matthews': 'wes matthews',
-            'kelly oubre jr.': 'kelly oubre',
-            'wade baldwin iv': 'wade baldwin',
-            'larry nance jr.': 'larry nance',
-            'stephen zimmerman jr.': 'stephen zimmerman',
-            'john lucas iii': 'john lucas',
-        },
         'parseRowFunction': parseRotoGuruRow,
     },
     {
@@ -435,17 +498,6 @@ DATA_SOURCES = [
             'bismack biyombo',
             'frank kaminsky',
             'michael carter-williams',
-        },
-        'nameMap': {
-            'patty mills': 'patrick mills',
-            'j.j. barea': 'jose juan barea',
-            'lou williams': 'louis williams',
-            'joe young': 'joseph young',
-            'ish smith': 'ishmael smith',
-            'juancho hernangomez': 'juan hernangomez',
-            'luc richard mbah a moute': 'luc mbah a moute',
-            'deandre\' bembry': 'deandre bembry',
-            'kelly oubre jr.': 'kelly oubre',
         },
         'parseRowFunction': parseNumberFireRow,
         'prefix': 'NF_',
@@ -561,20 +613,6 @@ DATA_SOURCES = [
             'denzel valentine', 'glenn robinson iii', 'brook lopez', 'rashad vaughn', 'cristiano felicio',
             'aaron brooks', 'joffrey lauvergne',
         },
-        'nameMap': {
-            'maurice harkless': 'moe harkless',
-            'james michael mcadoo': 'james mcadoo',
-            'lou williams': 'louis williams',
-            'joe young': 'joseph young',
-            'juancho hernangomez': 'juan hernangomez',
-            'cristiano felicio': 'cristiano da silva felicio',
-            'deandre\' bembry': 'deandre bembry',
-            'wade baldwin iv': 'wade baldwin',
-            'larry nance jr.': 'larry nance',
-            'stephen zimmerman jr.': 'stephen zimmerman',
-            'glenn robinson iii': 'glenn robinson',
-            'kelly oubre jr.': 'kelly oubre',
-        },
         'parseRowFunction': parseRotoGrinderPlayerProjectionsRow,
         'prefix': 'RG_',
     },
@@ -643,7 +681,98 @@ DATA_SOURCES = [
         'parseRowFunction': parseRotoGrinderDefenseVsPositionCheatSheetRow,
         'prefix': 'RG_OPP_DVP_',
     },
+    {
+        'name': 'NBA',
+        'features': [
+            'NBA_SEASON_AGE',
+            'NBA_SEASON_W',
+            'NBA_SEASON_L',
+            'NBA_SEASON_W_PCT',
+            'NBA_SEASON_MIN',
+            'NBA_SEASON_FGM',
+            'NBA_SEASON_FGA',
+            'NBA_SEASON_FG_PCT',
+            'NBA_SEASON_FG3M',
+            'NBA_SEASON_FG3A',
+            'NBA_SEASON_FG3_PCT',
+            'NBA_SEASON_FTM',
+            'NBA_SEASON_FTA',
+            'NBA_SEASON_FT_PCT',
+            'NBA_SEASON_OREB',
+            'NBA_SEASON_DREB',
+            'NBA_SEASON_REB',
+            'NBA_SEASON_AST',
+            'NBA_SEASON_TOV',
+            'NBA_SEASON_STL',
+            'NBA_SEASON_BLK',
+            'NBA_SEASON_BLKA',
+            'NBA_SEASON_PF',
+            'NBA_SEASON_PFD',
+            'NBA_SEASON_PTS',
+            'NBA_SEASON_PLUS_MINUS',
+            'NBA_SEASON_DD2',
+            'NBA_SEASON_TD3',
+        ],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'Traditional', '2016'),
+        'isJson': True,
+        'knownMissingObj': {
+            #2016-11-06
+            'darren collison',
+            'devin harris',
+            'derrick jones jr.',
+            'john jenkins',
+            'bruno caboclo',
+            'kelly olynyk',
+            'fred vanvleet',
+            'jarnell stokes',
+
+            #2016-11-05
+            'brice johnson', 'tiago splitter', 'damjan rudez', 'alan anderson', 'nerlens noel', 'paul pierce', 'patrick beverley', 'mike scott', 'chinanu onuaku', 'arinze onuaku', 'josh huestis',
+            'reggie bullock', 'r.j. hunter', 'danny green', 'danuel house',
+
+            #2016-11-04
+            'brandan wright', 'tim quarterman', 'alec burks', 'lucas nogueira', 'christian wood',
+            'damian jones', 'wayne ellington', 'derrick williams', 'chandler parsons', 'josh mcroberts', 'jrue holiday', 'randy foye', 'brian roberts', 'marshall plumlee', 'gordon hayward', 'festus ezeli', 'aaron harrison', 'caris levert',
+
+            #2016-11-03
+            'malik beasley', 'skal labissiere', 'adreian payne', 'georgios papagiannis', 'gary harris', 'steve novak', 'demetrius jackson', 'john lucas iii', 'mike miller',
+
+            #2016-11-01
+            'josh richardson', 'ivica zubac',
+
+            #2016-10-31
+            'darrell arthur', 'jerian grant',
+
+            #2016-10-30
+            'tony allen', 'james michael mcadoo', 'nick collison', 'udonis haslem', 'alan williams',
+
+            #2016-10-29
+            'jordan hill', 'treveon graham', 'aaron brooks', 'pat connaughton', 'tyus jones', 'james young', 'maurice ndour', 'marcus smart', 'jake layman', 'thon maker',
+
+            #2016-10-28
+            'anthony morrow', 'jose calderon', 'kay felder', 'raul neto', 'anthony bennett', 'joel bolomboy', 'rakeem christmas', 'frank kaminsky', 'cheick diallo',
+
+            #2016-10-27
+            'denzel valentine', 'brandon bass', 'jordan mickey', 'walter tavares', 'bobby portis', 'paul zipser', 'dejounte murray', 'diamond stone',
+
+            #2016-10-26
+            'jarell martin', 'georges niang', 'bismack biyombo', 'kevin seraphin', 'a.j. hammons', 'timothe luwawu-cabarrot', 'stephen zimmerman jr.', 'montrezl harrell', 'troy williams', 'troy daniels', 'c.j. wilcox', 'bobby brown', 'thomas robinson', 'c.j. watson', 'darrun hilliard', 'kyle wiltjer', 'joffrey lauvergne', 'salah mejri', 'tony snell',
+
+            #2016-10-25
+            'cory jefferson', 'louis amundson', 'derrick favors', 'damien inglis', 'phil pressey', 'livio jean-charles', 'henry sims', 'dahntay jones', 'cameron jones', 'chasson randle', 'grant jerrett', 'john holland', 'j.p. tokoto', 'joel anthony', 'shabazz napier', 'jonathan holmes', 'patricio garino', 'elliot williams', 'greg stiemsma', 'markel brown', 'chris johnson',
+        },
+        'loadFileFunction': loadNbaJsonFile,
+        'parseRowFunction': parseNbaRow,
+        'prefix': 'NBA_SEASON_',
+    },
+    #{
+    #    'name': '',
+    #    'features': [],
+    #    'fullPathToDir': util.joinDirs(DATA_DIR, ''),
+    #    'parseRowFunction': ,
+    #},
 ]
+
 
 #load fanduel data
 data = None
@@ -661,11 +790,12 @@ for dataSource in DATA_SOURCES:
     isTeam = util.getObjValue(dataSource, 'isTeam', False)
     keyRenameMap = util.getObjValue(dataSource, 'keyRenameMap', {})
     knownMissingObj = util.getObjValue(dataSource, 'knownMissingObj', {})
-    nameMap = util.getObjValue(dataSource, 'nameMap', {})
+    loadFileFunction = util.getObjValue(dataSource, 'loadFileFunction', (loadJsonFile if isJson else loadCsvFile))
+    nameMap = util.getObjValue(dataSource, 'nameMap', KNOWN_ALIASES)
     parseRowFunction = dataSource['parseRowFunction']
     prefix = util.getObjValue(dataSource, 'prefix', '')
 
-    newData = loadDataFromDir(fullPathToDir, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap, delimiter, prefix)
+    newData = loadDataFromDir(fullPathToDir, loadFileFunction, parseRowFunction, handleDuplicates, features, isJson, keyRenameMap, delimiter, prefix)
     X_NAMES.extend(features)
 
     if data == None:

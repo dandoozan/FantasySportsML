@@ -139,7 +139,7 @@ SEASONS = {
         'endDate': date(2016, 11, 6),
     },
 }
-DATE_FORMAT_FILENAME = '%Y%m%d'
+DATE_FORMAT_FILENAME = '%Y-%m-%d'
 ONE_DAY = timedelta(1)
 SLEEP = 10
 

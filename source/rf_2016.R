@@ -11,6 +11,9 @@
 #D-add rest of RG PlayerProjections features: rf_10moreRG3: 10/27-11/6, 50/53, 20, 0.851, 70.92486/62.70556, 3.356778/8.357909/3.521121, 8.126946, 0.9400258
 #D-add RG defense vs position: rf_11DvP: 10/27-11/6, 60/63, 20, 0.928, 72.85086/61.69281, 3.3672/8.387346/3.446881, 8.104879, 0.9684187 <-- new best!
 #D-add def vs my position: rf_12mydvp: 10/27-11/6, 52/65, 20, 0.819, 70.92388/62.70608, 3.426565/8.297581/3.437354, 8.078652, 0.9607791 <-- new best!
+#D-add nba player season-long features: rf_13nba: 10/27-11/6, 80/93, 20, 1.07, 49.71302/73.85939, 2.827531/6.956564/2.852913, 6.878917, 1.109224 <-- new best!
+
+#tbx: 70.14722/63.11447, 3.368216/8.329456/3.451713, 8.064409, 0.9656348
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -31,7 +34,6 @@
   #-VegasOdds
   #-BackToBack
 
-
 #Remove all objects from the current workspace
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -48,10 +50,10 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_12mydvp'
+FILENAME = 'rf_13nba'
 END_DATE = '2016-11-06'
 N_TREE = 20
-PLOT = 'scores' #fi, Scores,
+PLOT = 'fi' #fi, Scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
@@ -60,17 +62,19 @@ F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
 F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
-                  'RG_line',  'RG_movement', 'RG_overunder', 'RG_total',
-                  'RG_contr', 'RG_pownpct', 'RG_rank',
-                  'RG_rankdiff', 'RG_saldiff',
-                  'RG_deviation', 'RG_minutes',
-                  'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
-                  'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58',
-                  'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
+            'RG_line',  'RG_movement', 'RG_overunder', 'RG_total',
+            'RG_contr', 'RG_pownpct', 'RG_rank',
+            'RG_rankdiff', 'RG_saldiff',
+            'RG_deviation', 'RG_minutes',
+            'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
+            'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58',
+            'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
 #F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
+F.NBA = c('NBA_SEASON_AGE', 'NBA_SEASON_W', 'NBA_SEASON_L', 'NBA_SEASON_W_PCT', 'NBA_SEASON_MIN', 'NBA_SEASON_FGM', 'NBA_SEASON_FGA', 'NBA_SEASON_FG_PCT', 'NBA_SEASON_FG3M', 'NBA_SEASON_FG3A', 'NBA_SEASON_FG3_PCT', 'NBA_SEASON_FTM', 'NBA_SEASON_FTA', 'NBA_SEASON_FT_PCT', 'NBA_SEASON_OREB', 'NBA_SEASON_DREB', 'NBA_SEASON_REB', 'NBA_SEASON_AST', 'NBA_SEASON_TOV', 'NBA_SEASON_STL', 'NBA_SEASON_BLK', 'NBA_SEASON_BLKA', 'NBA_SEASON_PF', 'NBA_SEASON_PFD', 'NBA_SEASON_PTS', 'NBA_SEASON_PLUS_MINUS', 'NBA_SEASON_DD2', 'NBA_SEASON_TD3')
+
 F.MINE = c('OPP_DVP_FPPG', 'OPP_DVP_RANK')
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.MINE)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA, F.MINE)
 
 #============== Functions ===============
 
@@ -91,7 +95,7 @@ computeError = function(y, yhat) {
 }
 
 #I do not understand any of this code, I borrowed it from a kaggler
-plotImportances = function(model, max=100, save=FALSE) {
+plotImportances = function(model, max=50, save=FALSE) {
   cat('Plotting Feature Importances...\n')
 
   # Get importance
