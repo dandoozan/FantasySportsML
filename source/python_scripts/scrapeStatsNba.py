@@ -133,6 +133,11 @@ SEASONS = {
         'startDate': date(2015, 10, 27),
         'endDate': date(2016, 4, 14),
     },
+    '2016': {
+        'str': '2016-17',
+        'startDate': date(2016, 10, 25),
+        'endDate': date(2016, 11, 6),
+    },
 }
 DATE_FORMAT_FILENAME = '%Y%m%d'
 ONE_DAY = timedelta(1)
@@ -142,7 +147,7 @@ def createUrlParams(startDate, endDate, season, params):
     dateFormat = '%m/%d/%Y'
     urlParams = {
         'Conference': '',
-        'DateFrom': startDate.strftime(dateFormat), #eg.'10/27/2015',
+        'DateFrom': startDate.strftime(dateFormat) if startDate else '', #eg.'10/27/2015',
         'DateTo': endDate.strftime(dateFormat),
         'Division': '',
         'GameScope': '',
@@ -217,7 +222,7 @@ prevDataValues = None
 while currDate <= seasonEndDate:
     print '\nScraping data for ' + str(currDate) + '...'
 
-    startDate = currDate if isDaily else seasonStartDate
+    startDate = currDate if isDaily else None
     url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], params))
 
     jsonData = scraper.downloadJson(url, createHeaders(headers))
