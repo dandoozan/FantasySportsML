@@ -13,25 +13,11 @@
 #D-add def vs my position: rf_12mydvp: 10/27-11/6, 52/65, 20, 0.819, 70.92388/62.70608, 3.426565/8.297581/3.437354, 8.078652, 0.9607791 <-- new best!
 #D-add nba player season-long features: rf_13nba: 10/27-11/6, 80/93, 20, 1.07, 49.71302/73.85939, 2.827531/6.956564/2.852913, 6.878917, 1.109224 <-- WRONG
 #D-fix nba data (using prevday's data): rf_14fixnba: 10/27-11/6, 80/93, 20, 1.041, 72.91909/61.65693, 3.394206/8.340627/3.441368, 8.065771, 0.955393 <-- new best
+#D-Curate features: rf_15curate: 10/27-11/6, 6/93, 100, 0.774, 66.01628/65.28664, 4.163789/8.088749/4.206491, 8.066922, 0.9791746
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
 #-add first day back
-
-#-add rotogrinder individual stats:
-  #-PlayerProjections
-  #-AdvancedPlayerStats
-  #-Touches
-  #-OptimalLineup (perhaps do 0 or 1 if player is in the optimal lineup)
-  #-StartingLineups
-  #-SalaryCharts (multiple)
-  #-MarketWatch
-#-rotogrinder team stats:
-  #-DefenseVsPosition (multiple)
-  #-OffenseVsDefense... (multiple)
-  #-TeamStats (multiple)
-  #-VegasOdds
-  #-BackToBack
 
 #Remove all objects from the current workspace
 rm(list = ls())
@@ -49,10 +35,10 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_14fixnba'
+FILENAME = 'rf_15curate'
 END_DATE = '2016-11-06'
-N_TREE = 20
-PLOT = 'scores' #fi, Scores,
+N_TREE = 100
+PLOT = 'fi' #fi, scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
@@ -70,10 +56,14 @@ F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
             'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
 #F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
 F.NBA = c('NBA_SEASON_AGE', 'NBA_SEASON_W', 'NBA_SEASON_L', 'NBA_SEASON_W_PCT', 'NBA_SEASON_MIN', 'NBA_SEASON_FGM', 'NBA_SEASON_FGA', 'NBA_SEASON_FG_PCT', 'NBA_SEASON_FG3M', 'NBA_SEASON_FG3A', 'NBA_SEASON_FG3_PCT', 'NBA_SEASON_FTM', 'NBA_SEASON_FTA', 'NBA_SEASON_FT_PCT', 'NBA_SEASON_OREB', 'NBA_SEASON_DREB', 'NBA_SEASON_REB', 'NBA_SEASON_AST', 'NBA_SEASON_TOV', 'NBA_SEASON_STL', 'NBA_SEASON_BLK', 'NBA_SEASON_BLKA', 'NBA_SEASON_PF', 'NBA_SEASON_PFD', 'NBA_SEASON_PTS', 'NBA_SEASON_PLUS_MINUS', 'NBA_SEASON_DD2', 'NBA_SEASON_TD3')
-
 F.MINE = c('OPP_DVP_FPPG', 'OPP_DVP_RANK')
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA, F.MINE)
+F.CURATED = c('FPPG', 'Salary', 'InjuryIndicator',
+              'RG_points', 'RG_pownpct',
+              'OPP_DVP_RANK')
+
+FEATURES_TO_USE = F.CURATED# c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA, F.MINE)
+
 
 #============== Functions ===============
 
@@ -239,7 +229,7 @@ for (dateStr in dateStrs) {
   cat(', expected=', round(myTeam$expectedFantasyPoints, 2), sep='')
   cat(', actual=', round(myTeam$fantasyPoints, 2), sep='')
   cat(', low=', round(lowestWinningScore, 2), sep='')
-  cat(', high=', round(highestWinningScore, 2), sep='')
+  #cat(', high=', round(highestWinningScore, 2), sep='')
   cat('\n')
 
   #add data to arrays to plot

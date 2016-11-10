@@ -176,7 +176,7 @@ createTeam = function(data, verbose=F) {
   } else if (amountOverBudget < 0) {
     team = getBetterTeam(data, team, -amountOverBudget, verbose)
   } else {
-    cat('Wow, I got a perfect team on the first try!\n')
+    #cat('Wow, I got a perfect team on the first try!\n')
   }
 
   if (verbose) {
