@@ -13,17 +13,17 @@
 # Total Fantasy Points: 130.08
 
 #Finalteam:
-# PG, Isaiah Thomas, 8100, 39.9
 # SG, Giannis Antetokounmpo, 9900, 44.12
-# SG, Seth Curry, 3500, 16.9
-# PF, Amir Johnson, 4400, 26.07
 # SF, Harrison Barnes, 5100, 24.92
-# PF, Nikola Jokic, 5700, 27.78
-# C, DeMarcus Cousins, 9700, 40.1
-# PG, D'Angelo Russell, 6100, 29.2
+# PF, Dwight Powell, 4100, 24.98
+# PG, Jameer Nelson, 4200, 22.3
 # SF, Rudy Gay, 7300, 33.93
-# Total Amount spent: 59800
-# Total Fantasy Points: 282.93
+# PG, Isaiah Thomas, 8100, 39.9
+# PF, Nikola Jokic, 5700, 27.78
+# SG, Devin Booker, 5900, 30.15
+# C, DeMarcus Cousins, 9700, 40.1
+# Total Amount spent: 60000
+# Total Fantasy Points: 288.18
 
 
 SALARY_CAP = 60000
@@ -227,48 +227,48 @@ createFirstAvailableTeam = function(allPlayers) {
 
   return(team)
 }
-swapRow = function(data1, index1, data2, index2) {
-  tempRow = data1[index1,]
-  data1[index1,] = data2[index2,]
-  data2[index2,] = tempRow
+swapRow = function(data1, rowName1, data2, rowName2) {
+  tempRow = data1[rowName1,]
+  data1[rowName1,] = data2[rowName2,]
+  data2[rowName2,] = tempRow
   return(list(
     data1 = data1,
     data2 = data2
   ))
 }
-climbHill = function(team, availablePlayers, verbose=F) {
+climbHill = function(team, allPlayers, verbose=F) {
   #select a random player on the team, and swap him with an available player
   #if the fp is higher, keep the swapped player
   #repeat until i get to a team where every possible swap produces a lower score
+
+  availablePlayers = removeRows(allPlayers, team)
+
   foundBetterTeam = T
   while (foundBetterTeam) {
     foundBetterTeam = F
+
+    #shuffle the team and available players
     set.seed(48)
     team = shuffle(team)
+    set.seed(48)
+    availablePlayers = shuffle(availablePlayers)
+
+    amountUnderBudget = SALARY_CAP - computeAmountSpent(team)
+
     for (i in 1:nrow(team)) {
-      if (foundBetterTeam) break
       playerOnTeam = team[i,]
-      set.seed(29)
-      availablePlayers = shuffle(availablePlayers)
-      for (j in 1:nrow(availablePlayers)) {
-        availablePlayer = availablePlayers[j,]
-        if (availablePlayer$Position == playerOnTeam$Position) {
-          spNewTeam = swapRow(team, i, availablePlayers, j)
-          newTeam = spNewTeam$data1
-          newAvailablePlayers = spNewTeam$data2
-          newTeamAmountSpent = computeAmountSpent(newTeam)
-          newTeamFP = computeTeamFP(newTeam)
-          oldTeamFP = computeTeamFP(team) #todo: store this up above rather than recompute it each time
-          if (newTeamAmountSpent <= SALARY_CAP && newTeamFP > oldTeamFP) {
-            team = newTeam
-            availablePlayers = newAvailablePlayers
-            foundBetterTeam = T
-            if (verbose) cat('Replaced ', playerOnTeam$Name, ' (', as.character(playerOnTeam$Position), ') -> ', availablePlayer$Name, ' (', as.character(availablePlayer$Position), ') \n', sep='')
-            #cat(', team len=', nrow(team), ', availablePlayer len=', nrow(availablePlayers), '\n')
-            #cat(', team setdiff=', length(setdiff(team$Name, availablePlayers$Name)), ', avail sd=', length(setdiff(availablePlayers$Name, team$Name)), '\n')
-            break
-          }
-        }
+      betterPlayers = availablePlayers[(availablePlayers$Position == playerOnTeam$Position)
+                       & (availablePlayers$FantasyPoints > playerOnTeam$FantasyPoints)
+                       & (availablePlayers$Salary - playerOnTeam$Salary <= amountUnderBudget),]
+      if(nrow(betterPlayers) > 0) {
+        #swap new and old
+        newPlayer = betterPlayers[1,]
+        spNewTeam = swapRow(team, rownames(playerOnTeam), availablePlayers, rownames(newPlayer))
+        team = spNewTeam$data1
+        availablePlayers = spNewTeam$data2
+        foundBetterTeam = T
+        if (verbose) cat('Replaced ', playerOnTeam$Name, ' (', as.character(playerOnTeam$Position), ') -> ', newPlayer$Name, ' (', as.character(newPlayer$Position), ') \n', sep='')
+        break
       }
     }
   }
@@ -276,15 +276,16 @@ climbHill = function(team, availablePlayers, verbose=F) {
 }
 createTeam_HillClimbing = function(allPlayers, verbose=F) {
   #first, create a random team
+  set.seed(43)
   team = createFirstAvailableTeam(shuffle(allPlayers))
-  availablePlayers = removeRows(allPlayers, team)
 
   if (verbose) {
     cat('Initial team:\n')
     printTeam(team)
   }
 
-  team = climbHill(team, availablePlayers, verbose)
+  #todo: compute several of these teams
+  team = climbHill(team, allPlayers, verbose)
 
   if (verbose) {
     cat('Final team:\n')

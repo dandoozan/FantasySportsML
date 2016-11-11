@@ -34,11 +34,11 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 FILENAME = 'rf_15curate'
 END_DATE = '2016-11-06'
 N_TREE = 100
-PLOT = 'fi' #fi, scores,
+PLOT = 'scores' #fi, scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
@@ -149,19 +149,23 @@ getLowestWinningScore = function(contestData, dateStr) {
   return(min(contestData[contestData$Date == dateStr, 'LastWinningScore'], na.rm=T))
 }
 
-plotScores = function(dateStrs, y, yLow, yHigh, save=FALSE, name=NULL, ...) {
+plotScores = function(dateStrs, yLow, yHigh, line1=NULL, line2=NULL, line3=NULL, line4=NULL, save=FALSE, name=NULL, ...) {
   if (save) png(paste0('plots/', name, '.png'), width=500, height=350)
 
   dates = as.Date(dateStrs)
 
-  plot(dates, y, type='n', ylim=c(min(y, yLow, na.rm=T), max(y, yHigh, na.rm=T)),
+  #draw band
+  plot(dates, yLow, type='l', ylim=c(min(yLow, line1, line2, line3, line4, na.rm=T), max(yHigh, line1, line2, line3, line4, na.rm=T)),
        ylab='Fantasy Points', xlab='Date', xaxt='n', ...)
-  lines(dates, yLow, col='blue')
   lines(dates, yHigh, col='blue')
-
   polygon(c(dates, rev(dates)), c(yHigh, rev(yLow)),
           col = "azure", border = NA)
-  lines(dates, y, col='red')
+
+  #draw lines
+  if (!is.null(line1)) lines(dates, line1, col='red')
+  if (!is.null(line2)) lines(dates, line2, col='green')
+  if (!is.null(line3)) lines(dates, line3, col='purple')
+  if (!is.null(line4)) lines(dates, line4, col='orange')
 
   axis.Date(side=1, dates, format="%m/%d")
 
@@ -195,7 +199,9 @@ percentVarExplaineds = c()
 meanOfSquaredResidualss = c()
 testErrors = c()
 teamRatios = c()
+myTeamGreedyExpectedFPs = c()
 myTeamGreedyActualFPs = c()
+myTeamHillClimbingExpectedFPs = c()
 myTeamHillClimbingActualFPs = c()
 highestWinningScores = c()
 lowestWinningScores = c()
@@ -224,7 +230,7 @@ for (dateStr in dateStrs) {
   myTeamGreedy = createTeam_Greedy(predictionDF)
   myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
   myTeamGreedyActualFP = computeTeamFP(test[rownames(myTeamGreedy),])
-  myTeamHillClimbing = createTeam_Greedy(predictionDF)# createTeam_HillClimbing(predictionDF)
+  myTeamHillClimbing = createTeam_HillClimbing(predictionDF)
   myTeamHillClimbingExpectedFP = computeTeamFP(myTeamHillClimbing)
   myTeamHillClimbingActualFP = computeTeamFP(test[rownames(myTeamHillClimbing),])
 
@@ -244,7 +250,9 @@ for (dateStr in dateStrs) {
   meanOfSquaredResidualss = c(meanOfSquaredResidualss, model$mse[N_TREE])
   percentVarExplaineds = c(percentVarExplaineds, model$rsq[N_TREE])
   testErrors = c(testErrors, testError)
+  myTeamGreedyExpectedFPs = c(myTeamGreedyExpectedFPs, myTeamGreedyExpectedFP)
   myTeamGreedyActualFPs = c(myTeamGreedyActualFPs, myTeamGreedyActualFP)
+  myTeamHillClimbingExpectedFPs = c(myTeamHillClimbingExpectedFPs, myTeamHillClimbingExpectedFP)
   myTeamHillClimbingActualFPs = c(myTeamHillClimbingActualFPs, myTeamHillClimbingActualFP)
   highestWinningScores = c(highestWinningScores, highestWinningScore)
   lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
@@ -259,7 +267,7 @@ cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, save=PROD_RUN)
-if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, myTeamGreedyActualFPs, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
+if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, line1=myTeamGreedyExpectedFPs, line2=myTeamGreedyActualFPs, line3=myTeamHillClimbingExpectedFPs, line4=myTeamHillClimbingActualFPs, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
 #if (PROD_RUN || PLOT == 'rmse') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 #if (PROD_RUN || PLOT == 'scoreratios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
