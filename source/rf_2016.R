@@ -195,7 +195,8 @@ percentVarExplaineds = c()
 meanOfSquaredResidualss = c()
 testErrors = c()
 teamRatios = c()
-myTeamActualFantasyPointss = c()
+myTeamGreedyActualFPs = c()
+myTeamHillClimbingActualFPs = c()
 highestWinningScores = c()
 lowestWinningScores = c()
 
@@ -217,8 +218,15 @@ for (dateStr in dateStrs) {
   prediction = createPrediction(model, test, FEATURES_TO_USE)
   testError = computeError(test[[Y_NAME]], prediction)
 
-  #create my team for today
-  myTeam = createTeams(test, prediction, Y_NAME)$myTeam
+  #create my teams for today
+  predictionDF = test
+  predictionDF[[Y_NAME]] = prediction
+  myTeamGreedy = createTeam_Greedy(predictionDF)
+  myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
+  myTeamGreedyActualFP = computeTeamFP(test[rownames(myTeamGreedy),])
+  myTeamHillClimbing = createTeam_Greedy(predictionDF)# createTeam_HillClimbing(predictionDF)
+  myTeamHillClimbingExpectedFP = computeTeamFP(myTeamHillClimbing)
+  myTeamHillClimbingActualFP = computeTeamFP(test[rownames(myTeamHillClimbing),])
 
   #get actual fanduel winning score for currday
   highestWinningScore = getHighestWinningScore(contestData, dateStr)
@@ -226,8 +234,8 @@ for (dateStr in dateStrs) {
 
   #print results
   cat('RMSE=', testError, sep='')
-  cat(', expected=', round(myTeam$expectedFantasyPoints, 2), sep='')
-  cat(', actual=', round(myTeam$fantasyPoints, 2), sep='')
+  cat(', expected=', round(max(myTeamGreedyExpectedFP, myTeamHillClimbingExpectedFP), 2), sep='')
+  cat(', actual=', round(max(myTeamGreedyActualFP, myTeamHillClimbingActualFP), 2), sep='')
   cat(', low=', round(lowestWinningScore, 2), sep='')
   #cat(', high=', round(highestWinningScore, 2), sep='')
   cat('\n')
@@ -236,7 +244,8 @@ for (dateStr in dateStrs) {
   meanOfSquaredResidualss = c(meanOfSquaredResidualss, model$mse[N_TREE])
   percentVarExplaineds = c(percentVarExplaineds, model$rsq[N_TREE])
   testErrors = c(testErrors, testError)
-  myTeamActualFantasyPointss = c(myTeamActualFantasyPointss, myTeam$fantasyPoints)
+  myTeamGreedyActualFPs = c(myTeamGreedyActualFPs, myTeamGreedyActualFP)
+  myTeamHillClimbingActualFPs = c(myTeamHillClimbingActualFPs, myTeamHillClimbingActualFP)
   highestWinningScores = c(highestWinningScores, highestWinningScore)
   lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
 }
@@ -245,12 +254,12 @@ for (dateStr in dateStrs) {
 cat('Mean of daily RMSEs: ', mean(testErrors), '\n', sep='')
 
 #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
-scoreRatios = myTeamActualFantasyPointss/lowestWinningScores
+scoreRatios = myTeamGreedyActualFPs/lowestWinningScores
 cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, save=PROD_RUN)
-if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, myTeamActualFantasyPointss, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
+if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, myTeamGreedyActualFPs, lowestWinningScores, highestWinningScores, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
 #if (PROD_RUN || PLOT == 'rmse') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 #if (PROD_RUN || PLOT == 'scoreratios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))

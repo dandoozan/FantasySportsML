@@ -1,3 +1,31 @@
+#TBX:
+#Baseteam:
+# C, A.J. Hammons, 3500, 0.92
+# PF, Amir Johnson, 4400, 26.07
+# PF, Anthony Tolliver, 3500, 0.61
+# PG, Cory Joseph, 3500, 13.6
+# PG, D'Angelo Russell, 6100, 29.2
+# SF, Brandon Ingram, 3700, 16.36
+# SF, Bruno Caboclo, 3500, 2.05
+# SG, Arron Afflalo, 3600, 14.71
+# SG, Avery Bradley, 6800, 26.54
+# Total Amount spent: 38600
+# Total Fantasy Points: 130.08
+
+#Finalteam:
+# PG, Isaiah Thomas, 8100, 39.9
+# SG, Giannis Antetokounmpo, 9900, 44.12
+# SG, Seth Curry, 3500, 16.9
+# PF, Amir Johnson, 4400, 26.07
+# SF, Harrison Barnes, 5100, 24.92
+# PF, Nikola Jokic, 5700, 27.78
+# C, DeMarcus Cousins, 9700, 40.1
+# PG, D'Angelo Russell, 6100, 29.2
+# SF, Rudy Gay, 7300, 33.93
+# Total Amount spent: 59800
+# Total Fantasy Points: 282.93
+
+
 SALARY_CAP = 60000
 
 getInitialTeam = function(data) {
@@ -18,7 +46,7 @@ printPlayer = function(player) {
   cat('    ', as.character(player$Position), ', ', sep='')
   cat(paste(player[, c('Name', 'Salary')], collapse=', '), sep='')
   cat(', ', round(player$FantasyPoints, 2), sep='')
-  cat(', ', round(player$PPD, 2), sep='')
+  #cat(', ', round(player$PPD, 2), sep='')
   cat('\n')
 }
 printTeam = function(team) {
@@ -26,9 +54,9 @@ printTeam = function(team) {
     printPlayer(team[i,])
   }
   cat('    Total Amount spent:', computeAmountSpent(team), '\n')
-  cat('    Total Fantasy Points:', round(computeTotalFantasyPoints(team), 2), '\n')
+  cat('    Total Fantasy Points:', round(computeTeamFP(team), 2), '\n')
 }
-computeTotalFantasyPoints = function(team) {
+computeTeamFP = function(team) {
   return(sum(team$FantasyPoints))
 }
 computeAmountSpent = function(team) {
@@ -155,15 +183,15 @@ getBetterTeam = function(data, team, amountUnderBudget, verbose=F) {
   }
   return(team)
 }
-createTeam = function(data, verbose=F) {
+createTeam_Greedy = function(allPlayers, verbose=F) {
   #add PPD coumn
-  data$PPD = computePPD(data$FantasyPoints, data$Salary)
+  allPlayers$PPD = computePPD(allPlayers$FantasyPoints, allPlayers$Salary)
 
   #sort by ppd
-  data = data[order(data$PPD, decreasing=TRUE),]
+  allPlayers = allPlayers[order(allPlayers$PPD, decreasing=TRUE),]
 
   #first, fill team with all the highest ppd players
-  team = getInitialTeam(data)
+  team = getInitialTeam(allPlayers)
 
   if (verbose) {
     cat('Initial team:\n')
@@ -172,9 +200,9 @@ createTeam = function(data, verbose=F) {
 
   amountOverBudget = computeAmountOverBudget(team)
   if (amountOverBudget > 0) {
-    team = getWorseTeam(data, team, amountOverBudget, verbose)
+    team = getWorseTeam(allPlayers, team, amountOverBudget, verbose)
   } else if (amountOverBudget < 0) {
-    team = getBetterTeam(data, team, -amountOverBudget, verbose)
+    team = getBetterTeam(allPlayers, team, -amountOverBudget, verbose)
   } else {
     #cat('Wow, I got a perfect team on the first try!\n')
   }
@@ -186,50 +214,82 @@ createTeam = function(data, verbose=F) {
 
   return(team)
 }
-printTeamResults = function(myTeam, bestTeam, yName) {
-  myTeamPredictedPoints = computeTotalFantasyPoints(myTeam)
-  myTeamActualPoints = computeTotalFantasyPoints(test[rownames(myTeam),])
-  bestTeamPoints = computeTotalFantasyPoints(bestTeam)
 
-  cat('How did my team do?\n')
-  cat('    I was expecting to get', round(myTeamPredictedPoints, 2), 'points\n')
-  cat('    I actually got:', round(myTeamActualPoints, 2), 'points\n')
-  cat('    Best team got:', round(bestTeamPoints, 2), 'points\n')
-  cat('    My score ratio is', round(myTeamActualPoints/bestTeamPoints, 4), '\n')
+createFirstAvailableTeam = function(allPlayers) {
+  team = data.frame()
+
+  positions = levels(allPlayers$Position)
+  for (position in positions) {
+    numPlayersToChoose = ifelse(position == 'C', 1, 2)
+    playersInPosition = allPlayers[allPlayers$Position == position,]
+    team = rbind(team, playersInPosition[1:numPlayersToChoose,])
+  }
+
+  return(team)
 }
-
-createTeams = function(testData, prediction, yName, verbose=F) {
-  if (verbose) cat('Creating my team...\n')
-
-  #create my team (using prediction)
-  predictionDF = testData
-  predictionDF[[yName]] = prediction
-  myTeam = createTeam(predictionDF)
-  if (verbose) {
-    cat('My team:\n')
-    printTeam(myTeam)
-  }
-
-  #create best team (using test)
-  bestTeam = createTeam(testData)
-  if (verbose) {
-    cat('Best team:\n')
-    printTeam(bestTeam)
-  }
-
-  if (verbose) printTeamResults(myTeam, bestTeam, yName)
-
-  myTeamActualFantasyPoints = computeTotalFantasyPoints(testData[rownames(myTeam),])
-  bestTeamFantasyPoints = computeTotalFantasyPoints(bestTeam)
-
+swapRow = function(data1, index1, data2, index2) {
+  tempRow = data1[index1,]
+  data1[index1,] = data2[index2,]
+  data2[index2,] = tempRow
   return(list(
-    myTeam=list(
-      expectedFantasyPoints=computeTotalFantasyPoints(myTeam),
-      fantasyPoints=myTeamActualFantasyPoints
-    ),
-    bestTeam=list(
-      fantasyPoints=bestTeamFantasyPoints
-    ),
-    ratio=myTeamActualFantasyPoints/bestTeamFantasyPoints
-    ))
+    data1 = data1,
+    data2 = data2
+  ))
+}
+climbHill = function(team, availablePlayers, verbose=F) {
+  #select a random player on the team, and swap him with an available player
+  #if the fp is higher, keep the swapped player
+  #repeat until i get to a team where every possible swap produces a lower score
+  foundBetterTeam = T
+  while (foundBetterTeam) {
+    foundBetterTeam = F
+    set.seed(48)
+    team = shuffle(team)
+    for (i in 1:nrow(team)) {
+      if (foundBetterTeam) break
+      playerOnTeam = team[i,]
+      set.seed(29)
+      availablePlayers = shuffle(availablePlayers)
+      for (j in 1:nrow(availablePlayers)) {
+        availablePlayer = availablePlayers[j,]
+        if (availablePlayer$Position == playerOnTeam$Position) {
+          spNewTeam = swapRow(team, i, availablePlayers, j)
+          newTeam = spNewTeam$data1
+          newAvailablePlayers = spNewTeam$data2
+          newTeamAmountSpent = computeAmountSpent(newTeam)
+          newTeamFP = computeTeamFP(newTeam)
+          oldTeamFP = computeTeamFP(team) #todo: store this up above rather than recompute it each time
+          if (newTeamAmountSpent <= SALARY_CAP && newTeamFP > oldTeamFP) {
+            team = newTeam
+            availablePlayers = newAvailablePlayers
+            foundBetterTeam = T
+            if (verbose) cat('Replaced ', playerOnTeam$Name, ' (', as.character(playerOnTeam$Position), ') -> ', availablePlayer$Name, ' (', as.character(availablePlayer$Position), ') \n', sep='')
+            #cat(', team len=', nrow(team), ', availablePlayer len=', nrow(availablePlayers), '\n')
+            #cat(', team setdiff=', length(setdiff(team$Name, availablePlayers$Name)), ', avail sd=', length(setdiff(availablePlayers$Name, team$Name)), '\n')
+            break
+          }
+        }
+      }
+    }
+  }
+  return(team)
+}
+createTeam_HillClimbing = function(allPlayers, verbose=F) {
+  #first, create a random team
+  team = createFirstAvailableTeam(shuffle(allPlayers))
+  availablePlayers = removeRows(allPlayers, team)
+
+  if (verbose) {
+    cat('Initial team:\n')
+    printTeam(team)
+  }
+
+  team = climbHill(team, availablePlayers, verbose)
+
+  if (verbose) {
+    cat('Final team:\n')
+    printTeam(team)
+  }
+
+  return(team)
 }
