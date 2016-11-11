@@ -274,23 +274,27 @@ climbHill = function(team, allPlayers, verbose=F) {
   }
   return(team)
 }
-createTeam_HillClimbing = function(allPlayers, verbose=F) {
-  #first, create a random team
-  set.seed(43)
-  team = createFirstAvailableTeam(shuffle(allPlayers))
+createTeam_HillClimbing = function(allPlayers) {
 
-  if (verbose) {
-    cat('Initial team:\n')
-    printTeam(team)
+  bestTeam = NULL
+  bestTeamFP = -Inf
+
+  numTriesWithoutFindingBetterTeam = 0
+  while (numTriesWithoutFindingBetterTeam < 1) {
+    set.seed(43)
+    allPlayers = shuffle(allPlayers)
+    initalTeam = createFirstAvailableTeam(allPlayers)
+    team = climbHill(initalTeam, allPlayers)
+    teamFP = computeTeamFP(team)
+    #cat('numTriesWithoutFindingBetterTeam=', numTriesWithoutFindingBetterTeam, ', fp=', teamFP,'\n')
+    if (teamFP > bestTeamFP) {
+      bestTeam = team
+      bestTeamFP = teamFP
+      numTriesWithoutFindingBetterTeam = 0
+      #cat('    Found new best team, fp=', bestTeamFP, '\n')
+    } else {
+      numTriesWithoutFindingBetterTeam = numTriesWithoutFindingBetterTeam + 1
+    }
   }
-
-  #todo: compute several of these teams
-  team = climbHill(team, allPlayers, verbose)
-
-  if (verbose) {
-    cat('Final team:\n')
-    printTeam(team)
-  }
-
-  return(team)
+  return(bestTeam)
 }
