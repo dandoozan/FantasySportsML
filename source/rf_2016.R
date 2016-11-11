@@ -15,6 +15,7 @@
 #D-fix nba data (using prevday's data): rf_14fixnba: 10/27-11/6, 80/93, 20, 1.041, 72.91909/61.65693, 3.394206/8.340627/3.441368, 8.065771, 0.955393 <-- new best
 #D-Curate features: rf_15curate: 10/27-11/6, 6/93, 100, 0.774, 66.01628/65.28664, 4.163789/8.088749/4.206491, 8.066922, 0.9791746
 #D-add data up to 11/8: rf_16nov8: 10/27-11/8, 6/93, 100, 0.974, 65.82099/65.06195, 4.180437/7.846159/4.206441, 8.054633, 0.982619 <-- new best!
+#D-Plot 50/50 $1 contests: rf_17is5050: 10/27-11/8, 6/93, 0.958, 65.82099/65.06195, 4.180437/7.846159/4.206441, 8.054633, 0.9789038
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -44,7 +45,7 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_16nov8'
+FILENAME = 'rf_17is5050'
 END_DATE = '2016-11-08'
 N_TREE = 100
 PLOT = 'scores' #fi, scores,
@@ -153,12 +154,27 @@ getHighestWinningScore = function(contestData, dateStr) {
   #return the highest winnning score for this date
   return(max(contestData[contestData$Date == dateStr, 'HighestScore'], na.rm=T))
 }
-getLowestWinningScore = function(contestData, dateStr) {
+getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   #return the lowest lastWinningScore; essentially, this is what i need to have won anything in any contest
-  return(min(contestData[contestData$Date == dateStr, 'LastWinningScore'], na.rm=T))
+  contests = contests[contests$Date == dateStr,]
+  if (type != 'all') {
+    if (type == '5050') {
+      contests = contests[contests$Is5050 == 1,]
+    } else if (type == 'non5050') {
+      contests = contests[contests$Is5050 == 0,]
+    }
+  }
+  if (entryFee > -1) {
+    contests = contests[contests$EntryFee == entryFee,]
+  }
+
+  if (sum(!is.na(contests$LastWinningScore)) > 0) {
+    return(min(contests$LastWinningScore, na.rm=T))
+  }
+  return (NA)
 }
 
-plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), save=FALSE, name=NULL, ...) {
+plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), labels=c(), save=FALSE, name=NULL, ...) {
   if (save) png(paste0('plots/', name, '.png'), width=500, height=350)
 
   numLinesToPlot = length(linesToPlot)
@@ -166,12 +182,12 @@ plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), save=FALSE, nam
   dates = as.Date(dateStrs)
 
   #get ymin and ymax
-  minValue = min(yLow)
-  maxValue = max(yHigh)
+  minValue = min(yLow, na.rm=T)
+  maxValue = max(yHigh, na.rm=T)
   if (numLinesToPlot > 0) {
     for (i in 1:numLinesToPlot) {
-      minValue = min(minValue, linesToPlot[[i]])
-      maxValue = max(maxValue, linesToPlot[[i]])
+      minValue = min(minValue, linesToPlot[[i]], na.rm=T)
+      maxValue = max(maxValue, linesToPlot[[i]], na.rm=T)
     }
   }
 
@@ -182,7 +198,6 @@ plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), save=FALSE, nam
           col = "azure", border = NA)
 
   #draw lines
-  labels = c('Expected', 'Actual', 'line3', 'line4')
   colors = c('purple', 'green', 'red', 'orange')
   if (numLinesToPlot > 0) {
     for (i in 1:numLinesToPlot) {
@@ -238,6 +253,7 @@ myTeamGreedyExpectedFPs = c()
 myTeamHillClimbingExpectedFPs = c()
 highestWinningScores = c()
 lowestWinningScores = c()
+lowestWinningScores_5050_1 = c()
 
 dateStrs = sort(unique(data$Date))[-1] #-1 uses all but the first element
 for (dateStr in dateStrs) {
@@ -262,8 +278,8 @@ for (dateStr in dateStrs) {
   predictionDF[[Y_NAME]] = prediction
   myTeamGreedy = createTeam_Greedy(predictionDF)
   myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
-  myTeamHillClimbing = createTeam_HillClimbing(predictionDF)
-  myTeamHillClimbingExpectedFP = computeTeamFP(myTeamHillClimbing)
+  myTeamHillClimbing = NULL# createTeam_HillClimbing(predictionDF)
+  myTeamHillClimbingExpectedFP = 0# computeTeamFP(myTeamHillClimbing)
 
   #set my team to whichever gave the best expected score from above
   if (myTeamGreedyExpectedFP > myTeamHillClimbingExpectedFP) {
@@ -278,7 +294,8 @@ for (dateStr in dateStrs) {
 
   #get actual fanduel winning score for currday
   highestWinningScore = getHighestWinningScore(contestData, dateStr)
-  lowestWinningScore = getLowestWinningScore(contestData, dateStr)
+  lowestWinningScore = getLowestWinningScore(contestData, dateStr, type='non5050')
+  lowestWinningScore_5050_1 = getLowestWinningScore(contestData, dateStr, type='5050', entryFee=1)
 
   #print results
   cat('RMSE=', testError, sep='')
@@ -299,6 +316,7 @@ for (dateStr in dateStrs) {
   myTeamHillClimbingExpectedFPs = c(myTeamHillClimbingExpectedFPs, myTeamHillClimbingExpectedFP)
   highestWinningScores = c(highestWinningScores, highestWinningScore)
   lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
+  lowestWinningScores_5050_1 = c(lowestWinningScores_5050_1, lowestWinningScore_5050_1)
 }
 
 #print mean of rmses
@@ -310,7 +328,7 @@ cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, save=PROD_RUN)
-if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs), main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
+if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs, lowestWinningScores_5050_1), labels=c('Expected', 'Actual', '50/50 $1'), main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
 #if (PROD_RUN || PLOT == 'rmse') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 #if (PROD_RUN || PLOT == 'scoreratios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))

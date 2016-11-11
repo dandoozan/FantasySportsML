@@ -2,6 +2,7 @@ import datetime
 import re
 import json
 import _util as util
+import _fanDuelCommon as fd
 
 DATA_DIR = 'data'
 CONTESTS_DIR = util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'ContestResults')
@@ -13,7 +14,7 @@ DATE_FORMAT = '%Y-%m-%d'
 
 COL_NAMES = ['Date', 'Title', 'Entries', 'MaxEntries', 'MaxEntriesPerUser',
         'H2H', 'EntryFee', 'Pot', 'HighestScore', 'LastWinningIndex',
-        'LastWinningRank', 'LastWinningScore']
+        'LastWinningRank', 'LastWinningScore', 'Is5050']
 
 def loadDataFromTxtFile(fullPathFilename):
     data = {}
@@ -74,6 +75,9 @@ def loadDataFromTxtFile(fullPathFilename):
     data['LastWinningRank'] = int(re.sub(r'(st|nd|rd|th)', '', prevSp[0].strip()))
     data['LastWinningScore'] = float(prevSp[-1].strip())
 
+    #set 5050 to always be 0
+    data['Is5050'] = 0
+
     return data
 
 def loadDataFromJsonFile(fullPathFilename):
@@ -93,6 +97,7 @@ def loadDataFromJsonFile(fullPathFilename):
         'LastWinningIndex': int(contestData['scoring']['last_winning_index']),
         'LastWinningRank': int(contestData['scoring']['last_winning_rank']),
         'LastWinningScore': float(contestData['scoring']['last_winning_score']),
+        'Is5050': (1 if fd.is5050Contest(contestData['name']) else 0),
     }
 
 #============= main =============
