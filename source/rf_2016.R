@@ -93,14 +93,14 @@ computeError = function(y, yhat) {
 }
 
 #I do not understand any of this code, I borrowed it from a kaggler
-plotImportances = function(model, max=50, save=FALSE) {
+plotImportances = function(model, maxFeatures=50, save=FALSE) {
   cat('Plotting Feature Importances...\n')
 
   # Get importance
   importances = randomForest::importance(model)
 
   #DPD: take the top 20 if there are more than 20
-  importances = importances[order(-importances[, 1]), , drop = FALSE][1:min(max, nrow(importances)),, drop=F]
+  importances = importances[order(-importances[, 1]), , drop = FALSE][1:min(maxFeatures, nrow(importances)),, drop=F]
 
   varImportance = data.frame(Variables = row.names(importances),
                              Importance = round(importances[, 1], 2))
@@ -109,7 +109,7 @@ plotImportances = function(model, max=50, save=FALSE) {
   rankImportance = varImportance %>%
     mutate(Rank = paste0('#',dense_rank(desc(Importance))))
 
-  if (save) png(paste0('plots/Importances_', FILENAME, '.png'), width=500, height=nrow(importances)*10)
+  if (save) png(paste0('plots/Importances_', FILENAME, '.png'), width=500, height=max(nrow(importances)*10, 350))
   print(ggplot(rankImportance, aes(x = reorder(Variables, Importance),
                                    y = Importance, fill = Importance)) +
           geom_bar(stat='identity') +
@@ -158,23 +158,38 @@ getLowestWinningScore = function(contestData, dateStr) {
   return(min(contestData[contestData$Date == dateStr, 'LastWinningScore'], na.rm=T))
 }
 
-plotScores = function(dateStrs, yLow, yHigh, line1=NULL, line2=NULL, line3=NULL, line4=NULL, save=FALSE, name=NULL, ...) {
+plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), save=FALSE, name=NULL, ...) {
   if (save) png(paste0('plots/', name, '.png'), width=500, height=350)
+
+  numLinesToPlot = length(linesToPlot)
 
   dates = as.Date(dateStrs)
 
+  #get ymin and ymax
+  minValue = min(yLow)
+  maxValue = max(yHigh)
+  if (numLinesToPlot > 0) {
+    for (i in 1:numLinesToPlot) {
+      minValue = min(minValue, linesToPlot[[i]])
+      maxValue = max(maxValue, linesToPlot[[i]])
+    }
+  }
+
   #draw band
-  plot(dates, yLow, type='l', ylim=c(min(yLow, line1, line2, line3, line4, na.rm=T), max(yHigh, line1, line2, line3, line4, na.rm=T)),
-       ylab='Fantasy Points', xlab='Date', xaxt='n', ...)
+  plot(dates, yLow, type='l', ylim=c(minValue, maxValue+50), ylab='Fantasy Points', xlab='Date', xaxt='n', ...)
   lines(dates, yHigh, col='blue')
   polygon(c(dates, rev(dates)), c(yHigh, rev(yLow)),
           col = "azure", border = NA)
 
   #draw lines
-  if (!is.null(line1)) lines(dates, line1, col='red')
-  if (!is.null(line2)) lines(dates, line2, col='green')
-  if (!is.null(line3)) lines(dates, line3, col='purple')
-  if (!is.null(line4)) lines(dates, line4, col='orange')
+  labels = c('Expected', 'Actual', 'line3', 'line4')
+  colors = c('purple', 'green', 'red', 'orange')
+  if (numLinesToPlot > 0) {
+    for (i in 1:numLinesToPlot) {
+      lines(dates, linesToPlot[[i]], col=colors[i])
+    }
+    legend(x='topright', legend=labels[1:numLinesToPlot], fill=colors[1:numLinesToPlot], inset=0.02)
+  }
 
   axis.Date(side=1, dates, format="%m/%d")
 
@@ -217,10 +232,10 @@ percentVarExplaineds = c()
 meanOfSquaredResidualss = c()
 testErrors = c()
 teamRatios = c()
+myTeamExpectedFPs = c()
+myTeamActualFPs = c()
 myTeamGreedyExpectedFPs = c()
-myTeamGreedyActualFPs = c()
 myTeamHillClimbingExpectedFPs = c()
-myTeamHillClimbingActualFPs = c()
 highestWinningScores = c()
 lowestWinningScores = c()
 
@@ -247,10 +262,19 @@ for (dateStr in dateStrs) {
   predictionDF[[Y_NAME]] = prediction
   myTeamGreedy = createTeam_Greedy(predictionDF)
   myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
-  myTeamGreedyActualFP = computeActualFP(myTeamGreedy, test)
   myTeamHillClimbing = createTeam_HillClimbing(predictionDF)
   myTeamHillClimbingExpectedFP = computeTeamFP(myTeamHillClimbing)
-  myTeamHillClimbingActualFP = computeActualFP(myTeamHillClimbing, test)
+
+  #set my team to whichever gave the best expected score from above
+  if (myTeamGreedyExpectedFP > myTeamHillClimbingExpectedFP) {
+    myTeam = myTeamGreedy
+    whichTeamITook = 'Greedy'
+  } else {
+    myTeam = myTeamHillClimbing
+    whichTeamITook = 'HillClimbing'
+  }
+  myTeamExpectedFP = computeTeamFP(myTeam)
+  myTeamActualFP = computeActualFP(myTeam, test)
 
   #get actual fanduel winning score for currday
   highestWinningScore = getHighestWinningScore(contestData, dateStr)
@@ -258,9 +282,10 @@ for (dateStr in dateStrs) {
 
   #print results
   cat('RMSE=', testError, sep='')
-  cat(', expected=', round(max(myTeamGreedyExpectedFP, myTeamHillClimbingExpectedFP), 2), sep='')
-  cat(', actual=', round(max(myTeamGreedyActualFP, myTeamHillClimbingActualFP), 2), sep='')
+  cat(', expected=', round(myTeamExpectedFP, 2), sep='')
+  cat(', actual=', round(myTeamActualFP, 2), sep='')
   cat(', low=', round(lowestWinningScore, 2), sep='')
+  cat(', ', whichTeamITook, sep='')
   #cat(', high=', round(highestWinningScore, 2), sep='')
   cat('\n')
 
@@ -268,10 +293,10 @@ for (dateStr in dateStrs) {
   meanOfSquaredResidualss = c(meanOfSquaredResidualss, model$mse[N_TREE])
   percentVarExplaineds = c(percentVarExplaineds, model$rsq[N_TREE])
   testErrors = c(testErrors, testError)
+  myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
+  myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
   myTeamGreedyExpectedFPs = c(myTeamGreedyExpectedFPs, myTeamGreedyExpectedFP)
-  myTeamGreedyActualFPs = c(myTeamGreedyActualFPs, myTeamGreedyActualFP)
   myTeamHillClimbingExpectedFPs = c(myTeamHillClimbingExpectedFPs, myTeamHillClimbingExpectedFP)
-  myTeamHillClimbingActualFPs = c(myTeamHillClimbingActualFPs, myTeamHillClimbingActualFP)
   highestWinningScores = c(highestWinningScores, highestWinningScore)
   lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
 }
@@ -280,12 +305,12 @@ for (dateStr in dateStrs) {
 cat('Mean of daily RMSEs: ', mean(testErrors), '\n', sep='')
 
 #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
-scoreRatios = myTeamGreedyActualFPs/lowestWinningScores
+scoreRatios = myTeamActualFPs/lowestWinningScores
 cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, save=PROD_RUN)
-if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, line1=myTeamGreedyExpectedFPs, line2=myTeamGreedyActualFPs, line3=myTeamHillClimbingExpectedFPs, line4=myTeamHillClimbingActualFPs, main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
+if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs), main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
 #if (PROD_RUN || PLOT == 'rmse') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 #if (PROD_RUN || PLOT == 'scoreratios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
