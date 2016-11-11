@@ -172,6 +172,15 @@ plotScores = function(dateStrs, yLow, yHigh, line1=NULL, line2=NULL, line3=NULL,
   if (save) dev.off()
 }
 
+computeActualFP = function(team, test) {
+  #todo: perhaps improve this through vectorization
+  actualFP = 0.0
+  for (i in 1:nrow(team)) {
+    actualFP = actualFP + test[test$Name == team[i,'Name'], 'FantasyPoints']
+  }
+  return(actualFP)
+}
+
 #============= Main ================
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
@@ -229,10 +238,10 @@ for (dateStr in dateStrs) {
   predictionDF[[Y_NAME]] = prediction
   myTeamGreedy = createTeam_Greedy(predictionDF)
   myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
-  myTeamGreedyActualFP = computeTeamFP(test[rownames(myTeamGreedy),])
+  myTeamGreedyActualFP = computeActualFP(myTeamGreedy, test)
   myTeamHillClimbing = createTeam_HillClimbing(predictionDF)
   myTeamHillClimbingExpectedFP = computeTeamFP(myTeamHillClimbing)
-  myTeamHillClimbingActualFP = computeTeamFP(test[rownames(myTeamHillClimbing),])
+  myTeamHillClimbingActualFP = computeActualFP(myTeamHillClimbing, test)
 
   #get actual fanduel winning score for currday
   highestWinningScore = getHighestWinningScore(contestData, dateStr)
