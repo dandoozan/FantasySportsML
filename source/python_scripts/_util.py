@@ -142,5 +142,5 @@ def getOneDay():
     from datetime import timedelta
     return timedelta(1)
 def getYesterdayAsDate():
-    from datetime import datetime
-    return datetime.today() - getOneDay()
+    import datetime
+    return datetime.date.today() - getOneDay()

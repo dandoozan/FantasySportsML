@@ -136,7 +136,7 @@ SEASONS = {
     '2016': {
         'str': '2016-17',
         'startDate': date(2016, 10, 25),
-        'endDate': date(2016, 11, 6),
+        'endDate': util.getYesterdayAsDate(),
     },
 }
 DATE_FORMAT_FILENAME = '%Y-%m-%d'
@@ -220,25 +220,28 @@ headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 currDate = seasonStartDate
 prevDataValues = None
 while currDate <= seasonEndDate:
-    print '\nScraping data for ' + str(currDate) + '...'
-
-    startDate = currDate if isDaily else None
-    url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], params))
-
-    jsonData = scraper.downloadJson(url, createHeaders(headers))
-    #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
-
-    dataValues = getDataValues(jsonData)
-    if len(dataValues) > 0 and dataValues != prevDataValues:
-        baseFilename = currDate.strftime(DATE_FORMAT_FILENAME)
-        scraper.writeJsonData(jsonData, scraper.createJsonFilename(parentDir, baseFilename), prettyPrint=False)
+    print '\nDownloading data for ' + str(currDate) + '...'
+    fullPathFilename = util.createFullPathFilename(parentDir, util.createJsonFilename(util.formatDate(currDate)))
+    if util.fileExists(fullPathFilename):
+        print '    Skipping date because file exists: ' + fullPathFilename
     else:
-        util.headsUp('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
+        startDate = currDate if isDaily else None
+        url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], params))
 
-    prevDataValues = dataValues
+        jsonData = scraper.downloadJson(url, createHeaders(headers))
+        #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
+
+        dataValues = getDataValues(jsonData)
+        if len(dataValues) > 0 and dataValues != prevDataValues:
+            scraper.writeJsonData(jsonData, fullPathFilename, prettyPrint=False)
+        else:
+            util.headsUp('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
+
+        prevDataValues = dataValues
+
+        print '    Sleeping for %d seconds...' % SLEEP
+        time.sleep(SLEEP)
+
     currDate = currDate + ONE_DAY
-
-    print '    Sleeping for %d seconds...' % SLEEP
-    time.sleep(SLEEP)
 
 print 'Done!  Finished Daily: %s, Team: %s, Category: %s, Season: %s...' % (isDaily, isTeam, category, season)

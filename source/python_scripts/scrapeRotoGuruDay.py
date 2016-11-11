@@ -1,14 +1,15 @@
 import urllib2
 from bs4 import BeautifulSoup
-from datetime import datetime
+import datetime
 import scraper
 import _util as util
 
 PARENT_DIR = util.joinDirs('data', 'rawDataFromRotoGuru')
 DATE_FORMAT = '%Y-%m-%d'
-ONE_DAY = util.getOneDay()
+SEASON_START_DATE = datetime.date(2016, 10, 25)
 YESTERDAY = util.getYesterdayAsDate()
-SLEEP = 2
+ONE_DAY = util.getOneDay()
+SLEEP = 5
 
 def downloadData(date):
     url = 'http://rotoguru1.com/cgi-bin/hyday.pl?game=fd&mon=%d&day=%d&year=%d&scsv=1' % (date.month, date.day, date.year)
@@ -36,15 +37,16 @@ def writeData(data, fullPathFilename):
 
 #=============== Main ================
 
-dateInput = raw_input('Enter start date if different than yesterday (eg. 2016-10-25): ').strip()
-startDate = YESTERDAY if dateInput == '' else util.parseDate(dateInput)
-
-currDate = startDate
-while currDate <= YESTERDAY:
+currDate = SEASON_START_DATE
+while currDate < YESTERDAY:
     currDateStr = util.formatDate(currDate)
-    data = downloadData(currDate)
-    writeData(data, util.createFullPathFilename(PARENT_DIR, util.createTxtFilename(currDateStr)))
+    fullPathFilename = util.createFullPathFilename(PARENT_DIR, util.createCsvFilename(currDateStr))
+    if util.fileExists(fullPathFilename):
+        print '    Skipping date because file exists: ' + fullPathFilename
+    else:
+        data = downloadData(currDate)
+        writeData(data, fullPathFilename)
+        scraper.sleep(SLEEP)
     currDate = currDate + ONE_DAY
-    scraper.sleep(SLEEP)
 
 print 'Done!'
