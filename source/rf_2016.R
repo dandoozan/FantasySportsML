@@ -14,6 +14,7 @@
 #D-add nba player season-long features: rf_13nba: 10/27-11/6, 80/93, 20, 1.07, 49.71302/73.85939, 2.827531/6.956564/2.852913, 6.878917, 1.109224 <-- WRONG
 #D-fix nba data (using prevday's data): rf_14fixnba: 10/27-11/6, 80/93, 20, 1.041, 72.91909/61.65693, 3.394206/8.340627/3.441368, 8.065771, 0.955393 <-- new best
 #D-Curate features: rf_15curate: 10/27-11/6, 6/93, 100, 0.774, 66.01628/65.28664, 4.163789/8.088749/4.206491, 8.066922, 0.9791746
+#D-add data up to 11/8: rf_16nov8: 10/27-11/8, 6/93, 100, 0.974, 65.82099/65.06195, 4.180437/7.846159/4.206441, 8.054633, 0.982619 <-- new best!
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -22,7 +23,9 @@
 #How to add dates (up to date before yesterday)
   #-download rotoguru (python source/python_scripts/scrapeRotoGuruDay.py)
   #-download nba data (python source/python_scripts/scrapeStatsNba.py)
-  #-run cdf
+  #-change END_DATE in createDataFile_2016.py
+  #-create data_2016.csv (python source/python_scripts/createDataFile_2016.py)
+  #-create data_contests_2016.csv (python source/python_scripts/createContestFile.py)
   #-change END_DATE to new date
 
 #Remove all objects from the current workspace
@@ -40,9 +43,9 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = F
-FILENAME = 'rf_15curate'
-END_DATE = '2016-11-06'
+PROD_RUN = T
+FILENAME = 'rf_16nov8'
+END_DATE = '2016-11-08'
 N_TREE = 100
 PLOT = 'scores' #fi, scores,
 Y_NAME = 'FantasyPoints'

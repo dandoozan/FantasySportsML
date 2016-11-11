@@ -7,7 +7,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = datetime(2016, 10, 25)
 ONE_DAY = timedelta(1)
-END_DATE = datetime(2016, 11, 6)
+END_DATE = datetime(2016, 11, 8)
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -391,62 +391,72 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'darrell arthur',
     },
     '2016-11-04': {
-        'aaron harrison',
         'alec burks',
-        'brandan wright',
         'brian roberts',
-        'caris levert',
         'chandler parsons',
-        'christian wood',
-        'damian jones',
-        'derrick williams',
-        'festus ezeli',
         'gordon hayward',
-        'josh mcroberts',
         'josh richardson',
-        'jrue holiday',
         'marshall plumlee',
-        'randy foye',
-        'tim quarterman',
-        'wayne ellington',
     },
     '2016-11-05': {
         'adreian payne',
-        'alan anderson',
         'arinze onuaku',
-        'brice johnson',
-        'chinanu onuaku',
-        'damjan rudez',
         'danny green',
-        'danuel house',
         'gary harris',
         'georgios papagiannis',
         'john lucas iii',
         'jordan farmar',
-        'josh huestis',
         'malik beasley',
         'mike miller',
-        'mike scott',
+        'skal labissiere',
+        'steve novak',
+    },
+    '2016-11-06': {
+        'bruno caboclo',
+        'demetrius jackson',
+        'fred vanvleet',
+        'kelly olynyk',
+        'lucas nogueira',
+    },
+    '2016-11-07': {
+        'aaron harrison',
+        'alec burks',
+        'arinze onuaku',
+        'brian roberts',
+        'brice johnson',
+        'chinanu onuaku',
+        'christian wood',
+        'damian jones',
+        'damjan rudez',
+        'danuel house',
+        'derrick williams',
+        'josh huestis',
+        'josh mcroberts',
         'nerlens noel',
         'patrick beverley',
         'paul pierce',
         'r.j. hunter',
         'reggie bullock',
-        'skal labissiere',
-        'steve novak',
-        'tiago splitter',
+        'wayne ellington',
     },
-    '2016-11-06': {
-        'bruno caboclo',
+    '2016-11-08': {
+        'archie goodwin',
+        'brandan wright',
+        'caris levert',
         'darren collison',
-        'demetrius jackson',
         'derrick jones jr.',
         'devin harris',
-        'fred vanvleet',
+        'festus ezeli',
         'jarnell stokes',
         'john jenkins',
-        'kelly olynyk',
-        'lucas nogueira',
+        'jrue holiday',
+        'mike scott',
+        'randy foye',
+        'tiago splitter',
+        'tim quarterman',
+    },
+    '2016-11-09': {
+        'alan anderson',
     },
 }
 
@@ -742,17 +752,18 @@ def playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
     return name in knownMissingObj or (dateStr in knownMissingObj and name in knownMissingObj[dateStr])
 def playerDidPlay(dateStr, name):
     currDate = util.parseDate(dateStr)
-    while currDate <= END_DATE:
-        currDateStr = util.formatDate(currDate)
-        if currDateStr in PLAYERS_WHO_DID_NOT_PLAY_UP_TO and name in PLAYERS_WHO_DID_NOT_PLAY_UP_TO[currDateStr]:
+    currDateStr = dateStr
+    while currDateStr in PLAYERS_WHO_DID_NOT_PLAY_UP_TO:
+        if name in PLAYERS_WHO_DID_NOT_PLAY_UP_TO[currDateStr]:
             return False
         currDate = currDate + ONE_DAY
+        currDateStr = util.formatDate(currDate)
     return True
 def getTeam(playerData):
     return playerData['Team']
 def getOppTeam(playerData):
     return playerData['Opponent']
-def mergeData(obj1, obj2, isTeam, isOpp, nameMap, knownMissingObj, containsY):
+def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, nameMap, knownMissingObj, containsY):
     print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
@@ -768,10 +779,13 @@ def mergeData(obj1, obj2, isTeam, isOpp, nameMap, knownMissingObj, containsY):
                 else:
                     if not playerIsKnownToBeMissing(dateStr, name, knownMissingObj) and playerDidPlay(dateStr, name):
                         #tbx
-                        if dateStr in TBX_MISSING_PLAYERS:
-                            TBX_MISSING_PLAYERS[dateStr].append(name)
+                        if dataSourceName not in TBX_MISSING_PLAYERS:
+                            TBX_MISSING_PLAYERS[dataSourceName] = {}
+
+                        if dateStr in TBX_MISSING_PLAYERS[dataSourceName]:
+                            TBX_MISSING_PLAYERS[dataSourceName][dateStr].append(name)
                         else:
-                            TBX_MISSING_PLAYERS[dateStr] = [name]
+                            TBX_MISSING_PLAYERS[dataSourceName][dateStr] = [name]
 
                         util.headsUp('Name not found in obj2, date=' + dateStr + ', name=' + name)
                     else:
@@ -860,6 +874,14 @@ DATA_SOURCES = [
                 'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
                 'walter tavares', #he didn't play according to stats.nba.com
             },
+            '2016-11-07': {
+                'lance stephenson',
+            },
+            '2016-11-08': {
+                'jordan farmar',
+                'lance stephenson',
+                'walter tavares',
+            },
         },
         'parseRowFunction': parseRotoGuruRow,
     },
@@ -924,6 +946,11 @@ DATA_SOURCES = [
             'bismack biyombo',
             'frank kaminsky',
             'michael carter-williams',
+
+            #2016-11-08
+            'a.j. hammons',
+            'jordan farmar',
+            'lance stephenson',
         },
         'parseRowFunction': parseNumberFireRow,
         'prefix': 'NF_',
@@ -1038,6 +1065,10 @@ DATA_SOURCES = [
             'jason terry', 'lamarcus aldridge', 'montrezl harrell', 'salah mejri',
             'denzel valentine', 'glenn robinson iii', 'brook lopez', 'rashad vaughn', 'cristiano felicio',
             'aaron brooks', 'joffrey lauvergne',
+
+            #2016-11-08
+            'kyle korver',
+            'larry nance jr.',
         },
         'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderPlayerProjectionsRow,
@@ -1160,6 +1191,7 @@ DATA_SOURCES = [
 data = None
 
 for dataSource in DATA_SOURCES:
+    name = dataSource['name']
     print 'Loading data for %s...' % dataSource['name']
 
     containsY = util.getObjValue(dataSource, 'containsY', False)
@@ -1183,18 +1215,21 @@ for dataSource in DATA_SOURCES:
     if data == None:
         data = newData
     else:
-        mergeData(data, newData, isTeam, isOpp, nameMap, knownMissingObj, containsY)
+        mergeData(data, newData, name, isTeam, isOpp, nameMap, knownMissingObj, containsY)
 
 writeData(OUTPUT_FILE, data)
 
 if len(TBX_MISSING_PLAYERS) > 0:
     print 'Missing players:'
-    keys = TBX_MISSING_PLAYERS.keys()
-    keys.sort()
-    for key in keys:
-        TBX_MISSING_PLAYERS[key].sort()
+    dataSourceNames = TBX_MISSING_PLAYERS.keys()
+    dataSourceNames.sort()
+    for dataSourceName in dataSourceNames:
         print ' '
-        print key
-        for name in TBX_MISSING_PLAYERS[key]:
-            print '\'' + name + '\','
-    #util.printObj(TBX_MISSING_PLAYERS)
+        print dataSourceName
+        dateStrs = TBX_MISSING_PLAYERS[dataSourceName].keys()
+        dateStrs.sort()
+        for dateStr in dateStrs:
+            print dateStr
+            TBX_MISSING_PLAYERS[dataSourceName][dateStr].sort()
+            for name in TBX_MISSING_PLAYERS[dataSourceName][dateStr]:
+                print '\'' + name + '\','

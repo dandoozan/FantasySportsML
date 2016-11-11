@@ -112,7 +112,7 @@ while currDate < TODAY:
             fileData['Date'] = currDateStr
             data.append(fileData)
     else:
-        util.headsUp('No dir found for date=', currDateStr)
+        util.headsUp('No dir found for date=' + currDateStr)
     currDate = currDate + ONE_DAY
 
 util.writeCsvFile(COL_NAMES, data, OUTPUT_FILE)
