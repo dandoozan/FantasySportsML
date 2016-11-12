@@ -45,7 +45,7 @@ def findContestsToDownload():
         jsonDataFromFile = util.loadJsonFile(util.createFullPathFilename(CONTESTS_DIR, filename))
         contests = jsonDataFromFile['contests']
         for contest in contests:
-            if fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 10:
+            if fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 2:
                 contestsToDownload.append({
                     'contestId': getContestId(contest),
                     'url': getContestUrl(contest),
