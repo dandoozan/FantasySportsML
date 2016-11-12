@@ -3,6 +3,7 @@
 import re
 import scraper
 import _util as util
+import _fanDuelCommon as fd
 
 CONTESTS_DIR = util.joinDirs('data', 'rawDataFromFanDuel', 'Contests')
 CONTEST_RESULTS_DIR = util.joinDirs('data', 'rawDataFromFanDuel', 'ContestResults')
@@ -18,10 +19,6 @@ def parseDateStrFromFilename(filename):
 def parseContestGroup(contestId):
     return contestId[:contestId.find('-')]
 
-def is5050Contest(contest):
-    return not not re.match('50/50 Contest \(\$\d+ - Top 50% Win\)', contest['name'])
-def isOneDollarContest(contest):
-    return int(contest['entry_fee']) == 1
 def createHeaders(contestId, xAuthToken):
     contestGroup = parseContestGroup(contestId)
     return {
@@ -48,7 +45,7 @@ def findContestsToDownload():
         jsonDataFromFile = util.loadJsonFile(util.createFullPathFilename(CONTESTS_DIR, filename))
         contests = jsonDataFromFile['contests']
         for contest in contests:
-            if is5050Contest(contest) and isOneDollarContest(contest):
+            if fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 10:
                 contestsToDownload.append({
                     'contestId': getContestId(contest),
                     'url': getContestUrl(contest),

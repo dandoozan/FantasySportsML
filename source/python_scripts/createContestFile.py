@@ -97,7 +97,7 @@ def loadDataFromJsonFile(fullPathFilename):
         'LastWinningIndex': int(contestData['scoring']['last_winning_index']),
         'LastWinningRank': int(contestData['scoring']['last_winning_rank']),
         'LastWinningScore': float(contestData['scoring']['last_winning_score']),
-        'Is5050': (1 if fd.is5050Contest(contestData['name']) else 0),
+        'Is5050': (1 if fd.is5050Contest(contestData) else 0),
     }
 
 #============= main =============
