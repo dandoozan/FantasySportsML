@@ -60,16 +60,16 @@ getHyperParams = function() {
   ))
 }
 
-plotCVErrorRates = function(data, yName, xNames, ylim=NULL, save=FALSE) {
-  cat('Plotting CV error rates...\n')
+plotCVErrorRates = function(data, yName, xNames, ylim=NULL, save=FALSE, filename='') {
+  cat('    Plotting CV Error Rates...\n')
 
   dataAsDMatrix = getDMatrix(data, yName, xNames)
 
-  set.seed(SEED)
+  set.seed(hyperParams$seed)
   cvRes = xgb.cv(data=dataAsDMatrix,
                  params=getHyperParams(),
                  nfold=5,
-                 nrounds=(NROUNDS * 1.5), #times by 1.5 to plot a little extra
+                 nrounds=(hyperParams$nrounds * 1.5), #times by 1.5 to plot a little extra
                  verbose=0)
   trainErrors = cvRes[[1]]
   cvErrors = cvRes[[3]]
@@ -78,14 +78,14 @@ plotCVErrorRates = function(data, yName, xNames, ylim=NULL, save=FALSE) {
     ylim = c(0, max(cvErrors, trainErrors))
   }
 
-  if (save) png(paste0('ErrorRates_', FILENAME, '.png'), width=500, height=350)
+  if (save) png(createPlotFilename('XGBErrorRates', filename), width=500, height=350)
   plot(trainErrors, type='l', col='blue', ylim=ylim, main='Train Error vs. CV Error', xlab='Num Rounds', ylab='Error')
   lines(cvErrors, col='red')
-  legend(x='topright', legend=c('train', 'cv'), fill=c('blue', 'red'), inset=0.02, text.width=15)
+  legend(x='topright', legend=c('train', 'cv'), fill=c('blue', 'red'), inset=0.02)
   if (save) dev.off()
 }
 plotImportances = function(model, xNames, maxFeatures=50, save=FALSE) {
-  cat('Plotting feature importances...\n')
+  cat('    Plotting Feature Importances...\n')
 
   featureNames = colnames(oneHotEncode(data[, xNames]))
 
@@ -111,7 +111,7 @@ findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSee
   set.seed(1) #set seed at the start here so that we generate the same following seeds every time
   for (i in 1:numSeedsToTry) {
     seed = sample(1:1000, 1)
-    cat('    ', i, '. Seed ', seed, ': ', sep='')
+    if (numSeedsToTry > 1) cat('    ', i, '. Seed ', seed, ': ', sep='')
     set.seed(seed)
     output = capture.output(cvRes <- xgb.cv(data=dataAsDMatrix,
                                             params=getHyperParams(),
@@ -123,19 +123,19 @@ findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSee
     nrounds = if (length(output) > 0) strtoi(substr(output, 27, nchar(output))) else initialNrounds
     trainErrors[i] = cvRes[[1]][nrounds] #mean train error
     cvErrors[i] = cvRes[[3]][nrounds] #mean test error
-    cat('nrounds=', nrounds, ', trainError=', trainErrors[i], ', cvError=', cvErrors[i], sep='')
+    if (numSeedsToTry > 1) cat('nrounds=', nrounds, ', trainError=', trainErrors[i], ', cvError=', cvErrors[i], sep='')
     if (cvErrors[i] < bestCvError) {
       bestSeed = seed
       bestNrounds = nrounds
       bestTrainError = trainErrors[i]
       bestCvError = cvErrors[i]
-      cat(' <- New best!')
+      if (numSeedsToTry > 1) cat(' <- New best!')
     }
-    cat('\n')
+    if (numSeedsToTry > 1) cat('\n')
   }
 
-  cat('    Average errors: train=', mean(trainErrors), ', cv=', mean(cvErrors), '\n', sep='')
-  cat('    Best seed=', bestSeed, ', nrounds=', bestNrounds, ', trainError=', bestTrainError, ', cvError=', bestCvError, '\n', sep='')
+  if (numSeedsToTry > 1) cat('    Average errors: train=', mean(trainErrors), ', cv=', mean(cvErrors), '\n', sep='')
+  cat('    Best seed=', bestSeed, ', nrounds=', bestNrounds, ', train/cvErrors=', bestTrainError, '/', bestCvError, '\n', sep='')
 
   return(list(seed=bestSeed, nrounds=bestNrounds))
 }
@@ -160,6 +160,9 @@ findBestHyperParams = function(data, yName, xNames) {
   return(findBestSeedAndNrounds(data, yName, xNames))
 }
 
+doPlots = function(toPlot, prodRun, data, yName, xNames, filename) {
+  if (prodRun || toPlot=='cv') plotCVErrorRates(data, yName, xNames, save=prodRun, filename=filename)
+}
 #============= Main ================
 
 # train = data.matrix(oneHotEncode(getData(END_DATE)))

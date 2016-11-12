@@ -1,5 +1,5 @@
 #todo:
-#-use all features: 20_all_xgb: Dates=10/27-11/8, NumFeatures=80/93, Xgb Train/CvError=4.878435/8.200007, Trn/CV/Train=4.879084/7.799062/5.216833, MaxCov=Inf, Mean RMSE (AllPlayers/MyTeam)=8.152958/36.76341, Ratio of MyScore to LowestScore=0.9877099
+#-use all features: 20_all_xgb: Dates=10/27-11/8, NumFeatures=80/93, Xgb Train/CvError=4.878435/8.200007, TimeToComputeModel=0.845, Trn/CV/Train=4.879084/7.799062/5.216833, RGTrn/CV/Train: 7.887775/7.714255/7.853451, MaxCov=Inf, Mean RMSE (AllPlayers/MyTeam)=8.152958/36.76341, Ratio of MyScore to LowestScore=0.9877099
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -18,13 +18,14 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = F
+PROD_RUN = T
 ALG = 'xgb'
 FILENAME = paste0('20_all_', ALG)
 END_DATE = '2016-11-08'
-PLOT = 'rmses' #fi, scores,
+PLOT = 'cv' #fi, scores,
 MAX_COV = Inf
 Y_NAME = 'FantasyPoints'
+MAKE_TEAMS = T
 
 if (ALG == 'xgb') {
   source('source/xgb_2016.R')
@@ -98,8 +99,10 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   return(NA)
 }
 
-plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), labels=c(), save=FALSE, name=NULL, ...) {
-  if (save) png(paste0('plots/', name, '.png'), width=500, height=350)
+plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), labels=c(), save=FALSE, ...) {
+  cat('    Plotting Scores...\n')
+
+  if (save) png(createPlotFilename('Scores', FILENAME), width=500, height=350)
 
   numLinesToPlot = length(linesToPlot)
 
@@ -148,13 +151,26 @@ computeActualFP = function(team, test) {
   return(actualFP)
 }
 
+printRGTrnCVError = function(data, yName, xNames) {
+  #split data into train, cv
+  split = splitData(data, yName)
+  train = split$train
+  cv = split$cv
+
+  #compute train and cv errors
+  model = createModel(train, yName, xNames)
+  trnError = computeError(train[, yName], train$RG_points)
+  cvError = computeError(cv[, yName], cv$RG_points)
+  trainError = computeError(data[, yName], data$RG_points)
+  cat('    RG Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
+}
+
 #============= Main ================
 
 if (PROD_RUN) cat('PROD RUN: ', FILENAME, '\n', sep='')
 
 #load data
 data = getData(END_DATE)
-contestData = getContestData()
 
 #print number of feature to use
 cat('Number of features to use: ', length(FEATURES_TO_USE), '/', length(colnames(data)), '\n', sep='')
@@ -171,105 +187,115 @@ printModelResults(baseModel)
 
 #print trn/cv, train error
 printTrnCvTrainErrors(baseModel, data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
+printRGTrnCVError(data, Y_NAME, FEATURES_TO_USE)
 
-cat('Now let\'s see how I would\'ve done each day...\n')
-cat('    Creating teams with max cov:', MAX_COV, '\n')
-#these are arrays to plot later
-myRmses = c()
-nfRmses = c()
-rgRmses = c()
-fdRmses = c()
-teamRatios = c()
-myTeamExpectedFPs = c()
-myTeamActualFPs = c()
-myTeamRmses = c()
-myTeamGreedyExpectedFPs = c()
-myTeamHillClimbingExpectedFPs = c()
-highestWinningScores = c()
-lowestWinningScores = c()
-lowestWinningScores_5050_1 = c()
+if (MAKE_TEAMS) {
+  cat('Now let\'s see how I would\'ve done each day...\n')
 
-dateStrs = sort(unique(data$Date))[-1] #-1 uses all but the first element
-for (dateStr in dateStrs) {
-  cat('    ', dateStr, ': ', sep='')
+  contestData = getContestData()
 
-  #split data into train, test
-  trainTest = splitDataIntoTrainTest(data, 'start', dateStr)
-  train = trainTest$train
-  test = trainTest$test
+  cat('    Creating teams with max cov:', MAX_COV, '\n')
+  #these are arrays to plot later
+  myRmses = c()
+  nfRmses = c()
+  rgRmses = c()
+  fdRmses = c()
+  teamRatios = c()
+  myTeamExpectedFPs = c()
+  myTeamActualFPs = c()
+  myTeamRmses = c()
+  myTeamGreedyExpectedFPs = c()
+  myTeamHillClimbingExpectedFPs = c()
+  highestWinningScores = c()
+  lowestWinningScores = c()
+  lowestWinningScores_5050_1 = c()
 
-  #create model
-  model = createModel(train, Y_NAME, FEATURES_TO_USE)
+  dateStrs = sort(unique(data$Date))[-1] #-1 uses all but the first element
+  for (dateStr in dateStrs) {
+    cat('    ', dateStr, ': ', sep='')
 
-  #create prediction
-  prediction = createPrediction(model, test, FEATURES_TO_USE)
-  myRmse = computeError(test[[Y_NAME]], prediction)
-  nfRmse = computeError(test[[Y_NAME]], test$NF_FP)
-  rgRmse = computeError(test[[Y_NAME]], test$RG_points)
-  fdRmse = computeError(test[[Y_NAME]], test$FPPG)
+    #split data into train, test
+    trainTest = splitDataIntoTrainTest(data, 'start', dateStr)
+    train = trainTest$train
+    test = trainTest$test
 
-  #create my teams for today
-  predictionDF = test
-  predictionDF[[Y_NAME]] = prediction
-  myTeamGreedy = createTeam_Greedy(predictionDF, maxCov=MAX_COV)
-  myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
-  myTeamHillClimbing = NULL# createTeam_HillClimbing(predictionDF, maxCov=MAX_COV)
-  myTeamHillClimbingExpectedFP = 0# computeTeamFP(myTeamHillClimbing)
+    #create model
+    model = createModel(train, Y_NAME, FEATURES_TO_USE)
 
-  #set my team to whichever gave the best expected score from above
-  if (myTeamGreedyExpectedFP > myTeamHillClimbingExpectedFP) {
-    myTeam = myTeamGreedy
-    whichTeamITook = 'Greedy'
-  } else {
-    myTeam = myTeamHillClimbing
-    whichTeamITook = 'HillClimbing'
+    #create prediction
+    #prediction = test$RG_points
+    prediction = createPrediction(model, test, FEATURES_TO_USE)
+    myRmse = computeError(test[[Y_NAME]], prediction)
+    nfRmse = computeError(test[[Y_NAME]], test$NF_FP)
+    rgRmse = computeError(test[[Y_NAME]], test$RG_points)
+    fdRmse = computeError(test[[Y_NAME]], test$FPPG)
+
+    #create my teams for today
+    predictionDF = test
+    predictionDF[[Y_NAME]] = prediction
+    myTeamGreedy = createTeam_Greedy(predictionDF, maxCov=MAX_COV)
+    myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
+    myTeamHillClimbing = NULL# createTeam_HillClimbing(predictionDF, maxCov=MAX_COV)
+    myTeamHillClimbingExpectedFP = 0# computeTeamFP(myTeamHillClimbing)
+
+    #set my team to whichever gave the best expected score from above
+    if (myTeamGreedyExpectedFP > myTeamHillClimbingExpectedFP) {
+      myTeam = myTeamGreedy
+      whichTeamITook = 'Greedy'
+    } else {
+      myTeam = myTeamHillClimbing
+      whichTeamITook = 'HillClimbing'
+    }
+    myTeamExpectedFP = computeTeamFP(myTeam)
+    myTeamActualFP = computeActualFP(myTeam, test)
+    myTeamRmse = computeError(myTeamActualFP, myTeamExpectedFP)
+
+    #get actual fanduel winning score for currday
+    highestWinningScore = getHighestWinningScore(contestData, dateStr)
+    lowestWinningScore = getLowestWinningScore(contestData, dateStr, type='non5050')
+    lowestWinningScore_5050_1 = getLowestWinningScore(contestData, dateStr, type='5050', entryFee=1)
+
+    #print results
+    cat('allRmse=', round(myRmse, 2), sep='')
+    cat(', teamRmse=', round(myTeamRmse, 2), sep='')
+    cat(', expected=', round(myTeamExpectedFP, 2), sep='')
+    cat(', actual=', round(myTeamActualFP, 2), sep='')
+    cat(', low=', round(lowestWinningScore, 2), sep='')
+    #cat(', ', whichTeamITook, sep='')
+    #cat(', high=', round(highestWinningScore, 2), sep='')
+    cat('\n')
+
+    #add data to arrays to plot
+    myRmses = c(myRmses, myRmse)
+    fdRmses = c(fdRmses, fdRmse)
+    nfRmses = c(nfRmses, nfRmse)
+    rgRmses = c(rgRmses, rgRmse)
+    myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
+    myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
+    myTeamRmses = c(myTeamRmses, myTeamRmse)
+    myTeamGreedyExpectedFPs = c(myTeamGreedyExpectedFPs, myTeamGreedyExpectedFP)
+    myTeamHillClimbingExpectedFPs = c(myTeamHillClimbingExpectedFPs, myTeamHillClimbingExpectedFP)
+    highestWinningScores = c(highestWinningScores, highestWinningScore)
+    lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
+    lowestWinningScores_5050_1 = c(lowestWinningScores_5050_1, lowestWinningScore_5050_1)
   }
-  myTeamExpectedFP = computeTeamFP(myTeam)
-  myTeamActualFP = computeActualFP(myTeam, test)
-  myTeamRmse = computeError(myTeamActualFP, myTeamExpectedFP)
 
-  #get actual fanduel winning score for currday
-  highestWinningScore = getHighestWinningScore(contestData, dateStr)
-  lowestWinningScore = getLowestWinningScore(contestData, dateStr, type='non5050')
-  lowestWinningScore_5050_1 = getLowestWinningScore(contestData, dateStr, type='5050', entryFee=1)
+  #print mean of rmses
+  cat('Mean RMSE of all players/team: ', mean(myRmses), '/', mean(myTeamRmses), '\n', sep='')
 
-  #print results
-  cat('allRmse=', round(myRmse, 2), sep='')
-  cat(', teamRmse=', round(myTeamRmse, 2), sep='')
-  cat(', expected=', round(myTeamExpectedFP, 2), sep='')
-  cat(', actual=', round(myTeamActualFP, 2), sep='')
-  cat(', low=', round(lowestWinningScore, 2), sep='')
-  #cat(', ', whichTeamITook, sep='')
-  #cat(', high=', round(highestWinningScore, 2), sep='')
-  cat('\n')
+  #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
+  scoreRatios = myTeamActualFPs/lowestWinningScores
+  cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
-  #add data to arrays to plot
-  myRmses = c(myRmses, myRmse)
-  fdRmses = c(fdRmses, fdRmse)
-  nfRmses = c(nfRmses, nfRmse)
-  rgRmses = c(rgRmses, rgRmse)
-  myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
-  myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
-  myTeamRmses = c(myTeamRmses, myTeamRmse)
-  myTeamGreedyExpectedFPs = c(myTeamGreedyExpectedFPs, myTeamGreedyExpectedFP)
-  myTeamHillClimbingExpectedFPs = c(myTeamHillClimbingExpectedFPs, myTeamHillClimbingExpectedFP)
-  highestWinningScores = c(highestWinningScores, highestWinningScore)
-  lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
-  lowestWinningScores_5050_1 = c(lowestWinningScores_5050_1, lowestWinningScore_5050_1)
+  #plots
+  cat('Creating plots...\n')
+  doPlots(PLOT, PROD_RUN, data, Y_NAME, FEATURES_TO_USE, FILENAME)
+  if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs, lowestWinningScores_5050_1), labels=c('My Team Expected', 'My Team Actual', '50/50 $1 Contests'), main='My Team Vs. Actual Contests', save=PROD_RUN)
+  if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, myRmses, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name='RMSE_ScoreRatios', filename=FILENAME)
+  if (PROD_RUN || PLOT == 'rmses') plotLinesByDate(dateStrs, list(myRmses, fdRmses, nfRmses, rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=PROD_RUN, name='RMSEs', filename=FILENAME)
 }
 
-#print mean of rmses
-cat('Mean RMSE of all players/team: ', mean(myRmses), '/', mean(myTeamRmses), '\n', sep='')
-
-#print myteam score / lowestWinningScore ratio, call it "scoreRatios"
-scoreRatios = myTeamActualFPs/lowestWinningScores
-cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
-
-#plots
+#generic plots
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, FEATURES_TO_USE, save=PROD_RUN)
-if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs, lowestWinningScores_5050_1), labels=c('My Team Expected', 'My Team Actual', '50/50 $1 Contests'), main='My Team Vs. Actual Contests', save=PROD_RUN, name=paste0('Scores_', FILENAME))
-#if (PROD_RUN || PLOT == 'rmse') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
-#if (PROD_RUN || PLOT == 'scoreratios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
-if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, myRmses, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
-if (PROD_RUN || PLOT == 'rmses') plotLinesByDate(dateStrs, list(myRmses, fdRmses, nfRmses, rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=PROD_RUN, name=paste0('RMSEs_', FILENAME))
+
 cat('Done!\n')
