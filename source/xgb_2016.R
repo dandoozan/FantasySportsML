@@ -15,32 +15,7 @@
 # source('source/_createTeam.R')
 #
 # #Globals
-# PROD_RUN = F
-# FILENAME = 'rf_19cov'
-# END_DATE = '2016-11-08'
-# N_TREE = 100
-# PLOT = 'scores' #fi, scores,
-# MAX_COV = Inf
 # Y_NAME = 'FantasyPoints'
-#
-# #features excluded: FantasyPoints, Date, Name
-# F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent')
-# F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary',
-#               'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
-# F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
-# F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk',
-#             'RG_line',  'RG_movement', 'RG_overunder', 'RG_total',
-#             'RG_contr', 'RG_pownpct', 'RG_rank',
-#             'RG_rankdiff', 'RG_saldiff',
-#             'RG_deviation', 'RG_minutes',
-#             'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20',
-#             'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58',
-#             'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
-# #F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
-# F.NBA = c('NBA_SEASON_AGE', 'NBA_SEASON_W', 'NBA_SEASON_L', 'NBA_SEASON_W_PCT', 'NBA_SEASON_MIN', 'NBA_SEASON_FGM', 'NBA_SEASON_FGA', 'NBA_SEASON_FG_PCT', 'NBA_SEASON_FG3M', 'NBA_SEASON_FG3A', 'NBA_SEASON_FG3_PCT', 'NBA_SEASON_FTM', 'NBA_SEASON_FTA', 'NBA_SEASON_FT_PCT', 'NBA_SEASON_OREB', 'NBA_SEASON_DREB', 'NBA_SEASON_REB', 'NBA_SEASON_AST', 'NBA_SEASON_TOV', 'NBA_SEASON_STL', 'NBA_SEASON_BLK', 'NBA_SEASON_BLKA', 'NBA_SEASON_PF', 'NBA_SEASON_PFD', 'NBA_SEASON_PTS', 'NBA_SEASON_PLUS_MINUS', 'NBA_SEASON_DD2', 'NBA_SEASON_TD3')
-# F.MINE = c('OPP_DVP_FPPG', 'OPP_DVP_RANK')
-#
-# FEATURES_TO_USE = c('FPPG', 'GamesPlayed', 'Salary')
 
 #================= Functions ===================
 
@@ -109,7 +84,6 @@ plotCVErrorRates = function(data, yName, xNames, ylim=NULL, save=FALSE) {
   legend(x='topright', legend=c('train', 'cv'), fill=c('blue', 'red'), inset=0.02, text.width=15)
   if (save) dev.off()
 }
-
 plotImportances = function(model, xNames, maxFeatures=50, save=FALSE) {
   cat('Plotting feature importances...\n')
 
@@ -168,10 +142,12 @@ findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSee
 
 getDMatrix = function(data, yName, xNames) {
   set.seed(634)
+  #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
   return(xgb.DMatrix(data.matrix(oneHotEncode(data[, xNames])), label=data[, yName]))
 }
 
 oneHotEncode = function(data) {
+  #data = data[, setdiff(colnames(data), c('Date', 'Name'))]
   dmy = caret::dummyVars('~.', data, fullRank=T)
   return(data.frame(predict(dmy, data)))
 }
@@ -188,26 +164,18 @@ findBestHyperParams = function(data, yName, xNames) {
 
 # train = data.matrix(oneHotEncode(getData(END_DATE)))
 #
-# #find best set of features to use based on cv error
-# featuresToUse = setdiff(colnames(train), c('FantasyPoints', 'Date', 'Name'))
+# FEATURES_TO_USE = setdiff(colnames(train), c('FantasyPoints', 'Date', 'Name'))
 #
 # #find best seed and nrounds
-# sn = findBestSeedAndNrounds(train, Y_NAME, featuresToUse)
+# hyperParams = findBestSeedAndNrounds(train, Y_NAME, FEATURES_TO_USE)
 # SEED = sn$seed
 # NROUNDS = sn$nrounds
 #
 # #create model
 # cat('Creating Model...\n')
-# model = createModel(train, Y_NAME, featuresToUse)
-#
-# #plots
-# if (PROD_RUN || PLOT=='cv') plotCVErrorRates(train, Y_NAME, featuresToUse, ylim=c(0, 0.2), save=PROD_RUN)
-# if (PROD_RUN || PLOT=='lc') plotLearningCurve(train, Y_NAME, featuresToUse, createModel, createPrediction, computeError, increment=50, ylim=c(0, 0.3), save=PROD_RUN)
-# if (PROD_RUN || PLOT=='fi') plotFeatureImportances(model, featuresToUse, save=PROD_RUN)
+# model = createModel(train, Y_NAME, FEATURES_TO_USE)
 #
 # #print trn/cv, train error
-# printTrnCvTrainErrors(model, train, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
-#
-# if (PROD_RUN) outputSolution(createPrediction, model, test, ID_NAME, Y_NAME, featuresToUse, paste0(FILENAME, '.csv'))
+# printTrnCvTrainErrors(model, train, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
 #
 # cat('Done!\n')

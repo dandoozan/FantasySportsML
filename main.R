@@ -18,7 +18,7 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 ALG = 'xgb'
 FILENAME = paste0('20_all_', ALG)
 END_DATE = '2016-11-08'
@@ -175,8 +175,6 @@ printTrnCvTrainErrors(baseModel, data, Y_NAME, FEATURES_TO_USE, createModel, cre
 cat('Now let\'s see how I would\'ve done each day...\n')
 cat('    Creating teams with max cov:', MAX_COV, '\n')
 #these are arrays to plot later
-percentVarExplaineds = c()
-meanOfSquaredResidualss = c()
 myRmses = c()
 nfRmses = c()
 rgRmses = c()
@@ -202,8 +200,6 @@ for (dateStr in dateStrs) {
 
   #create model
   model = createModel(train, Y_NAME, FEATURES_TO_USE)
-  meanOfSquaredResiduals = model$mse[N_TREE]
-  percentVarExplained = model$rsq[N_TREE] * 100
 
   #create prediction
   prediction = createPrediction(model, test, FEATURES_TO_USE)
@@ -248,8 +244,6 @@ for (dateStr in dateStrs) {
   cat('\n')
 
   #add data to arrays to plot
-  meanOfSquaredResidualss = c(meanOfSquaredResidualss, model$mse[N_TREE])
-  percentVarExplaineds = c(percentVarExplaineds, model$rsq[N_TREE])
   myRmses = c(myRmses, myRmse)
   fdRmses = c(fdRmses, fdRmse)
   nfRmses = c(nfRmses, nfRmse)
