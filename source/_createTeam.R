@@ -25,36 +25,54 @@
 # Total Amount spent: 60000
 # Total Fantasy Points: 288.18
 
-
 SALARY_CAP = 60000
 
-getInitialTeam = function(data) {
-  #take the top 2 from each position (except C)
-  team = rbind(
-    data[data$Position == 'PG',][1:2,],
-    data[data$Position == 'SG',][1:2,],
-    data[data$Position == 'SF',][1:2,],
-    data[data$Position == 'PF',][1:2,],
-    data[data$Position == 'C',][1,]
-  )
+createFirstAvailableTeam = function(allPlayers) {
+  team = data.frame()
+
+  positions = levels(allPlayers$Position)
+  for (position in positions) {
+    numPlayersToChoose = ifelse(position == 'C', 1, 2)
+    playersInPosition = allPlayers[allPlayers$Position == position,]
+
+    #if there are not enough players in the position, return NA
+    if (sum(!is.na(allPlayers[allPlayers$Position == position, 'Position'])) < numPlayersToChoose) {
+      stop('Cannot create team because there are not enough ', position, 's\n')
+      return(NULL)
+    }
+
+    team = rbind(team, playersInPosition[1:numPlayersToChoose,])
+  }
+
   return(team)
 }
 computePPD = function(fantasyPoints, salary) {
   return(fantasyPoints / salary * 1000)
+}
+computeCov = function(players) {
+  #cov is the 'Coefficient of Variance', which is the stdev / mean
+  cov = players$RG_deviation / players$FantasyPoints
+  cov = ifelse(is.nan(cov), Inf, cov)
+  return(cov)
 }
 printPlayer = function(player) {
   cat('    ', as.character(player$Position), ', ', sep='')
   cat(paste(player[, c('Name', 'Salary')], collapse=', '), sep='')
   cat(', ', round(player$FantasyPoints, 2), sep='')
   #cat(', ', round(player$PPD, 2), sep='')
+  cat(', ', round(player$cov, 2), sep='')
   cat('\n')
 }
 printTeam = function(team) {
-  for (i in 1:nrow(team)) {
-    printPlayer(team[i,])
+  if (is.null(team)) {
+    cat('No team\n')
+  } else {
+    for (i in 1:nrow(team)) {
+      printPlayer(team[i,])
+    }
+    cat('    Total Amount spent:', computeAmountSpent(team), '\n')
+    cat('    Total Fantasy Points:', round(computeTeamFP(team), 2), '\n')
   }
-  cat('    Total Amount spent:', computeAmountSpent(team), '\n')
-  cat('    Total Fantasy Points:', round(computeTeamFP(team), 2), '\n')
 }
 computeTeamFP = function(team) {
   return(sum(team$FantasyPoints))
@@ -183,7 +201,11 @@ getBetterTeam = function(data, team, amountUnderBudget, verbose=F) {
   }
   return(team)
 }
-createTeam_Greedy = function(allPlayers, verbose=F) {
+createTeam_Greedy = function(allPlayers, maxCov=Inf, verbose=F) {
+  #remove players whose Coefficient of Variation is > cov
+  allPlayers$cov = computeCov(allPlayers)
+  allPlayers = removeRows(allPlayers, allPlayers[allPlayers$cov > maxCov,])
+
   #add PPD coumn
   allPlayers$PPD = computePPD(allPlayers$FantasyPoints, allPlayers$Salary)
 
@@ -191,7 +213,10 @@ createTeam_Greedy = function(allPlayers, verbose=F) {
   allPlayers = allPlayers[order(allPlayers$PPD, decreasing=TRUE),]
 
   #first, fill team with all the highest ppd players
-  team = getInitialTeam(allPlayers)
+  team = createFirstAvailableTeam(allPlayers)
+  if (is.null(team)) {
+    return(NULL)
+  }
 
   if (verbose) {
     cat('Initial team:\n')
@@ -215,18 +240,6 @@ createTeam_Greedy = function(allPlayers, verbose=F) {
   return(team)
 }
 
-createFirstAvailableTeam = function(allPlayers) {
-  team = data.frame()
-
-  positions = levels(allPlayers$Position)
-  for (position in positions) {
-    numPlayersToChoose = ifelse(position == 'C', 1, 2)
-    playersInPosition = allPlayers[allPlayers$Position == position,]
-    team = rbind(team, playersInPosition[1:numPlayersToChoose,])
-  }
-
-  return(team)
-}
 swapRow = function(data1, rowName1, data2, rowName2) {
   tempRow = data1[rowName1,]
   data1[rowName1,] = data2[rowName2,]
@@ -274,17 +287,20 @@ climbHill = function(team, allPlayers, verbose=F) {
   }
   return(team)
 }
-createTeam_HillClimbing = function(allPlayers) {
+createTeam_HillClimbing = function(allPlayers, maxCov=Inf, maxNumTries=1, verbose=F) {
+  #remove players whose Coefficient of Variation is > cov
+  allPlayers$cov = computeCov(allPlayers)
+  allPlayers = removeRows(allPlayers, allPlayers[allPlayers$cov > maxCov,])
 
   bestTeam = NULL
   bestTeamFP = -Inf
 
   numTriesWithoutFindingBetterTeam = 0
-  while (numTriesWithoutFindingBetterTeam < 1) {
+  while (numTriesWithoutFindingBetterTeam < maxNumTries) {
     set.seed(43)
     allPlayers = shuffle(allPlayers)
     initalTeam = createFirstAvailableTeam(allPlayers)
-    team = climbHill(initalTeam, allPlayers)
+    team = climbHill(initalTeam, allPlayers, verbose)
     teamFP = computeTeamFP(team)
     #cat('numTriesWithoutFindingBetterTeam=', numTriesWithoutFindingBetterTeam, ', fp=', teamFP,'\n')
     if (teamFP > bestTeamFP) {

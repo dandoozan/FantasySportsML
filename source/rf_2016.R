@@ -16,7 +16,8 @@
 #D-Curate features: rf_15curate: 10/27-11/6, 6/93, 100, 0.774, 66.01628/65.28664, 4.163789/8.088749/4.206491, 8.066922, 0.9791746
 #D-add data up to 11/8: rf_16nov8: 10/27-11/8, 6/93, 100, 0.974, 65.82099/65.06195, 4.180437/7.846159/4.206441, 8.054633, 0.982619 <-- new best!
 #D-Plot 50/50 $1 contests: rf_17is5050: 10/27-11/8, 6/93, 0.958, 65.82099/65.06195, 4.180437/7.846159/4.206441, 8.054633, 0.9789038
-#D-Use RotoGrinder's prediction: rf_18RG: 10/27-11/8, 6/93, 1.006, 65.82099/65.06195, 4.180437/7.846159/4.206441, 7.772721, 0.9678828 <-- unfortunately, new best
+#D-Use RotoGrinder's prediction: rf_18RG: 10/27-11/8, 7.772721/31.25154, 0.9678828 <-- unfortunately, new best
+#D-Create team with players whose cov <= 0.4: rf_19cov: 10/27-11/8, 7.772721/24.38308, 0.999644
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -46,10 +47,11 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_18RG'
+FILENAME = 'rf_19cov'
 END_DATE = '2016-11-08'
 N_TREE = 100
-PLOT = 'rmses' #fi, scores,
+PLOT = 'scores' #fi, scores,
+MAX_COV = 0.4
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
@@ -246,7 +248,7 @@ cat('    MeanOfSquaredResiduals / %VarExplained: ', baseModel$mse[N_TREE], '/', 
 printTrnCvTrainErrors(baseModel, data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
 
 cat('Now let\'s see how I would\'ve done each day...\n')
-
+cat('    Creating teams with max cov:', MAX_COV, '\n')
 #these are arrays to plot later
 percentVarExplaineds = c()
 meanOfSquaredResidualss = c()
@@ -257,6 +259,7 @@ fdRmses = c()
 teamRatios = c()
 myTeamExpectedFPs = c()
 myTeamActualFPs = c()
+myTeamRmses = c()
 myTeamGreedyExpectedFPs = c()
 myTeamHillClimbingExpectedFPs = c()
 highestWinningScores = c()
@@ -287,9 +290,9 @@ for (dateStr in dateStrs) {
   #create my teams for today
   predictionDF = test
   predictionDF[[Y_NAME]] = prediction
-  myTeamGreedy = createTeam_Greedy(predictionDF)
+  myTeamGreedy = createTeam_Greedy(predictionDF, maxCov=MAX_COV)
   myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
-  myTeamHillClimbing = NULL# createTeam_HillClimbing(predictionDF)
+  myTeamHillClimbing = NULL# createTeam_HillClimbing(predictionDF, maxCov=MAX_COV)
   myTeamHillClimbingExpectedFP = 0# computeTeamFP(myTeamHillClimbing)
 
   #set my team to whichever gave the best expected score from above
@@ -302,6 +305,7 @@ for (dateStr in dateStrs) {
   }
   myTeamExpectedFP = computeTeamFP(myTeam)
   myTeamActualFP = computeActualFP(myTeam, test)
+  myTeamRmse = computeError(myTeamActualFP, myTeamExpectedFP)
 
   #get actual fanduel winning score for currday
   highestWinningScore = getHighestWinningScore(contestData, dateStr)
@@ -309,11 +313,12 @@ for (dateStr in dateStrs) {
   lowestWinningScore_5050_1 = getLowestWinningScore(contestData, dateStr, type='5050', entryFee=1)
 
   #print results
-  cat('RMSE=', myRmse, sep='')
+  cat('allRmse=', round(myRmse, 2), sep='')
+  cat(', teamRmse=', round(myTeamRmse, 2), sep='')
   cat(', expected=', round(myTeamExpectedFP, 2), sep='')
   cat(', actual=', round(myTeamActualFP, 2), sep='')
   cat(', low=', round(lowestWinningScore, 2), sep='')
-  cat(', ', whichTeamITook, sep='')
+  #cat(', ', whichTeamITook, sep='')
   #cat(', high=', round(highestWinningScore, 2), sep='')
   cat('\n')
 
@@ -326,6 +331,7 @@ for (dateStr in dateStrs) {
   rgRmses = c(rgRmses, rgRmse)
   myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
   myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
+  myTeamRmses = c(myTeamRmses, myTeamRmse)
   myTeamGreedyExpectedFPs = c(myTeamGreedyExpectedFPs, myTeamGreedyExpectedFP)
   myTeamHillClimbingExpectedFPs = c(myTeamHillClimbingExpectedFPs, myTeamHillClimbingExpectedFP)
   highestWinningScores = c(highestWinningScores, highestWinningScore)
@@ -334,7 +340,7 @@ for (dateStr in dateStrs) {
 }
 
 #print mean of rmses
-cat('Mean of daily RMSEs: ', mean(myRmses), '\n', sep='')
+cat('Mean RMSE of all players/team: ', mean(myRmses), '/', mean(myTeamRmses), '\n', sep='')
 
 #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
 scoreRatios = myTeamActualFPs/lowestWinningScores
