@@ -114,7 +114,7 @@ for page in pagesToScrape:
     if colNames and rowData:
         writeData(colNames, rowData, createFilename(PARENT_DIR, dirName, FILENAME))
     else:
-        print 'No data was parsed, not writing data'
+        util.stop('No data was parsed, not writing data')
 
     print '    Sleeping for %d seconds' % SLEEP
     time.sleep(SLEEP)
