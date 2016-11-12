@@ -48,7 +48,7 @@ PROD_RUN = T
 FILENAME = 'rf_17is5050'
 END_DATE = '2016-11-08'
 N_TREE = 100
-PLOT = 'scores' #fi, scores,
+PLOT = 'rmses' #fi, scores,
 Y_NAME = 'FantasyPoints'
 
 #features excluded: FantasyPoints, Date, Name
@@ -171,7 +171,7 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   if (sum(!is.na(contests$LastWinningScore)) > 0) {
     return(min(contests$LastWinningScore, na.rm=T))
   }
-  return (NA)
+  return(NA)
 }
 
 plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), labels=c(), save=FALSE, name=NULL, ...) {
@@ -203,10 +203,14 @@ plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), labels=c(), sav
     for (i in 1:numLinesToPlot) {
       lines(dates, linesToPlot[[i]], col=colors[i])
     }
-    legend(x='topright', legend=labels[1:numLinesToPlot], fill=colors[1:numLinesToPlot], inset=0.02)
+    legend(x='topright', legend=c('Contest Results', labels[1:numLinesToPlot]), fill=c('blue', colors[1:numLinesToPlot]), inset=0.02)
   }
 
+  #add date axis
   axis.Date(side=1, dates, format="%m/%d")
+
+  #add grid
+  grid()
 
   if (save) dev.off()
 }
@@ -245,7 +249,10 @@ cat('Now let\'s see how I would\'ve done each day...\n')
 #these are arrays to plot later
 percentVarExplaineds = c()
 meanOfSquaredResidualss = c()
-testErrors = c()
+myRmses = c()
+nfRmses = c()
+rgRmses = c()
+fdRmses = c()
 teamRatios = c()
 myTeamExpectedFPs = c()
 myTeamActualFPs = c()
@@ -271,7 +278,10 @@ for (dateStr in dateStrs) {
 
   #create prediction
   prediction = createPrediction(model, test, FEATURES_TO_USE)
-  testError = computeError(test[[Y_NAME]], prediction)
+  myRmse = computeError(test[[Y_NAME]], prediction)
+  nfRmse = computeError(test[[Y_NAME]], test$NF_FP)
+  rgRmse = computeError(test[[Y_NAME]], test$RG_points)
+  fdRmse = computeError(test[[Y_NAME]], test$FPPG)
 
   #create my teams for today
   predictionDF = test
@@ -298,7 +308,7 @@ for (dateStr in dateStrs) {
   lowestWinningScore_5050_1 = getLowestWinningScore(contestData, dateStr, type='5050', entryFee=1)
 
   #print results
-  cat('RMSE=', testError, sep='')
+  cat('RMSE=', myRmse, sep='')
   cat(', expected=', round(myTeamExpectedFP, 2), sep='')
   cat(', actual=', round(myTeamActualFP, 2), sep='')
   cat(', low=', round(lowestWinningScore, 2), sep='')
@@ -309,7 +319,10 @@ for (dateStr in dateStrs) {
   #add data to arrays to plot
   meanOfSquaredResidualss = c(meanOfSquaredResidualss, model$mse[N_TREE])
   percentVarExplaineds = c(percentVarExplaineds, model$rsq[N_TREE])
-  testErrors = c(testErrors, testError)
+  myRmses = c(myRmses, myRmse)
+  fdRmses = c(fdRmses, fdRmse)
+  nfRmses = c(nfRmses, nfRmse)
+  rgRmses = c(rgRmses, rgRmse)
   myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
   myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
   myTeamGreedyExpectedFPs = c(myTeamGreedyExpectedFPs, myTeamGreedyExpectedFP)
@@ -320,7 +333,7 @@ for (dateStr in dateStrs) {
 }
 
 #print mean of rmses
-cat('Mean of daily RMSEs: ', mean(testErrors), '\n', sep='')
+cat('Mean of daily RMSEs: ', mean(myRmses), '\n', sep='')
 
 #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
 scoreRatios = myTeamActualFPs/lowestWinningScores
@@ -328,9 +341,9 @@ cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
 
 #plots
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, save=PROD_RUN)
-if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs, lowestWinningScores_5050_1), labels=c('Expected', 'Actual', '50/50 $1'), main='Fantasy Points Comparison', save=PROD_RUN, name=paste0('Scores_', FILENAME))
+if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs, lowestWinningScores_5050_1), labels=c('My Team Expected', 'My Team Actual', '50/50 $1 Contests'), main='My Team Vs. Actual Contests', save=PROD_RUN, name=paste0('Scores_', FILENAME))
 #if (PROD_RUN || PLOT == 'rmse') plotByDate(dateStrs, testErrors, main='RMSE by Date', ylab='RMSE', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
 #if (PROD_RUN || PLOT == 'scoreratios') plotByDate(dateStrs, scoreRatios, ylim=c(0, 1.5), main='Score Ratio by Date', ylab='Score Ratio', save=PROD_RUN, name=paste0(PLOT, '_', FILENAME))
-if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, testErrors, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
-
+if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, myRmses, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name=paste0('RMSE_ScoreRatios_', FILENAME))
+if (PROD_RUN || PLOT == 'rmses') plotLinesByDate(dateStrs, list(myRmses, fdRmses, nfRmses, rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=PROD_RUN, name=paste0('RMSEs_', FILENAME))
 cat('Done!\n')
