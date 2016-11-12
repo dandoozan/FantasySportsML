@@ -16,6 +16,7 @@
 #D-Curate features: rf_15curate: 10/27-11/6, 6/93, 100, 0.774, 66.01628/65.28664, 4.163789/8.088749/4.206491, 8.066922, 0.9791746
 #D-add data up to 11/8: rf_16nov8: 10/27-11/8, 6/93, 100, 0.974, 65.82099/65.06195, 4.180437/7.846159/4.206441, 8.054633, 0.982619 <-- new best!
 #D-Plot 50/50 $1 contests: rf_17is5050: 10/27-11/8, 6/93, 0.958, 65.82099/65.06195, 4.180437/7.846159/4.206441, 8.054633, 0.9789038
+#D-Use RotoGrinder's prediction: rf_18RG: 10/27-11/8, 6/93, 1.006, 65.82099/65.06195, 4.180437/7.846159/4.206441, 7.772721, 0.9678828 <-- unfortunately, new best
 
 #-Compute FantasyPoints from nba.com rather than get it from rotoguru
 #-Compute FPPD (FP/Salary*1000)
@@ -45,7 +46,7 @@ source('source/_createTeam.R')
 
 #Globals
 PROD_RUN = T
-FILENAME = 'rf_17is5050'
+FILENAME = 'rf_18RG'
 END_DATE = '2016-11-08'
 N_TREE = 100
 PLOT = 'rmses' #fi, scores,
@@ -277,7 +278,7 @@ for (dateStr in dateStrs) {
   percentVarExplained = model$rsq[N_TREE] * 100
 
   #create prediction
-  prediction = createPrediction(model, test, FEATURES_TO_USE)
+  prediction = test$RG_points#createPrediction(model, test, FEATURES_TO_USE)
   myRmse = computeError(test[[Y_NAME]], prediction)
   nfRmse = computeError(test[[Y_NAME]], test$NF_FP)
   rgRmse = computeError(test[[Y_NAME]], test$RG_points)
