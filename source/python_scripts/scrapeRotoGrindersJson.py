@@ -86,27 +86,27 @@ PAGES_TO_SCRAPE = [
     },
 ]
 TEAM_STATS_PAGES_TO_SCRAPE = [
-    {
-        'baseUrl': 'https://rotogrinders.com/team-stats/nba-earned?',
-        'dirName': 'TeamStats',
-        'jsonPrefix': 'data = ',
-        'urlParams': {
-            'site': 'fanduel',
-        },
-        'positions': [
-            { 'name': 'C', 'urlParams': { 'position': 'C', 'sport': 'nba' } },
-            { 'name': 'PF', 'urlParams': { 'position': 'PF', 'sport': 'nba' } },
-            { 'name': 'PG', 'urlParams': { 'position': 'PG', 'sport': 'nba' } },
-            { 'name': 'SF', 'urlParams': { 'position': 'SF', 'sport': 'nba' } },
-            { 'name': 'SG', 'urlParams': { 'position': 'SG', 'sport': 'nba' } },
-        ],
-        'ranges': [
-            { 'name': '4weeks', 'urlParams': { 'range': '4weeks' } },
-            { 'name': 'LastWeek', 'urlParams': { 'range': '1week' } },
-            { 'name': 'Season', 'urlParams': { 'range': 'season' } },
-            { 'name': 'Yesterday', 'urlParams': { 'range': 'yesterday' } },
-        ],
-    },
+    #{
+    #    'baseUrl': 'https://rotogrinders.com/team-stats/nba-earned?',
+    #    'dirName': 'TeamStats',
+    #    'jsonPrefix': 'data = ',
+    #    'urlParams': {
+    #        'site': 'fanduel',
+    #    },
+    #    'positions': [
+    #        { 'name': 'C', 'urlParams': { 'position': 'C', 'sport': 'nba' } },
+    #        { 'name': 'PF', 'urlParams': { 'position': 'PF', 'sport': 'nba' } },
+    #        { 'name': 'PG', 'urlParams': { 'position': 'PG', 'sport': 'nba' } },
+    #        { 'name': 'SF', 'urlParams': { 'position': 'SF', 'sport': 'nba' } },
+    #        { 'name': 'SG', 'urlParams': { 'position': 'SG', 'sport': 'nba' } },
+    #    ],
+    #    'ranges': [
+    #        { 'name': '4weeks', 'urlParams': { 'range': '4weeks' } },
+    #        { 'name': 'LastWeek', 'urlParams': { 'range': '1week' } },
+    #        { 'name': 'Season', 'urlParams': { 'range': 'season' } },
+    #        { 'name': 'Yesterday', 'urlParams': { 'range': 'yesterday' } },
+    #    ],
+    #},
     {
         'baseUrl': 'https://rotogrinders.com/team-stats/nba-allowed?',
         'dirName': 'DefenseVsPosition',
