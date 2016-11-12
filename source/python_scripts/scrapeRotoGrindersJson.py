@@ -15,6 +15,26 @@ PAGES_TO_SCRAPE = [
         'url': 'https://rotogrinders.com/grids/nba-advanced-stats-1494397',
     },
     {
+        'dirName': 'Consistency4Weeks',
+        'jsonPrefix': 'data = ',
+        'url': 'https://rotogrinders.com/game-stats/nba/consistency?site=fanduel&range=4weeks',
+    },
+    {
+        'dirName': 'ConsistencyLastWeek',
+        'jsonPrefix': 'data = ',
+        'url': 'https://rotogrinders.com/game-stats/nba/consistency?site=fanduel&range=1week',
+    },
+    {
+        'dirName': 'ConsistencySeason',
+        'jsonPrefix': 'data = ',
+        'url': 'https://rotogrinders.com/game-stats/nba/consistency',
+    },
+    {
+        'dirName': 'ConsistencyYesterday',
+        'jsonPrefix': 'data = ',
+        'url': 'https://rotogrinders.com/game-stats/nba/consistency?site=fanduel&range=yesterday',
+    },
+    {
         'dirName': 'DefenseVsPositionCheatSheet',
         'jsonPrefix': 'data = ',
         'url': 'https://rotogrinders.com/grids/nba-defense-vs-position-cheat-sheet-1493632',
