@@ -7,7 +7,7 @@ import _fanDuelCommon as fd
 
 CONTESTS_DIR = util.joinDirs('data', 'rawDataFromFanDuel', 'Contests')
 CONTEST_RESULTS_DIR = util.joinDirs('data', 'rawDataFromFanDuel', 'ContestResults')
-SLEEP = 10
+SLEEP = 30
 
 def getContestId(contest):
     return contest['id']
