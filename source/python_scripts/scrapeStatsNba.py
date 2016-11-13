@@ -5,6 +5,28 @@ import scraper
 import _util as util
 
 NBA_DIR = 'data/rawDataFromStatsNba'
+DATE_FORMAT_FILENAME = '%Y-%m-%d'
+ONE_DAY = util.getOneDay()
+SLEEP = 10
+
+SEASONS = {
+    '2014': {
+        'str': '2014-15',
+        'startDate': date(2014, 10, 28),
+        'endDate': date(2015, 4, 16),
+    },
+    '2015': {
+        'str': '2015-16',
+        'startDate': date(2015, 10, 27),
+        'endDate': date(2016, 4, 14),
+    },
+    '2016': {
+        'str': '2016-17',
+        'startDate': date(2016, 10, 25),
+        'endDate': util.getYesterdayAsDate() - ONE_DAY,
+    },
+}
+
 PLAYER_CATEGORIES = {
     'Traditional': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
@@ -122,26 +144,6 @@ TEAM_CATEGORIES = {
     },
 }
 
-SEASONS = {
-    '2014': {
-        'str': '2014-15',
-        'startDate': date(2014, 10, 28),
-        'endDate': date(2015, 4, 16),
-    },
-    '2015': {
-        'str': '2015-16',
-        'startDate': date(2015, 10, 27),
-        'endDate': date(2016, 4, 14),
-    },
-    '2016': {
-        'str': '2016-17',
-        'startDate': date(2016, 10, 25),
-        'endDate': util.getYesterdayAsDate(),
-    },
-}
-DATE_FORMAT_FILENAME = '%Y-%m-%d'
-ONE_DAY = timedelta(1)
-SLEEP = 10
 
 def createUrlParams(startDate, endDate, season, params):
     dateFormat = '%m/%d/%Y'
