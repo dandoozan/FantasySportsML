@@ -1,5 +1,7 @@
 #todo:
-#-use all features: 20_all_xgb: Dates=10/27-11/8, NumFeatures=80/93, Xgb Train/CvError=4.878435/8.200007, TimeToComputeModel=0.845, Trn/CV/Train=4.879084/7.799062/5.216833, RGTrn/CV/Train: 7.887775/7.714255/7.853451, MaxCov=Inf, Mean RMSE (AllPlayers/MyTeam)=8.152958/36.76341, Ratio of MyScore to LowestScore=0.9877099
+#D-use all features: 20_all_xgb: Dates=10/27-11/8, NumFeatures=80/93, Seed=?, Nrounds=?, XgbTrain/CvError=4.878435/8.200007, TimeToComputeModel=0.845, Trn/CV/Train=4.879084/7.799062/5.216833, MaxCov=Inf, Mean RMSE (AllPlayers/MyTeam)=8.152958/36.76341, Ratio of MyScore to LowestScore=0.9877099
+#D-tune hyperparams: 21_tune_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.232, 6.797523/7.527155/6.903303, Inf, 7.771552/34.14032, 0.9890346 <-- new best!
+
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -20,12 +22,14 @@ source('source/_createTeam.R')
 #Globals
 PROD_RUN = T
 ALG = 'xgb'
-FILENAME = paste0('20_all_', ALG)
+NUMBER = 21
+NAME = 'tune'
+FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 END_DATE = '2016-11-08'
-PLOT = 'cv' #fi, scores,
+PLOT = '' #fi, scores,
 MAX_COV = Inf
 Y_NAME = 'FantasyPoints'
-MAKE_TEAMS = T
+MAKE_TEAMS = PROD_RUN || F
 
 if (ALG == 'xgb') {
   source('source/xgb_2016.R')
@@ -286,16 +290,17 @@ if (MAKE_TEAMS) {
   #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
   scoreRatios = myTeamActualFPs/lowestWinningScores
   cat('Mean myScore/lowestScore ratio: ', mean(scoreRatios), '\n', sep='')
+}
 
-  #plots
-  cat('Creating plots...\n')
-  doPlots(PLOT, PROD_RUN, data, Y_NAME, FEATURES_TO_USE, FILENAME)
+#plots
+cat('Creating plots...\n')
+doPlots(PLOT, PROD_RUN, data, Y_NAME, FEATURES_TO_USE, FILENAME)
+if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, FEATURES_TO_USE, save=PROD_RUN)
+if (MAKE_TEAMS) {
   if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs, lowestWinningScores_5050_1), labels=c('My Team Expected', 'My Team Actual', '50/50 $1 Contests'), main='My Team Vs. Actual Contests', save=PROD_RUN)
   if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, myRmses, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name='RMSE_ScoreRatios', filename=FILENAME)
   if (PROD_RUN || PLOT == 'rmses') plotLinesByDate(dateStrs, list(myRmses, fdRmses, nfRmses, rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=PROD_RUN, name='RMSEs', filename=FILENAME)
 }
 
-#generic plots
-if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, FEATURES_TO_USE, save=PROD_RUN)
 
 cat('Done!\n')

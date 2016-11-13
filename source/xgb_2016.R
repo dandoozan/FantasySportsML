@@ -42,13 +42,13 @@ getHyperParams = function() {
     colsample_bytree = 1, #ratio of cols (features) to use in each tree. Lower value=less overfitting
 
     #range=[0,1], default=0.3, toTry=0.01,0.015,0.025,0.05,0.1
-    eta = 0.3, #learning rate. Lower value=less overfitting, but increase nrounds when lowering eta
+    eta = 0.05, #learning rate. Lower value=less overfitting, but increase nrounds when lowering eta
 
     #range=[0,∞], default=0, toTry=?
-    gamma = 0, #Larger value=less overfitting
+    gamma = 6, #Larger value=less overfitting
 
     #range=[1,∞], default=6, toTry=3,5,7,9,12,15,17,25
-    max_depth = 6, #Lower value=less overfitting
+    max_depth = 3, #Lower value=less overfitting
 
     #range=[0,∞], default=1, toTry=1,3,5,7
     min_child_weight = 1, #Larger value=less overfitting
@@ -161,7 +161,7 @@ findBestHyperParams = function(data, yName, xNames) {
 }
 
 doPlots = function(toPlot, prodRun, data, yName, xNames, filename) {
-  if (prodRun || toPlot=='cv') plotCVErrorRates(data, yName, xNames, save=prodRun, filename=filename)
+  if (prodRun || toPlot=='cv') plotCVErrorRates(data, yName, xNames, ylim=c(0, 15), save=prodRun, filename=filename)
 }
 #============= Main ================
 
