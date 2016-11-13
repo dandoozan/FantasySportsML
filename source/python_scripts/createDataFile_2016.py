@@ -582,7 +582,6 @@ def parseNbaRow(row, dateStr, prefix):
         'TD3',
     ], prefix)
     floatCols = util.addPrefixToArray([
-        'AGE',
         'W_PCT',
         'MIN',
         'FGM',
@@ -1160,7 +1159,7 @@ DATA_SOURCES = [
     {
         'name': 'NBA',
         'features': [
-            'NBA_SEASON_AGE',
+            #'NBA_SEASON_AGE', #remove this from here, but add it to NBA PlayerBios data when I incorporate that
             'NBA_SEASON_W',
             'NBA_SEASON_L',
             'NBA_SEASON_W_PCT',
