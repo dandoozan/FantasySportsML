@@ -261,9 +261,7 @@ climbHill = function(team, allPlayers, verbose=F) {
     foundBetterTeam = F
 
     #shuffle the team and available players
-    set.seed(48)
     team = shuffle(team)
-    set.seed(48)
     availablePlayers = shuffle(availablePlayers)
 
     amountUnderBudget = SALARY_CAP - computeAmountSpent(team)
@@ -297,7 +295,7 @@ createTeam_HillClimbing = function(allPlayers, maxCov=Inf, maxNumTries=1, verbos
 
   numTriesWithoutFindingBetterTeam = 0
   while (numTriesWithoutFindingBetterTeam < maxNumTries) {
-    set.seed(43)
+    set.seed(sample(1:1000, 1))
     allPlayers = shuffle(allPlayers)
     initalTeam = createFirstAvailableTeam(allPlayers)
     team = climbHill(initalTeam, allPlayers, verbose)

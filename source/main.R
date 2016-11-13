@@ -3,7 +3,9 @@
 #D-tune hyperparams: 21_tune_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.232, 6.797523/7.527155/6.903303, Inf, 7.771552/34.14032, 0.9890346 <-- new best!
 #D-Use MAX_COV=0.5: 22_cov_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.285, 6.797523/7.527155/6.903303, 0.5, 7.771552/29.82064, 1.021105
 #D-Tune using gblinear: 23_gblinear_xgb: 10/27-11/8, 80/93, 266, 1368, 7.523755/7.787023, 1.581, 7.578275/7.510651/7.546615, Inf, 7.860481/41.00078, 0.9811104
-#-Revert back to using gbtree
+#D-Revert back to using gbtree
+#-plot several teams
+#-make createTeam faster
 
 #-use curated features
 #-tune again using xgbcv as metric to watch
@@ -33,7 +35,8 @@ NAME = 'gblinear'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 END_DATE = '2016-11-08'
 PLOT = 'scores' #fi, scores, cv
-MAX_COV = 0.5
+MAX_COV = Inf
+NUM_TEAMS = 5
 Y_NAME = 'FantasyPoints'
 MAKE_TEAMS = PROD_RUN || T
 
@@ -109,49 +112,6 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   return(NA)
 }
 
-plotScores = function(dateStrs, yLow, yHigh, linesToPlot=list(), labels=c(), save=FALSE, ...) {
-  cat('    Plotting Scores...\n')
-
-  if (save) png(createPlotFilename('Scores', FILENAME), width=500, height=350)
-
-  numLinesToPlot = length(linesToPlot)
-
-  dates = as.Date(dateStrs)
-
-  #get ymin and ymax
-  minValue = min(yLow, na.rm=T)
-  maxValue = max(yHigh, na.rm=T)
-  if (numLinesToPlot > 0) {
-    for (i in 1:numLinesToPlot) {
-      minValue = min(minValue, linesToPlot[[i]], na.rm=T)
-      maxValue = max(maxValue, linesToPlot[[i]], na.rm=T)
-    }
-  }
-
-  #draw band
-  plot(dates, yLow, type='l', ylim=c(minValue, maxValue+50), ylab='Fantasy Points', xlab='Date', xaxt='n', ...)
-  lines(dates, yHigh, col='blue')
-  polygon(c(dates, rev(dates)), c(yHigh, rev(yLow)),
-          col = "azure", border = NA)
-
-  #draw lines
-  colors = c('purple', 'green', 'red', 'orange')
-  if (numLinesToPlot > 0) {
-    for (i in 1:numLinesToPlot) {
-      lines(dates, linesToPlot[[i]], col=colors[i])
-    }
-    legend(x='topright', legend=c('Contest Results', labels[1:numLinesToPlot]), fill=c('blue', colors[1:numLinesToPlot]), inset=0.02)
-  }
-
-  #add date axis
-  axis.Date(side=1, dates, format="%m/%d")
-
-  #add grid
-  grid()
-
-  if (save) dev.off()
-}
-
 computeActualFP = function(team, test) {
   #todo: perhaps improve this through vectorization
   actualFP = 0.0
@@ -173,6 +133,60 @@ printRGTrnCVError = function(data, yName, xNames) {
   cvError = computeError(cv[, yName], cv$RG_points)
   trainError = computeError(data[, yName], data$RG_points)
   cat('    RG Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
+}
+
+plotScores = function(dateStrs, yLow, yHigh, lowest5050=c(), greedyTeam=c(), hillClimbingTeams=list(), meanFPs=c(), save=FALSE, main='Title') {
+  cat('    Plotting Scores...\n')
+
+  if (save) png(createPlotFilename('Scores', FILENAME), width=500, height=350)
+
+  numHillClimbing = length(hillClimbingTeams)
+
+  dates = as.Date(dateStrs)
+
+  #get ymin and ymax
+  minValue = min(yLow, lowest5050, greedyTeam, meanFPs, na.rm=T)
+  maxValue = max(yHigh, lowest5050, greedyTeam, meanFPs, na.rm=T)
+  if (numHillClimbing > 0) {
+    for (i in 1:numHillClimbing) {
+      minValue = min(minValue, hillClimbingTeams[[i]], na.rm=T)
+      maxValue = max(maxValue, hillClimbingTeams[[i]], na.rm=T)
+    }
+  }
+
+  #draw band
+  plot(dates, yLow, type='l', col='blue', ylim=c(minValue, maxValue+50), ylab='Fantasy Points', xlab='Date', xaxt='n', main=main)
+  lines(dates, yHigh, col='blue')
+  polygon(c(dates, rev(dates)), c(yHigh, rev(yLow)),
+          col = "azure", border = NA)
+
+  #draw lowest5050
+  lines(dates, lowest5050, col='red')
+
+  #draw hill climbing
+  colors = c('purple', 'green', 'red', 'orange')
+  if (numHillClimbing > 0) {
+    for (i in 1:numHillClimbing) {
+      lines(dates, hillClimbingTeams[[i]], col='grey', lty=2)
+    }
+  }
+
+  #draw greedy team
+  lines(dates, greedyTeam, col='grey')
+
+  #draw mean
+  lines(dates, meanFPs, col='black')
+
+  #labels=c('My Team Expected', 'My Team Actual', '50/50 $1 Contests')
+  #legend(x='topright', legend=c('Contest Results', labels[1:numLinesToPlot]), fill=c('blue', colors[1:numLinesToPlot]), inset=0.02)
+
+  #add date axis
+  axis.Date(side=1, dates, format="%m/%d")
+
+  #add grid
+  grid()
+
+  if (save) dev.off()
 }
 
 #============= Main ================
@@ -219,6 +233,9 @@ if (MAKE_TEAMS) {
   highestWinningScores = c()
   lowestWinningScores = c()
   lowestWinningScores_5050_1 = c()
+  myTeamHillClimbingActualFPs = vector('list', NUM_TEAMS)
+  for (i in 1:NUM_TEAMS) myTeamHillClimbingActualFPs[[i]] = numeric()
+  meanActualFPs = c()
 
   dateStrs = sort(unique(data$Date))[-1] #-1 uses all but the first element
   for (dateStr in dateStrs) {
@@ -244,21 +261,16 @@ if (MAKE_TEAMS) {
     predictionDF = test
     predictionDF[[Y_NAME]] = prediction
     myTeamGreedy = createTeam_Greedy(predictionDF, maxCov=MAX_COV)
-    myTeamGreedyExpectedFP = computeTeamFP(myTeamGreedy)
-    myTeamHillClimbing = NULL# createTeam_HillClimbing(predictionDF, maxCov=MAX_COV)
-    myTeamHillClimbingExpectedFP = 0# computeTeamFP(myTeamHillClimbing)
-
-    #set my team to whichever gave the best expected score from above
-    if (myTeamGreedyExpectedFP > myTeamHillClimbingExpectedFP) {
-      myTeam = myTeamGreedy
-      whichTeamITook = 'Greedy'
-    } else {
-      myTeam = myTeamHillClimbing
-      whichTeamITook = 'HillClimbing'
-    }
-    myTeamExpectedFP = computeTeamFP(myTeam)
-    myTeamActualFP = computeActualFP(myTeam, test)
+    myTeamExpectedFP = computeTeamFP(myTeamGreedy)
+    myTeamActualFP = computeActualFP(myTeamGreedy, test)
     myTeamRmse = computeError(myTeamActualFP, myTeamExpectedFP)
+    tempFPs = c(myTeamActualFP)
+    for (i in 1:NUM_TEAMS) {
+      hillClimbingActualFP = computeActualFP(createTeam_HillClimbing(predictionDF, maxCov=MAX_COV), test)
+      myTeamHillClimbingActualFPs[[i]] = c(myTeamHillClimbingActualFPs[[i]], hillClimbingActualFP)
+      tempFPs = c(tempFPs, hillClimbingActualFP)
+    }
+    meanActualFPs = c(meanActualFPs, mean(tempFPs))
 
     #get actual fanduel winning score for currday
     highestWinningScore = getHighestWinningScore(contestData, dateStr)
@@ -283,8 +295,6 @@ if (MAKE_TEAMS) {
     myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
     myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
     myTeamRmses = c(myTeamRmses, myTeamRmse)
-    myTeamGreedyExpectedFPs = c(myTeamGreedyExpectedFPs, myTeamGreedyExpectedFP)
-    myTeamHillClimbingExpectedFPs = c(myTeamHillClimbingExpectedFPs, myTeamHillClimbingExpectedFP)
     highestWinningScores = c(highestWinningScores, highestWinningScore)
     lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
     lowestWinningScores_5050_1 = c(lowestWinningScores_5050_1, lowestWinningScore_5050_1)
@@ -303,7 +313,7 @@ cat('Creating plots...\n')
 doPlots(PLOT, PROD_RUN, data, Y_NAME, FEATURES_TO_USE, FILENAME)
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, FEATURES_TO_USE, save=PROD_RUN)
 if (MAKE_TEAMS) {
-  if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, linesToPlot=list(myTeamExpectedFPs, myTeamActualFPs, lowestWinningScores_5050_1), labels=c('My Team Expected', 'My Team Actual', '50/50 $1 Contests'), main='My Team Vs. Actual Contests', save=PROD_RUN)
+  if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, lowest5050=lowestWinningScores_5050_1, greedyTeam=myTeamActualFPs, hillClimbingTeams=myTeamHillClimbingActualFPs, meanFPs=meanActualFPs, main='My Team Vs. Actual Contests', save=PROD_RUN)
   if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, myRmses, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name='RMSE_ScoreRatios', filename=FILENAME)
   if (PROD_RUN || PLOT == 'rmses') plotLinesByDate(dateStrs, list(myRmses, fdRmses, nfRmses, rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=PROD_RUN, name='RMSEs', filename=FILENAME)
 }
