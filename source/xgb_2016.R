@@ -33,38 +33,57 @@ createPrediction = function(model, newData, xNames) {
 computeError = function(y, yhat) {
   return(rmse(y, yhat))
 }
-getHyperParams = function() {
+
+#these are the params i used for gblinear
+getHyperParams_gblinear = function() {
   return(list(
     #values=gbtree|gblinear|dart, default=gbtree, toTry=gbtree,gblinear
     booster = 'gblinear', #gbtree/dart=tree based, gblinear=linear function. Remove eta when using gblinear
 
-    #range=[0,1], default=0.3, toTry=0.01,0.015,0.025,0.05,0.1
-    #eta = 0.3,#0.05, #learning rate. Lower value=less overfitting, but increase nrounds when lowering eta
-
-    #range=[0,∞], default=0, toTry=?
-    #gamma = 0,#6, #Larger value=less overfitting
-
-    #range=[1,∞], default=6, toTry=3,5,7,9,12,15,17,25
-    #max_depth = 6,#,3, #Lower value=less overfitting
-
-    #range=[0,∞], default=1, toTry=1,3,5,7
-    #min_child_weight = 1, #Larger value=less overfitting
-
-    #range=(0,1], default=1, toTry=0.6,0.7,0.8,0.9,1.0
-    #subsample = 1, #ratio of sample of data to use for each instance (eg. 0.5=50% of data). Lower value=less overfitting
-
-    #range=(0,1], default=1, toTry=0.6,0.7,0.8,0.9,1.0
-    #colsample_bytree = 1, #ratio of cols (features) to use in each tree. Lower value=less overfitting
-
-    #----Parameters for Linear Booster:-----
-    #range=?, default=0, toTry=0->1000 or more
+    #range=[0,∞], default=0, toTry=0->1000 or more
     lambda = 100, #Larger value=less overfitting
 
-    #range=?, default=0, toTry=?
+    #range=[0,∞], default=0, toTry=0->1000 or more
     alpha = 70, #Larger value=less overfitting
 
-    #range=?, default=0, toTry=?
+    #range=[0,∞], default=0, toTry=0->100? or more
     lambda_bias = 3,
+
+    objective = 'reg:linear'
+  ))
+}
+getHyperParams = function() {
+  return(list(
+    #values=gbtree|gblinear|dart, default=gbtree, toTry=gbtree,gblinear
+    booster = 'gbtree', #gbtree/dart=tree based, gblinear=linear function. Remove eta when using gblinear
+
+    #range=[0,1], default=0.3, toTry=0.01,0.015,0.025,0.05,0.1
+    eta = 0.05, #learning rate. Lower value=less overfitting, but increase nrounds when lowering eta
+
+    #range=[0,∞], default=0, toTry=?
+    gamma = 6, #Larger value=less overfitting
+
+    #range=[1,∞], default=6, toTry=3,5,7,9,12,15,17,25
+    max_depth = 3, #Lower value=less overfitting
+
+    #range=[0,∞], default=1, toTry=1,3,5,7
+    min_child_weight = 1, #Larger value=less overfitting
+
+    #range=(0,1], default=1, toTry=0.6,0.7,0.8,0.9,1.0
+    subsample = 1, #ratio of sample of data to use for each instance (eg. 0.5=50% of data). Lower value=less overfitting
+
+    #range=(0,1], default=1, toTry=0.6,0.7,0.8,0.9,1.0
+    colsample_bytree = 1, #ratio of cols (features) to use in each tree. Lower value=less overfitting
+
+    #----Parameters for Linear Booster:-----
+    #range=[0,∞], default=0, toTry=0->1000 or more
+    #lambda = 0, #Larger value=less overfitting
+
+    #range=[0,∞], default=0, toTry=0->1000 or more
+    #alpha = 0, #Larger value=less overfitting
+
+    #range=[0,∞], default=0, toTry=0->100? or more
+    #lambda_bias = 0,
 
     objective = 'reg:linear'
   ))

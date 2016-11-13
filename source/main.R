@@ -3,8 +3,11 @@
 #D-tune hyperparams: 21_tune_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.232, 6.797523/7.527155/6.903303, Inf, 7.771552/34.14032, 0.9890346 <-- new best!
 #D-Use MAX_COV=0.5: 22_cov_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.285, 6.797523/7.527155/6.903303, 0.5, 7.771552/29.82064, 1.021105
 #D-Tune using gblinear: 23_gblinear_xgb: 10/27-11/8, 80/93, 266, 1368, 7.523755/7.787023, 1.581, 7.578275/7.510651/7.546615, Inf, 7.860481/41.00078, 0.9811104
+#-Revert back to using gbtree
+
 #-use curated features
 #-tune again using xgbcv as metric to watch
+#-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -23,16 +26,16 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 ALG = 'xgb'
 NUMBER = 23
 NAME = 'gblinear'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 END_DATE = '2016-11-08'
-PLOT = '' #fi, scores,
-MAX_COV = Inf
+PLOT = 'scores' #fi, scores, cv
+MAX_COV = 0.5
 Y_NAME = 'FantasyPoints'
-MAKE_TEAMS = PROD_RUN || F
+MAKE_TEAMS = PROD_RUN || T
 
 if (ALG == 'xgb') {
   source('source/xgb_2016.R')
