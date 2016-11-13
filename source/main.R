@@ -1,7 +1,9 @@
 #todo:
 #D-use all features: 20_all_xgb: Dates=10/27-11/8, NumFeatures=80/93, Seed=?, Nrounds=?, XgbTrain/CvError=4.878435/8.200007, TimeToComputeModel=0.845, Trn/CV/Train=4.879084/7.799062/5.216833, MaxCov=Inf, Mean RMSE (AllPlayers/MyTeam)=8.152958/36.76341, Ratio of MyScore to LowestScore=0.9877099
 #D-tune hyperparams: 21_tune_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.232, 6.797523/7.527155/6.903303, Inf, 7.771552/34.14032, 0.9890346 <-- new best!
-
+#D-Use MAX_COV=0.5: 22_cov_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.285, 6.797523/7.527155/6.903303, 0.5, 7.771552/29.82064, 1.021105
+#-Try gblinear
+#-use curated features
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -22,14 +24,14 @@ source('source/_createTeam.R')
 #Globals
 PROD_RUN = T
 ALG = 'xgb'
-NUMBER = 21
-NAME = 'tune'
+NUMBER = 22
+NAME = 'cov'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 END_DATE = '2016-11-08'
-PLOT = '' #fi, scores,
-MAX_COV = Inf
+PLOT = 'scores' #fi, scores,
+MAX_COV = 0.5
 Y_NAME = 'FantasyPoints'
-MAKE_TEAMS = PROD_RUN || F
+MAKE_TEAMS = PROD_RUN || T
 
 if (ALG == 'xgb') {
   source('source/xgb_2016.R')

@@ -46,7 +46,7 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 FILENAME = 'rf_19cov'
 END_DATE = '2016-11-08'
 N_TREE = 100
