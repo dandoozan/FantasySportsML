@@ -7,7 +7,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = datetime(2016, 10, 25)
 ONE_DAY = timedelta(1)
-END_DATE = datetime(2016, 11, 8)
+END_DATE = datetime(2016, 11, 11)
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -396,12 +396,10 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'chandler parsons',
         'gordon hayward',
         'josh richardson',
-        'marshall plumlee',
     },
     '2016-11-05': {
         'adreian payne',
         'arinze onuaku',
-        'danny green',
         'gary harris',
         'georgios papagiannis',
         'john lucas iii',
@@ -412,52 +410,60 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'steve novak',
     },
     '2016-11-06': {
-        'bruno caboclo',
         'demetrius jackson',
-        'fred vanvleet',
-        'kelly olynyk',
         'lucas nogueira',
     },
     '2016-11-07': {
         'aaron harrison',
-        'alec burks',
         'arinze onuaku',
         'brian roberts',
-        'brice johnson',
-        'chinanu onuaku',
         'christian wood',
-        'damian jones',
         'damjan rudez',
-        'danuel house',
         'derrick williams',
-        'josh huestis',
-        'josh mcroberts',
-        'nerlens noel',
-        'patrick beverley',
-        'paul pierce',
-        'r.j. hunter',
-        'reggie bullock',
-        'wayne ellington',
     },
     '2016-11-08': {
-        'archie goodwin',
         'brandan wright',
-        'caris levert',
         'darren collison',
-        'derrick jones jr.',
-        'devin harris',
-        'festus ezeli',
         'jarnell stokes',
-        'john jenkins',
-        'jrue holiday',
-        'mike scott',
         'randy foye',
-        'tiago splitter',
-        'tim quarterman',
     },
     '2016-11-09': {
         'alan anderson',
+        'caris levert', #no games
+        'chinanu onuaku', #no games
+        'danny green',
+        'derrick jones jr.', #no games
+        'devin harris', #no games
+        'fred vanvleet',
+        'kelly olynyk',
+        'mike scott', #no games
+        'patrick beverley', #no games
+        'tiago splitter', #no games
+        'tim quarterman',
     },
+    '2016-11-10': {
+        'damian jones', #no games
+        'jrue holiday', #no games
+        'r.j. hunter', #no games
+        'wayne ellington', #no games
+    },
+    '2016-11-11': {
+        'alec burks', #no games
+        'brice johnson', #no games
+        'bruno caboclo', #no games
+        'danuel house',
+        'festus ezeli', #no games
+        'josh huestis', #no games
+        'marshall plumlee', #no games
+        'nerlens noel', #no games
+        'paul pierce', #no games
+        'reggie bullock', #no games
+    },
+    '2016-11-12': {
+        'archie goodwin',
+        'john jenkins',
+        'josh mcroberts',
+    }
 }
 
 TBX_MISSING_PLAYERS = {}
@@ -468,7 +474,6 @@ def findJsonFile(fullPathToDir, dateStr):
     return util.createFullPathFilename(fullPathToDir, util.createJsonFilename(dateStr))
 def findNbaFile(fullPathToDir, dateStr):
     #get previous day's file
-    #if i dont find it, then check each previous day until i find it
     usedDiffFile = False
     currDate = util.parseDate(dateStr)
     while currDate > SEASON_START_DATE:
@@ -747,23 +752,33 @@ def findMatchingName(name, newData, nameMap={}):
         #add it to the known mismatches
         nameMap[name] = newName
         return newName
-    return None
+
+    #if all fails return name, and let the parent handle it
+    return name
+
 def playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
     return name in knownMissingObj or (dateStr in knownMissingObj and name in knownMissingObj[dateStr])
-def playerDidPlay(dateStr, name):
-    currDate = util.parseDate(dateStr)
-    currDateStr = dateStr
+def playerDidNotPlayOnOrUpToDate(date, name):
+    currDate = date + ONE_DAY
+    currDateStr = util.formatDate(currDate)
     while currDateStr in PLAYERS_WHO_DID_NOT_PLAY_UP_TO:
         if name in PLAYERS_WHO_DID_NOT_PLAY_UP_TO[currDateStr]:
-            return False
+            return True
         currDate = currDate + ONE_DAY
         currDateStr = util.formatDate(currDate)
-    return True
+    return False
 def getTeam(playerData):
     return playerData['Team']
 def getOppTeam(playerData):
     return playerData['Opponent']
-def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, nameMap, knownMissingObj, containsY):
+def playerIsInData(data, name, nameMap):
+    for dateStr in data:
+        for nme in data[dateStr]:
+            if nme == findMatchingName(name, data[dateStr], nameMap):
+                return True
+    return False
+
+def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, nameMap, knownMissingObj, containsY, usePrevDay):
     print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
@@ -774,10 +789,18 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, nameMap, knownMissingOb
                 if isTeam:
                     name = getOppTeam(playerData) if isOpp else getTeam(playerData)
                 obj2Name = findMatchingName(name, obj2[dateStr], nameMap)
-                if obj2Name and obj2Name in obj2[dateStr]:
+                if obj2Name in obj2[dateStr]:
                     playerData.update(obj2[dateStr][obj2Name])
                 else:
-                    if not playerIsKnownToBeMissing(dateStr, name, knownMissingObj) and playerDidPlay(dateStr, name):
+                    date = util.parseDate(dateStr)
+                    if playerIsKnownToBeMissing(dateStr, name, knownMissingObj) \
+                            or playerDidNotPlayOnOrUpToDate(date - ONE_DAY if usePrevDay else date, name) \
+                            or playerIsInData(obj2, name, nameMap): #it's oh well in this case; at least i know it's not a name mismatch
+                        #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
+                        if containsY:
+                            #set FantasyPoints to 0 for these people who are known to be missing
+                            playerData.update({ 'FantasyPoints': 0 })
+                    else:
                         #tbx
                         if dataSourceName not in TBX_MISSING_PLAYERS:
                             TBX_MISSING_PLAYERS[dataSourceName] = {}
@@ -788,12 +811,6 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, nameMap, knownMissingOb
                             TBX_MISSING_PLAYERS[dataSourceName][dateStr] = [name]
 
                         util.headsUp('Name not found in obj2, date=' + dateStr + ', name=' + name)
-                    else:
-                        #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
-                        if containsY:
-                            #set FantasyPoints to 0 for these people who are known to be missing
-                            playerData.update({ 'FantasyPoints': 0 })
-
         else:
             util.headsUp('Date not found in obj2, date=' + dateStr)
 
@@ -1177,6 +1194,7 @@ DATA_SOURCES = [
         'loadFileFunction': loadNbaJsonFile,
         'parseRowFunction': parseNbaRow,
         'prefix': 'NBA_SEASON_',
+        'usePrevDay': True,
     },
     #{
     #    'name': '',
@@ -1208,6 +1226,7 @@ for dataSource in DATA_SOURCES:
     nameMap = util.getObjValue(dataSource, 'nameMap', KNOWN_ALIASES)
     parseRowFunction = dataSource['parseRowFunction']
     prefix = util.getObjValue(dataSource, 'prefix', '')
+    usePrevDay = util.getObjValue(dataSource, 'usePrevDay', False)
 
     newData = loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, keyRenameMap, delimiter, prefix)
     X_NAMES.extend(features)
@@ -1215,7 +1234,7 @@ for dataSource in DATA_SOURCES:
     if data == None:
         data = newData
     else:
-        mergeData(data, newData, name, isTeam, isOpp, nameMap, knownMissingObj, containsY)
+        mergeData(data, newData, name, isTeam, isOpp, nameMap, knownMissingObj, containsY, usePrevDay)
 
 writeData(OUTPUT_FILE, data)
 

@@ -23,14 +23,6 @@
 #-Compute FPPD (FP/Salary*1000)
 #-add first day back
 
-#How to add dates (up to date before yesterday)
-  #-download rotoguru (python source/python_scripts/scrapeRotoGuruDay.py)
-  #-download nba data (python source/python_scripts/scrapeStatsNba.py)
-  #-change END_DATE in createDataFile_2016.py
-  #-create data_2016.csv (python source/python_scripts/createDataFile_2016.py)
-  #-create data_contests_2016.csv (python source/python_scripts/createContestFile.py)
-  #-change END_DATE to new date
-
 #Remove all objects from the current workspace
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
