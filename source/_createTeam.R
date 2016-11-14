@@ -27,27 +27,24 @@
 
 SALARY_CAP = 60000
 
-getTeam = function(players) {
-  return(players[players$OnTeam == T,])
-}
-createFirstAvailableTeam = function(players) {
-  players$OnTeam = F
+createFirstAvailableTeam = function(allPlayers) {
+  team = data.frame()
 
-  positions = levels(players$Position)
+  positions = levels(allPlayers$Position)
   for (position in positions) {
     numPlayersToChoose = ifelse(position == 'C', 1, 2)
-    playersInPosition = players[players$Position == position,]
+    playersInPosition = allPlayers[allPlayers$Position == position,]
 
     #if there are not enough players in the position, return NA
-    if (sum(!is.na(players[players$Position == position, 'Position'])) < numPlayersToChoose) {
+    if (sum(!is.na(allPlayers[allPlayers$Position == position, 'Position'])) < numPlayersToChoose) {
       stop('Cannot create team because there are not enough ', position, 's\n')
       return(NULL)
     }
 
-    players[players$Position == position,][1:numPlayersToChoose, 'OnTeam'] = T
+    team = rbind(team, playersInPosition[1:numPlayersToChoose,])
   }
 
-  return(players)
+  return(team)
 }
 computePPD = function(fantasyPoints, salary) {
   return(fantasyPoints / salary * 1000)
@@ -86,48 +83,64 @@ computeAmountSpent = function(team) {
 computeAmountOverBudget = function(team) {
   return(computeAmountSpent(team) - SALARY_CAP)
 }
-getWorseTeam = function(players, amountOverBudget, verbose=F) {
+replacePlayer = function(team, oldPlayer, newPlayer) {
+  #remove old player
+  playersToKeep = setdiff(rownames(team), rownames(oldPlayer))
+  team = team[playersToKeep,]
+
+  #add new player
+  team = rbind(team, newPlayer)
+
+  return(team)
+}
+getWorseTeam = function(data, team, amountOverBudget, verbose=F) {
   cnt = 1
   while (amountOverBudget > 0) {
     if (verbose) print(paste('Iteration', cnt, ', amountOverBudget=', amountOverBudget))
 
     bestPpdg = Inf
-    bestOldPlayerIndex = NULL
-    bestNewPlayerIndex = NULL
+    bestOldPlayer = NULL
+    bestNewPlayer = NULL
 
-    team = getTeam(players)
+    positions = c('PG', 'SG', 'SF', 'PF', 'C')
 
-    for (i in 1:nrow(team)) {
-      playerOnTeam = team[i,]
-      potentiallyBetterPlayers = players[(players$OnTeam == F)
-          & (players$Position == playerOnTeam$Position),]
-      fpDiff = playerOnTeam$FantasyPoints - potentiallyBetterPlayers$FantasyPoints
-      salaryDiff = pmin(playerOnTeam$Salary - potentiallyBetterPlayers$Salary, amountOverBudget)
-      salaryDiff[salaryDiff <= 0] = NA
-      if (sum(!is.na(salaryDiff)) > 0) {
-        ppdg = computePPD(fpDiff, salaryDiff)
-        minPpdg = min(ppdg, na.rm=T)
-        if (minPpdg < bestPpdg) {
-          bestPpdg = minPpdg
-          bestOldPlayerIndex = rownames(playerOnTeam)
-          bestNewPlayerIndex = rownames(potentiallyBetterPlayers[which.min(ppdg), ])
+    #find next best player for each position
+    for (position in positions) {
+      numPlayers = ifelse(position == 'C', 1, 2)
+
+      players = data[data$Position == position,]
+
+      #remove players currently on the team
+      playersOnTeam = team[team$Position == position,]
+      players = players[setdiff(rownames(players), rownames(playersOnTeam)),]
+
+      for (i in 1:numPlayers) {
+        teamPlayer = team[team$Position == position,][i,]
+        fpDiff = teamPlayer$FantasyPoints - players$FantasyPoints
+        salaryDiff = pmin(teamPlayer$Salary - players$Salary, amountOverBudget)
+        salaryDiff[salaryDiff <= 0] = NA
+        if (sum(!is.na(salaryDiff)) > 0) {
+          ppdg = computePPD(fpDiff, salaryDiff)
+          minPpdg = min(ppdg, na.rm=T)
+          if (minPpdg < bestPpdg) {
+            bestPpdg = minPpdg
+            bestOldPlayer = teamPlayer
+            bestNewPlayer = players[which.min(ppdg), ]
+          }
         }
       }
     }
 
     #i now have the next best player, replace him
-    #if (verbose) cat('Replacing', oldPlayer$Name, '<-', newPlayer$Name, '\n')
-    #team = replacePlayer(team, bestOldPlayerIndex, bestNewPlayerIndex)
-    players[bestOldPlayerIndex, 'OnTeam'] = F
-    players[bestNewPlayerIndex, 'OnTeam'] = T
-    team = getTeam(players)
+    if (verbose) cat('Replacing', oldPlayer$Name, '<-', newPlayer$Name, '\n')
+    team = replacePlayer(team, bestOldPlayer, bestNewPlayer)
 
     amountOverBudget = computeAmountOverBudget(team)
     cnt = cnt + 1
   }
   return(team)
 }
-getBetterTeam = function(players, amountUnderBudget, verbose=F) {
+getBetterTeam = function(data, team, amountUnderBudget, verbose=F) {
   #while amountOverBudget < 0, look for a better match
   #compute the next highest ppdg for each position
   #select the matchup with the highest ppdg gained
@@ -138,36 +151,49 @@ getBetterTeam = function(players, amountUnderBudget, verbose=F) {
     if (verbose) cat(paste('Iteration', cnt, ', amountUnderBudget=', amountUnderBudget), '\n')
 
     bestPpdg = -Inf
-    bestOldPlayerIndex = NULL
-    bestNewPlayerIndex = NULL
+    bestOldPlayer = NULL
+    bestNewPlayer = NULL
 
-    team = getTeam(players)
+    positions = c('PG', 'SG', 'SF', 'PF', 'C')
 
-    for (i in 1:nrow(team)) {
-      playerOnTeam = team[i,]
-      potentiallyBetterPlayers = players[(players$OnTeam == F)
-          & (players$Position == playerOnTeam$Position),]
-      fpDiff = potentiallyBetterPlayers$FantasyPoints - playerOnTeam$FantasyPoints
-      salaryDiff = potentiallyBetterPlayers$Salary - playerOnTeam$Salary
-      salaryDiff[salaryDiff > amountUnderBudget] = NA
-      salaryDiff[salaryDiff < 0] = NA
-      if (sum(!is.na(salaryDiff)) > 0) {
-        ppdg = computePPD(fpDiff, salaryDiff)
-        maxPpdg = max(ppdg, na.rm=T)
-        if (maxPpdg > bestPpdg) {
-          bestPpdg = maxPpdg
-          bestOldPlayerIndex = rownames(playerOnTeam)
-          bestNewPlayerIndex = rownames(potentiallyBetterPlayers[which.max(ppdg), ])
+    #find next best player for each position
+    for (position in positions) {
+      numPlayers = ifelse(position == 'C', 1, 2)
+
+      players = data[data$Position == position,]
+
+      #remove players currently on the team
+      playersOnTeam = team[team$Position == position,]
+      players = players[setdiff(rownames(players), rownames(playersOnTeam)),]
+
+      for (i in 1:numPlayers) {
+        teamPlayer = team[team$Position == position,][i,]
+        fpDiff = players$FantasyPoints - teamPlayer$FantasyPoints
+        salaryDiff = players$Salary - teamPlayer$Salary
+        salaryDiff[salaryDiff > amountUnderBudget] = NA
+        salaryDiff[salaryDiff < 0] = NA
+        if (sum(!is.na(salaryDiff)) > 0) {
+          ppdg = computePPD(fpDiff, salaryDiff)
+          maxPpdg = max(ppdg, na.rm=T)
+          if (maxPpdg > bestPpdg) {
+            bestPpdg = maxPpdg
+            bestOldPlayer = teamPlayer
+            bestNewPlayer = players[which.max(ppdg), ]
+          }
         }
       }
     }
 
-    if (!is.null(bestOldPlayerIndex)) {
-      #i now have the next best player, replace him
+    if (!is.null(bestOldPlayer)) {
       someoneWasReplaced = TRUE
-      players[bestOldPlayerIndex, 'OnTeam'] = F
-      players[bestNewPlayerIndex, 'OnTeam'] = T
-      team = getTeam(players)
+      #i now have the next best player, replace him
+      if (verbose) cat('Replacing', bestOldPlayer$Name, '<-', bestNewPlayer$Name, '\n')
+      team = replacePlayer(team, bestOldPlayer, bestNewPlayer)
+    }
+
+    if (verbose) {
+      printTeam(team)
+      cat('\n')
     }
 
     amountUnderBudget = -computeAmountOverBudget(team)
@@ -175,20 +201,19 @@ getBetterTeam = function(players, amountUnderBudget, verbose=F) {
   }
   return(team)
 }
-createTeam_Greedy = function(players, maxCov=Inf, verbose=F) {
+createTeam_Greedy = function(allPlayers, maxCov=Inf, verbose=F) {
   #remove players whose Coefficient of Variation is > cov
-  players$cov = computeCov(players)
-  players = removeRows(players, players[players$cov > maxCov,]) #todo: improve
+  allPlayers$cov = computeCov(allPlayers)
+  allPlayers = removeRows(allPlayers, allPlayers[allPlayers$cov > maxCov,])
 
   #add PPD coumn
-  players$PPD = computePPD(players$FantasyPoints, players$Salary)
+  allPlayers$PPD = computePPD(allPlayers$FantasyPoints, allPlayers$Salary)
 
   #sort by ppd
-  players = players[order(players$PPD, decreasing=TRUE),]
+  allPlayers = allPlayers[order(allPlayers$PPD, decreasing=TRUE),]
 
   #first, fill team with all the highest ppd players
-  players = createFirstAvailableTeam(players)
-  team = getTeam(players)
+  team = createFirstAvailableTeam(allPlayers)
   if (is.null(team)) {
     return(NULL)
   }
@@ -200,9 +225,9 @@ createTeam_Greedy = function(players, maxCov=Inf, verbose=F) {
 
   amountOverBudget = computeAmountOverBudget(team)
   if (amountOverBudget > 0) {
-    team = getWorseTeam(players, amountOverBudget, verbose)
+    team = getWorseTeam(allPlayers, team, amountOverBudget, verbose)
   } else if (amountOverBudget < 0) {
-    team = getBetterTeam(players, -amountOverBudget, verbose)
+    team = getBetterTeam(allPlayers, team, -amountOverBudget, verbose)
   } else {
     #cat('Wow, I got a perfect team on the first try!\n')
   }
@@ -215,44 +240,55 @@ createTeam_Greedy = function(players, maxCov=Inf, verbose=F) {
   return(team)
 }
 
-climbHill = function(players, verbose=F) {
+swapRow = function(data1, rowName1, data2, rowName2) {
+  tempRow = data1[rowName1,]
+  data1[rowName1,] = data2[rowName2,]
+  data2[rowName2,] = tempRow
+  return(list(
+    data1 = data1,
+    data2 = data2
+  ))
+}
+climbHill = function(team, allPlayers, verbose=F) {
   #select a random player on the team, and swap him with an available player
   #if the fp is higher, keep the swapped player
   #repeat until i get to a team where every possible swap produces a lower score
+
+  availablePlayers = removeRows(allPlayers, team)
 
   foundBetterTeam = T
   while (foundBetterTeam) {
     foundBetterTeam = F
 
-    #shuffle the players
-    players = shuffle(players)
-    team = getTeam(players)
+    #shuffle the team and available players
+    team = shuffle(team)
+    availablePlayers = shuffle(availablePlayers)
 
     amountUnderBudget = SALARY_CAP - computeAmountSpent(team)
 
     for (i in 1:nrow(team)) {
       playerOnTeam = team[i,]
-      betterPlayers = players[(players$OnTeam == F)
-          & (players$Position == playerOnTeam$Position)
-          & (players$FantasyPoints > playerOnTeam$FantasyPoints)
-          & (players$Salary - playerOnTeam$Salary <= amountUnderBudget),]
+      betterPlayers = availablePlayers[(availablePlayers$Position == playerOnTeam$Position)
+                                       & (availablePlayers$FantasyPoints > playerOnTeam$FantasyPoints)
+                                       & (availablePlayers$Salary - playerOnTeam$Salary <= amountUnderBudget),]
       if(nrow(betterPlayers) > 0) {
         #swap new and old
         newPlayer = betterPlayers[1,]
-        players[players$Name == playerOnTeam$Name, 'OnTeam'] = F
-        players[players$Name == newPlayer$Name, 'OnTeam'] = T
+        spNewTeam = swapRow(team, rownames(playerOnTeam), availablePlayers, rownames(newPlayer))
+        team = spNewTeam$data1
+        availablePlayers = spNewTeam$data2
         foundBetterTeam = T
         if (verbose) cat('Replaced ', playerOnTeam$Name, ' (', as.character(playerOnTeam$Position), ') -> ', newPlayer$Name, ' (', as.character(newPlayer$Position), ') \n', sep='')
         break
       }
     }
   }
-  return(players)
+  return(team)
 }
-createTeam_HillClimbing = function(players, maxCov=Inf, maxNumTries=1, verbose=F) {
+createTeam_HillClimbing = function(allPlayers, maxCov=Inf, maxNumTries=1, verbose=F) {
   #remove players whose Coefficient of Variation is > cov
-  players$cov = computeCov(players)
-  players = players[players$cov <= maxCov,]
+  allPlayers$cov = computeCov(allPlayers)
+  allPlayers = removeRows(allPlayers, allPlayers[allPlayers$cov > maxCov,])
 
   bestTeam = NULL
   bestTeamFP = -Inf
@@ -260,10 +296,9 @@ createTeam_HillClimbing = function(players, maxCov=Inf, maxNumTries=1, verbose=F
   numTriesWithoutFindingBetterTeam = 0
   while (numTriesWithoutFindingBetterTeam < maxNumTries) {
     set.seed(sample(1:1000, 1))
-    players = shuffle(players)
-    players = createFirstAvailableTeam(players)
-    players = climbHill(players, verbose)
-    team = getTeam(players)
+    allPlayers = shuffle(allPlayers)
+    initalTeam = createFirstAvailableTeam(allPlayers)
+    team = climbHill(initalTeam, allPlayers, verbose)
     teamFP = computeTeamFP(team)
     #cat('numTriesWithoutFindingBetterTeam=', numTriesWithoutFindingBetterTeam, ', fp=', teamFP,'\n')
     if (teamFP > bestTeamFP) {

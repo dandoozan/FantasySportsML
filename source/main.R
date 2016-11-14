@@ -8,6 +8,7 @@
 #D-Remove NBA_SEASON_AGE: 26_removeAge_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.486, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664 <-- new best!
 #D-plot multiple teams: 27_multiteams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.507, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 #D-Make create teams more efficient: 28_efficientteams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.696, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
+#D-Revert create teams: 29_revertTeams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.509, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 
 #-use curated features
 #-adjust MAX_COV
@@ -33,11 +34,11 @@ source('source/_createTeam.R')
 #Globals
 PROD_RUN = T
 ALG = 'xgb'
-NUMBER = 28
-NAME = 'efficientteams'
+NUMBER = 29
+NAME = 'revertTeams'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 END_DATE = '2016-11-11'
-PLOT = 'multiscores' #fi, scores, cv
+PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 Y_NAME = 'FantasyPoints'
