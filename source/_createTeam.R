@@ -59,6 +59,7 @@ printPlayer = function(player) {
   cat('    ', as.character(player$Position), ', ', sep='')
   cat(paste(player[, c('Name', 'Salary')], collapse=', '), sep='')
   cat(', ', round(player$FantasyPoints, 2), sep='')
+  cat(' (', round(player$RG_deviation, 2), ')', sep='')
   #cat(', ', round(player$PPD, 2), sep='')
   cat(', ', round(player$cov, 2), sep='')
   cat('\n')
@@ -67,6 +68,10 @@ printTeam = function(team) {
   if (is.null(team)) {
     cat('No team\n')
   } else {
+    if (!('cov' %in% colnames(team))) {
+      team$cov = computeCov(team)
+    }
+
     for (i in 1:nrow(team)) {
       printPlayer(team[i,])
     }

@@ -9,6 +9,7 @@
 #D-plot multiple teams: 27_multiteams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.507, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 #D-Make create teams more efficient: 28_efficientteams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.696, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 #D-Revert create teams: 29_revertTeams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.509, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
+#-Compute teamRmse correctly: 30_teamrmse_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.779, 7.132318/6.901998/7.085736, Inf, 7.736499/17.48905, 0.9860664
 
 #-use curated features
 #-adjust MAX_COV
@@ -34,8 +35,8 @@ source('source/_createTeam.R')
 #Globals
 PROD_RUN = T
 ALG = 'xgb'
-NUMBER = 29
-NAME = 'revertTeams'
+NUMBER = 30
+NAME = 'teamrmse'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 END_DATE = '2016-11-11'
 PLOT = 'scores' #fi, scores, cv
@@ -117,12 +118,10 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
 }
 
 computeActualFP = function(team, test) {
-  #todo: perhaps improve this through vectorization
-  actualFP = 0.0
-  for (i in 1:nrow(team)) {
-    actualFP = actualFP + test[test$Name == team[i,'Name'], 'FantasyPoints']
-  }
-  return(actualFP)
+  return(sum(getTeamIndividualActualFPs(team, test)))
+}
+getTeamIndividualActualFPs = function(team, test) {
+  return(test[test$Name %in% team$Name, 'FantasyPoints'])
 }
 
 printRGTrnCVError = function(data, yName, xNames) {
@@ -306,7 +305,7 @@ if (MAKE_TEAMS) {
     myTeamGreedy = createTeam_Greedy(predictionDF, maxCov=MAX_COV)
     myTeamExpectedFP = computeTeamFP(myTeamGreedy)
     myTeamActualFP = computeActualFP(myTeamGreedy, test)
-    myTeamRmse = computeError(myTeamActualFP, myTeamExpectedFP)
+    myTeamRmse = computeError(getTeamIndividualActualFPs(myTeamGreedy, test), myTeamGreedy$FantasyPoints)
     allMyTeamActualFPs = c(myTeamActualFP)
     if (PLOT == 'multiscores' || PROD_RUN) {
       for (i in 1:NUM_HILL_CLIMBING_TEAMS) {
