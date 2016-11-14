@@ -8,8 +8,6 @@
 #D-Remove NBA_SEASON_AGE: 26_removeAge_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.486, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664 <-- new best!
 #D-plot multiple teams: 27_multiteams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.507, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 
-#-make createTeam faster
-
 #-use curated features
 #-adjust MAX_COV
 #-tune again using xgbcv as metric to watch
