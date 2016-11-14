@@ -6,7 +6,7 @@
 #D-Revert back to gbtree, cov=Inf: 24_revert_xgb: 10/27-11/8, 80/93, 266, 83, 6.762798/7.723589, 1.249, 6.797523/7.527155/6.903303, Inf, 7.771552/34.14032, 0.9890346
 #D-Add more dates (up to 11/11): 25_nov11_xgb: 10/27-11/11, 80/93, 266, 83, 6.931508/7.714106, 1.582, 7.095388/6.890297/7.044084, Inf, 7.743002/29.56711, 0.9956685 <-- new best!
 #D-Remove NBA_SEASON_AGE: 26_removeAge_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.486, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664 <-- new best!
-#-plot several teams:
+#D-plot multiple teams: 27_multiteams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.507, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 #-plot $2 5050 contests
 
 #-make createTeam faster
@@ -35,13 +35,13 @@ source('source/_createTeam.R')
 #Globals
 PROD_RUN = T
 ALG = 'xgb'
-NUMBER = 26
-NAME = 'removeAge'
+NUMBER = 27
+NAME = 'multiteams'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 END_DATE = '2016-11-11'
-PLOT = 'scores' #fi, scores, cv
+PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
-NUM_TEAMS = 5
+NUM_HILL_CLIMBING_TEAMS = 4
 Y_NAME = 'FantasyPoints'
 MAKE_TEAMS = PROD_RUN || T
 
@@ -140,18 +140,21 @@ printRGTrnCVError = function(data, yName, xNames) {
   cat('    RG Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
 }
 
-plotScores = function(dateStrs, yLow, yHigh, lowest5050=c(), greedyTeamExpected=c(), greedyTeamActual=c(), hillClimbingTeams=list(), meanFPs=c(), save=FALSE, main='Title') {
+plotScores = function(dateStrs, yLow, yHigh, lowest5050=c(), greedyTeamExpected=c(), greedyTeamActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), name='Scores', save=FALSE, main='Title') {
   cat('    Plotting Scores...\n')
 
-  if (save) png(createPlotFilename('Scores', FILENAME), width=500, height=350)
+  if (save) png(createPlotFilename(name, FILENAME), width=500, height=350)
 
-  numHillClimbing = length(hillClimbingTeams)
+  labels = c()
+  colors = c()
 
   dates = as.Date(dateStrs)
 
+  numHillClimbing = length(hillClimbingTeams)
+
   #get ymin and ymax
-  minValue = min(yLow, lowest5050, greedyTeamExpected, greedyTeamActual, meanFPs, na.rm=T)
-  maxValue = max(yHigh, lowest5050, greedyTeamExpected, greedyTeamActual, meanFPs, na.rm=T)
+  minValue = min(yLow, lowest5050, greedyTeamExpected, greedyTeamActual, medianActualFPs, na.rm=T)
+  maxValue = max(yHigh, lowest5050, greedyTeamExpected, greedyTeamActual, medianActualFPs, na.rm=T)
   if (numHillClimbing > 0) {
     for (i in 1:numHillClimbing) {
       minValue = min(minValue, hillClimbingTeams[[i]], na.rm=T)
@@ -164,28 +167,51 @@ plotScores = function(dateStrs, yLow, yHigh, lowest5050=c(), greedyTeamExpected=
   lines(dates, yHigh, col='blue')
   polygon(c(dates, rev(dates)), c(yHigh, rev(yLow)),
           col = "azure", border = NA)
+  labels = c(labels, 'Contest Results')
+  colors = c(colors, 'blue')
 
   #draw lowest5050
-  lines(dates, lowest5050, col='red')
+  if (length(lowest5050) > 0) {
+    lines(dates, lowest5050, col='red')
+    labels = c(labels, '50/50 $1 Contests')
+    colors = c(colors, 'red')
+  }
+
+  #draw greedy expected
+  if (length(greedyTeamExpected) > 0) {
+    lines(dates, greedyTeamExpected, col='purple')
+    labels = c(labels, 'My Team Expected')
+    colors = c(colors, 'purple')
+  }
 
   #draw hill climbing
-  colors = c('purple', 'green', 'red', 'orange')
   if (numHillClimbing > 0) {
     for (i in 1:numHillClimbing) {
       lines(dates, hillClimbingTeams[[i]], col='grey', lty=2)
     }
+    #draw greedy as gray
+    if (length(greedyTeamActual) > 0) {
+      lines(dates, greedyTeamActual, col='grey')
+    }
+    labels = c(labels, 'My Teams')
+    colors = c(colors, 'grey')
+
+    #draw median
+    if (length(medianActualFPs) > 0) {
+      lines(dates, medianActualFPs, col='black')
+      labels = c(labels, 'My Teams Median')
+      colors = c(colors, 'black')
+    }
+  } else {
+    if (length(greedyTeamActual) > 0) {
+      #draw greedy as green
+      lines(dates, greedyTeamActual, col='green')
+      labels = c(labels, 'My Team Actual')
+      colors = c(colors, 'green')
+    }
   }
 
-  #draw greedy expected
-  lines(dates, greedyTeamExpected, col='purple')
-
-  #draw greedy actual
-  lines(dates, greedyTeamActual, col='green')
-
-  #draw mean
-  lines(dates, meanFPs, col='black')
-
-  legend(x='topright', legend=c('Contest Results', 'My Team Expected', 'My Team Actual', '50/50 $1 Contests'), fill=c('blue', 'purple', 'green', 'red'), inset=0.02)
+  legend(x='topright', legend=labels, fill=colors, inset=0.02)
 
   #add date axis
   axis.Date(side=1, dates, format="%m/%d")
@@ -240,9 +266,9 @@ if (MAKE_TEAMS) {
   highestWinningScores = c()
   lowestWinningScores = c()
   lowestWinningScores_5050_1 = c()
-  myTeamHillClimbingActualFPs = vector('list', NUM_TEAMS)
-  for (i in 1:NUM_TEAMS) myTeamHillClimbingActualFPs[[i]] = numeric()
-  meanActualFPs = c()
+  myTeamHillClimbingActualFPs = vector('list', NUM_HILL_CLIMBING_TEAMS)
+  for (i in 1:NUM_HILL_CLIMBING_TEAMS) myTeamHillClimbingActualFPs[[i]] = numeric()
+  medianActualFPs = c()
 
   dateStrs = sort(unique(data$Date))[-1] #-1 uses all but the first element
   for (dateStr in dateStrs) {
@@ -271,13 +297,14 @@ if (MAKE_TEAMS) {
     myTeamExpectedFP = computeTeamFP(myTeamGreedy)
     myTeamActualFP = computeActualFP(myTeamGreedy, test)
     myTeamRmse = computeError(myTeamActualFP, myTeamExpectedFP)
-    tempFPs = c(myTeamActualFP)
-    for (i in 1:NUM_TEAMS) {
+    allMyTeamActualFPs = c(myTeamActualFP)
+    for (i in 1:NUM_HILL_CLIMBING_TEAMS) {
       hillClimbingActualFP = computeActualFP(createTeam_HillClimbing(predictionDF, maxCov=MAX_COV), test)
       myTeamHillClimbingActualFPs[[i]] = c(myTeamHillClimbingActualFPs[[i]], hillClimbingActualFP)
-      tempFPs = c(tempFPs, hillClimbingActualFP)
+      allMyTeamActualFPs = c(allMyTeamActualFPs, hillClimbingActualFP)
     }
-    meanActualFPs = c(meanActualFPs, mean(tempFPs))
+    medianActualFP = median(allMyTeamActualFPs)
+    medianActualFPs = c(medianActualFPs, medianActualFP)
 
     #get actual fanduel winning score for currday
     highestWinningScore = getHighestWinningScore(contestData, dateStr)
@@ -287,8 +314,9 @@ if (MAKE_TEAMS) {
     #print results
     cat('allRmse=', round(myRmse, 2), sep='')
     cat(', teamRmse=', round(myTeamRmse, 2), sep='')
-    cat(', expected=', round(myTeamExpectedFP, 2), sep='')
-    cat(', actual=', round(myTeamActualFP, 2), sep='')
+    #cat(', expected=', round(myTeamExpectedFP, 2), sep='')
+    #cat(', actual=', round(myTeamActualFP, 2), sep='')
+    cat(', medianActual=', round(medianActualFP, 2), sep='')
     cat(', low=', round(lowestWinningScore, 2), sep='')
     #cat(', ', whichTeamITook, sep='')
     #cat(', high=', round(highestWinningScore, 2), sep='')
@@ -320,11 +348,10 @@ cat('Creating plots...\n')
 doPlots(PLOT, PROD_RUN, data, Y_NAME, FEATURES_TO_USE, FILENAME)
 if (PROD_RUN || PLOT == 'fi') plotImportances(baseModel, FEATURES_TO_USE, save=PROD_RUN)
 if (MAKE_TEAMS) {
-  #if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, lowest5050=lowestWinningScores_5050_1, greedyTeam=myTeamActualFPs, hillClimbingTeams=myTeamHillClimbingActualFPs, meanFPs=meanActualFPs, main='My Team Vs. Actual Contests', save=PROD_RUN)
-  if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, lowest5050=lowestWinningScores_5050_1, greedyTeamExpected=myTeamExpectedFPs, greedyTeamActual=myTeamActualFPs, main='My Team Vs. Actual Contests', save=PROD_RUN)
+  if (PROD_RUN || PLOT == 'scores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, lowest5050=lowestWinningScores_5050_1, greedyTeamExpected=myTeamExpectedFPs, greedyTeamActual=myTeamActualFPs, main='My Team Vs. Actual Contests', name='Scores', save=PROD_RUN)
+  if (PROD_RUN || PLOT == 'multiscores') plotScores(dateStrs, lowestWinningScores, highestWinningScores, lowest5050=lowestWinningScores_5050_1, greedyTeamActual=myTeamActualFPs, hillClimbingTeams=myTeamHillClimbingActualFPs, medianActualFPs=medianActualFPs, main='My Teams Vs. Actual Contests', name='Multiscores', save=PROD_RUN)
   if (PROD_RUN || PLOT == 'rmse_scoreratios') plotByDate2Axis(dateStrs, myRmses, ylab='RMSE', ylim=c(5, 12), y2=scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=PROD_RUN, name='RMSE_ScoreRatios', filename=FILENAME)
   if (PROD_RUN || PLOT == 'rmses') plotLinesByDate(dateStrs, list(myRmses, fdRmses, nfRmses, rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=PROD_RUN, name='RMSEs', filename=FILENAME)
 }
-
 
 cat('Done!\n')
