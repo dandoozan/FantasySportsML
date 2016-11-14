@@ -35,6 +35,9 @@ def createHeaders(contestId, xAuthToken):
         'X-Auth-Token': xAuthToken,
     }
 
+def contestAlreadyDownloaded(dateStr, contest):
+    return util.fileExists(util.createFullPathFilename(util.joinDirs(CONTEST_RESULTS_DIR, dateStr), util.createJsonFilename(getContestId(contest))))
+
 def findContestsToDownload():
     print 'Finding contests to donwload...'
     contestsToDownload = []
@@ -45,11 +48,14 @@ def findContestsToDownload():
         jsonDataFromFile = util.loadJsonFile(util.createFullPathFilename(CONTESTS_DIR, filename))
         contests = jsonDataFromFile['contests']
         for contest in contests:
-            if fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 2:
+            dateStr = parseDateStrFromFilename(filename)
+            if fd.is5050Contest(contest) \
+                and fd.getEntryFee(contest) <= 5 \
+                and not contestAlreadyDownloaded(dateStr, contest):
                 contestsToDownload.append({
                     'contestId': getContestId(contest),
                     'url': getContestUrl(contest),
-                    'dateStr': parseDateStrFromFilename(filename),
+                    'dateStr': dateStr,
                 })
                 numContests += 1
 
