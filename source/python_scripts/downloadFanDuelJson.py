@@ -3,6 +3,7 @@ from datetime import date
 import json
 import scraper
 import _util as util
+import _fanDuelCommon as fd
 
 TEST = False
 
@@ -37,7 +38,6 @@ def createFullPathFilename(dirName, prefix=''):
 def writeData(data, dirName):
     util.writeJsonData(data, createFullPathFilename(dirName))
 
-#tested
 def parseFixtureList(jsonData):
     fixtureListObjs = jsonData['fixture_lists']
     for obj in fixtureListObjs:
@@ -51,12 +51,13 @@ def downloadFixtureList(xAuthToken):
     jsonData = json.load(open(createFullPathFilename(dirName, 'tbx_'))) if TEST else downloadData(url, xAuthToken, referer)
     return parseFixtureList(jsonData)
 
-#tested
-def parseContestId(jsonData):
-    contestId = jsonData['contests'][0]['id']
-    #verify that it fits the expected format
-    if len(contestId) == 15 and re.match('\d{5}-\d{9}', contestId):
-        return contestId
+def findContestId(jsonData):
+    #find the first contest whose id fits the expected format
+    contests = jsonData['contests']
+    for contest in contests:
+        contestId = fd.getContestId(contest)
+        if fd.isValidContestId(contestId):
+            return contestId
     util.stop('Contest Id was not found or was a different format than expected, contestId=' + contestId)
 def downloadContests(xAuthToken, fixtureList):
     dirName = 'Contests'
@@ -65,7 +66,7 @@ def downloadContests(xAuthToken, fixtureList):
     jsonData = json.load(open(createFullPathFilename(dirName, 'tbx_'))) if TEST else downloadData(url, xAuthToken, referer)
     if not TEST:
         writeData(jsonData, dirName)
-    return parseContestId(jsonData)
+    return findContestId(jsonData)
 
 def downloadPlayers(xAuthToken, fixtureList, contestId):
     dirName = 'Players'
