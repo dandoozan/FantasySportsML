@@ -50,7 +50,7 @@ def findContestsToDownload():
         for contest in contests:
             dateStr = parseDateStrFromFilename(filename)
             if fd.is5050Contest(contest) \
-                and fd.getEntryFee(contest) <= 5 \
+                and fd.getEntryFee(contest) <= 10 \
                 and not contestAlreadyDownloaded(dateStr, contest):
                 contestsToDownload.append({
                     'contestId': getContestId(contest),
