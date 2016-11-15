@@ -87,13 +87,18 @@ imputeMissingValues = function(data) {
   data[is.na(data$RG_START_Status), 'RG_START_Status'] = 'B'
   data$RG_START_Status = factor(data$RG_START_Status)
 
-  #----------NBA.TEAM.TRADITIONAL-----------
+  #----------NBA.SEASON.TEAM.TRADITIONAL and NBA.SEASON.OPPTEAM.TRADITIONAL-----------
   #The NAs are for team's first games (because I look for the previous day's
   #data, but since there is none, then the NBA_TEAM_[X] features are NA), so set
   #them all to 0 (they all have the same 345 NAs)
   for (colName in F.NBA.SEASON.TEAM.TRADITIONAL) {
     data[is.na(data[[colName]]), colName] = 0
   }
+  for (colName in F.NBA.SEASON.OPPTEAM.TRADITIONAL) {
+    data[is.na(data[[colName]]), colName] = 0
+  }
+
+
 
   return(data)
 }

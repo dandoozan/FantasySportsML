@@ -15,10 +15,9 @@
 #D-Add NBA PlayerBios: 33_playerbios_xgb: 10/27-11/11, 89/102, 266, 107, 6.772287/7.697509, 9.504, 6.904363/6.904882/6.893519, Inf, 7.750878/18.79264, 0.9617669
 #D-Add RG StartingLineups: 34_starter_xgb: 10/27-11/11, 92/105, 266, 101, 6.777758/7.680179, 10.026, 6.907689/6.935779/6.879808, Inf, 7.73361/18.6916, 0.9273415 <-- new best!
 #D-Set numeric NAs to 1000: 35_numNA_xgb: 10/27-11/11, 92/105, 266, 85, 6.872778/7.686423, 9.691, 7.016102/6.916518/6.974054, Inf, 7.703383/17.91926, 0.9147303 <-- new best!
-#D-Add NBA Team features:  36_team_xgb: 10/27-11/11, 118/131, 266, 102, 6.750822/7.664908, 6.363, 6.870544/6.913532/6.871711, Inf, 7.716599/17.70431, 0.9262162
+#D-Add NBA Team features: 36_team_xgb: 10/27-11/11, 118/131, 266, 102, 6.750822/7.664908, 6.363, 6.870544/6.913532/6.871711, Inf, 7.716599/17.70431, 0.9262162
+#D-Add NBA Opp team features: 37_opp_xgb: 10/27-11/11, 144/157, 266, 101, 6.729758/7.671829, 7.292, 6.862323/6.924714/6.826556, Inf, 7.717891/18.05657, 0.9195285
 
-#-team wpct (NBA Team_Traditional)
-#-opp wpct (NBA Team_Traditional)
 #-add back-to-back (RG BackToBack)
 #-nba advanced
 #-offense/defense rating (RG OffenseVsDefense)
@@ -27,12 +26,14 @@
 #-touches (RG Touches)
 #-vegas odds (RG VegasOdds)
 #-season-long defense
+#-remove NBA Opp features
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
 #-adjust MAX_COV
 #-tune again using xgbcv as metric to watch
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
+#-tune earlystopround in findBestSeedAndNrounds
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -40,8 +41,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '36'
-NAME = 'team'
+NUMBER = '37'
+NAME = 'opp'
 
 PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
@@ -50,7 +51,7 @@ ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.PLAYERBIOS, F.RG.START, F.NBA.SEASON.TEAM.TRADITIONAL, F.MINE)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.PLAYERBIOS, F.RG.START, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL, F.MINE)
 
 #================= Functions =================
 
