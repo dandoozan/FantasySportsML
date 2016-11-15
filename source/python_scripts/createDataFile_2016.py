@@ -61,36 +61,36 @@ KNOWN_ALIASES = {
     #'chuck hayes': 'charles hayes',
 }
 TEAM_KNOWN_ALIASES = {
-    'ATL': 'atlanta hawks',
-    'CHI': 'chicago bulls',
-    'CLE': 'cleveland cavaliers',
-    'BOS': 'boston celtics',
-    'BKN': 'brooklyn nets',
-    'CHA': 'charlotte hornets',
-    'DAL': 'dallas mavericks',
-    'DEN': 'denver nuggets',
-    'DET': 'detroit pistons',
-    'GS': 'golden state warriors',
-    'HOU': 'houston rockets',
-    'IND': 'indiana pacers',
-    'LAC': ['los angeles clippers', 'la clippers'],
-    'LAL': 'los angeles lakers',
-    'MEM': 'memphis grizzlies',
-    'MIA': 'miami heat',
-    'MIL': 'milwaukee bucks',
-    'MIN': 'minnesota timberwolves',
-    'NO': 'new orleans pelicans',
-    'NY': 'new york knicks',
-    'OKC': 'oklahoma city thunder',
-    'ORL': 'orlando magic',
-    'PHI': 'philadelphia 76ers',
-    'PHO': 'phoenix suns',
-    'POR': 'portland trail blazers',
-    'SAC': 'sacramento kings',
-    'SA': 'san antonio spurs',
-    'TOR': 'toronto raptors',
-    'UTA': 'utah jazz',
-    'WAS': 'washington wizards',
+    'ATL': ['atl', 'atlanta hawks'],
+    'CHI': ['chi', 'chicago bulls'],
+    'CLE': ['cle', 'cleveland cavaliers'],
+    'BOS': ['bos', 'boston celtics'],
+    'BKN': ['bkn', 'brooklyn nets'],
+    'CHA': ['cha', 'charlotte hornets'],
+    'DAL': ['dal', 'dallas mavericks'],
+    'DEN': ['den', 'denver nuggets'],
+    'DET': ['det', 'detroit pistons'],
+    'GS': ['gsw', 'golden state warriors'],
+    'HOU': ['hou', 'houston rockets'],
+    'IND': ['ind', 'indiana pacers'],
+    'LAC': ['lac', 'los angeles clippers', 'la clippers'],
+    'LAL': ['lal', 'los angeles lakers'],
+    'MEM': ['mem', 'memphis grizzlies'],
+    'MIA': ['mia', 'miami heat'],
+    'MIL': ['mil', 'milwaukee bucks'],
+    'MIN': ['min', 'minnesota timberwolves'],
+    'NO': ['nop', 'new orleans pelicans'],
+    'NY': ['nyk', 'new york knicks'],
+    'OKC': ['okc', 'oklahoma city thunder'],
+    'ORL': ['orl', 'orlando magic'],
+    'PHI': ['phi', 'philadelphia 76ers'],
+    'PHO': ['pho', 'phoenix suns'],
+    'POR': ['por', 'portland trail blazers'],
+    'SAC': ['sac', 'sacramento kings'],
+    'SA': ['sas', 'san antonio spurs'],
+    'TOR': ['tor', 'toronto raptors'],
+    'UTA': ['uta', 'utah jazz'],
+    'WAS': ['was', 'washington wizards'],
 }
 
 PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
@@ -524,6 +524,7 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
 
 TBX_MISSING_PLAYERS = {}
 
+#------------ Find File ------------
 def findCsvFile(fullPathToDir, dateStr):
     return util.createFullPathFilename(fullPathToDir, util.createCsvFilename(dateStr))
 def findJsonFile(fullPathToDir, dateStr):
@@ -544,6 +545,7 @@ def findNbaFile(fullPathToDir, dateStr):
 def findYearJsonFile(fullPathToDir, dateStr):
     return util.createFullPathFilename(fullPathToDir, util.createJsonFilename(str(util.parseDate(dateStr).year)))
 
+#------------ Parse Row ------------
 def parseFanDuelRow(row, dateStr, prefix):
     #add Name, which is a join of firstname and lastname
     row['Name'] = ' '.join([row['First Name'], row['Last Name']])
@@ -649,7 +651,16 @@ def parseRotoGrinderStartingLineupsRow(row, dateStr, prefix):
     row = { 'Order': order, 'Starter': isStarter, 'Status': status, }
 
     return name.lower(), util.addPrefixToObj(row, prefix)
+def parseRotoGrinderOffenseVsDefenseBasicRow(row, dateStr, prefix):
+    #remove the '%' from FGPCT
+    fgPct = row[prefix + 'FGPCT'].strip()
+    row[prefix + 'FGPCT'] = fgPct[:-1] if fgPct[-1] == '%' else fgPct
 
+    #make sure all values are floats
+    util.mapSome(float, row, util.addPrefixToArray(['AST', 'STL', 'FGM', 'TO', '3PM', 'BLK', 'FGPCT', 'REB', 'PTS', 'FGA' ], prefix))
+    return row[prefix + 'OFFENSE'].strip().lower(), row
+
+#------------ Handle Duplicates ------------
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
     oldMatchPoints = float(oldMatch['RG_points'])
     newMatchPoints = float(newMatch['RG_points'])
@@ -659,6 +670,7 @@ def handleRotoGrinderDuplicates(oldMatch, newMatch):
         return newMatch
     util.stop('In handleDuplicates for RotoGrinder, and dont know which to return')
 
+#------------ Load File ------------
 def loadCsvFile(fullPathFilename, keyRenameMap, prefix, delimiter):
     return util.loadCsvFile(fullPathFilename, keyRenameMap=keyRenameMap, delimiter=delimiter, prefix=prefix)
 def loadJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
@@ -694,6 +706,7 @@ def loadRotoGrinderStartingLineupsFile(fullPathFilename, keyRenameMap, prefix, d
         rows.extend(teamAwayPlayers)
     return rows
 
+#------------ Common ------------
 def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
     data = {}
 
@@ -1370,6 +1383,30 @@ DATA_SOURCES = [
         'parseRowFunction': parseNbaRow,
         'prefix': 'NBA_S_P_ADV_',
         'usePrevDay': True,
+    },
+    {
+        'name': 'RotoGrinderOffenseVsDefenseBasic',
+        'features': [
+            'RG_OVD_AST',
+            'RG_OVD_STL',
+            'RG_OVD_FGM',
+            'RG_OVD_TO',
+            'RG_OVD_3PM',
+            'RG_OVD_BLK',
+            'RG_OVD_FGPCT',
+            'RG_OVD_REB',
+            'RG_OVD_PTS',
+            'RG_OVD_FGA',
+        ],
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'OffenseVsDefenseBasic'),
+        'isTeam': True,
+        'keyRenameMap': {
+            'FG%': 'FGPCT',
+        },
+        'loadFileFunction': loadJsonFile,
+        'parseRowFunction': parseRotoGrinderOffenseVsDefenseBasicRow,
+        'prefix': 'RG_OVD_',
     },
 
 
