@@ -11,7 +11,9 @@
 #D-Revert create teams: 29_revertTeams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.509, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 #D-Compute teamRmse correctly: 30_teamrmse_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.779, 7.132318/6.901998/7.085736, Inf, 7.736499/17.48905, 0.9860664
 #D-Add teammates expected RG points: 31_teammates_xgb: 10/27-11/11, 81/94, 266, 81, 6.925018/7.701815, 1.997, 7.084283/6.873463/7.040948, Inf, 7.724325/18.74159, 0.9985387 <-- new best!
+#D-plot median of lowest contest results: 32_mediancontest_xgb: 10/27-11/11, 81/94, 266, 81, 6.925018/7.701815, 1.599, 7.084283/6.873463/7.040948, Inf, 7.724325/18.74159, 0.9440826
 
+#-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
 #-adjust MAX_COV
 #-tune again using xgbcv as metric to watch
@@ -23,10 +25,10 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '31'
-NAME = 'teammates'
+NUMBER = '32'
+NAME = 'mediancontest'
 
-PLOT = 'fi' #fi, scores, cv
+PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
@@ -38,7 +40,10 @@ FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA, F.MINE)
 #================= Functions =================
 
 createTeamPrediction = function(train, test, yName, xNames) {
-  return(createPrediction(createModel(train, yName, xNames), test, xNames))
+  prediction = createPrediction(createModel(train, yName, xNames), test, xNames)
+  floor = pmax(prediction - test$RG_deviation, 0)
+  ceil = prediction + test$RG_deviation
+  return(prediction)
 }
 
 #================= Main =================

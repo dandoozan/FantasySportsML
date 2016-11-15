@@ -103,7 +103,7 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   }
 
   if (sum(!is.na(contests$LastWinningScore)) > 0) {
-    return(min(contests$LastWinningScore, na.rm=T))
+    return(median(contests$LastWinningScore, na.rm=T))
   }
   return(NA)
 }
@@ -163,7 +163,7 @@ plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), labels5050=c(),
   lines(dates, yHigh, col='blue')
   polygon(c(dates, rev(dates)), c(yHigh, rev(yLow)),
           col = "azure", border = NA)
-  labels = c(labels, 'Contest Results')
+  labels = c(labels, 'Tournament Results')
   colors = c(colors, 'blue')
 
   #draw lowest5050
