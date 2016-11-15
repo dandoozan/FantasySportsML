@@ -10,7 +10,7 @@
 #D-Make create teams more efficient: 28_efficientteams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.696, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 #D-Revert create teams: 29_revertTeams_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.509, 7.132318/6.901998/7.085736, Inf, 7.736499/28.44422, 0.9860664
 #D-Compute teamRmse correctly: 30_teamrmse_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.779, 7.132318/6.901998/7.085736, Inf, 7.736499/17.48905, 0.9860664
-#-Add sum of all teammates' RG expected scores as feature
+#D-Add teammates expected RG points: 31_teammates_xgb: 10/27-11/11, 81/94, 266, 81, 6.925018/7.701815, 1.997, 7.084283/6.873463/7.040948, Inf, 7.724325/18.74159, 0.9985387 <-- new best!
 
 #-use curated features
 #-adjust MAX_COV
@@ -22,11 +22,11 @@ setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = F
-NUMBER = '30'
-NAME = 'teamrmse'
+PROD_RUN = T
+NUMBER = '31'
+NAME = 'teammates'
 
-PLOT = 'scores' #fi, scores, cv
+PLOT = 'fi' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
@@ -35,21 +35,13 @@ FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
 FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA, F.MINE)
 
-
-#================= Functions ===================
+#================= Functions =================
 
 createTeamPrediction = function(train, test, yName, xNames) {
-  #create model
-  model = createModel(train, yName, xNames)
-
-  #create prediction
-  #prediction = test$RG_points
-  prediction = createPrediction(model, test, xNames)
-
-  return(prediction)
+  return(createPrediction(createModel(train, yName, xNames), test, xNames))
 }
 
-#============= Main ================
+#================= Main =================
 
 data = setup(ALG, FEATURES_TO_USE, END_DATE, PROD_RUN, FILENAME)
 hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)

@@ -55,6 +55,9 @@ imputeMissingValues = function(data) {
   return(data)
 }
 
+getUniqueDates = function(data) {
+  return(sort(unique(data$Date)))
+}
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
 
@@ -67,6 +70,18 @@ featureEngineer = function(data) {
     data[data$Position == position, 'OPP_DVP_FPPG'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'FPPG')]
     data[data$Position == position, 'OPP_DVP_RANK'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'RK')]
   }
+
+  #add team RG expected points and teammates' RG expected scores
+  data$TEAM_RG_points = 0
+  dateStrs = getUniqueDates(data)
+  for (dateStr in dateStrs) {
+    teams = unique(data[data$Date == dateStr, 'Team',])
+    for (team in teams) {
+      indices = which((data$Date == dateStr) & (data$Team == team))
+      data[indices, 'TEAM_RG_points'] = sum(data[indices, 'RG_points'])
+    }
+  }
+  data$TEAMMATES_RG_points = round(data$TEAM_RG_points - data$RG_points, 2)
 
   return(data)
 }
