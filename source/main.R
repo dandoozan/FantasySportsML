@@ -14,6 +14,7 @@
 #D-plot median of lowest contest results: 32_mediancontest_xgb: 10/27-11/11, 81/94, 266, 81, 6.925018/7.701815, 1.599, 7.084283/6.873463/7.040948, Inf, 7.724325/18.74159, 0.9440826
 #D-Add NBA PlayerBios: 33_playerbios_xgb: 10/27-11/11, 89/102, 266, 107, 6.772287/7.697509, 9.504, 6.904363/6.904882/6.893519, Inf, 7.750878/18.79264, 0.9617669
 #D-Add RG StartingLineups: 34_starter_xgb: 10/27-11/11, 92/105, 266, 101, 6.777758/7.680179, 10.026, 6.907689/6.935779/6.879808, Inf, 7.73361/18.6916, 0.9273415 <-- new best!
+#-Set numeric NAs to 1000: 35_numNA_xgb: 10/27-11/11, 92/105, 266, 85, 6.872778/7.686423, 9.691, 7.016102/6.916518/6.974054, Inf, 7.703383/17.91926, 0.9147303 <-- new best!
 
 #-add back-to-back (RG BackToBack)
 #-team wpct (NBA Team_Traditional)
@@ -37,8 +38,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '34'
-NAME = 'starter'
+NUMBER = '35'
+NAME = 'numNA'
 
 PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
