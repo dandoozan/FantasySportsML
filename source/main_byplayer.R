@@ -1,5 +1,6 @@
 #todo:
 #D-Use all features: byplyr_01_all_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.681, 7.132318/6.901998/7.085736, Inf, 10.01754/18.61355, 0.9680755
+#-make faster: create sparseMatrix before looping through the individual players
 #-tune hyperparams for each player
 
 rm(list = ls())
