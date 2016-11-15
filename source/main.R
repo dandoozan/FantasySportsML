@@ -17,15 +17,16 @@
 #D-Set numeric NAs to 1000: 35_numNA_xgb: 10/27-11/11, 92/105, 266, 85, 6.872778/7.686423, 9.691, 7.016102/6.916518/6.974054, Inf, 7.703383/17.91926, 0.9147303 <-- new best!
 #D-Add NBA Team features: 36_team_xgb: 10/27-11/11, 118/131, 266, 102, 6.750822/7.664908, 6.363, 6.870544/6.913532/6.871711, Inf, 7.716599/17.70431, 0.9262162
 #D-Add NBA Opp team features: 37_opp_xgb: 10/27-11/11, 144/157, 266, 101, 6.729758/7.671829, 7.292, 6.862323/6.924714/6.826556, Inf, 7.717891/18.05657, 0.9195285
+#D-Add nba advanced: 38_nbaAdv_xgb: 10/27-11/11, 161/174, 266, 113, 6.664812/7.671916, 8.479, 6.804168/6.889426/6.781096, Inf, 7.738682/18.0611, 0.924935
 
-#-add back-to-back (RG BackToBack)
 #-nba advanced
+#-add back-to-back (RG BackToBack)
 #-offense/defense rating (RG OffenseVsDefense)
 #-whether in RG optimal lineup (RG OptimalLineup)
 #-salary/rank change (RG MarketWatch)
 #-touches (RG Touches)
 #-vegas odds (RG VegasOdds)
-#-season-long defense
+#-nba defense
 #-remove NBA Opp features
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
@@ -41,8 +42,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '37'
-NAME = 'opp'
+NUMBER = '38'
+NAME = 'nbaAdv'
 
 PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
@@ -51,7 +52,7 @@ ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.PLAYERBIOS, F.RG.START, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL, F.MINE)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.PLAYERBIOS, F.RG.START, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL, F.MINE)
 
 #================= Functions =================
 

@@ -31,6 +31,7 @@ loadData = function() {
 imputeMissingValues = function(data) {
   cat('    Imputing missing values...\n')
 
+  #----------F.NUMBERFIRE-----------
   #set all NAs to 0 in NumberFire cols (all the cols are predictive cols,
   #so if they dont have a value for a player, i think it's safe to assume
   #they're 'predicting' he'll get 0 in it
@@ -38,6 +39,7 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
+  #----------F.RG.PP-----------
   #set RG rank NAs to 0, but maybe consider something else (Inf?) since
   #generally lower rank is better, and since these don't have a rank, it
   #probably means that they're a bad player
@@ -49,11 +51,16 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
+  #----------F.NBA.SEASON.PLAYER.TRADITIONAL and F.NBA.SEASON.PLAYER.ADVANCED-----------
   #Set all NBA col NAs to 0
   for (colName in F.NBA.SEASON.PLAYER.TRADITIONAL) {
     data[is.na(data[[colName]]), colName] = 0
   }
+  for (colName in F.NBA.SEASON.PLAYER.ADVANCED) {
+    data[is.na(data[[colName]]), colName] = 0
+  }
 
+  #----------F.NBA.PLAYERBIOS-----------
   #set NAs to 0 or 'None' for players who haven't played this season (all of their
   #stats are NA because they aren't listed in NBA PlayerBios)
   playersWhoHaveNotPlayedThisSeason = c('Brandan Wright', 'Bruno Caboclo', 'Caris LeVert', 'Chinanu Onuaku', 'Derrick Jones Jr.', 'Devin Harris', 'Josh Huestis', 'Jrue Holiday', 'Nerlens Noel', 'Patrick Beverley', 'Reggie Bullock', 'Wayne Ellington', 'Brice Johnson', 'Festus Ezeli', 'Mike Scott', 'Paul Pierce', 'Tiago Splitter', 'Alec Burks', 'Damian Jones', 'Marshall Plumlee', 'R.J. Hunter')
