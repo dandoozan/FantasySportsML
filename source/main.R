@@ -12,6 +12,17 @@
 #D-Compute teamRmse correctly: 30_teamrmse_xgb: 10/27-11/11, 79/92, 266, 77, 6.976525/7.717935, 1.779, 7.132318/6.901998/7.085736, Inf, 7.736499/17.48905, 0.9860664
 #D-Add teammates expected RG points: 31_teammates_xgb: 10/27-11/11, 81/94, 266, 81, 6.925018/7.701815, 1.997, 7.084283/6.873463/7.040948, Inf, 7.724325/18.74159, 0.9985387 <-- new best!
 #D-plot median of lowest contest results: 32_mediancontest_xgb: 10/27-11/11, 81/94, 266, 81, 6.925018/7.701815, 1.599, 7.084283/6.873463/7.040948, Inf, 7.724325/18.74159, 0.9440826
+#D-Add NBA PlayerBios: 33_playerbios_xgb: 10/27-11/11, 89/102, 266, 107, 6.772287/7.697509, 9.504, 6.904363/6.904882/6.893519, Inf, 7.750878/18.79264, 0.9617669
+#-add starter (RG StartingLineups)
+#-add back-to-back (RG BackToBack)
+#-team wpct (NBA Team_Traditional)
+#-offense/defense rating (RG OffenseVsDefense)
+#-whether in RG optimal lineup (RG OptimalLineup)
+#-salary/rank change (RG MarketWatch)
+#-touches (RG Touches)
+#-vegas odds (RG VegasOdds)
+#-season-long advanced
+#-season-long defense
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
@@ -25,8 +36,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '32'
-NAME = 'mediancontest'
+NUMBER = '33'
+NAME = 'playerbios'
 
 PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
@@ -35,7 +46,7 @@ ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA, F.MINE)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.TRADITIONAL, F.NBA.PLAYERBIOS, F.MINE)
 
 #================= Functions =================
 

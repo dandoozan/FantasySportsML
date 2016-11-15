@@ -422,47 +422,68 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'derrick williams',
     },
     '2016-11-08': {
-        'brandan wright',
         'darren collison',
         'jarnell stokes',
         'randy foye',
     },
     '2016-11-09': {
         'alan anderson',
-        'caris levert', #no games
-        'chinanu onuaku', #no games
         'danny green',
-        'derrick jones jr.', #no games
-        'devin harris', #no games
         'fred vanvleet',
         'kelly olynyk',
-        'mike scott', #no games
-        'patrick beverley', #no games
-        'tiago splitter', #no games
         'tim quarterman',
     },
     '2016-11-10': {
-        'damian jones', #no games
-        'jrue holiday', #no games
-        'r.j. hunter', #no games
-        'wayne ellington', #no games
     },
     '2016-11-11': {
-        'alec burks', #no games
-        'brice johnson', #no games
-        'bruno caboclo', #no games
         'danuel house',
-        'festus ezeli', #no games
-        'josh huestis', #no games
-        'marshall plumlee', #no games
-        'nerlens noel', #no games
-        'paul pierce', #no games
-        'reggie bullock', #no games
     },
     '2016-11-12': {
         'archie goodwin',
         'john jenkins',
         'josh mcroberts',
+    },
+    'never': {
+        'alec burks', #no games
+        'brandan wright',
+        'brice johnson', #no games
+        'bruno caboclo', #no games
+        'cameron jones',
+        'caris levert', #no games
+        'chasson randle',
+        'chinanu onuaku', #no games
+        'chris johnson',
+        'cory jefferson',
+        'dahntay jones',
+        'damian jones', #no games
+        'damien inglis',
+        'derrick jones jr.', #no games
+        'devin harris', #no games
+        'elliot williams',
+        'festus ezeli', #no games
+        'grant jerrett',
+        'greg stiemsma',
+        'henry sims',
+        'j.p. tokoto',
+        'joel anthony',
+        'john holland',
+        'jonathan holmes',
+        'josh huestis', #no games
+        'jrue holiday', #no games
+        'livio jean-charles',
+        'louis amundson',
+        'markel brown',
+        'marshall plumlee', #no games
+        'mike scott', #no games
+        'nerlens noel', #no games
+        'patricio garino',
+        'patrick beverley', #no games
+        'paul pierce', #no games
+        'phil pressey',
+        'reggie bullock', #no games
+        'r.j. hunter', #no games
+        'tiago splitter', #no games
+        'wayne ellington', #no games
     }
 }
 
@@ -485,6 +506,8 @@ def findNbaFile(fullPathToDir, dateStr):
             return fullPathFilename
         usedDiffFile = True
     return None
+def findYearJsonFile(fullPathToDir, dateStr):
+    return util.createFullPathFilename(fullPathToDir, util.createJsonFilename(str(util.parseDate(dateStr).year)))
 
 def parseFanDuelRow(row, dateStr, prefix):
     #add Name, which is a join of firstname and lastname
@@ -575,42 +598,6 @@ def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     util.mapSome(float, row, util.addPrefixToArray(['CFPPG', 'SFFPPG', 'SGFPPG', 'PFFPPG', 'PGFPPG'], prefix))
     return row[prefix + 'TEAM'].strip(), row
 def parseNbaRow(row, dateStr, prefix):
-    intCols = util.addPrefixToArray([
-        'W',
-        'L',
-        'DD2',
-        'TD3',
-    ], prefix)
-    floatCols = util.addPrefixToArray([
-        'W_PCT',
-        'MIN',
-        'FGM',
-        'FGA',
-        'FG_PCT',
-        'FG3M',
-        'FG3A',
-        'FG3_PCT',
-        'FTM',
-        'FTA',
-        'FT_PCT',
-        'OREB',
-        'DREB',
-        'REB',
-        'AST',
-        'TOV',
-        'STL',
-        'BLK',
-        'BLKA',
-        'PF',
-        'PFD',
-        'PTS',
-        'PLUS_MINUS',
-    ], prefix)
-
-    #convert each to int/float
-    util.mapSome(int, row, intCols)
-    util.mapSome(float, row, floatCols)
-
     return row[prefix + 'PLAYER_NAME'].lower(), row
 
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
@@ -758,6 +745,11 @@ def findMatchingName(name, newData, nameMap={}):
 def playerIsKnownToBeMissing(dateStr, name, knownMissingObj):
     return name in knownMissingObj or (dateStr in knownMissingObj and name in knownMissingObj[dateStr])
 def playerDidNotPlayOnOrUpToDate(date, name):
+    #first, check if they're in 'never'
+    if name in PLAYERS_WHO_DID_NOT_PLAY_UP_TO['never']:
+        return True
+
+    #then, check each date starting with tomorrow up to the end
     currDate = date + ONE_DAY
     currDateStr = util.formatDate(currDate)
     while currDateStr in PLAYERS_WHO_DID_NOT_PLAY_UP_TO:
@@ -975,6 +967,14 @@ DATA_SOURCES = [
         'name': 'RotoGrinderPlayerProjections',
         'handleDuplicates': handleRotoGrinderDuplicates,
         'features': [
+            #15=DD
+            #19=?
+            #20=DK
+            #28=fa
+            #43=FDraft (fdft)
+            #50=Y!
+            #58=rstr
+
             #Projection
             'RG_ceil',
             'RG_floor',
@@ -1194,6 +1194,24 @@ DATA_SOURCES = [
         'parseRowFunction': parseNbaRow,
         'prefix': 'NBA_SEASON_',
         'usePrevDay': True,
+    },
+    {
+        'name': 'NBAPlayerBios',
+        'features': [
+            'NBA_AGE',
+            'NBA_PLAYER_HEIGHT_INCHES',
+            'NBA_PLAYER_WEIGHT',
+            'NBA_COLLEGE',
+            'NBA_COUNTRY',
+            'NBA_DRAFT_YEAR',
+            'NBA_DRAFT_ROUND',
+            'NBA_DRAFT_NUMBER',
+        ],
+        'findFileFunction': findYearJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'PlayerBios'),
+        'loadFileFunction': loadNbaJsonFile,
+        'parseRowFunction': parseNbaRow,
+        'prefix': 'NBA_',
     },
     #{
     #    'name': '',

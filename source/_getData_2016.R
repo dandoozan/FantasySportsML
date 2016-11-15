@@ -2,6 +2,7 @@
 #How to add dates (up to date before yesterday)
   #-download rotoguru data (python source/python_scripts/scrapeRotoGuruDay.py)
   #-download nba data (python source/python_scripts/scrapeStatsNba.py)
+  #-save nba playerbios json data (http://stats.nba.com/stats/leaguedashplayerbiostats?College=&Conference=&Country=&DateFrom=&DateTo=&Division=&DraftPick=&DraftYear=&GameScope=&GameSegment=&Height=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PerMode=PerGame&Period=0&PlayerExperience=&PlayerPosition=&Season=2016-17&SeasonSegment=&SeasonType=Regular+Season&ShotClockRange=&StarterBench=&TeamID=0&VsConference=&VsDivision=&Weight=)
   #-change END_DATE in createDataFile_2016.py
   #-create data_2016.csv (python source/python_scripts/createDataFile_2016.py)
     #-Resolve missing names
@@ -48,9 +49,32 @@ imputeMissingValues = function(data) {
   }
 
   #Set all other NBA col NAs to 0
-  for (colName in F.NBA) {
+  for (colName in F.NBA.TRADITIONAL) {
     data[is.na(data[[colName]]), colName] = 0
   }
+
+  #set NAs to 0 or 'None' for players who haven't played this season (all of their
+  #stats are NA because they aren't listed in NBA PlayerBios)
+  playersWhoHaveNotPlayedThisSeason = c('Brandan Wright', 'Bruno Caboclo', 'Caris LeVert', 'Chinanu Onuaku', 'Derrick Jones Jr.', 'Devin Harris', 'Josh Huestis', 'Jrue Holiday', 'Nerlens Noel', 'Patrick Beverley', 'Reggie Bullock', 'Wayne Ellington', 'Brice Johnson', 'Festus Ezeli', 'Mike Scott', 'Paul Pierce', 'Tiago Splitter', 'Alec Burks', 'Damian Jones', 'Marshall Plumlee', 'R.J. Hunter')
+  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_AGE', 'NBA_PLAYER_HEIGHT_INCHES', 'NBA_PLAYER_WEIGHT', 'NBA_DRAFT_YEAR', 'NBA_DRAFT_ROUND', 'NBA_DRAFT_NUMBER')] = 0
+  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_COLLEGE', 'NBA_COUNTRY')] = 'None'
+  data$NBA_COLLEGE = factor(data$NBA_COLLEGE)
+
+  #set NAs to 'None' for players who don't have Country listed in NBA.com
+  #There are 5 players
+  playersWithNoCountry = c('Dario Saric', 'Semaj Christon', 'Jonathon Simmons', 'Tomas Satoransky', 'Jordan McRae')
+  data[data$Name %in% playersWithNoCountry, 'NBA_COUNTRY'] = 'None'
+  data$NBA_COUNTRY = factor(data$NBA_COUNTRY)
+
+  #set 'Undrafted' to 0 in NBA_DRAFT_YEAR, NBA_DRAFT_ROUND, NBA_DRAFT_NUMBER
+  #and make them numeric
+  data[data$NBA_DRAFT_YEAR == 'Undrafted', 'NBA_DRAFT_YEAR'] = 0
+  data[data$NBA_DRAFT_ROUND == 'Undrafted', 'NBA_DRAFT_ROUND'] = 0
+  data[data$NBA_DRAFT_NUMBER == 'Undrafted', 'NBA_DRAFT_NUMBER'] = 0
+  data$NBA_DRAFT_YEAR = as.numeric(data$NBA_DRAFT_YEAR)
+  data$NBA_DRAFT_ROUND = as.numeric(data$NBA_DRAFT_ROUND)
+  data$NBA_DRAFT_NUMBER = as.numeric(data$NBA_DRAFT_NUMBER)
+
 
   return(data)
 }
