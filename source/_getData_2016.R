@@ -50,32 +50,32 @@ imputeMissingValues = function(data) {
   }
 
   #Set all NBA col NAs to 0
-  for (colName in F.NBA.TRADITIONAL) {
+  for (colName in F.NBA.SEASON.PLAYER.TRADITIONAL) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
   #set NAs to 0 or 'None' for players who haven't played this season (all of their
   #stats are NA because they aren't listed in NBA PlayerBios)
   playersWhoHaveNotPlayedThisSeason = c('Brandan Wright', 'Bruno Caboclo', 'Caris LeVert', 'Chinanu Onuaku', 'Derrick Jones Jr.', 'Devin Harris', 'Josh Huestis', 'Jrue Holiday', 'Nerlens Noel', 'Patrick Beverley', 'Reggie Bullock', 'Wayne Ellington', 'Brice Johnson', 'Festus Ezeli', 'Mike Scott', 'Paul Pierce', 'Tiago Splitter', 'Alec Burks', 'Damian Jones', 'Marshall Plumlee', 'R.J. Hunter')
-  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_AGE', 'NBA_PLAYER_HEIGHT_INCHES', 'NBA_PLAYER_WEIGHT', 'NBA_DRAFT_YEAR')] = 0
-  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_DRAFT_ROUND', 'NBA_DRAFT_NUMBER')] = 1000
-  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_COLLEGE', 'NBA_COUNTRY')] = 'None'
-  data$NBA_COLLEGE = factor(data$NBA_COLLEGE)
+  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_AGE', 'NBA_PB_PLAYER_HEIGHT_INCHES', 'NBA_PB_PLAYER_WEIGHT', 'NBA_PB_DRAFT_YEAR')] = 0
+  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_DRAFT_ROUND', 'NBA_PB_DRAFT_NUMBER')] = 1000
+  data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_COLLEGE', 'NBA_PB_COUNTRY')] = 'None'
+  data$NBA_PB_COLLEGE = factor(data$NBA_PB_COLLEGE)
 
   #set NAs to 'None' for players who don't have Country listed in NBA.com
   #There are 5 players
   playersWithNoCountry = c('Dario Saric', 'Semaj Christon', 'Jonathon Simmons', 'Tomas Satoransky', 'Jordan McRae')
-  data[data$Name %in% playersWithNoCountry, 'NBA_COUNTRY'] = 'None'
-  data$NBA_COUNTRY = factor(data$NBA_COUNTRY)
+  data[data$Name %in% playersWithNoCountry, 'NBA_PB_COUNTRY'] = 'None'
+  data$NBA_PB_COUNTRY = factor(data$NBA_PB_COUNTRY)
 
   #set 'Undrafted' to 0 in NBA_DRAFT_YEAR and 1000 in NBA_DRAFT_ROUND, NBA_DRAFT_NUMBER
   #and make them numeric
-  data[data$NBA_DRAFT_YEAR == 'Undrafted', 'NBA_DRAFT_YEAR'] = 0
-  data[data$NBA_DRAFT_ROUND == 'Undrafted', 'NBA_DRAFT_ROUND'] = 1000
-  data[data$NBA_DRAFT_NUMBER == 'Undrafted', 'NBA_DRAFT_NUMBER'] = 1000
-  data$NBA_DRAFT_YEAR = as.numeric(data$NBA_DRAFT_YEAR)
-  data$NBA_DRAFT_ROUND = as.numeric(data$NBA_DRAFT_ROUND)
-  data$NBA_DRAFT_NUMBER = as.numeric(data$NBA_DRAFT_NUMBER)
+  data[data$NBA_PB_DRAFT_YEAR == 'Undrafted', 'NBA_PB_DRAFT_YEAR'] = 0
+  data[data$NBA_PB_DRAFT_ROUND == 'Undrafted', 'NBA_PB_DRAFT_ROUND'] = 1000
+  data[data$NBA_PB_DRAFT_NUMBER == 'Undrafted', 'NBA_PB_DRAFT_NUMBER'] = 1000
+  data$NBA_PB_DRAFT_YEAR = as.numeric(data$NBA_PB_DRAFT_YEAR)
+  data$NBA_PB_DRAFT_ROUND = as.numeric(data$NBA_PB_DRAFT_ROUND)
+  data$NBA_PB_DRAFT_NUMBER = as.numeric(data$NBA_PB_DRAFT_NUMBER)
 
 
   #----------RG.START-----------
@@ -86,6 +86,14 @@ imputeMissingValues = function(data) {
   data[is.na(data$RG_START_Starter), 'RG_START_Starter'] = 0
   data[is.na(data$RG_START_Status), 'RG_START_Status'] = 'B'
   data$RG_START_Status = factor(data$RG_START_Status)
+
+  #----------NBA.TEAM.TRADITIONAL-----------
+  #The NAs are for team's first games (because I look for the previous day's
+  #data, but since there is none, then the NBA_TEAM_[X] features are NA), so set
+  #them all to 0 (they all have the same 345 NAs)
+  for (colName in F.NBA.SEASON.TEAM.TRADITIONAL) {
+    data[is.na(data[[colName]]), colName] = 0
+  }
 
   return(data)
 }

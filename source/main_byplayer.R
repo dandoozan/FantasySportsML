@@ -19,7 +19,7 @@ ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0('byplyr_', NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA, F.MINE)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.SEASON.PLAYER.TRADITIONAL, F.MINE)
 
 #================= Functions ===================
 

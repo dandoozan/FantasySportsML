@@ -14,16 +14,18 @@
 #D-plot median of lowest contest results: 32_mediancontest_xgb: 10/27-11/11, 81/94, 266, 81, 6.925018/7.701815, 1.599, 7.084283/6.873463/7.040948, Inf, 7.724325/18.74159, 0.9440826
 #D-Add NBA PlayerBios: 33_playerbios_xgb: 10/27-11/11, 89/102, 266, 107, 6.772287/7.697509, 9.504, 6.904363/6.904882/6.893519, Inf, 7.750878/18.79264, 0.9617669
 #D-Add RG StartingLineups: 34_starter_xgb: 10/27-11/11, 92/105, 266, 101, 6.777758/7.680179, 10.026, 6.907689/6.935779/6.879808, Inf, 7.73361/18.6916, 0.9273415 <-- new best!
-#-Set numeric NAs to 1000: 35_numNA_xgb: 10/27-11/11, 92/105, 266, 85, 6.872778/7.686423, 9.691, 7.016102/6.916518/6.974054, Inf, 7.703383/17.91926, 0.9147303 <-- new best!
+#D-Set numeric NAs to 1000: 35_numNA_xgb: 10/27-11/11, 92/105, 266, 85, 6.872778/7.686423, 9.691, 7.016102/6.916518/6.974054, Inf, 7.703383/17.91926, 0.9147303 <-- new best!
+#D-Add NBA Team features:  36_team_xgb: 10/27-11/11, 118/131, 266, 102, 6.750822/7.664908, 6.363, 6.870544/6.913532/6.871711, Inf, 7.716599/17.70431, 0.9262162
 
-#-add back-to-back (RG BackToBack)
 #-team wpct (NBA Team_Traditional)
+#-opp wpct (NBA Team_Traditional)
+#-add back-to-back (RG BackToBack)
+#-nba advanced
 #-offense/defense rating (RG OffenseVsDefense)
 #-whether in RG optimal lineup (RG OptimalLineup)
 #-salary/rank change (RG MarketWatch)
 #-touches (RG Touches)
 #-vegas odds (RG VegasOdds)
-#-season-long advanced
 #-season-long defense
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
@@ -38,8 +40,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '35'
-NAME = 'numNA'
+NUMBER = '36'
+NAME = 'team'
 
 PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
@@ -48,7 +50,7 @@ ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.TRADITIONAL, F.NBA.PLAYERBIOS, F.RG.START, F.MINE)
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.PLAYERBIOS, F.RG.START, F.NBA.SEASON.TEAM.TRADITIONAL, F.MINE)
 
 #================= Functions =================
 

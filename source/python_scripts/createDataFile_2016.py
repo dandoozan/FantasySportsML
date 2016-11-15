@@ -60,6 +60,38 @@ KNOWN_ALIASES = {
     #'maurice williams': 'mo williams',
     #'chuck hayes': 'charles hayes',
 }
+TEAM_KNOWN_ALIASES = {
+    'ATL': 'atlanta hawks',
+    'CHI': 'chicago bulls',
+    'CLE': 'cleveland cavaliers',
+    'BOS': 'boston celtics',
+    'BKN': 'brooklyn nets',
+    'CHA': 'charlotte hornets',
+    'DAL': 'dallas mavericks',
+    'DEN': 'denver nuggets',
+    'DET': 'detroit pistons',
+    'GS': 'golden state warriors',
+    'HOU': 'houston rockets',
+    'IND': 'indiana pacers',
+    'LAC': ['los angeles clippers', 'la clippers'],
+    'LAL': 'los angeles lakers',
+    'MEM': 'memphis grizzlies',
+    'MIA': 'miami heat',
+    'MIL': 'milwaukee bucks',
+    'MIN': 'minnesota timberwolves',
+    'NO': 'new orleans pelicans',
+    'NY': 'new york knicks',
+    'OKC': 'oklahoma city thunder',
+    'ORL': 'orlando magic',
+    'PHI': 'philadelphia 76ers',
+    'PHO': 'phoenix suns',
+    'POR': 'portland trail blazers',
+    'SAC': 'sacramento kings',
+    'SA': 'san antonio spurs',
+    'TOR': 'toronto raptors',
+    'UTA': 'utah jazz',
+    'WAS': 'washington wizards',
+}
 
 PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
     '2016-10-26': {
@@ -599,9 +631,11 @@ def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     #convert each to int/float
     util.mapSome(int, row, util.addPrefixToArray([ 'CRK', 'SFRK', 'SGRK', 'PFRK', 'PGRK'], prefix))
     util.mapSome(float, row, util.addPrefixToArray(['CFPPG', 'SFFPPG', 'SGFPPG', 'PFFPPG', 'PGFPPG'], prefix))
-    return row[prefix + 'TEAM'].strip(), row
+    return row[prefix + 'TEAM'].strip().lower(), row
 def parseNbaRow(row, dateStr, prefix):
     return row[prefix + 'PLAYER_NAME'].strip().lower(), row
+def parseNbaTeamRow(row, dateStr, prefix):
+    return row[prefix + 'TEAM_NAME'].strip().lower(), row
 def parseRotoGrinderStartingLineupsRow(row, dateStr, prefix):
     name = row['data']['text'].strip()
     order = int(row['data']['order'].strip())
@@ -734,13 +768,14 @@ def findAllPlayerMatches(name, newData):
     playerMatches.extend(findAllPlayersThatMatchFunction(name, newData, removePeriods))
     playerMatches.extend(findAllPlayersThatMatchFunction(name, newData, removeSuffix))
     return playerMatches
-def findMatchingName(name, newData, nameMap={}):
+def findMatchingName(name, newData, isTeam):
 
     #first, check for exact match
     if hasExactMatch(name, newData):
         return name
 
     #then, check if it's a known mismatch name
+    nameMap = TEAM_KNOWN_ALIASES if isTeam else KNOWN_ALIASES
     if name in nameMap:
         misMatchedName = nameMap[name]
         if isinstance(misMatchedName, list):
@@ -788,14 +823,14 @@ def getTeam(playerData):
     return playerData['Team']
 def getOppTeam(playerData):
     return playerData['Opponent']
-def playerIsInData(data, name, nameMap):
+def playerIsInData(data, name, isTeam):
     for dateStr in data:
         for nme in data[dateStr]:
-            if nme == findMatchingName(name, data[dateStr], nameMap):
+            if nme == findMatchingName(name, data[dateStr], isTeam):
                 return True
     return False
 
-def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, nameMap, knownMissingObj, containsY, usePrevDay):
+def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, containsY, usePrevDay):
     print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
@@ -805,14 +840,14 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, nameMap, knownMissingOb
                 playerData = obj1[dateStr][name]
                 if isTeam:
                     name = getOppTeam(playerData) if isOpp else getTeam(playerData)
-                obj2Name = findMatchingName(name, obj2[dateStr], nameMap)
+                obj2Name = findMatchingName(name, obj2[dateStr], isTeam)
                 if obj2Name in obj2[dateStr]:
                     playerData.update(obj2[dateStr][obj2Name])
                 else:
                     date = util.parseDate(dateStr)
                     if playerIsKnownToBeMissing(dateStr, name, knownMissingObj) \
                             or playerDidNotPlayOnOrUpToDate(date - ONE_DAY if usePrevDay else date, name) \
-                            or playerIsInData(obj2, name, nameMap): #it's oh well in this case; at least i know it's not a name mismatch
+                            or playerIsInData(obj2, name, isTeam): #it's oh well in this case; at least i know it's not a name mismatch
                         #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
                         if containsY:
                             #set FantasyPoints to 0 for these people who are known to be missing
@@ -1147,97 +1182,64 @@ DATA_SOURCES = [
             'SG RK': 'SGRK'
         },
         'loadFileFunction': loadJsonFile,
-        'nameMap': {
-            'ATL': 'Atlanta Hawks',
-            'CHI': 'Chicago Bulls',
-            'CLE': 'Cleveland Cavaliers',
-            'BOS': 'Boston Celtics',
-            'BKN': 'Brooklyn Nets',
-            'CHA': 'Charlotte Hornets',
-            'DAL': 'Dallas Mavericks',
-            'DEN': 'Denver Nuggets',
-            'DET': 'Detroit Pistons',
-            'GS': 'Golden State Warriors',
-            'HOU': 'Houston Rockets',
-            'IND': 'Indiana Pacers',
-            'LAC': 'Los Angeles Clippers',
-            'LAL': 'Los Angeles Lakers',
-            'MEM': 'Memphis Grizzlies',
-            'MIA': 'Miami Heat',
-            'MIL': 'Milwaukee Bucks',
-            'MIN': 'Minnesota Timberwolves',
-            'NO': 'New Orleans Pelicans',
-            'NY': 'New York Knicks',
-            'OKC': 'Oklahoma City Thunder',
-            'ORL': 'Orlando Magic',
-            'PHI': 'Philadelphia 76ers',
-            'PHO': 'Phoenix Suns',
-            'POR': 'Portland Trail Blazers',
-            'SAC': 'Sacramento Kings',
-            'SA': 'San Antonio Spurs',
-            'TOR': 'Toronto Raptors',
-            'UTA': 'Utah Jazz',
-            'WAS': 'Washington Wizards',
-        },
         'parseRowFunction': parseRotoGrinderDefenseVsPositionCheatSheetRow,
         'prefix': 'RG_OPP_DVP_',
     },
     {
-        'name': 'NBA',
+        'name': 'NBASeasonPlayerTraditional',
         'features': [
-            #'NBA_SEASON_AGE', #remove this from here, but add it to NBA PlayerBios data when I incorporate that
-            'NBA_SEASON_W',
-            'NBA_SEASON_L',
-            'NBA_SEASON_W_PCT',
-            'NBA_SEASON_MIN',
-            'NBA_SEASON_FGM',
-            'NBA_SEASON_FGA',
-            'NBA_SEASON_FG_PCT',
-            'NBA_SEASON_FG3M',
-            'NBA_SEASON_FG3A',
-            'NBA_SEASON_FG3_PCT',
-            'NBA_SEASON_FTM',
-            'NBA_SEASON_FTA',
-            'NBA_SEASON_FT_PCT',
-            'NBA_SEASON_OREB',
-            'NBA_SEASON_DREB',
-            'NBA_SEASON_REB',
-            'NBA_SEASON_AST',
-            'NBA_SEASON_TOV',
-            'NBA_SEASON_STL',
-            'NBA_SEASON_BLK',
-            'NBA_SEASON_BLKA',
-            'NBA_SEASON_PF',
-            'NBA_SEASON_PFD',
-            'NBA_SEASON_PTS',
-            'NBA_SEASON_PLUS_MINUS',
-            'NBA_SEASON_DD2',
-            'NBA_SEASON_TD3',
+            'NBA_S_P_TRAD_W',
+            'NBA_S_P_TRAD_L',
+            'NBA_S_P_TRAD_W_PCT',
+            'NBA_S_P_TRAD_MIN',
+            'NBA_S_P_TRAD_FGM',
+            'NBA_S_P_TRAD_FGA',
+            'NBA_S_P_TRAD_FG_PCT',
+            'NBA_S_P_TRAD_FG3M',
+            'NBA_S_P_TRAD_FG3A',
+            'NBA_S_P_TRAD_FG3_PCT',
+            'NBA_S_P_TRAD_FTM',
+            'NBA_S_P_TRAD_FTA',
+            'NBA_S_P_TRAD_FT_PCT',
+            'NBA_S_P_TRAD_OREB',
+            'NBA_S_P_TRAD_DREB',
+            'NBA_S_P_TRAD_REB',
+            'NBA_S_P_TRAD_AST',
+            'NBA_S_P_TRAD_TOV',
+            'NBA_S_P_TRAD_STL',
+            'NBA_S_P_TRAD_BLK',
+            'NBA_S_P_TRAD_BLKA',
+            'NBA_S_P_TRAD_PF',
+            'NBA_S_P_TRAD_PFD',
+            'NBA_S_P_TRAD_PTS',
+            'NBA_S_P_TRAD_PLUS_MINUS',
+            'NBA_S_P_TRAD_DD2',
+            'NBA_S_P_TRAD_TD3',
         ],
         'findFileFunction': findNbaFile,
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'Traditional', '2016'),
         'loadFileFunction': loadNbaJsonFile,
         'parseRowFunction': parseNbaRow,
-        'prefix': 'NBA_SEASON_',
+        'prefix': 'NBA_S_P_TRAD_',
         'usePrevDay': True,
     },
     {
         'name': 'NBAPlayerBios',
         'features': [
-            'NBA_AGE',
-            'NBA_PLAYER_HEIGHT_INCHES',
-            'NBA_PLAYER_WEIGHT',
-            'NBA_COLLEGE',
-            'NBA_COUNTRY',
-            'NBA_DRAFT_YEAR',
-            'NBA_DRAFT_ROUND',
-            'NBA_DRAFT_NUMBER',
+            'NBA_PB_AGE',
+            'NBA_PB_PLAYER_HEIGHT_INCHES',
+            'NBA_PB_PLAYER_WEIGHT',
+            'NBA_PB_COLLEGE',
+            'NBA_PB_COUNTRY',
+            'NBA_PB_DRAFT_YEAR',
+            'NBA_PB_DRAFT_ROUND',
+            'NBA_PB_DRAFT_NUMBER',
         ],
         'findFileFunction': findYearJsonFile,
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'PlayerBios'),
         'loadFileFunction': loadNbaJsonFile,
         'parseRowFunction': parseNbaRow,
-        'prefix': 'NBA_',
+        'prefix': 'NBA_PB_',
     },
     {
         'name': 'RotoGrinderStartingLineups',
@@ -1264,6 +1266,44 @@ DATA_SOURCES = [
         'parseRowFunction': parseRotoGrinderStartingLineupsRow,
         'prefix': 'RG_START_',
     },
+    {
+        'name': 'NBASeasonTeamTraditional',
+        'features': [
+            'NBA_S_T_TRAD_GP',
+            'NBA_S_T_TRAD_W',
+            'NBA_S_T_TRAD_L',
+            'NBA_S_T_TRAD_W_PCT',
+            'NBA_S_T_TRAD_MIN',
+            'NBA_S_T_TRAD_FGM',
+            'NBA_S_T_TRAD_FGA',
+            'NBA_S_T_TRAD_FG_PCT',
+            'NBA_S_T_TRAD_FG3M',
+            'NBA_S_T_TRAD_FG3A',
+            'NBA_S_T_TRAD_FG3_PCT',
+            'NBA_S_T_TRAD_FTM',
+            'NBA_S_T_TRAD_FTA',
+            'NBA_S_T_TRAD_FT_PCT',
+            'NBA_S_T_TRAD_OREB',
+            'NBA_S_T_TRAD_DREB',
+            'NBA_S_T_TRAD_REB',
+            'NBA_S_T_TRAD_AST',
+            'NBA_S_T_TRAD_TOV',
+            'NBA_S_T_TRAD_STL',
+            'NBA_S_T_TRAD_BLK',
+            'NBA_S_T_TRAD_BLKA',
+            'NBA_S_T_TRAD_PF',
+            'NBA_S_T_TRAD_PFD',
+            'NBA_S_T_TRAD_PTS',
+            'NBA_S_T_TRAD_PLUS_MINUS',
+        ],
+        'findFileFunction': findNbaFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'Team_Traditional', '2016'),
+        'isTeam': True,
+        'loadFileFunction': loadNbaJsonFile,
+        'parseRowFunction': parseNbaTeamRow,
+        'prefix': 'NBA_S_T_TRAD_',
+        'usePrevDay': True,
+    },
     #{
     #    'name': '',
     #    'features': [],
@@ -1272,6 +1312,81 @@ DATA_SOURCES = [
     #},
 ]
 
+#tbx
+'''
+DATA_SOURCES = [
+    {
+        'name': 'FanDuel',
+        'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded'),
+        'keyRenameMap': {
+            'Played': 'GamesPlayed',
+            'Injury Indicator': 'InjuryIndicator',
+            'Injury Details': 'InjuryDetails',
+        },
+        'parseRowFunction': parseFanDuelRow,
+    },
+    {
+        'name': 'RotoGuru',
+        'containsY': True,
+        'delimiter': ';',
+        'features': ['FantasyPoints'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru'),
+        'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
+        'knownMissingObj': {
+            '2016-10-25': {
+                'cory jefferson', #he didn't play according to stats.nba.com
+                'louis amundson', #he didn't play according to stats.nba.com
+                'damien inglis', #he didn't play according to stats.nba.com
+                'phil pressey', #he didn't play according to stats.nba.com
+                'greg stiemsma', #he didn't play according to stats.nba.com
+                'patricio garino', #this guy isn't even on nba.com
+                'chasson randle', #this guy isn't even on nba.com
+                'j.p. tokoto', #this guy isn't even on nba.com
+                'livio jean-charles', #this guy isn't even on nba.com
+                'markel brown', #he didn't play according to stats.nba.com
+                'joel anthony', #he didn't play according to stats.nba.com
+                'grant jerrett', #he didn't play according to stats.nba.com
+                'henry sims', #he didn't play according to stats.nba.com
+                'chris johnson', #he didn't play according to stats.nba.com
+                'dahntay jones', #he didn't play according to stats.nba.com
+                'elliot williams', #he didn't play according to stats.nba.com
+                'john holland', #he didn't play according to stats.nba.com
+                'cameron jones', #this guy isn't even on nba.com
+                'jonathan holmes', #this guy isn't even on nba.com
+            },'2016-10-31': {
+                'taurean prince', #he didn't play according to stats.nba.com
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-01': {
+                'jerami grant', #he didn't play according to stats.nba.com
+            },
+            '2016-11-02': {
+                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-04': {
+                'taurean prince', #he didn't play according to stats.nba.com
+                'walter tavares', #he didn't play according to stats.nba.com
+                'joel bolomboy', #he didn't play according to stats.nba.com
+            },
+            '2016-11-05': {
+                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-07': {
+                'lance stephenson',
+            },
+            '2016-11-08': {
+                'jordan farmar',
+                'lance stephenson',
+                'walter tavares',
+            },
+        },
+        'parseRowFunction': parseRotoGuruRow,
+    },
+]
+'''
 
 #load fanduel data
 data = None
@@ -1291,7 +1406,6 @@ for dataSource in DATA_SOURCES:
     keyRenameMap = util.getObjValue(dataSource, 'keyRenameMap', {})
     knownMissingObj = util.getObjValue(dataSource, 'knownMissingObj', {})
     loadFileFunction = util.getObjValue(dataSource, 'loadFileFunction', loadCsvFile)
-    nameMap = util.getObjValue(dataSource, 'nameMap', KNOWN_ALIASES)
     parseRowFunction = dataSource['parseRowFunction']
     prefix = util.getObjValue(dataSource, 'prefix', '')
     usePrevDay = util.getObjValue(dataSource, 'usePrevDay', False)
@@ -1302,7 +1416,7 @@ for dataSource in DATA_SOURCES:
     if data == None:
         data = newData
     else:
-        mergeData(data, newData, name, isTeam, isOpp, nameMap, knownMissingObj, containsY, usePrevDay)
+        mergeData(data, newData, name, isTeam, isOpp, knownMissingObj, containsY, usePrevDay)
 
 writeData(OUTPUT_FILE, data)
 
