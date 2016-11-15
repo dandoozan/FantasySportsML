@@ -5,6 +5,7 @@
   #-save nba playerbios json data (http://stats.nba.com/stats/leaguedashplayerbiostats?College=&Conference=&Country=&DateFrom=&DateTo=&Division=&DraftPick=&DraftYear=&GameScope=&GameSegment=&Height=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PerMode=PerGame&Period=0&PlayerExperience=&PlayerPosition=&Season=2016-17&SeasonSegment=&SeasonType=Regular+Season&ShotClockRange=&StarterBench=&TeamID=0&VsConference=&VsDivision=&Weight=)
   #-change END_DATE in createDataFile_2016.py
   #-create data_2016.csv (python source/python_scripts/createDataFile_2016.py)
+    #-recheck the 'never' played names
     #-Resolve missing names
   #-create data_contests_2016.csv (python source/python_scripts/createContestFile.py)
   #-change END_DATE to new date
@@ -75,6 +76,15 @@ imputeMissingValues = function(data) {
   data$NBA_DRAFT_ROUND = as.numeric(data$NBA_DRAFT_ROUND)
   data$NBA_DRAFT_NUMBER = as.numeric(data$NBA_DRAFT_NUMBER)
 
+
+  #----------RG.START-----------
+  #The NAs in RG.START mean that the player did not play that day,
+  #so set Starter=0, Order=20 (max order=15), and Status='B' (bc most are 'B')
+  #There are 451 NAs in all 3 (they all have the same NAs)
+  data[is.na(data$RG_START_Order), 'RG_START_Order'] = 20
+  data[is.na(data$RG_START_Starter), 'RG_START_Starter'] = 0
+  data[is.na(data$RG_START_Status), 'RG_START_Status'] = 'B'
+  data$RG_START_Status = factor(data$RG_START_Status)
 
   return(data)
 }

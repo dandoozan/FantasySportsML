@@ -51,6 +51,9 @@ KNOWN_ALIASES = {
     'c.j. wilcox': 'cj wilcox',
     'c.j. watson': 'cj watson',
 
+    #RotoGrinderStartingLineups
+    'tim hardaway jr.': 'tim hardaway',
+
     #from createDataFile.py, investigate these
     #'amare stoudemire': 'amar\'e stoudemire',
     #'louis amundson': 'lou amundson',
@@ -529,16 +532,16 @@ def parseFanDuelRow(row, dateStr, prefix):
     return playerName, row
 def parseRotoGuruRow(row, dateStr, prefix):
     #convert to float just to make sure all values can be parsed to floats
-    row['FantasyPoints'] = float(row['FantasyPoints'])
+    row['FantasyPoints'] = float(row['FantasyPoints'].strip())
 
     #reverse name bc it's in format: 'lastname, firstname'
-    playerName = row['Name'].split(', ')
+    playerName = row['Name'].strip().split(', ')
     playerName.reverse()
     playerName = ' '.join(playerName).lower()
 
     return playerName, row
 def parseNumberFireRow(row, dateStr, prefix):
-    return row['NF_Name'].lower(), row
+    return row['NF_Name'].strip().lower(), row
 def parseRotoGrinderPlayerProjectionsRow(row, dateStr, prefix):
     #handle pownpct
     #remove the '%' from pownpct (eg. '25.00%' -> 25.00)
@@ -598,7 +601,20 @@ def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     util.mapSome(float, row, util.addPrefixToArray(['CFPPG', 'SFFPPG', 'SGFPPG', 'PFFPPG', 'PGFPPG'], prefix))
     return row[prefix + 'TEAM'].strip(), row
 def parseNbaRow(row, dateStr, prefix):
-    return row[prefix + 'PLAYER_NAME'].lower(), row
+    return row[prefix + 'PLAYER_NAME'].strip().lower(), row
+def parseRotoGrinderStartingLineupsRow(row, dateStr, prefix):
+    name = row['data']['text'].strip()
+    order = int(row['data']['order'].strip())
+    isStarter = 1 if order <= 5 else 0
+
+    #Im not sure what status is, but it might be important
+    #I've seen it equal 'B' and 'C'
+    #I think these are B=Best Guess and C=Confirmed
+    status = row['data']['status'].strip()
+
+    row = { 'Order': order, 'Starter': isStarter, 'Status': status, }
+
+    return name.lower(), util.addPrefixToObj(row, prefix)
 
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
     oldMatchPoints = float(oldMatch['RG_points'])
@@ -632,6 +648,16 @@ def loadNbaJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
     rowData = jsonData['resultSets'][0]['rowSet']
     for row in rowData:
         rows.append(dict(zip(colNames, row)))
+    return rows
+def loadRotoGrinderStartingLineupsFile(fullPathFilename, keyRenameMap, prefix, delimiter):
+    rows = []
+    jsonData = util.loadJsonFile(fullPathFilename)
+    matchups = jsonData.values()
+    for matchup in matchups:
+        teamHomePlayers = matchup['data']['team_home']['data']['lineups']['collection'].values()
+        teamAwayPlayers = matchup['data']['team_away']['data']['lineups']['collection'].values()
+        rows.extend(teamHomePlayers)
+        rows.extend(teamAwayPlayers)
     return rows
 
 def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
@@ -1212,6 +1238,31 @@ DATA_SOURCES = [
         'loadFileFunction': loadNbaJsonFile,
         'parseRowFunction': parseNbaRow,
         'prefix': 'NBA_',
+    },
+    {
+        'name': 'RotoGrinderStartingLineups',
+        'features': [
+            'RG_START_Order',
+            'RG_START_Starter',
+            'RG_START_Status',
+        ],
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'StartingLineups'),
+        'knownMissingObj': {
+            '2016-10-29': { 'rakeem christmas' },
+            '2016-11-01': { 'rakeem christmas' },
+            '2016-11-03': { 'rakeem christmas' },
+            '2016-11-05': { 'rakeem christmas', 'georgios papagiannis' },
+            '2016-11-06': { 'georgios papagiannis' },
+            '2016-11-07': { 'rakeem christmas' },
+            '2016-11-08': { 'georgios papagiannis' },
+            '2016-11-09': { 'rakeem christmas' },
+            '2016-11-10': { 'georgios papagiannis' },
+            '2016-11-11': { 'rakeem christmas', 'georgios papagiannis' },
+        },
+        'loadFileFunction': loadRotoGrinderStartingLineupsFile,
+        'parseRowFunction': parseRotoGrinderStartingLineupsRow,
+        'prefix': 'RG_START_',
     },
     #{
     #    'name': '',

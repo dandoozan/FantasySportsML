@@ -126,7 +126,7 @@ def addPrefixToArray(arr, prefix):
 def addPrefixToObj(obj, prefix):
     #note: use obj.keys() because renameKeys alters the obj
     map(lambda x: renameKey(obj, x, prefix + x), obj.keys())
-
+    return obj
 
 def mapSome(func, obj, keyNames):
     for key in keyNames:
