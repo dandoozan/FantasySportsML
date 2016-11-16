@@ -553,6 +553,8 @@ ROTOGRINDER_KNOWN_MISSING = {
 TBX_MISSING_PLAYERS = {}
 
 #------------ Misc ------------
+def joinFirstLastNames(obj, firstNameKey, lastNameKey):
+    return ' '.join([getValue(obj, firstNameKey), getValue(obj, lastNameKey)])
 def getNameValue(obj, key, prefix=''):
     return getValue(obj, key, prefix).lower()
 def getValue(obj, key, prefix=''):
@@ -591,25 +593,25 @@ def findYearJsonFile(fullPathToDir, dateStr):
 #------------ Parse Row ------------
 def parseFanDuelRow(row, dateStr, prefix):
     #add Name, which is a join of firstname and lastname
-    row['Name'] = ' '.join([row['First Name'], row['Last Name']])
+    row['Name'] = joinFirstLastNames(row, 'First Name', 'Last Name')
 
     #add date to row
     row['Date'] = dateStr
 
     #add IsHome
-    row['Home'] = 'Home' if (row['Game'].split('@')[1] == row['Team']) else 'Away'
+    row['Home'] = 'Home' if (getValue(row, 'Game').split('@')[1].strip() == getValue(row, 'Team')) else 'Away'
 
     #set '' to 'None' in injury cols
-    if row['InjuryIndicator'] == '':
+    if getValue(row, 'InjuryIndicator') == '':
         row['InjuryIndicator'] = 'None'
-    if row['InjuryDetails'] == '':
+    if getValue(row, 'InjuryDetails') == '':
         row['InjuryDetails'] = 'None'
 
-    playerName = row['Name'].lower()
+    playerName = getNameValue(row, 'Name')
     return playerName, row
 def parseFanDuelJsonRow(row, dateStr, prefix):
-    #-add enddate
-    #-add strip to values
+    #D-add enddate
+    #D-add strip to values
     #-replace Home with RotoGuru Home
 
     #add Name, which is a join of firstname and lastname
