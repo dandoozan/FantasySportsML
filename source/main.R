@@ -23,11 +23,14 @@
 #D-Remove country and college: 41_rmCollegeCountry_xgb: 10/27-11/11, 179/194, 266, 111, 6.675282/7.675929, 3.941, 6.802302/6.927807/6.779758, Inf, 7.758061/17.7694, 0.90549
 #D-Remove InjuryDetails: 42_rmInjuryDetails_xgb: 10/27-11/11, 178/194, 266, 111, 6.675282/7.675929, 3.683, 6.802302/6.927807/6.779758, Inf, 7.759193/16.98893, 0.9154588
 #D-Add RG AdvancedPlayerStats: 43_rgAdv_xgb: 10/27-11/11, 188/204, 266, 81, 6.846089/7.690408, 3.323, 6.998297/6.902806/6.969302, Inf, 7.708973/17.87509, 0.9420913
+#-Add RG MarketWatch: 44_rgMW_xgb: 10/27-11/11, 202/218, 266, 102, 6.678373/7.69498, 3.826, 6.848475/6.951411/6.823288, Inf, 7.751412/18.46984, 0.9252272
 
-#-whether in RG optimal lineup (RG OptimalLineup)
+#-verify marketwatch
+
 #-salary/rank change (RG MarketWatch)
 #-touches (RG Touches)
 #-vegas odds (RG VegasOdds)
+#-nba GP
 #-nba defense
 #-add back-to-back (RG BackToBack)
 
@@ -42,6 +45,7 @@
 #-use nba GP instead of FD GamesPlayed
 #-add back college, country, InjuryDetails
 #-remove F.RG.ADVANCEDPLAYERSTATS bc there are too many NAs
+#-remove some of the RG_Salary_X features now that I have the MarketWatch features
 
 
 rm(list = ls())
@@ -50,8 +54,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '43'
-NAME = 'rgAdv'
+NUMBER = '44'
+NAME = 'rgMW'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
@@ -61,7 +65,7 @@ MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
 FEATURES_TO_USE = c(F.FANDUEL_FAST, F.NUMBERFIRE,
-                    F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.START, F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC,
+                    F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.MARKETWATCH, F.RG.START, F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC,
                     F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.PLAYERBIOS_NUM, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL,
                     F.MINE)
 

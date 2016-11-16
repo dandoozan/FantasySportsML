@@ -59,6 +59,13 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
+  #----------RG.MARKETWATCH-----------
+  #Set the NAs to 0s for MarketWatch features. They all have the same 484
+  #NAs.  I'm not sure that 0 is best, but that's all I can think of to do
+  for (colName in F.RG.MARKETWATCH) {
+    data[is.na(data[[colName]]), colName] = 0
+  }
+
   #----------RG.START-----------
   #The NAs in RG.START mean that the player did not play that day,
   #so set Starter=0, Order=20 (max order=15), and Status='B' (bc most are 'B')

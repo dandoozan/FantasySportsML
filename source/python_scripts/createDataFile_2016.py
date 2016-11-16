@@ -554,9 +554,9 @@ ROTOGRINDER_KNOWN_MISSING = {
 TBX_MISSING_PLAYERS = {}
 
 #------------ Misc ------------
-def getNameValue(obj, key, prefix):
+def getNameValue(obj, key, prefix=''):
     return getValue(obj, key, prefix).lower()
-def getValue(obj, key, prefix):
+def getValue(obj, key, prefix=''):
     return obj[prefix + key].strip()
 def setValue(obj, key, prefix, newValue):
     obj[prefix + key] = newValue
@@ -683,15 +683,26 @@ def parseRotoGrinderAdvancedPlayerStatsRow(row, dateStr, prefix):
     util.mapSome(int, row, util.addPrefixToArray(['D_RT', 'O_RT'], prefix))
     util.mapSome(float, row, util.addPrefixToArray(['EFGPCT', 'TSPCT', 'USGPCT', 'POW_AST', 'POW_BLK', 'POW_PTS', 'POW_REB', 'POW_STL'], prefix))
     return getNameValue(row, 'PLAYER', prefix), row
+def parseRotoGrinderMarketWatchRow(row, dateStr, prefix):
+    newRow = {}
+    #add all values to row
+    sites = ['dd', 'dk', 'fa', 'fd', 'fdft', 'rstr', 'y']
+    for site in sites:
+        siteObj = util.getObjValue(row, site)
+        if siteObj:
+            change = int(siteObj['change'])
+            current = int(siteObj['current'])
+        else:
+            change = 0
+            current = 0
+        setValue(newRow, site + '_change', prefix, change)
+        setValue(newRow, site + '_current', prefix, current)
+    return getNameValue(row, 'player'), newRow
 def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     #convert each to int/float
     util.mapSome(int, row, util.addPrefixToArray([ 'CRK', 'SFRK', 'SGRK', 'PFRK', 'PGRK'], prefix))
     util.mapSome(float, row, util.addPrefixToArray(['CFPPG', 'SFFPPG', 'SGFPPG', 'PFFPPG', 'PGFPPG'], prefix))
     return row[prefix + 'TEAM'].strip().lower(), row
-def parseNbaRow(row, dateStr, prefix):
-    return row[prefix + 'PLAYER_NAME'].strip().lower(), row
-def parseNbaTeamRow(row, dateStr, prefix):
-    return row[prefix + 'TEAM_NAME'].strip().lower(), row
 def parseRotoGrinderStartingLineupsRow(row, dateStr, prefix):
     name = row['data']['text'].strip()
     order = int(row['data']['order'].strip())
@@ -713,6 +724,10 @@ def parseRotoGrinderOffenseVsDefenseBasicRow(row, dateStr, prefix):
     #make sure all values are floats
     util.mapSome(float, row, util.addPrefixToArray(['AST', 'STL', 'FGM', 'TO', '3PM', 'BLK', 'FGPCT', 'REB', 'PTS', 'FGA'], prefix))
     return row[prefix + 'OFFENSE'].strip().lower(), row
+def parseNbaRow(row, dateStr, prefix):
+    return row[prefix + 'PLAYER_NAME'].strip().lower(), row
+def parseNbaTeamRow(row, dateStr, prefix):
+    return row[prefix + 'TEAM_NAME'].strip().lower(), row
 #def parseRotoGrinderOffenseVsDefenseAdvancedRow(row, dateStr, prefix):
 #    #make sure all values are floats
 #    util.mapSome(float, row, util.addPrefixToArray(['OFFRTG', 'PPG', 'PPG-A', 'AVGRTG', 'DEFRTG', 'PACE', 'PTS'], prefix))
@@ -763,6 +778,9 @@ def loadRotoGrinderStartingLineupsFile(fullPathFilename, keyRenameMap, prefix, d
         rows.extend(teamHomePlayers)
         rows.extend(teamAwayPlayers)
     return rows
+def loadRotoGrinderMarketWatchFile(fullPathFilename, keyRenameMap, prefix, delimiter):
+    jsonData = util.loadJsonFile(fullPathFilename)
+    return jsonData.values()
 
 #------------ Common ------------
 def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
@@ -1206,6 +1224,31 @@ DATA_SOURCES = [
         'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderAdvancedPlayerStatsRow,
         'prefix': 'RG_ADV_',
+    },
+    {
+        'name': 'RotoGrinderMarketWatch',
+        'features': [
+            'RG_MW_dk_current', #compare with RG_salary20
+            'RG_MW_dk_change', #RG_diff20
+            'RG_MW_fa_current', #RG_salary28
+            'RG_MW_fa_change',
+            'RG_MW_y_current', #RG_salary50
+            'RG_MW_y_change',
+            'RG_MW_dd_current', #RG_salary15
+            'RG_MW_dd_change',
+            'RG_MW_rstr_current', #RG_salary58
+            'RG_MW_rstr_change',
+            'RG_MW_fd_current', #Salary
+            'RG_MW_fd_change', #RG_saldiff
+            'RG_MW_fdft_current', #RG_salary43
+            'RG_MW_fdft_change',
+        ],
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'MarketWatch'),
+        'knownMissingObj': ROTOGRINDER_KNOWN_MISSING,
+        'loadFileFunction': loadRotoGrinderMarketWatchFile,
+        'parseRowFunction': parseRotoGrinderMarketWatchRow,
+        'prefix': 'RG_MW_',
     },
     {
         'name': 'RotoGrinderDefenseVsPositionCheatSheet',
