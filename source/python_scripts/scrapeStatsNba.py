@@ -198,14 +198,19 @@ def createHeaders(hdrs):
 def getDataValues(data):
     return data['resultSets'][0]['rowSet']
 
+def getSummary(isDaily, isTeam, category, season):
+    return '%s, %s, %s, %s' % ('Daily' if isDaily else 'Season', 'Team' if isTeam else 'Player', category, season)
+
 #=============== Main ================
 
-isDaily = raw_input('Daily? ').strip() == 'y'
-isTeam = raw_input('Team? ').strip() == 'y'
-category = raw_input('Enter Category (eg. Traditional): ').strip()
-season = raw_input('Enter season (eg. 2015): ').strip()
+isDaily = raw_input('Daily (leave blank for no)? ').strip() == 'y'
+isTeam = raw_input('Team (leave blank for no)? ').strip() == 'y'
+categoryInput = raw_input('Enter Category (if other than Traditional): ').strip()
+category = 'Traditional' if categoryInput == '' else categoryInput
+seasonInput = raw_input('Enter season (if other than 2016): ').strip()
+season = '2016' if seasonInput == '' else seasonInput
 
-print 'Running Daily: %s, Team: %s, Category: %s, Season: %s...' % (isDaily, isTeam, category, season)
+print 'Running ' + getSummary(isDaily, isTeam, category, season) + '...'
 
 parentDir = util.joinDirs(NBA_DIR, 'Daily' if isDaily else 'Season', ('Team_' if isTeam else '') + category, season)
 util.createDirIfNecessary(parentDir)
@@ -246,4 +251,4 @@ while currDate <= seasonEndDate:
 
     currDate = currDate + ONE_DAY
 
-print 'Done!  Finished Daily: %s, Team: %s, Category: %s, Season: %s...' % (isDaily, isTeam, category, season)
+print 'Done!  Finished ' + getSummary(isDaily, isTeam, category, season)
