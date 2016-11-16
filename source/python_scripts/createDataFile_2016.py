@@ -1427,6 +1427,26 @@ DATA_SOURCES = [
         'usePrevDay': True,
     },
     {
+        'name': 'NBASeasonPlayerDefense',
+        'features': [
+            'NBA_S_P_DEF_DEF_RATING',
+            'NBA_S_P_DEF_PCT_DREB',
+            'NBA_S_P_DEF_PCT_STL',
+            'NBA_S_P_DEF_PCT_BLK',
+            'NBA_S_P_DEF_OPP_PTS_OFF_TOV',
+            'NBA_S_P_DEF_OPP_PTS_2ND_CHANCE',
+            'NBA_S_P_DEF_OPP_PTS_FB',
+            'NBA_S_P_DEF_OPP_PTS_PAINT',
+            'NBA_S_P_DEF_DEF_WS',
+        ],
+        'findFileFunction': findNbaFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'Defense', '2016'),
+        'loadFileFunction': loadNbaJsonFile,
+        'parseRowFunction': parseNbaRow,
+        'prefix': 'NBA_S_P_DEF_',
+        'usePrevDay': True,
+    },
+    {
         'name': 'NBAPlayerBios',
         'features': [
             'NBA_PB_AGE',
