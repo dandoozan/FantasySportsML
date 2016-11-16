@@ -1,13 +1,12 @@
-from datetime import datetime, timedelta
 import scraper
 import _util as util
 
 DATA_DIR = 'data'
 OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
-SEASON_START_DATE = datetime(2016, 10, 25)
-ONE_DAY = timedelta(1)
-END_DATE = datetime(2016, 11, 11)
+SEASON_START_DATE = util.getDate(2016, 10, 25)
+ONE_DAY = util.getOneDay()
+END_DATE = util.getDate(2016, 11, 11)
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -576,7 +575,7 @@ def findJsonFile(fullPathToDir, dateStr):
 def findNbaFile(fullPathToDir, dateStr):
     #get previous day's file
     usedDiffFile = False
-    currDate = util.parseDate(dateStr)
+    currDate = util.parseAsDate(dateStr)
     while currDate > SEASON_START_DATE:
         currDate = currDate - ONE_DAY
         fullPathFilename = util.createFullPathFilename(fullPathToDir, util.createJsonFilename(util.formatDate(currDate)))
@@ -824,14 +823,14 @@ def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRow
             #    print playerData
             data[playerName] = util.filterObj(features, playerData)
     else:
-        util.headsUp('File not found for date=' + dateStr)
+        util.stop('File not found for date=' + dateStr)
         pass
 
     return data
-def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, keyRenameMap={}, delimiter=',', prefix=''):
+def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, startDate, keyRenameMap={}, delimiter=',', prefix=''):
     print '    Loading dir:', fullPathToDir
     data = {}
-    currDate = SEASON_START_DATE
+    currDate = startDate
     while currDate <= END_DATE:
         currDateStr = util.formatDate(currDate)
         dateData = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
@@ -934,7 +933,7 @@ def playerIsInData(data, name, isTeam):
                 return True
     return False
 
-def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, containsY, usePrevDay):
+def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate):
     print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
@@ -968,7 +967,9 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, contai
 
                         util.headsUp('Name not found in obj2, date=' + dateStr + ', name=' + name)
         else:
-            util.headsUp('Date not found in obj2, date=' + dateStr)
+            #stop if i'm expecting the date to be in obj2
+            if util.parseAsDate(dateStr) >= startDate:
+                util.stop('Date not found in obj2, date=' + dateStr)
 
 def writeData(fullPathFilename, data):
     colNames = [Y_NAME]
@@ -1239,6 +1240,7 @@ DATA_SOURCES = [
         'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderAdvancedPlayerStatsRow,
         'prefix': 'RG_ADV_',
+        'startDate': util.getDate(2016, 10, 26),
     },
     {
         'name': 'RotoGrinderStartingLineups',
@@ -1264,6 +1266,7 @@ DATA_SOURCES = [
         'loadFileFunction': loadRotoGrinderStartingLineupsFile,
         'parseRowFunction': parseRotoGrinderStartingLineupsRow,
         'prefix': 'RG_START_',
+        'startDate': util.getDate(2016, 10, 26),
     },
     {
         'name': 'RotoGrinderMarketWatch',
@@ -1289,6 +1292,7 @@ DATA_SOURCES = [
         'loadFileFunction': loadRotoGrinderMarketWatchFile,
         'parseRowFunction': parseRotoGrinderMarketWatchRow,
         'prefix': 'RG_MW_',
+        'startDate': util.getDate(2016, 10, 26),
     },
     {
         'name': 'RotoGrinderDefenseVsPositionCheatSheet',
@@ -1323,6 +1327,7 @@ DATA_SOURCES = [
         'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderDefenseVsPositionCheatSheetRow,
         'prefix': 'RG_OPP_DVP_',
+        'startDate': util.getDate(2016, 10, 26),
     },
     {
         'name': 'RotoGrinderOffenseVsDefenseBasic',
@@ -1347,6 +1352,7 @@ DATA_SOURCES = [
         'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderOffenseVsDefenseBasicRow,
         'prefix': 'RG_OVD_',
+        'startDate': util.getDate(2016, 10, 26),
     },
     {
         'name': 'RotoGrinderOffenseVsDefenseBasicOpponent',
@@ -1372,6 +1378,7 @@ DATA_SOURCES = [
         'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderOffenseVsDefenseBasicRow,
         'prefix': 'RG_OVD_OPP_',
+        'startDate': util.getDate(2016, 10, 26),
     },
     {
         'name': 'RotoGrinderBackToBack',
@@ -1382,7 +1389,7 @@ DATA_SOURCES = [
         'prefix': 'RG_B2B_',
     },
     {
-        'name': 'RotoGrinderBackToBack',
+        'name': 'RotoGrinderBackToBackOpponent',
         'features': [ 'RG_B2B_OPP_Situation' ],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'BackToBack'),
         'isOpp': True,
@@ -1700,14 +1707,15 @@ for dataSource in DATA_SOURCES:
     parseRowFunction = dataSource['parseRowFunction']
     prefix = util.getObjValue(dataSource, 'prefix', '')
     usePrevDay = util.getObjValue(dataSource, 'usePrevDay', False)
+    startDate = util.getObjValue(dataSource, 'startDate', (SEASON_START_DATE + ONE_DAY) if usePrevDay else SEASON_START_DATE)
 
-    newData = loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, keyRenameMap, delimiter, prefix)
+    newData = loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, startDate, keyRenameMap, delimiter, prefix)
     X_NAMES.extend(features)
 
     if data == None:
         data = newData
     else:
-        mergeData(data, newData, name, isTeam, isOpp, knownMissingObj, containsY, usePrevDay)
+        mergeData(data, newData, name, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate)
 
 writeData(OUTPUT_FILE, data)
 

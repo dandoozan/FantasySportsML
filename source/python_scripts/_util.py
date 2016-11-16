@@ -107,6 +107,10 @@ def mapSome(func, obj, keyNames):
 def parseDate(dateStr, dateFormat='%Y-%m-%d'):
     from datetime import datetime
     return datetime.strptime(dateStr, dateFormat)
+def parseAsDate(dateStr, dateFormat='%Y-%m-%d'):
+    import datetime
+    parsedDatetime = parseDate(dateStr, dateFormat)
+    return datetime.date(parsedDatetime.year, parsedDatetime.month, parsedDatetime.day)
 def formatDate(date, dateFormat='%Y-%m-%d'):
     return date.strftime(dateFormat)
 def getOneDay():
@@ -115,7 +119,9 @@ def getOneDay():
 def getYesterdayAsDate():
     import datetime
     return datetime.date.today() - getOneDay()
-
+def getDate(year, month, day):
+    import datetime
+    return(datetime.date(year, month, day))
 
 #================= error stuff ===================
 def headsUp(msg):
