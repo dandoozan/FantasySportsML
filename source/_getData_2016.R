@@ -12,7 +12,7 @@
 
 
 SEASON_START_DATE = '2016-10-25'
-FACTOR_COLS = c('Position', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
+FACTOR_COLS = c('Position', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails', 'RG_B2B_Situation', 'RG_B2B_OPP_Situation')
 
 loadData = function() {
   data = read.csv(paste0('data/data_2016.csv'), stringsAsFactors=F, na.strings=c(''))
@@ -39,7 +39,7 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
-  #----------F.RG.PP-----------
+  #----------RG.PP-----------
   #set RG rank NAs to 0, but maybe consider something else (Inf?) since
   #generally lower rank is better, and since these don't have a rank, it
   #probably means that they're a bad player
@@ -74,6 +74,9 @@ imputeMissingValues = function(data) {
   data[is.na(data$RG_START_Starter), 'RG_START_Starter'] = 0
   data[is.na(data$RG_START_Status), 'RG_START_Status'] = 'B'
   data$RG_START_Status = factor(data$RG_START_Status)
+
+  #----------RG.BACK2BACK-----------
+
 
   #----------F.NBA.SEASON.PLAYER.[X]-----------
   #Set all NBA col NAs to 0.  These all have the same 754 NA rows

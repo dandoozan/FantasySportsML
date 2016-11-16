@@ -61,36 +61,36 @@ KNOWN_ALIASES = {
     #'chuck hayes': 'charles hayes',
 }
 TEAM_KNOWN_ALIASES = {
-    'ATL': ['atl', 'atlanta hawks'],
-    'CHI': ['chi', 'chicago bulls'],
-    'CLE': ['cle', 'cleveland cavaliers'],
-    'BOS': ['bos', 'boston celtics'],
-    'BKN': ['bkn', 'brooklyn nets'],
-    'CHA': ['cha', 'charlotte hornets'],
-    'DAL': ['dal', 'dallas mavericks'],
-    'DEN': ['den', 'denver nuggets'],
-    'DET': ['det', 'detroit pistons'],
-    'GS': ['gsw', 'golden state warriors'],
-    'HOU': ['hou', 'houston rockets'],
-    'IND': ['ind', 'indiana pacers'],
-    'LAC': ['lac', 'los angeles clippers', 'la clippers'],
-    'LAL': ['lal', 'los angeles lakers'],
-    'MEM': ['mem', 'memphis grizzlies'],
-    'MIA': ['mia', 'miami heat'],
-    'MIL': ['mil', 'milwaukee bucks'],
-    'MIN': ['min', 'minnesota timberwolves'],
-    'NO': ['nop', 'new orleans pelicans'],
-    'NY': ['nyk', 'new york knicks'],
-    'OKC': ['okc', 'oklahoma city thunder'],
-    'ORL': ['orl', 'orlando magic'],
-    'PHI': ['phi', 'philadelphia 76ers'],
-    'PHO': ['pho', 'phoenix suns'],
-    'POR': ['por', 'portland trail blazers'],
-    'SAC': ['sac', 'sacramento kings'],
-    'SA': ['sas', 'san antonio spurs'],
-    'TOR': ['tor', 'toronto raptors'],
-    'UTA': ['uta', 'utah jazz'],
-    'WAS': ['was', 'washington wizards'],
+    'ATL': ['atl', 'atlanta hawks', 'atlanta'],
+    'CHI': ['chi', 'chicago bulls', 'chicago'],
+    'CLE': ['cle', 'cleveland cavaliers', 'cleveland'],
+    'BOS': ['bos', 'boston celtics', 'boston'],
+    'BKN': ['bkn', 'brooklyn nets', 'brooklyn'],
+    'CHA': ['cha', 'charlotte hornets', 'charlotte'],
+    'DAL': ['dal', 'dallas mavericks', 'dallas'],
+    'DEN': ['den', 'denver nuggets', 'denver'],
+    'DET': ['det', 'detroit pistons', 'detroit'],
+    'GS': ['gsw', 'golden state warriors', 'golden state'],
+    'HOU': ['hou', 'houston rockets', 'houston'],
+    'IND': ['ind', 'indiana pacers', 'indiana'],
+    'LAC': ['lac', 'los angeles clippers', 'la clippers', 'l.a. clippers'],
+    'LAL': ['lal', 'los angeles lakers', 'l.a. lakers'],
+    'MEM': ['mem', 'memphis grizzlies', 'memphis'],
+    'MIA': ['mia', 'miami heat', 'miami'],
+    'MIL': ['mil', 'milwaukee bucks', 'milwaukee'],
+    'MIN': ['min', 'minnesota timberwolves', 'minnesota'],
+    'NO': ['nop', 'new orleans pelicans', 'new orleans'],
+    'NY': ['nyk', 'new york knicks', 'new york'],
+    'OKC': ['okc', 'oklahoma city thunder', 'oklahoma city'],
+    'ORL': ['orl', 'orlando magic', 'orlando'],
+    'PHI': ['phi', 'philadelphia 76ers', 'philadelphia'],
+    'PHO': ['pho', 'phoenix suns', 'phoenix'],
+    'POR': ['por', 'portland trail blazers', 'portland'],
+    'SAC': ['sac', 'sacramento kings', 'sacramento'],
+    'SA': ['sas', 'san antonio spurs', 'san antonio'],
+    'TOR': ['tor', 'toronto raptors', 'toronto'],
+    'UTA': ['uta', 'utah jazz', 'utah'],
+    'WAS': ['was', 'washington wizards', 'washington'],
 }
 
 PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
@@ -725,6 +725,20 @@ def parseRotoGrinderOffenseVsDefenseBasicRow(row, dateStr, prefix):
     #make sure all values are floats
     util.mapSome(float, row, util.addPrefixToArray(['AST', 'STL', 'FGM', 'TO', '3PM', 'BLK', 'FGPCT', 'REB', 'PTS', 'FGA'], prefix))
     return row[prefix + 'OFFENSE'].strip().lower(), row
+def parseRotoGrinderBackToBackRow(row, dateStr, prefix):
+    #handle the later file format (it started on 11/4)
+    if (prefix + 'Today Situation') in row:
+        situation = getValue(row, 'Today Situation', prefix)
+    else:
+        situation = getValue(row, 'Situation', prefix)
+
+    #set to 'None' if situation is blank
+    if situation == '':
+        situation = 'None'
+
+    setValue(row, 'Situation', prefix, situation)
+
+    return getNameValue(row, 'Team', prefix), row
 def parseNbaRow(row, dateStr, prefix):
     return row[prefix + 'PLAYER_NAME'].strip().lower(), row
 def parseNbaTeamRow(row, dateStr, prefix):
@@ -1360,6 +1374,23 @@ DATA_SOURCES = [
         'prefix': 'RG_OVD_OPP_',
     },
     {
+        'name': 'RotoGrinderBackToBack',
+        'features': [ 'RG_B2B_Situation' ],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'BackToBack'),
+        'isTeam': True,
+        'parseRowFunction': parseRotoGrinderBackToBackRow,
+        'prefix': 'RG_B2B_',
+    },
+    {
+        'name': 'RotoGrinderBackToBack',
+        'features': [ 'RG_B2B_OPP_Situation' ],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'BackToBack'),
+        'isOpp': True,
+        'isTeam': True,
+        'parseRowFunction': parseRotoGrinderBackToBackRow,
+        'prefix': 'RG_B2B_OPP_',
+    },
+    {
         'name': 'NBASeasonPlayerTraditional',
         'features': [
             'NBA_S_P_TRAD_GP',
@@ -1644,8 +1675,10 @@ DATA_SOURCES = [
         'parseRowFunction': parseRotoGuruRow,
     },
 
+
 ]
 '''
+
 #load fanduel data
 data = None
 
