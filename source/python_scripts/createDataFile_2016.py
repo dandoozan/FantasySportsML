@@ -1288,6 +1288,7 @@ DATA_SOURCES = [
     {
         'name': 'NBASeasonPlayerTraditional',
         'features': [
+            'NBA_S_P_TRAD_GP',
             'NBA_S_P_TRAD_W',
             'NBA_S_P_TRAD_L',
             'NBA_S_P_TRAD_W_PCT',

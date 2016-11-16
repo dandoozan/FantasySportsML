@@ -25,8 +25,8 @@
 #D-Add RG AdvancedPlayerStats: 43_rgAdv_xgb: 10/27-11/11, 188/204, 266, 81, 6.846089/7.690408, 3.323, 6.998297/6.902806/6.969302, Inf, 7.708973/17.87509, 0.9420913
 #D-Add RG MarketWatch: 44_rgMW_xgb: 10/27-11/11, 202/218, 266, 102, 6.678373/7.69498, 3.826, 6.848475/6.951411/6.823288, Inf, 7.751412/18.46984, 0.9252272
 #D-Fix MarketWatch Yahoo: 45_fixMW_xgb: 10/27-11/11, 202/218, 266, 102, 6.676079/7.70062, 3.817, 6.819313/6.928745/6.825204, Inf, 7.744314/19.18012, 0.9351234
+#D-Add nba GP: 46_nbaGP_xgb: 10/27-11/11, 203/219, 266, 106, 6.653886/7.691137, 4.222, 6.794239/6.931079/6.805209, Inf, 7.748192/19.2912, 0.9092166
 
-#-nba GP
 #-nba defense
 #-vegas odds (RG VegasOdds)
 #-add back-to-back (RG BackToBack)
@@ -51,8 +51,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '45'
-NAME = 'fixMW'
+NUMBER = '46'
+NAME = 'nbaGP'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
