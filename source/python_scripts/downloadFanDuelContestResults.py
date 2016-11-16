@@ -90,4 +90,5 @@ for contest in contestsToDownload:
         scraper.sleep(SLEEP)
     cnt += 1
 
+print 'Done!'
 
