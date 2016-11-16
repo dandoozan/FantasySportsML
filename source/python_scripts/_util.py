@@ -1,58 +1,31 @@
 
+#================= file stuff ===================
 def createDirIfNecessary(fullPathToDir):
     import os
     if not os.path.isdir(fullPathToDir):
         print 'Creating dir: ' + fullPathToDir + '...'
         os.makedirs(fullPathToDir)
-
 def getFilesInDir(fullPathToDir):
     import os
     return [f for f in os.listdir(fullPathToDir) if (os.path.isfile(os.path.join(fullPathToDir, f)) and f[:1] != '.')]
-
-def headsUp(msg):
-    print '==========================================='
-    print '***HEADS UP! ', msg
-    print '==========================================='
-
-def stop(msg):
-    headsUp(msg)
-    exit()
-
 def createFullPathFilename(fullPathToParentDir, filename):
     import os
     return os.path.join(fullPathToParentDir, filename)
-
 def joinDirs(*dirNames):
     import os
     return os.path.join(*dirNames)
-
-def getObjValue(obj, key, default=None):
-    return obj[key] if key in obj else default
-
 def fileExists(fullPathFilename):
     import os
     return os.path.exists(fullPathFilename)
 def dirExists(fullPathToDir):
     import os
     return os.path.exists(fullPathToDir)
-
 def createCsvFilename(baseFilename):
     return baseFilename + '.csv'
 def createJsonFilename(baseFilename):
     return baseFilename + '.json'
 def createTxtFilename(baseFilename):
     return baseFilename + '.txt'
-
-def printObj(obj):
-    keys = obj.keys()
-    keys.sort()
-    for key in keys:
-        print key + ': ' + str(obj[key])
-
-def printArray(arr):
-    for a in arr:
-        print a
-
 def loadCsvFile(fullPathFilename, keyRenameMap=None, delimiter=',', prefix=''):
     import csv
     data = []
@@ -77,31 +50,10 @@ def loadJsonFile(fullPathFilename):
     import json
     with open(fullPathFilename) as f:
         return json.load(f)
-def removeKey(key, obj):
-    obj.pop(key, None)
-
-def renameKey(obj, oldKey, newKey):
-    obj[newKey] = obj.pop(oldKey)
-
-def renameKeys(keyMap, obj):
-    #note: use keys bc renameKey alters obj
-    keys = obj.keys()
-    for key in keys:
-        if key in keyMap:
-            renameKey(obj, key, keyMap[key])
-
-def filterObj(validKeys, obj):
-    keys = obj.keys()
-    for key in keys:
-        if key not in validKeys:
-            removeKey(key, obj)
-    return obj
-
 def isJsonFile(filename):
     return len(filename) > 5 and filename[-5:] == '.json'
 def isTxtFile(filename):
     return len(filename) > 4 and filename[-4:] == '.txt'
-
 def writeCsvFile(colNames, dataArr, fullPathFilename):
     print 'Writing Csv File: ' + fullPathFilename + '...'
     import csv
@@ -119,18 +71,37 @@ def writeJsonData(jsonData, fullPathFilename, prettyPrint=True):
         json.dump(jsonData, f, sort_keys=True)
     f.close()
 
+
+#================= obj manipulation stuff ===================
+def getObjValue(obj, key, default=None):
+    return obj[key] if key in obj else default
+def removeKey(key, obj):
+    obj.pop(key, None)
+def renameKey(obj, oldKey, newKey):
+    obj[newKey] = obj.pop(oldKey)
+def renameKeys(keyMap, obj):
+    #note: use keys bc renameKey alters obj
+    keys = obj.keys()
+    for key in keys:
+        if key in keyMap:
+            renameKey(obj, key, keyMap[key])
+def filterObj(validKeys, obj):
+    keys = obj.keys()
+    for key in keys:
+        if key not in validKeys:
+            removeKey(key, obj)
+    return obj
 def addPrefixToArray(arr, prefix):
     return map(lambda x: prefix + x, arr)
-
-#This adds a prefix to all TOP LEVEL key names
 def addPrefixToObj(obj, prefix):
+    #This adds a prefix to all TOP LEVEL key names
     #note: use obj.keys() because renameKeys alters the obj
     map(lambda x: renameKey(obj, x, prefix + x), obj.keys())
     return obj
-
 def mapSome(func, obj, keyNames):
     for key in keyNames:
         obj[key] = func(obj[key])
+
 
 #================= date stuff ===================
 def parseDate(dateStr, dateFormat='%Y-%m-%d'):
@@ -144,3 +115,25 @@ def getOneDay():
 def getYesterdayAsDate():
     import datetime
     return datetime.date.today() - getOneDay()
+
+
+#================= error stuff ===================
+def headsUp(msg):
+    print '==========================================='
+    print '***HEADS UP! ', msg
+    print '==========================================='
+def stop(msg):
+    headsUp(msg)
+    exit()
+
+
+#================= print stuff ===================
+def printObj(obj):
+    keys = obj.keys()
+    keys.sort()
+    for key in keys:
+        print key + ': ' + str(obj[key])
+def printArray(arr):
+    for a in arr:
+        print a
+
