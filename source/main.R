@@ -53,7 +53,7 @@ setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '51'
 NAME = 'rmFdCurr'
 

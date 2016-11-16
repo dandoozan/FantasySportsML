@@ -607,6 +607,20 @@ def parseFanDuelRow(row, dateStr, prefix):
 
     playerName = row['Name'].lower()
     return playerName, row
+def parseFanDuelJsonRow(row, dateStr, prefix):
+    #-add enddate
+    #-add strip to values
+    #-replace Home with RotoGuru Home
+
+    #add Name, which is a join of firstname and lastname
+    row['Name'] = ' '.join(getValue(row, 'first_name'), getValue(row, 'last_name'))
+
+    #add date to row
+    row['Date'] = dateStr
+
+    #add IsHome
+    #row['Home'] = 'Home' if (row['Game'].split('@')[1] == row['Team']) else 'Away'
+
 def parseRotoGuruRow(row, dateStr, prefix):
     #convert to float just to make sure all values can be parsed to floats
     row['FantasyPoints'] = float(row['FantasyPoints'].strip())
@@ -774,6 +788,8 @@ def loadJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
             util.addPrefixToObj(item, prefix)
 
     return jsonData
+def loadFanDuelJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
+    return util.loadJsonFile(fullPathFilename)['players']
 def loadNbaJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
     rows = []
     jsonData = util.loadJsonFile(fullPathFilename)
@@ -827,11 +843,11 @@ def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRow
         pass
 
     return data
-def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, startDate, keyRenameMap={}, delimiter=',', prefix=''):
+def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, startDate, endDate, keyRenameMap={}, delimiter=',', prefix=''):
     print '    Loading dir:', fullPathToDir
     data = {}
     currDate = startDate
-    while currDate <= END_DATE:
+    while currDate <= endDate:
         currDateStr = util.formatDate(currDate)
         dateData = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
         if dateData:
@@ -990,7 +1006,7 @@ def writeData(fullPathFilename, data):
 
 DATA_SOURCES = [
     {
-        'name': 'FanDuel',
+        'name': 'FanDuel_fromPlayersManuallyDownloaded',
         'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded'),
         'keyRenameMap': {
@@ -999,7 +1015,16 @@ DATA_SOURCES = [
             'Injury Details': 'InjuryDetails',
         },
         'parseRowFunction': parseFanDuelRow,
+        'endDate': util.getDate(2016, 11, 11),
     },
+    #{
+    #    'name': 'FanDuel_fromPlayers',
+    #    'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
+    #    'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players'),
+    #    'loadFileFunction': loadFanDuelJsonFile,
+    #    'parseRowFunction': parseFanDuelJsonRow,
+    #    'startDate': util.getDate(2016, 11, 8),
+    #},
     {
         'name': 'RotoGuru',
         'containsY': True,
@@ -1608,83 +1633,6 @@ DATA_SOURCES = [
     #},
 ]
 
-'''
-#tbx
-DATA_SOURCES = [
-    {
-        'name': 'FanDuel',
-        'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
-        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded'),
-        'keyRenameMap': {
-            'Played': 'GamesPlayed',
-            'Injury Indicator': 'InjuryIndicator',
-            'Injury Details': 'InjuryDetails',
-        },
-        'parseRowFunction': parseFanDuelRow,
-    },
-    {
-        'name': 'RotoGuru',
-        'containsY': True,
-        'delimiter': ';',
-        'features': ['FantasyPoints'],
-        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru'),
-        'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
-        'knownMissingObj': {
-            '2016-10-25': {
-                'cory jefferson', #he didn't play according to stats.nba.com
-                'louis amundson', #he didn't play according to stats.nba.com
-                'damien inglis', #he didn't play according to stats.nba.com
-                'phil pressey', #he didn't play according to stats.nba.com
-                'greg stiemsma', #he didn't play according to stats.nba.com
-                'patricio garino', #this guy isn't even on nba.com
-                'chasson randle', #this guy isn't even on nba.com
-                'j.p. tokoto', #this guy isn't even on nba.com
-                'livio jean-charles', #this guy isn't even on nba.com
-                'markel brown', #he didn't play according to stats.nba.com
-                'joel anthony', #he didn't play according to stats.nba.com
-                'grant jerrett', #he didn't play according to stats.nba.com
-                'henry sims', #he didn't play according to stats.nba.com
-                'chris johnson', #he didn't play according to stats.nba.com
-                'dahntay jones', #he didn't play according to stats.nba.com
-                'elliot williams', #he didn't play according to stats.nba.com
-                'john holland', #he didn't play according to stats.nba.com
-                'cameron jones', #this guy isn't even on nba.com
-                'jonathan holmes', #this guy isn't even on nba.com
-            },'2016-10-31': {
-                'taurean prince', #he didn't play according to stats.nba.com
-                'walter tavares', #he didn't play according to stats.nba.com
-            },
-            '2016-11-01': {
-                'jerami grant', #he didn't play according to stats.nba.com
-            },
-            '2016-11-02': {
-                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
-                'walter tavares', #he didn't play according to stats.nba.com
-            },
-            '2016-11-04': {
-                'taurean prince', #he didn't play according to stats.nba.com
-                'walter tavares', #he didn't play according to stats.nba.com
-                'joel bolomboy', #he didn't play according to stats.nba.com
-            },
-            '2016-11-05': {
-                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
-                'walter tavares', #he didn't play according to stats.nba.com
-            },
-            '2016-11-07': {
-                'lance stephenson',
-            },
-            '2016-11-08': {
-                'jordan farmar',
-                'lance stephenson',
-                'walter tavares',
-            },
-        },
-        'parseRowFunction': parseRotoGuruRow,
-    },
-
-
-]
-'''
 
 #load fanduel data
 data = None
@@ -1708,8 +1656,9 @@ for dataSource in DATA_SOURCES:
     prefix = util.getObjValue(dataSource, 'prefix', '')
     usePrevDay = util.getObjValue(dataSource, 'usePrevDay', False)
     startDate = util.getObjValue(dataSource, 'startDate', (SEASON_START_DATE + ONE_DAY) if usePrevDay else SEASON_START_DATE)
+    endDate = util.getObjValue(dataSource, 'endDate', END_DATE)
 
-    newData = loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, startDate, keyRenameMap, delimiter, prefix)
+    newData = loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, startDate, endDate, keyRenameMap, delimiter, prefix)
     X_NAMES.extend(features)
 
     if data == None:
