@@ -1268,19 +1268,19 @@ DATA_SOURCES = [
     {
         'name': 'RotoGrinderMarketWatch',
         'features': [
-            'RG_MW_dk_current', #compare with RG_salary20
-            'RG_MW_dk_change', #RG_diff20
-            'RG_MW_fa_current', #RG_salary28
+            'RG_MW_dk_current',
+            'RG_MW_dk_change',
+            'RG_MW_fa_current',
             'RG_MW_fa_change',
-            'RG_MW_y_current', #RG_salary50
+            'RG_MW_y_current',
             'RG_MW_y_change',
-            'RG_MW_dd_current', #RG_salary15
+            'RG_MW_dd_current',
             'RG_MW_dd_change',
-            'RG_MW_rstr_current', #RG_salary58
+            'RG_MW_rstr_current',
             'RG_MW_rstr_change',
-            'RG_MW_fd_current', #Salary
-            'RG_MW_fd_change', #RG_saldiff
-            'RG_MW_fdft_current', #RG_salary43
+            #'RG_MW_fd_current', #<-- same as 'Salary'
+            'RG_MW_fd_change',
+            'RG_MW_fdft_current',
             'RG_MW_fdft_change',
         ],
         'findFileFunction': findJsonFile,

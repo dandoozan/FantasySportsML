@@ -14,14 +14,29 @@ source('source/_createTeam.R')
 END_DATE = '2016-11-11'
 Y_NAME = 'FantasyPoints'
 
+#possible duplicates:
+# Salary, RG_MW_fd_current <-- duplicate REMOVE
+# RG_saldiff, RG_MW_fd_change <-- no, saldiff is between fd and dk (fd-dk)
+# RG_diff20, RG_MW_dk_change <-- no, it's dk - fd
+# RG_salary20, RG_MW_dk_current <-- they might be duplicate, but they both have missing data that the other contains; perhaps merge them in the future
+# RG_salary15, RG_MW_dd_current <-- "
+# RG_salary28, RG_MW_fa_current <-- "
+# RG_salary43, RG_MW_fdft_current <-- "
+# RG_salary50, RG_MW_y_current <-- "
+# RG_salary58, RG_MW_rstr_current <-- "
+# RG_ADV_D_RT, NBA_S_P_ADV_DEF_RATING <-- no
+# RG_ADV_O_RT, NBA_S_P_ADV_OFF_RATING <-- no
+# RG_ADV_EFGPCT, NBA_S_P_ADV_EFG_PCT <-- no
+# RG_ADV_TSPCT, NBA_S_P_ADV_TS_PCT <-- no
+# RG_ADV_USGPCT, NBA_S_P_ADV_USG_PCT <-- no
+
 #features excluded: FantasyPoints, Date, Name
 F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent')
 F.FANDUEL = c('Position', 'FPPG', 'GamesPlayed', 'Salary', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
-F.FANDUEL_FAST = c('Position', 'FPPG', 'GamesPlayed', 'Salary', 'Home', 'Team', 'Opponent', 'InjuryIndicator')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
 F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk', 'RG_line',  'RG_movement', 'RG_overunder', 'RG_total', 'RG_contr', 'RG_pownpct', 'RG_rank', 'RG_rankdiff', 'RG_saldiff', 'RG_deviation', 'RG_minutes', 'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20', 'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
 F.RG.ADVANCEDPLAYERSTATS = c('RG_ADV_D_RT', 'RG_ADV_O_RT', 'RG_ADV_POW_AST', 'RG_ADV_POW_BLK', 'RG_ADV_POW_PTS', 'RG_ADV_POW_REB', 'RG_ADV_POW_STL', 'RG_ADV_EFGPCT', 'RG_ADV_TSPCT', 'RG_ADV_USGPCT')
-F.RG.MARKETWATCH = c('RG_MW_dk_current', 'RG_MW_dk_change', 'RG_MW_fa_current',  'RG_MW_fa_change', 'RG_MW_y_current', 'RG_MW_y_change', 'RG_MW_dd_current', 'RG_MW_dd_change', 'RG_MW_rstr_current', 'RG_MW_rstr_change', 'RG_MW_fd_current', 'RG_MW_fd_change', 'RG_MW_fdft_current', 'RG_MW_fdft_change')
+F.RG.MARKETWATCH = c('RG_MW_dk_current', 'RG_MW_dk_change', 'RG_MW_fa_current',  'RG_MW_fa_change', 'RG_MW_y_current', 'RG_MW_y_change', 'RG_MW_dd_current', 'RG_MW_dd_change', 'RG_MW_rstr_current', 'RG_MW_rstr_change', 'RG_MW_fd_change', 'RG_MW_fdft_current', 'RG_MW_fdft_change')
 #F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
 F.RG.OVD.BASIC = c('RG_OVD_AST', 'RG_OVD_STL', 'RG_OVD_FGM', 'RG_OVD_TO', 'RG_OVD_3PM', 'RG_OVD_BLK', 'RG_OVD_FGPCT', 'RG_OVD_REB', 'RG_OVD_PTS', 'RG_OVD_FGA')
 F.RG.OVD.OPP.BASIC = c('RG_OVD_OPP_AST', 'RG_OVD_OPP_STL', 'RG_OVD_OPP_FGM', 'RG_OVD_OPP_TO', 'RG_OVD_OPP_3PM', 'RG_OVD_OPP_BLK', 'RG_OVD_OPP_FGPCT', 'RG_OVD_OPP_REB', 'RG_OVD_OPP_PTS', 'RG_OVD_OPP_FGA')
@@ -31,7 +46,6 @@ F.NBA.SEASON.PLAYER.TRADITIONAL = c('NBA_S_P_TRAD_GP', 'NBA_S_P_TRAD_W', 'NBA_S_
 F.NBA.SEASON.PLAYER.ADVANCED = c('NBA_S_P_ADV_OFF_RATING', 'NBA_S_P_ADV_DEF_RATING', 'NBA_S_P_ADV_NET_RATING', 'NBA_S_P_ADV_AST_PCT', 'NBA_S_P_ADV_AST_TO', 'NBA_S_P_ADV_AST_RATIO', 'NBA_S_P_ADV_OREB_PCT', 'NBA_S_P_ADV_DREB_PCT', 'NBA_S_P_ADV_REB_PCT', 'NBA_S_P_ADV_TM_TOV_PCT', 'NBA_S_P_ADV_EFG_PCT', 'NBA_S_P_ADV_TS_PCT', 'NBA_S_P_ADV_USG_PCT', 'NBA_S_P_ADV_PACE', 'NBA_S_P_ADV_PIE', 'NBA_S_P_ADV_FGM_PG', 'NBA_S_P_ADV_FGA_PG')
 F.NBA.SEASON.PLAYER.DEFENSE = c('NBA_S_P_DEF_DEF_RATING', 'NBA_S_P_DEF_PCT_DREB', 'NBA_S_P_DEF_PCT_STL', 'NBA_S_P_DEF_PCT_BLK', 'NBA_S_P_DEF_OPP_PTS_OFF_TOV', 'NBA_S_P_DEF_OPP_PTS_2ND_CHANCE', 'NBA_S_P_DEF_OPP_PTS_FB', 'NBA_S_P_DEF_OPP_PTS_PAINT', 'NBA_S_P_DEF_DEF_WS')
 F.NBA.PLAYERBIOS = c('NBA_PB_AGE', 'NBA_PB_PLAYER_HEIGHT_INCHES', 'NBA_PB_PLAYER_WEIGHT', 'NBA_PB_COLLEGE', 'NBA_PB_COUNTRY', 'NBA_PB_DRAFT_YEAR', 'NBA_PB_DRAFT_ROUND', 'NBA_PB_DRAFT_NUMBER')
-F.NBA.PLAYERBIOS_NUM = c('NBA_PB_AGE', 'NBA_PB_PLAYER_HEIGHT_INCHES', 'NBA_PB_PLAYER_WEIGHT', 'NBA_PB_DRAFT_YEAR', 'NBA_PB_DRAFT_ROUND', 'NBA_PB_DRAFT_NUMBER')
 F.RG.START = c('RG_START_Order', 'RG_START_Starter', 'RG_START_Status')
 F.NBA.SEASON.TEAM.TRADITIONAL = c('NBA_S_T_TRAD_GP', 'NBA_S_T_TRAD_W', 'NBA_S_T_TRAD_L', 'NBA_S_T_TRAD_W_PCT', 'NBA_S_T_TRAD_MIN', 'NBA_S_T_TRAD_FGM', 'NBA_S_T_TRAD_FGA', 'NBA_S_T_TRAD_FG_PCT', 'NBA_S_T_TRAD_FG3M', 'NBA_S_T_TRAD_FG3A', 'NBA_S_T_TRAD_FG3_PCT', 'NBA_S_T_TRAD_FTM', 'NBA_S_T_TRAD_FTA', 'NBA_S_T_TRAD_FT_PCT', 'NBA_S_T_TRAD_OREB', 'NBA_S_T_TRAD_DREB', 'NBA_S_T_TRAD_REB', 'NBA_S_T_TRAD_AST', 'NBA_S_T_TRAD_TOV', 'NBA_S_T_TRAD_STL', 'NBA_S_T_TRAD_BLK', 'NBA_S_T_TRAD_BLKA', 'NBA_S_T_TRAD_PF', 'NBA_S_T_TRAD_PFD', 'NBA_S_T_TRAD_PTS', 'NBA_S_T_TRAD_PLUS_MINUS')
 F.NBA.SEASON.OPPTEAM.TRADITIONAL = c('NBA_S_OPPT_TRAD_GP', 'NBA_S_OPPT_TRAD_W', 'NBA_S_OPPT_TRAD_L', 'NBA_S_OPPT_TRAD_W_PCT', 'NBA_S_OPPT_TRAD_MIN', 'NBA_S_OPPT_TRAD_FGM', 'NBA_S_OPPT_TRAD_FGA', 'NBA_S_OPPT_TRAD_FG_PCT', 'NBA_S_OPPT_TRAD_FG3M', 'NBA_S_OPPT_TRAD_FG3A', 'NBA_S_OPPT_TRAD_FG3_PCT', 'NBA_S_OPPT_TRAD_FTM', 'NBA_S_OPPT_TRAD_FTA', 'NBA_S_OPPT_TRAD_FT_PCT', 'NBA_S_OPPT_TRAD_OREB', 'NBA_S_OPPT_TRAD_DREB', 'NBA_S_OPPT_TRAD_REB', 'NBA_S_OPPT_TRAD_AST', 'NBA_S_OPPT_TRAD_TOV', 'NBA_S_OPPT_TRAD_STL', 'NBA_S_OPPT_TRAD_BLK', 'NBA_S_OPPT_TRAD_BLKA', 'NBA_S_OPPT_TRAD_PF', 'NBA_S_OPPT_TRAD_PFD', 'NBA_S_OPPT_TRAD_PTS', 'NBA_S_OPPT_TRAD_PLUS_MINUS')
@@ -48,7 +62,7 @@ F.BORUTA.CONFIRMED = c('FPPG', 'Salary', 'InjuryIndicator', 'InjuryDetails',
     'RG_ADV_POW_PTS', 'RG_ADV_POW_REB', 'RG_ADV_POW_STL', 'RG_ADV_USGPCT',
     'RG_START_Order', 'RG_START_Starter', 'RG_MW_dk_current',
     'RG_MW_fa_current', 'RG_MW_y_current', 'RG_MW_dd_current',
-    'RG_MW_dd_change', 'RG_MW_rstr_current', 'RG_MW_fd_current',
+    'RG_MW_dd_change', 'RG_MW_rstr_current',
     'RG_MW_fdft_current', 'NBA_S_P_TRAD_GP', 'NBA_S_P_TRAD_W',
     'NBA_S_P_TRAD_MIN', 'NBA_S_P_TRAD_FGM', 'NBA_S_P_TRAD_FGA',
     'NBA_S_P_TRAD_FG_PCT', 'NBA_S_P_TRAD_FG3A', 'NBA_S_P_TRAD_FTM',
