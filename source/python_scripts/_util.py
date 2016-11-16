@@ -137,3 +137,9 @@ def printArray(arr):
     for a in arr:
         print a
 
+
+#================= misc ===================
+def removePercentSign(string):
+    if string[-1] == '%':
+        return string[:-1]
+    return string

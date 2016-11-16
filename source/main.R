@@ -22,19 +22,14 @@
 #D-Add RG Opponent OffVsDef: 40_rgOppOvD_xgb: 10/27-11/11, 181/194, 266, 118, 6.634613/7.672941, 12.594, 6.741939/6.945327/6.745809, Inf, 7.731329/16.75071, 0.9421539
 #D-Remove country and college: 41_rmCollegeCountry_xgb: 10/27-11/11, 179/194, 266, 111, 6.675282/7.675929, 3.941, 6.802302/6.927807/6.779758, Inf, 7.758061/17.7694, 0.90549
 #D-Remove InjuryDetails: 42_rmInjuryDetails_xgb: 10/27-11/11, 178/194, 266, 111, 6.675282/7.675929, 3.683, 6.802302/6.927807/6.779758, Inf, 7.759193/16.98893, 0.9154588
+#D-Add RG AdvancedPlayerStats: 43_rgAdv_xgb: 10/27-11/11, 188/204, 266, 81, 6.846089/7.690408, 3.323, 6.998297/6.902806/6.969302, Inf, 7.708973/17.87509, 0.9420913
 
-#-verify ovd
-
-#-rg player advanced
 #-whether in RG optimal lineup (RG OptimalLineup)
 #-salary/rank change (RG MarketWatch)
 #-touches (RG Touches)
 #-vegas odds (RG VegasOdds)
 #-nba defense
 #-add back-to-back (RG BackToBack)
-#-remove NBA Opp features
-#-use nba GP instead of FD GamesPlayed
-#-add back college, country, InjuryDetails
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
@@ -43,6 +38,11 @@
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
 #-tune earlystopround in findBestSeedAndNrounds
 #-remove 10/26 and add RG Offense Vs Defense Advanced
+#-remove NBA Opp features
+#-use nba GP instead of FD GamesPlayed
+#-add back college, country, InjuryDetails
+#-remove F.RG.ADVANCEDPLAYERSTATS bc there are too many NAs
+
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -50,8 +50,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '42'
-NAME = 'rmInjuryDetails'
+NUMBER = '43'
+NAME = 'rgAdv'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
@@ -61,7 +61,7 @@ MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
 FEATURES_TO_USE = c(F.FANDUEL_FAST, F.NUMBERFIRE,
-                    F.RG.PP, F.RG.START, F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC,
+                    F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.START, F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC,
                     F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.PLAYERBIOS_NUM, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL,
                     F.MINE)
 

@@ -522,7 +522,51 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
     }
 }
 
+ROTOGRINDER_KNOWN_MISSING = {
+    'cory jefferson', 'louis amundson', 'derrick favors', 'kevon looney', 'tim quarterman', 'alec burks', 'davis bertans', 'nicolas laprovittola', 'damien inglis', 'guillermo hernangomez', 'phil pressey', 'damian jones', 'raul neto', 'livio jean-charles', 'henry sims', 'dahntay jones', 'cameron jones', 'pat connaughton', 'chasson randle', 'grant jerrett', 'mindaugas kuzminskas', 'bryn forbes', 'joel bolomboy', 'maurice ndour', 'john holland',
+    'jake layman', 'javale mcgee', 'j.p. tokoto', 'joel anthony', 'shabazz napier', 'danny green', 'dejounte murray', 'jonathan holmes', 'marshall plumlee', 'patricio garino', 'elliot williams', 'greg stiemsma', 'markel brown', 'kay felder', 'festus ezeli', 'chris johnson',
+    'skal labissiere', 'brian roberts', 'adreian payne', 'tony allen', 'brandan wright', 'darrell arthur', 'nick collison', 'sam dekker', 'jarell martin', 'georges niang', 'tyus jones',
+    'lucas nogueira', 'bismack biyombo', 'caris levert', 'thon maker', 'georgios papagiannis', 'josh huestis', 'christian wood', 'henry ellenson', 'udonis haslem', 'wayne ellington', 'mike miller', 'josh mcroberts', 'kevin seraphin', 'jose calderon',
+    'nerlens noel', 'ivica zubac', 'a.j. hammons', 'timothe luwawu-cabarrot', 'isaiah whitehead', 'devin harris', 'derrick jones jr.', 'josh richardson', 'malachi richardson', 'steve novak', 'quincy acy', 'jordan mickey', 'patrick beverley', 'treveon graham', 'malik beasley', 'chinanu onuaku', 'arinze onuaku', 'demetrius jackson', 'jordan hill', 'james young', 'john jenkins', 'anthony bennett', 'john lucas iii', 'bruno caboclo', 'bobby brown', 'chandler parsons', 'marcus smart', 'kelly olynyk', 'gary harris', 'michael gbinije', 'alan williams', 'jrue holiday', 'randy foye', 'rakeem christmas', 'darrun hilliard', 'dragan bender', 'kyle wiltjer', 'jakob poeltl', 'frank kaminsky', 'fred vanvleet', 'boban marjanovic',
+    'jarnell stokes',
+    'dorian finney-smith', 'aaron harrison', 'tony snell', 'cheick diallo',
+    'roy hibbert', 'james michael mcadoo', 'lance stephenson', 'paul zipser', 'jeremy lamb', 'sheldon mcclellan', 'damjan rudez', 'michael carter-williams', 'alan anderson', 'anderson varejao', 'brice johnson', 'paul pierce', 'reggie bullock', 'rodney stuckey', 'stephen zimmerman jr.', 'daniel ochefu', 'c.j. wilcox', 'patrick mccaw', 'george hill', 'diamond stone',
+    'danuel house', 'derrick williams', 'r.j. hunter', 'boris diaw',
+    'anthony tolliver', 'darren collison', 'metta world peace', 'will barton', 'deron williams', 'leandro barbosa', 'nicolas brussino', 'jae crowder', 'marcelo huertas', 'gerald green', 'al horford', 'miles plumlee', 'thomas robinson', 'dirk nowitzki', 'michael beasley',
+    'tiago splitter', 'cole aldrich', 'ricky rubio', 'rudy gay', 'chris andersen', 'deandre\' bembry', 'jordan farmar', 'mike scott', 'tony parker', 'anthony morrow', 'john wall', 'jerian grant', 'walter tavares', 'taurean prince', 'james jones',
+    'sasha vujacic', 'troy williams', 'chris mccullough', 'greivis vasquez', 'dante cunningham', 'tomas satoransky', 'jeremy lin', 'troy daniels', 'gordon hayward',
+    'omri casspi', 'jordan mcrae', 'juancho hernangomez',
+    'joel embiid', 'brandon bass', 'ron baker', 'jerami grant', 'timofey mozgov', 'nene hilario',
+    'john henson', 'channing frye', 'c.j. watson', 'jeff withey', 'jahlil okafor', 'deyonta davis',
+    'bobby portis',
+    'jason terry', 'lamarcus aldridge', 'montrezl harrell', 'salah mejri',
+    'denzel valentine', 'glenn robinson iii', 'brook lopez', 'rashad vaughn', 'cristiano felicio',
+    'aaron brooks', 'joffrey lauvergne',
+
+    #2016-11-08
+    'kyle korver',
+    'larry nance jr.',
+
+    'alex abrines',
+    'richaun holmes',
+}
+
 TBX_MISSING_PLAYERS = {}
+
+#------------ Misc ------------
+def getNameValue(obj, key, prefix):
+    return getValue(obj, key, prefix).lower()
+def getValue(obj, key, prefix):
+    return obj[prefix + key].strip()
+def setValue(obj, key, prefix, newValue):
+    obj[prefix + key] = newValue
+def removePercentSigns(obj, keys, prefix):
+    for key in keys:
+        obj[prefix + key] = util.removePercentSign(getValue(obj, key, prefix))
+def replaceAllOccurrences(obj, oldValue, newValue):
+    for key in obj:
+        if getValue(obj, key, '') == oldValue:
+            setValue(obj, key, '', newValue)
 
 #------------ Find File ------------
 def findCsvFile(fullPathToDir, dateStr):
@@ -629,6 +673,16 @@ def parseRotoGrinderPlayerProjectionsRow(row, dateStr, prefix):
         else:
             row['RG_salary' + siteId] = float(dataObj['salary'])
     return row['RG_player_name'].strip().lower(), row
+def parseRotoGrinderAdvancedPlayerStatsRow(row, dateStr, prefix):
+    #remove percent signs
+    removePercentSigns(row, ['EFGPCT', 'TSPCT', 'USGPCT', 'POW_AST', 'POW_BLK', 'POW_PTS', 'POW_REB', 'POW_STL'], prefix)
+
+    #replace all occurrences of '&nbsp' with 0
+    replaceAllOccurrences(row, '&nbsp;', 0)
+
+    util.mapSome(int, row, util.addPrefixToArray(['D_RT', 'O_RT'], prefix))
+    util.mapSome(float, row, util.addPrefixToArray(['EFGPCT', 'TSPCT', 'USGPCT', 'POW_AST', 'POW_BLK', 'POW_PTS', 'POW_REB', 'POW_STL'], prefix))
+    return getNameValue(row, 'PLAYER', prefix), row
 def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     #convert each to int/float
     util.mapSome(int, row, util.addPrefixToArray([ 'CRK', 'SFRK', 'SGRK', 'PFRK', 'PGRK'], prefix))
@@ -1115,58 +1169,43 @@ DATA_SOURCES = [
             '51': 'points51',
             '58': 'points58',
         },
-        'knownMissingObj': {
-            'cory jefferson',
-            'louis amundson',
-            'derrick favors',
-            'kevon looney',
-            'tim quarterman',
-            'alec burks',
-            'davis bertans',
-            'nicolas laprovittola',
-            'damien inglis',
-            'guillermo hernangomez',
-            'phil pressey',
-            'damian jones',
-            'raul neto',
-            'livio jean-charles',
-            'henry sims',
-            'dahntay jones',
-            'cameron jones',
-            'pat connaughton',
-            'chasson randle',
-            'grant jerrett',
-            'mindaugas kuzminskas',
-            'bryn forbes',
-            'joel bolomboy',
-            'maurice ndour',
-            'john holland',
-            'jake layman', 'javale mcgee', 'j.p. tokoto', 'joel anthony', 'shabazz napier', 'danny green', 'dejounte murray', 'jonathan holmes', 'marshall plumlee', 'patricio garino', 'elliot williams', 'greg stiemsma', 'markel brown', 'kay felder', 'festus ezeli', 'chris johnson',
-            'skal labissiere', 'brian roberts', 'adreian payne', 'tony allen', 'brandan wright', 'darrell arthur', 'nick collison', 'sam dekker', 'jarell martin', 'georges niang', 'tyus jones',
-            'lucas nogueira', 'bismack biyombo', 'caris levert', 'thon maker', 'georgios papagiannis', 'josh huestis', 'christian wood', 'henry ellenson', 'udonis haslem', 'wayne ellington', 'mike miller', 'josh mcroberts', 'kevin seraphin', 'jose calderon',
-            'nerlens noel', 'ivica zubac', 'a.j. hammons', 'timothe luwawu-cabarrot', 'isaiah whitehead', 'devin harris', 'derrick jones jr.', 'josh richardson', 'malachi richardson', 'steve novak', 'quincy acy', 'jordan mickey', 'patrick beverley', 'treveon graham', 'malik beasley', 'chinanu onuaku', 'arinze onuaku', 'demetrius jackson', 'jordan hill', 'james young', 'john jenkins', 'anthony bennett', 'john lucas iii', 'bruno caboclo', 'bobby brown', 'chandler parsons', 'marcus smart', 'kelly olynyk', 'gary harris', 'michael gbinije', 'alan williams', 'jrue holiday', 'randy foye', 'rakeem christmas', 'darrun hilliard', 'dragan bender', 'kyle wiltjer', 'jakob poeltl', 'frank kaminsky', 'fred vanvleet', 'boban marjanovic',
-            'jarnell stokes',
-            'dorian finney-smith', 'aaron harrison', 'tony snell', 'cheick diallo',
-            'roy hibbert', 'james michael mcadoo', 'lance stephenson', 'paul zipser', 'jeremy lamb', 'sheldon mcclellan', 'damjan rudez', 'michael carter-williams', 'alan anderson', 'anderson varejao', 'brice johnson', 'paul pierce', 'reggie bullock', 'rodney stuckey', 'stephen zimmerman jr.', 'daniel ochefu', 'c.j. wilcox', 'patrick mccaw', 'george hill', 'diamond stone',
-            'danuel house', 'derrick williams', 'r.j. hunter', 'boris diaw',
-            'anthony tolliver', 'darren collison', 'metta world peace', 'will barton', 'deron williams', 'leandro barbosa', 'nicolas brussino', 'jae crowder', 'marcelo huertas', 'gerald green', 'al horford', 'miles plumlee', 'thomas robinson', 'dirk nowitzki', 'michael beasley',
-            'tiago splitter', 'cole aldrich', 'ricky rubio', 'rudy gay', 'chris andersen', 'deandre\' bembry', 'jordan farmar', 'mike scott', 'tony parker', 'anthony morrow', 'john wall', 'jerian grant', 'walter tavares', 'taurean prince', 'james jones',
-            'sasha vujacic', 'troy williams', 'chris mccullough', 'greivis vasquez', 'dante cunningham', 'tomas satoransky', 'jeremy lin', 'troy daniels', 'gordon hayward',
-            'omri casspi', 'jordan mcrae', 'juancho hernangomez',
-            'joel embiid', 'brandon bass', 'ron baker', 'jerami grant', 'timofey mozgov', 'nene hilario',
-            'john henson', 'channing frye', 'c.j. watson', 'jeff withey', 'jahlil okafor', 'deyonta davis',
-            'bobby portis',
-            'jason terry', 'lamarcus aldridge', 'montrezl harrell', 'salah mejri',
-            'denzel valentine', 'glenn robinson iii', 'brook lopez', 'rashad vaughn', 'cristiano felicio',
-            'aaron brooks', 'joffrey lauvergne',
-
-            #2016-11-08
-            'kyle korver',
-            'larry nance jr.',
-        },
+        'knownMissingObj': ROTOGRINDER_KNOWN_MISSING,
         'loadFileFunction': loadJsonFile,
         'parseRowFunction': parseRotoGrinderPlayerProjectionsRow,
         'prefix': 'RG_',
+    },
+    {
+        'name': 'RotoGrinderAdvancedPlayerStats',
+        'features': [
+            'RG_ADV_D_RT',
+            'RG_ADV_O_RT',
+            'RG_ADV_POW_AST',
+            'RG_ADV_POW_BLK',
+            'RG_ADV_POW_PTS',
+            'RG_ADV_POW_REB',
+            'RG_ADV_POW_STL',
+            'RG_ADV_EFGPCT',
+            'RG_ADV_TSPCT',
+            'RG_ADV_USGPCT',
+        ],
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'AdvancedPlayerStats'),
+        'keyRenameMap': {
+            'USG%': 'USGPCT',
+            'TS%': 'TSPCT',
+            'EFG%': 'EFGPCT',
+            'D-RT': 'D_RT',
+            'O-RT': 'O_RT',
+            'POW-AST': 'POW_AST',
+            'POW-BLK': 'POW_BLK',
+            'POW-PTS': 'POW_PTS',
+            'POW-REB': 'POW_REB',
+            'POW-STL': 'POW_STL',
+        },
+        'knownMissingObj': ROTOGRINDER_KNOWN_MISSING,
+        'loadFileFunction': loadJsonFile,
+        'parseRowFunction': parseRotoGrinderAdvancedPlayerStatsRow,
+        'prefix': 'RG_ADV_',
     },
     {
         'name': 'RotoGrinderDefenseVsPositionCheatSheet',
@@ -1465,8 +1504,8 @@ DATA_SOURCES = [
     #},
 ]
 
-#tbx
 '''
+#tbx
 DATA_SOURCES = [
     {
         'name': 'FanDuel',
@@ -1538,9 +1577,9 @@ DATA_SOURCES = [
         },
         'parseRowFunction': parseRotoGuruRow,
     },
+
 ]
 '''
-
 #load fanduel data
 data = None
 

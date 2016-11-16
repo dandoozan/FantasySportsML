@@ -51,6 +51,14 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
+  #----------RG.ADVANCEDPLAYERSTATS-----------
+  #They all have 1454 NAs, which is a lot.  I guess set them all to 0, but that
+  #is quite a lot of data that RG doesn't have on these players (about 40% of nrows), so
+  #maybe it'd be better to remove RG.ADVANCEDPLAYERSTATS altogether
+  for (colName in F.RG.ADVANCEDPLAYERSTATS) {
+    data[is.na(data[[colName]]), colName] = 0
+  }
+
   #----------RG.START-----------
   #The NAs in RG.START mean that the player did not play that day,
   #so set Starter=0, Order=20 (max order=15), and Status='B' (bc most are 'B')
