@@ -21,6 +21,7 @@
 #D-Add RG OffVsDef: 39_rgOvD_xgb: 10/27-11/11, 171/184, 266, 119, 6.635796/7.662486, 12.482, 6.752482/6.958521/6.746832, Inf, 7.760703/17.182, 0.9426347
 #D-Add RG Opponent OffVsDef: 40_rgOppOvD_xgb: 10/27-11/11, 181/194, 266, 118, 6.634613/7.672941, 12.594, 6.741939/6.945327/6.745809, Inf, 7.731329/16.75071, 0.9421539
 #D-Remove country and college: 41_rmCollegeCountry_xgb: 10/27-11/11, 179/194, 266, 111, 6.675282/7.675929, 3.941, 6.802302/6.927807/6.779758, Inf, 7.758061/17.7694, 0.90549
+#D-Remove InjuryDetails: 42_rmInjuryDetails_xgb: 10/27-11/11, 178/194, 266, 111, 6.675282/7.675929, 3.683, 6.802302/6.927807/6.779758, Inf, 7.759193/16.98893, 0.9154588
 
 #-verify ovd
 
@@ -33,7 +34,7 @@
 #-add back-to-back (RG BackToBack)
 #-remove NBA Opp features
 #-use nba GP instead of FD GamesPlayed
-#-add back college and country
+#-add back college, country, InjuryDetails
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
@@ -49,8 +50,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '41'
-NAME = 'rmCollegeCountry'
+NUMBER = '42'
+NAME = 'rmInjuryDetails'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
@@ -59,7 +60,7 @@ ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE,
+FEATURES_TO_USE = c(F.FANDUEL_FAST, F.NUMBERFIRE,
                     F.RG.PP, F.RG.START, F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC,
                     F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.PLAYERBIOS_NUM, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL,
                     F.MINE)
