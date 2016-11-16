@@ -559,7 +559,7 @@ def getNameValue(obj, key, prefix=''):
     return getValue(obj, key, prefix).lower()
 def getValue(obj, key, prefix=''):
     return obj[prefix + key].strip()
-def setValue(obj, key, prefix, newValue):
+def setValue(obj, key, newValue, prefix=''):
     obj[prefix + key] = newValue
 def removePercentSigns(obj, keys, prefix):
     for key in keys:
@@ -567,7 +567,7 @@ def removePercentSigns(obj, keys, prefix):
 def replaceAllOccurrences(obj, oldValue, newValue):
     for key in obj:
         if getValue(obj, key, '') == oldValue:
-            setValue(obj, key, '', newValue)
+            setValue(obj, key, newValue)
 
 #------------ Find File ------------
 def findCsvFile(fullPathToDir, dateStr):
@@ -607,22 +607,28 @@ def parseFanDuelRow(row, dateStr, prefix):
     if getValue(row, 'InjuryDetails') == '':
         row['InjuryDetails'] = 'None'
 
-    playerName = getNameValue(row, 'Name')
-    return playerName, row
+    #lowercase injury values
+    setValue(row, 'InjuryIndicator', getValue(row, 'InjuryIndicator').lower())
+    setValue(row, 'InjuryDetails', getValue(row, 'InjuryDetails').lower())
+
+    return getNameValue(row, 'Name'), row
 def parseFanDuelJsonRow(row, dateStr, prefix):
-    #D-add enddate
-    #D-add strip to values
-    #-replace Home with RotoGuru Home
+    #-lowercase injury values
+    #'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
 
     #add Name, which is a join of firstname and lastname
-    row['Name'] = ' '.join(getValue(row, 'first_name'), getValue(row, 'last_name'))
+    row['Name'] = joinFirstLastNames(row, 'first_name', 'last_name')
 
     #add date to row
     row['Date'] = dateStr
 
-    #add IsHome
-    #row['Home'] = 'Home' if (row['Game'].split('@')[1] == row['Team']) else 'Away'
+    #set nulls to 'None' in injury cols
+    if row['InjuryIndicator'] == None:
+        row['InjuryIndicator'] = 'None'
+    if row['InjuryDetails'] == None:
+        row['InjuryDetails'] = 'None'
 
+    return getNameValue(row, 'Name'), row
 def parseRotoGuruRow(row, dateStr, prefix):
     #convert to float just to make sure all values can be parsed to floats
     row['FantasyPoints'] = float(row['FantasyPoints'].strip())
@@ -711,8 +717,8 @@ def parseRotoGrinderMarketWatchRow(row, dateStr, prefix):
         else:
             change = 0
             current = 0
-        setValue(newRow, site + '_change', prefix, change)
-        setValue(newRow, site + '_current', prefix, current)
+        setValue(newRow, site + '_change', change, prefix)
+        setValue(newRow, site + '_current', current, prefix)
     return getNameValue(row, 'player'), newRow
 def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     #convert each to int/float
@@ -751,7 +757,7 @@ def parseRotoGrinderBackToBackRow(row, dateStr, prefix):
     if situation == '':
         situation = 'None'
 
-    setValue(row, 'Situation', prefix, situation)
+    setValue(row, 'Situation', situation, prefix)
 
     return getNameValue(row, 'Team', prefix), row
 def parseNbaRow(row, dateStr, prefix):
@@ -779,7 +785,6 @@ def loadCsvFile(fullPathFilename, keyRenameMap, prefix, delimiter):
 def loadJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
     jsonData = util.loadJsonFile(fullPathFilename)
 
-    #append prefix to all keys
     for item in jsonData:
         #first, rename the keys
         if keyRenameMap:
@@ -791,7 +796,41 @@ def loadJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
 
     return jsonData
 def loadFanDuelJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
-    return util.loadJsonFile(fullPathFilename)['players']
+    #add home or away indicator to each player's obj
+    jsonData = util.loadJsonFile(fullPathFilename)
+    players = jsonData['players']
+    fixtures = jsonData['fixtures']
+    teams = jsonData['teams']
+    for player in players:
+        fixtureId = player['fixture']['_members'][0]
+        teamId = player['team']['_members'][0]
+        #find home and away teams
+        for fixture in fixtures:
+            if fixture['id'] == fixtureId:
+                homeTeamId = fixture['home_team']['team']['_members'][0]
+                awayTeamId = fixture['away_team']['team']['_members'][0]
+                isHome = teamId == homeTeamId
+                break
+        #find team full name
+        for team in teams:
+            if team['id'] == teamId:
+                teamName = team['full_name']
+                break
+        #find opponent team full name
+        opponentTeamId = awayTeamId if isHome else homeTeamId
+        for team in teams:
+            if team['id'] == opponentTeamId:
+                opponentTeamName = team['full_name']
+                break
+
+        #set team, opponent, and home
+        player['Team'] = teamName.strip()
+        player['Opponent'] = opponentTeamName.strip()
+        player['Home'] = 'Home' if isHome else 'Away'
+
+        util.renameKeys(keyRenameMap, player)
+
+    return players
 def loadNbaJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
     rows = []
     jsonData = util.loadJsonFile(fullPathFilename)
@@ -1022,7 +1061,16 @@ DATA_SOURCES = [
     #{
     #    'name': 'FanDuel_fromPlayers',
     #    'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
+    #    'findFileFunction': findJsonFile,
     #    'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players'),
+    #    'keyRenameMap': {
+    #        'position': 'Position',
+    #        'fppg': 'FPPG',
+    #        'played': 'GamesPlayed',
+    #        'salary': 'Salary',
+    #        'injury_status': 'InjuryIndicator',
+    #        'injury_details': 'InjuryDetails',
+    #    },
     #    'loadFileFunction': loadFanDuelJsonFile,
     #    'parseRowFunction': parseFanDuelJsonRow,
     #    'startDate': util.getDate(2016, 11, 8),

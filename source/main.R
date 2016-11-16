@@ -57,7 +57,7 @@ PROD_RUN = F
 NUMBER = '51'
 NAME = 'rmFdCurr'
 
-PLOT = 'multiscores' #fi, scores, cv
+PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
