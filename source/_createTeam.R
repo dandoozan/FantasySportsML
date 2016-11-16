@@ -1,30 +1,3 @@
-#TBX:
-#Baseteam:
-# C, A.J. Hammons, 3500, 0.92
-# PF, Amir Johnson, 4400, 26.07
-# PF, Anthony Tolliver, 3500, 0.61
-# PG, Cory Joseph, 3500, 13.6
-# PG, D'Angelo Russell, 6100, 29.2
-# SF, Brandon Ingram, 3700, 16.36
-# SF, Bruno Caboclo, 3500, 2.05
-# SG, Arron Afflalo, 3600, 14.71
-# SG, Avery Bradley, 6800, 26.54
-# Total Amount spent: 38600
-# Total Fantasy Points: 130.08
-
-#Finalteam:
-# SG, Giannis Antetokounmpo, 9900, 44.12
-# SF, Harrison Barnes, 5100, 24.92
-# PF, Dwight Powell, 4100, 24.98
-# PG, Jameer Nelson, 4200, 22.3
-# SF, Rudy Gay, 7300, 33.93
-# PG, Isaiah Thomas, 8100, 39.9
-# PF, Nikola Jokic, 5700, 27.78
-# SG, Devin Booker, 5900, 30.15
-# C, DeMarcus Cousins, 9700, 40.1
-# Total Amount spent: 60000
-# Total Fantasy Points: 288.18
-
 SALARY_CAP = 60000
 
 createFirstAvailableTeam = function(allPlayers) {
@@ -302,8 +275,13 @@ createTeam_HillClimbing = function(allPlayers, maxCov=Inf, maxNumTries=1, verbos
   while (numTriesWithoutFindingBetterTeam < maxNumTries) {
     set.seed(sample(1:1000, 1))
     allPlayers = shuffle(allPlayers)
-    initalTeam = createFirstAvailableTeam(allPlayers)
-    team = climbHill(initalTeam, allPlayers, verbose)
+    initialTeam = createFirstAvailableTeam(allPlayers)
+    while (computeTeamFP(initialTeam) > SALARY_CAP) {
+      cat('Wow, I got a team that was > SALARY_CAP randomly\n')
+      allPlayers = shuffle(allPlayers)
+      initialTeam = createFirstAvailableTeam(allPlayers)
+    }
+    team = climbHill(initialTeam, allPlayers, verbose)
     teamFP = computeTeamFP(team)
     #cat('numTriesWithoutFindingBetterTeam=', numTriesWithoutFindingBetterTeam, ', fp=', teamFP,'\n')
     if (teamFP > bestTeamFP) {
