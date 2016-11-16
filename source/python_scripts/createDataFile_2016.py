@@ -688,7 +688,8 @@ def parseRotoGrinderMarketWatchRow(row, dateStr, prefix):
     #add all values to row
     sites = ['dd', 'dk', 'fa', 'fd', 'fdft', 'rstr', 'y']
     for site in sites:
-        siteObj = util.getObjValue(row, site)
+        #handle y! differently because it has the exclamation
+        siteObj = util.getObjValue(row, 'y!') if site == 'y' else util.getObjValue(row, site)
         if siteObj:
             change = int(siteObj['change'])
             current = int(siteObj['current'])

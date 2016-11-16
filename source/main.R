@@ -23,15 +23,12 @@
 #D-Remove country and college: 41_rmCollegeCountry_xgb: 10/27-11/11, 179/194, 266, 111, 6.675282/7.675929, 3.941, 6.802302/6.927807/6.779758, Inf, 7.758061/17.7694, 0.90549
 #D-Remove InjuryDetails: 42_rmInjuryDetails_xgb: 10/27-11/11, 178/194, 266, 111, 6.675282/7.675929, 3.683, 6.802302/6.927807/6.779758, Inf, 7.759193/16.98893, 0.9154588
 #D-Add RG AdvancedPlayerStats: 43_rgAdv_xgb: 10/27-11/11, 188/204, 266, 81, 6.846089/7.690408, 3.323, 6.998297/6.902806/6.969302, Inf, 7.708973/17.87509, 0.9420913
-#-Add RG MarketWatch: 44_rgMW_xgb: 10/27-11/11, 202/218, 266, 102, 6.678373/7.69498, 3.826, 6.848475/6.951411/6.823288, Inf, 7.751412/18.46984, 0.9252272
+#D-Add RG MarketWatch: 44_rgMW_xgb: 10/27-11/11, 202/218, 266, 102, 6.678373/7.69498, 3.826, 6.848475/6.951411/6.823288, Inf, 7.751412/18.46984, 0.9252272
+#D-Fix MarketWatch Yahoo: 45_fixMW_xgb: 10/27-11/11, 202/218, 266, 102, 6.676079/7.70062, 3.817, 6.819313/6.928745/6.825204, Inf, 7.744314/19.18012, 0.9351234
 
-#-verify marketwatch
-
-#-salary/rank change (RG MarketWatch)
-#-touches (RG Touches)
-#-vegas odds (RG VegasOdds)
 #-nba GP
 #-nba defense
+#-vegas odds (RG VegasOdds)
 #-add back-to-back (RG BackToBack)
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
@@ -54,8 +51,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '44'
-NAME = 'rgMW'
+NUMBER = '45'
+NAME = 'fixMW'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
