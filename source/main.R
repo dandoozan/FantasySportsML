@@ -29,6 +29,7 @@
 #D-Add NBA Defense: 47_nbaDef_xgb: 10/27-11/11, 212/228, 266, 97, 6.711039/7.705174, 4.089, 6.865964/6.928642/6.848675, Inf, 7.749246/17.77589, 0.9192925
 #D-Add BackToBack: 48_b2b_xgb: 10/27-11/11, 214/230, 266, 95, 6.725143/7.702265, 3.953, 6.890779/6.930635/6.858175, Inf, 7.755357/17.19484, 0.9140041
 #D-Use boruta confirmed features: 49_boruta_xgb: 10/27-11/11, 95/230, 266, 79, 6.90763/7.720568, 1.436, 7.084831/6.903145/7.027715, Inf, 7.728519/16.21745, 0.9611085
+#D-Add boruta tentative: 50_borutaTntv_xgb: 10/27-11/11, 123/230, 266, 105, 6.719698/7.685369, 2.258, 6.867719/6.948294/6.86174, Inf, 7.771497/16.60619, 0.9041602
 #-retune xgb
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
@@ -51,17 +52,17 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '49'
-NAME = 'boruta'
+NUMBER = '50'
+NAME = 'borutaTntv'
 
-PLOT = 'scores' #fi, scores, cv
+PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = F.BORUTA.CONFIRMED
+FEATURES_TO_USE = c(F.BORUTA.CONFIRMED, F.BORUTA.TENTATIVE)
 
 #================= Functions =================
 
