@@ -28,6 +28,8 @@
 #D-Add nba GP: 46_nbaGP_xgb: 10/27-11/11, 203/219, 266, 106, 6.653886/7.691137, 4.222, 6.794239/6.931079/6.805209, Inf, 7.748192/19.2912, 0.9092166
 #D-Add NBA Defense: 47_nbaDef_xgb: 10/27-11/11, 212/228, 266, 97, 6.711039/7.705174, 4.089, 6.865964/6.928642/6.848675, Inf, 7.749246/17.77589, 0.9192925
 #D-Add BackToBack: 48_b2b_xgb: 10/27-11/11, 214/230, 266, 95, 6.725143/7.702265, 3.953, 6.890779/6.930635/6.858175, Inf, 7.755357/17.19484, 0.9140041
+#D-Use boruta confirmed features: 49_boruta_xgb: 10/27-11/11, 95/230, 266, 79, 6.90763/7.720568, 1.436, 7.084831/6.903145/7.027715, Inf, 7.728519/16.21745, 0.9611085
+#-retune xgb
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
@@ -49,8 +51,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '48'
-NAME = 'b2b'
+NUMBER = '49'
+NAME = 'boruta'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
@@ -59,12 +61,7 @@ ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL_FAST, F.NUMBERFIRE,
-                    F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.MARKETWATCH, F.RG.START,
-                    F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC, F.RG.BACK2BACK, F.RG.BACK2BACK.OPP,
-                    F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.SEASON.PLAYER.DEFENSE, F.NBA.PLAYERBIOS_NUM,
-                    F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL,
-                    F.MINE)
+FEATURES_TO_USE = F.BORUTA.CONFIRMED
 
 #================= Functions =================
 
