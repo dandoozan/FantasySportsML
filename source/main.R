@@ -19,8 +19,8 @@
 #D-Add NBA Opp team features: 37_opp_xgb: 10/27-11/11, 144/157, 266, 101, 6.729758/7.671829, 7.292, 6.862323/6.924714/6.826556, Inf, 7.717891/18.05657, 0.9195285
 #D-Add nba advanced: 38_nbaAdv_xgb: 10/27-11/11, 161/174, 266, 113, 6.664812/7.671916, 8.479, 6.804168/6.889426/6.781096, Inf, 7.738682/18.0611, 0.924935
 #D-Add RG OffVsDef: 39_rgOvD_xgb: 10/27-11/11, 171/184, 266, 119, 6.635796/7.662486, 12.482, 6.752482/6.958521/6.746832, Inf, 7.760703/17.182, 0.9426347
-#-Add RG Opponent OffVsDef: 40_rgOppOvD_xgb: 10/27-11/11, 181/194, 266, 118, 6.634613/7.672941, 12.594, 6.741939/6.945327/6.745809, Inf, 7.731329/16.75071, 0.9421539
-#-Remove country and college to make it faster:
+#D-Add RG Opponent OffVsDef: 40_rgOppOvD_xgb: 10/27-11/11, 181/194, 266, 118, 6.634613/7.672941, 12.594, 6.741939/6.945327/6.745809, Inf, 7.731329/16.75071, 0.9421539
+#D-Remove country and college: 41_rmCollegeCountry_xgb: 10/27-11/11, 179/194, 266, 111, 6.675282/7.675929, 3.941, 6.802302/6.927807/6.779758, Inf, 7.758061/17.7694, 0.90549
 
 #-verify ovd
 
@@ -33,6 +33,7 @@
 #-add back-to-back (RG BackToBack)
 #-remove NBA Opp features
 #-use nba GP instead of FD GamesPlayed
+#-add back college and country
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
@@ -48,8 +49,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '40'
-NAME = 'rgOppOvD'
+NUMBER = '41'
+NAME = 'rmCollegeCountry'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
@@ -60,7 +61,7 @@ FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
 FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE,
                     F.RG.PP, F.RG.START, F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC,
-                    F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.PLAYERBIOS, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL,
+                    F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.PLAYERBIOS_NUM, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL,
                     F.MINE)
 
 #================= Functions =================
