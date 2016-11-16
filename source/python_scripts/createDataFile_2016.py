@@ -657,8 +657,12 @@ def parseRotoGrinderOffenseVsDefenseBasicRow(row, dateStr, prefix):
     row[prefix + 'FGPCT'] = fgPct[:-1] if fgPct[-1] == '%' else fgPct
 
     #make sure all values are floats
-    util.mapSome(float, row, util.addPrefixToArray(['AST', 'STL', 'FGM', 'TO', '3PM', 'BLK', 'FGPCT', 'REB', 'PTS', 'FGA' ], prefix))
+    util.mapSome(float, row, util.addPrefixToArray(['AST', 'STL', 'FGM', 'TO', '3PM', 'BLK', 'FGPCT', 'REB', 'PTS', 'FGA'], prefix))
     return row[prefix + 'OFFENSE'].strip().lower(), row
+#def parseRotoGrinderOffenseVsDefenseAdvancedRow(row, dateStr, prefix):
+#    #make sure all values are floats
+#    util.mapSome(float, row, util.addPrefixToArray(['OFFRTG', 'PPG', 'PPG-A', 'AVGRTG', 'DEFRTG', 'PACE', 'PTS'], prefix))
+#    return row[prefix + 'OFFENSE'].strip().lower(), row
 
 #------------ Handle Duplicates ------------
 def handleRotoGrinderDuplicates(oldMatch, newMatch):
@@ -1408,6 +1412,49 @@ DATA_SOURCES = [
         'parseRowFunction': parseRotoGrinderOffenseVsDefenseBasicRow,
         'prefix': 'RG_OVD_',
     },
+    {
+        'name': 'RotoGrinderOffenseVsDefenseBasicOpponent',
+        'features': [
+            'RG_OVD_OPP_AST',
+            'RG_OVD_OPP_STL',
+            'RG_OVD_OPP_FGM',
+            'RG_OVD_OPP_TO',
+            'RG_OVD_OPP_3PM',
+            'RG_OVD_OPP_BLK',
+            'RG_OVD_OPP_FGPCT',
+            'RG_OVD_OPP_REB',
+            'RG_OVD_OPP_PTS',
+            'RG_OVD_OPP_FGA',
+        ],
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'OffenseVsDefenseBasic'),
+        'isOpp': True,
+        'isTeam': True,
+        'keyRenameMap': {
+            'FG%': 'FGPCT',
+        },
+        'loadFileFunction': loadJsonFile,
+        'parseRowFunction': parseRotoGrinderOffenseVsDefenseBasicRow,
+        'prefix': 'RG_OVD_OPP_',
+    },
+    #{
+    #    'name': 'RotoGrinderOffenseVsDefenseAdvanced',
+    #    'features': [
+    #        'RG_OVD_ADV_OFFRTG',
+    #        'RG_OVD_ADV_PPG',
+    #        'RG_OVD_ADV_PPG-A',
+    #        'RG_OVD_ADV_AVGRTG',
+    #        'RG_OVD_ADV_DEFRTG',
+    #        'RG_OVD_ADV_PACE',
+    #        'RG_OVD_ADV_PTS',
+    #    ],
+    #    'findFileFunction': findJsonFile,
+    #    'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'OffenseVsDefenseAdvanced'),
+    #    'isTeam': True,
+    #    'loadFileFunction': loadJsonFile,
+    #    'parseRowFunction': parseRotoGrinderOffenseVsDefenseAdvancedRow,
+    #    'prefix': 'RG_OVD_ADV_',
+    #},
 
 
     #{

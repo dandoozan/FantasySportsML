@@ -51,6 +51,15 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
+  #----------RG.START-----------
+  #The NAs in RG.START mean that the player did not play that day,
+  #so set Starter=0, Order=20 (max order=15), and Status='B' (bc most are 'B')
+  #There are 451 NAs in all 3 (they all have the same NAs)
+  data[is.na(data$RG_START_Order), 'RG_START_Order'] = 20
+  data[is.na(data$RG_START_Starter), 'RG_START_Starter'] = 0
+  data[is.na(data$RG_START_Status), 'RG_START_Status'] = 'B'
+  data$RG_START_Status = factor(data$RG_START_Status)
+
   #----------F.NBA.SEASON.PLAYER.TRADITIONAL and F.NBA.SEASON.PLAYER.ADVANCED-----------
   #Set all NBA col NAs to 0
   for (colName in F.NBA.SEASON.PLAYER.TRADITIONAL) {
@@ -84,16 +93,6 @@ imputeMissingValues = function(data) {
   data$NBA_PB_DRAFT_ROUND = as.numeric(data$NBA_PB_DRAFT_ROUND)
   data$NBA_PB_DRAFT_NUMBER = as.numeric(data$NBA_PB_DRAFT_NUMBER)
 
-
-  #----------RG.START-----------
-  #The NAs in RG.START mean that the player did not play that day,
-  #so set Starter=0, Order=20 (max order=15), and Status='B' (bc most are 'B')
-  #There are 451 NAs in all 3 (they all have the same NAs)
-  data[is.na(data$RG_START_Order), 'RG_START_Order'] = 20
-  data[is.na(data$RG_START_Starter), 'RG_START_Starter'] = 0
-  data[is.na(data$RG_START_Status), 'RG_START_Status'] = 'B'
-  data$RG_START_Status = factor(data$RG_START_Status)
-
   #----------NBA.SEASON.TEAM.TRADITIONAL and NBA.SEASON.OPPTEAM.TRADITIONAL-----------
   #The NAs are for team's first games (because I look for the previous day's
   #data, but since there is none, then the NBA_TEAM_[X] features are NA), so set
@@ -104,8 +103,6 @@ imputeMissingValues = function(data) {
   for (colName in F.NBA.SEASON.OPPTEAM.TRADITIONAL) {
     data[is.na(data[[colName]]), colName] = 0
   }
-
-
 
   return(data)
 }

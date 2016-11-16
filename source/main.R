@@ -18,10 +18,13 @@
 #D-Add NBA Team features: 36_team_xgb: 10/27-11/11, 118/131, 266, 102, 6.750822/7.664908, 6.363, 6.870544/6.913532/6.871711, Inf, 7.716599/17.70431, 0.9262162
 #D-Add NBA Opp team features: 37_opp_xgb: 10/27-11/11, 144/157, 266, 101, 6.729758/7.671829, 7.292, 6.862323/6.924714/6.826556, Inf, 7.717891/18.05657, 0.9195285
 #D-Add nba advanced: 38_nbaAdv_xgb: 10/27-11/11, 161/174, 266, 113, 6.664812/7.671916, 8.479, 6.804168/6.889426/6.781096, Inf, 7.738682/18.0611, 0.924935
-#D-Add RG off vs def: 39_rgOvD_xgb: 10/27-11/11, 171/184, 266, 119, 6.635796/7.662486, 12.482, 6.752482/6.958521/6.746832, Inf, 7.760703/17.182, 0.9426347
+#D-Add RG OffVsDef: 39_rgOvD_xgb: 10/27-11/11, 171/184, 266, 119, 6.635796/7.662486, 12.482, 6.752482/6.958521/6.746832, Inf, 7.760703/17.182, 0.9426347
+#-Add RG Opponent OffVsDef: 40_rgOppOvD_xgb: 10/27-11/11, 181/194, 266, 118, 6.634613/7.672941, 12.594, 6.741939/6.945327/6.745809, Inf, 7.731329/16.75071, 0.9421539
+#-Remove country and college to make it faster:
 
-#-rg advanced
-#-offense/defense rating (RG OffenseVsDefense)
+#-verify ovd
+
+#-rg player advanced
 #-whether in RG optimal lineup (RG OptimalLineup)
 #-salary/rank change (RG MarketWatch)
 #-touches (RG Touches)
@@ -29,6 +32,7 @@
 #-nba defense
 #-add back-to-back (RG BackToBack)
 #-remove NBA Opp features
+#-use nba GP instead of FD GamesPlayed
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
@@ -36,6 +40,7 @@
 #-tune again using xgbcv as metric to watch
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
 #-tune earlystopround in findBestSeedAndNrounds
+#-remove 10/26 and add RG Offense Vs Defense Advanced
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -43,17 +48,18 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '39'
-NAME = 'rgOvD'
+NUMBER = '40'
+NAME = 'rgOppOvD'
 
-PLOT = 'multiscores' #fi, scores, cv
+PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
-FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.START, F.RG.OVD.BASIC,
+FEATURES_TO_USE = c(F.FANDUEL, F.NUMBERFIRE,
+                    F.RG.PP, F.RG.START, F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC,
                     F.NBA.SEASON.PLAYER.TRADITIONAL, F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.PLAYERBIOS, F.NBA.SEASON.TEAM.TRADITIONAL, F.NBA.SEASON.OPPTEAM.TRADITIONAL,
                     F.MINE)
 
@@ -68,10 +74,14 @@ createTeamPrediction = function(train, test, yName, xNames) {
 
 #================= Main =================
 
+
 data = setup(ALG, FEATURES_TO_USE, END_DATE, PROD_RUN, FILENAME)
 hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)
 baseModel = createBaseModel(data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
-teamStats = if(MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, PROD_RUN) else list()
+
+timeElapsed = system.time(teamStats <- if(MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, PROD_RUN) else list())
+cat('Time taken to make teams: ', timeElapsed[3], '\n', sep='')
+
 makePlots(PLOT, data, Y_NAME, FEATURES_TO_USE, FILENAME, teamStats, PROD_RUN)
 
 cat('Done!\n')
