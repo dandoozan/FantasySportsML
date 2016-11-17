@@ -33,10 +33,9 @@
 #D-Remove RG_MW_fd_current: 51_rmFdCurr_xgb: 10/27-11/11, 122/229, 266, 93, 6.789944/7.691975, 2.113, 6.929501/6.911408/6.903851, Inf, 7.756041/17.04462, 0.9323927
 #D-Use auto-downloaded FD data: 52_autoFD_xgb: 10/27-11/11, 122/229, 266, 108, 6.703789/7.685564, 2.383, 6.832482/6.924322/6.824815, Inf, 7.784987/19.37958, 0.9208128
 #D-add dates (up to 11/14): 53_nov14_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.596, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
-#-make better plots: 54_plot_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.522, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
-#-Tune like kaggler: 55_tunek_xgb: 10/27-11/14, 122/229, 266, 50, 7.050717/7.725374, 0.514, 7.009162/7.895815/7.180566, Inf, 7.803517/19.19325, 0.9434116
+#D-make better plots: 54_plot_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.522, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
+#D-Tune like kaggler: 55_tunek_xgb: 10/27-11/14, 122/229, 266, 50, 7.050717/7.725374, 0.514, 7.009162/7.895815/7.180566, Inf, 7.803517/19.19325, 0.9434116
 
-#-retune xgb
 
 #-use combination of MAX_COV, floor or ceil to get good prediction
 #-use curated features
@@ -57,11 +56,11 @@ setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '55'
 NAME = 'tunek'
 
-PLOT = 'cv' #fi, scores, cv
+PLOT = '' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
@@ -80,7 +79,6 @@ createTeamPrediction = function(train, test, yName, xNames) {
 }
 
 #================= Main =================
-
 
 data = setup(ALG, FEATURES_TO_USE, END_DATE, PROD_RUN, FILENAME)
 hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)

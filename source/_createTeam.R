@@ -295,3 +295,32 @@ createTeam_HillClimbing = function(allPlayers, maxCov=Inf, maxNumTries=1, verbos
   }
   return(bestTeam)
 }
+
+testClimbHill = function() {
+  data = getData()
+  playersForDate = data[data$Date == '2016-11-11',]
+
+  for (i in 1:1) {
+    cat('Run ', i, '... ', sep='')
+    set.seed(i)
+    shuffledPlayers = shuffle(playersForDate)
+    initialTeam = createFirstAvailableTeam(shuffledPlayers)
+
+    #cat('    Initial team: salary=', computeAmountSpent(initialTeam), ', fp=', computeTeamFP(initialTeam),'\n', sep='')
+
+    set.seed(i)
+    oldTimeElapsed = system.time(oldFinalTeam <- climbHillOld(initialTeam, shuffledPlayers))
+    set.seed(i)
+    newTimeElapsed = system.time(newFinalTeam <- climbHill(initialTeam, shuffledPlayers))
+
+    cat('Old team: ', computeAmountSpent(oldFinalTeam), ', ', computeTeamFP(oldFinalTeam), ', time=', oldTimeElapsed[3], sep='')
+    printTeam(oldFinalTeam)
+    cat(', New team: ', computeAmountSpent(newFinalTeam), ', ', computeTeamFP(newFinalTeam), ', time=', newTimeElapsed[3], sep='')
+    printTeam(newFinalTeam)
+    if (identical(oldFinalTeam, newFinalTeam)) {
+      cat(', Match\n')
+    } else {
+      stop('Teams don\'t match')
+    }
+  }
+}
