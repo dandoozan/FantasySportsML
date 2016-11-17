@@ -35,8 +35,8 @@
 #D-add dates (up to 11/14): 53_nov14_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.596, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
 #D-make better plots: 54_plot_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.522, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
 #D-Tune like kaggler: 55_tunek_xgb: 10/27-11/14, 122/229, 266, 50, 7.050717/7.725374, 0.514, 7.009162/7.895815/7.180566, Inf, 7.803517/19.19325, 0.9434116
-#D-Use new boruta confirmed: 56_boruta_xgb: 10/27-11/14, 129/229, 266, 54, 7.01587/7.726528, 3.345, 6.981771/7.893756/7.125948, Inf, 7.82811/17.04404, 0.9245518
-#-retune
+#D-Use new boruta confirmed and tentative: 56_boruta_xgb: 10/27-11/14, 129/229, 266, 54, 7.01587/7.726528, 3.345, 6.981771/7.893756/7.125948, Inf, 7.82811/17.04404, 0.9245518
+#D-Use only boruta confirmed: 57_bconf_xgb: 10/27-11/14, 105/229, 266, 52, 7.051704/7.732884, 0.488, 7.011773/7.934879/7.161589, Inf, 7.844367/17.9021, 0.9388054
 
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
@@ -51,20 +51,20 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '56'
-NAME = 'boruta'
+NUMBER = '57'
+NAME = 'bconf'
 
-PLOT = 'multiscores' #fi, scores, cv
+PLOT = '' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
 END_DATE = '2016-11-14'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || T
+MAKE_TEAMS = PROD_RUN || F
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 Y_NAME = 'FantasyPoints'
 
-FEATURES_TO_USE = c(F.BORUTA.CONFIRMED, F.BORUTA.TENTATIVE)
+FEATURES_TO_USE = c(F.BORUTA.CONFIRMED)
 
 #================= Functions =================
 
