@@ -35,36 +35,30 @@
 #D-add dates (up to 11/14): 53_nov14_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.596, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
 #D-make better plots: 54_plot_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.522, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
 #D-Tune like kaggler: 55_tunek_xgb: 10/27-11/14, 122/229, 266, 50, 7.050717/7.725374, 0.514, 7.009162/7.895815/7.180566, Inf, 7.803517/19.19325, 0.9434116
+#D-Use new boruta confirmed: 56_boruta_xgb: 10/27-11/14, 129/229, 266, 54, 7.01587/7.726528, 3.345, 6.981771/7.893756/7.125948, Inf, 7.82811/17.04404, 0.9245518
+#-retune
 
 
-#-use combination of MAX_COV, floor or ceil to get good prediction
-#-use curated features
-#-adjust MAX_COV
-#-tune again using xgbcv as metric to watch
+#-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
-#-tune earlystopround in findBestSeedAndNrounds
 #-remove 10/26 and add RG Offense Vs Defense Advanced
-#-remove NBA Opp features
-#-use nba GP instead of FD GamesPlayed
-#-add back college, country, InjuryDetails
 #-remove F.RG.ADVANCEDPLAYERSTATS bc there are too many NAs
-#-remove some of the RG_Salary_X features now that I have the MarketWatch features
-
+#-increase numTries in createTeam_HillClimbing to get a better hill climbing team
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = F
-NUMBER = '55'
-NAME = 'tunek'
+PROD_RUN = T
+NUMBER = '56'
+NAME = 'boruta'
 
 PLOT = 'multiscores' #fi, scores, cv
-PLOT_START_DATE = '2016-11-05'
+PLOT_START_DATE = '2016-10-27'
 END_DATE = '2016-11-14'
 MAX_COV = Inf
-NUM_HILL_CLIMBING_TEAMS = 2
+NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)

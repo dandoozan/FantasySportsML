@@ -13,6 +13,8 @@
     #-Resolve missing names
   #-create data_contests_2016.csv (python source/python_scripts/createContestFile.py)
   #-change END_DATE to new date
+  #-rerun boruta
+  #-retune xgb params
 
 
 SEASON_START_DATE = '2016-10-25'
