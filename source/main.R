@@ -60,11 +60,11 @@ PROD_RUN = F
 NUMBER = '55'
 NAME = 'tunek'
 
-PLOT = '' #fi, scores, cv
+PLOT = 'multiscores' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || F
+MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
 FEATURES_TO_USE = c(F.BORUTA.CONFIRMED, F.BORUTA.TENTATIVE)

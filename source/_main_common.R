@@ -228,7 +228,7 @@ printRGTrnCVError = function(data, yName, xNames, createModel, computeError) {
   cat('    RG Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
 }
 
-plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), labels5050=c(), greedyTeamExpected=c(), greedyTeamActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), name='Scores', save=FALSE, main='Title', filename='') {
+plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), entryFeesFor5050=c(), greedyTeamExpected=c(), greedyTeamActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), name='Scores', save=FALSE, main='Title', filename='') {
   cat('    Plotting ', name, '...\n', sep='')
 
   if (save) startSavePlot(name, filename)
@@ -267,10 +267,10 @@ plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), labels5050=c(),
 
   #draw lowest5050
   if (numLowest5050s > 0) {
-    colors5050 = c('red', 'orange')
+    colors5050 = c('red', 'orange', 'purple', 'cyan')
     for (i in 1:numLowest5050s) {
       lines(dates, lowest5050s[[i]], col=colors5050[i])
-      labels = c(labels, labels5050[i])
+      labels = c(labels, paste0('50/50 $', entryFeesFor5050[i], ' Contests'))
       colors = c(colors, colors5050[i])
     }
   }
@@ -325,6 +325,8 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
 
   contestData = getContestData()
 
+  entryFeesFor5050 = c(1, 2, 5, 10)
+
   cat('    Creating teams with max cov:', maxCov, '\n')
   #these are arrays to plot later
   myRmses = c()
@@ -339,8 +341,8 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
   myTeamHillClimbingExpectedFPs = c()
   highestWinningScores = c()
   lowestWinningScores = c()
-  lowestWinningScores_5050_1 = c()
-  lowestWinningScores_5050_2 = c()
+  lowestWinningScores_5050s = vector('list', length(entryFeesFor5050))
+  for (i in 1:length(entryFeesFor5050)) lowestWinningScores_5050s[[i]] = numeric()
   myTeamHillClimbingActualFPs = vector('list', numHillClimbingTeams)
   for (i in 1:numHillClimbingTeams) myTeamHillClimbingActualFPs[[i]] = numeric()
   medianActualFPs = c()
@@ -382,8 +384,7 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     #get actual fanduel winning score for currday
     highestWinningScore = getHighestWinningScore(contestData, dateStr)
     lowestWinningScore = getLowestWinningScore(contestData, dateStr, type='non5050')
-    lowestWinningScore_5050_1 = getLowestWinningScore(contestData, dateStr, type='5050', entryFee=1)
-    lowestWinningScore_5050_2 = getLowestWinningScore(contestData, dateStr, type='5050', entryFee=2)
+    for (i in 1:length(entryFeesFor5050)) lowestWinningScores_5050s[[i]] = c(lowestWinningScores_5050s[[i]], getLowestWinningScore(contestData, dateStr, type='5050', entryFee=entryFeesFor5050[i]))
 
     #print results
     cat('allRmse=', round(myRmse, 2), sep='')
@@ -406,8 +407,6 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     myTeamRmses = c(myTeamRmses, myTeamRmse)
     highestWinningScores = c(highestWinningScores, highestWinningScore)
     lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
-    lowestWinningScores_5050_1 = c(lowestWinningScores_5050_1, lowestWinningScore_5050_1)
-    lowestWinningScores_5050_2 = c(lowestWinningScores_5050_2, lowestWinningScore_5050_2)
   }
 
   #print mean of rmses
@@ -431,16 +430,16 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     scoreRatios=scoreRatios,
     highestWinningScores=highestWinningScores,
     lowestWinningScores=lowestWinningScores,
-    lowestWinningScores_5050_1=lowestWinningScores_5050_1,
-    lowestWinningScores_5050_2=lowestWinningScores_5050_2
+    entryFeesFor5050=entryFeesFor5050,
+    lowestWinningScores_5050s=lowestWinningScores_5050s
   ))
 }
 
 makePlots = function(toPlot, data, yName, xNames, filename, teamStats=list(), prodRun) {
   cat('Creating plots...\n')
   if (length(teamStats) > 0) {
-    if (prodRun || toPlot == 'scores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, lowest5050s=list(teamStats$lowestWinningScores_5050_1, teamStats$lowestWinningScores_5050_2), labels5050=c('50/50 $1 Contests', '50/50 $2 Contests'), greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, main='My Team Vs. Actual Contests', name='Scores', save=prodRun, filename=filename)
-    if (prodRun || toPlot == 'multiscores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, lowest5050s=list(teamStats$lowestWinningScores_5050_1, teamStats$lowestWinningScores_5050_2), labels5050=c('50/50 $1 Contests', '50/50 $2 Contests'), greedyTeamActual=teamStats$myTeamActualFPs, hillClimbingTeams=teamStats$myTeamHillClimbingActualFPs, medianActualFPs=teamStats$medianActualFPs, main='My Teams Vs. Actual Contests', name='Multiscores', save=prodRun, filename=filename)
+    if (prodRun || toPlot == 'scores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, lowest5050s=teamStats$lowestWinningScores_5050s, entryFeesFor5050=teamStats$entryFeesFor5050, greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, main='My Team Vs. Actual Contests', name='Scores', save=prodRun, filename=filename)
+    if (prodRun || toPlot == 'multiscores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, lowest5050s=teamStats$lowestWinningScores_5050s, entryFeesFor5050=teamStats$entryFeesFor5050, greedyTeamActual=teamStats$myTeamActualFPs, hillClimbingTeams=teamStats$myTeamHillClimbingActualFPs, medianActualFPs=teamStats$medianActualFPs, main='My Teams Vs. Actual Contests', name='Multiscores', save=prodRun, filename=filename)
     if (prodRun || toPlot == 'rmse_scoreratios') plotByDate2Axis(teamStats$dateStrs, teamStats$myRmses, ylab='RMSE', ylim=c(5, 12), y2=teamStats$scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=prodRun, name='RMSE_ScoreRatios', filename=filename)
     if (prodRun || toPlot == 'rmses') plotLinesByDate(teamStats$dateStrs, list(teamStats$myRmses, teamStats$fdRmses, teamStats$nfRmses, teamStats$rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=prodRun, name='RMSEs', filename=filename)
   }
