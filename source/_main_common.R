@@ -139,11 +139,7 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   #return the lowest lastWinningScore; essentially, this is what i need to have won anything in any contest
   contests = contests[contests$Date == dateStr,]
   if (type != 'all') {
-    if (type == '5050') {
-      contests = contests[contests$Type == 'FIFTY_FIFTY',]
-    } else if (type == 'non5050') {
-      contests = contests[contests$Type != 'FIFTY_FIFTY',]
-    }
+    contests = contests[contests$Type == type,]
   }
   if (entryFee > -1) {
     contests = contests[contests$EntryFee == entryFee,]
@@ -332,8 +328,8 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
 
     #get actual fanduel winning score for currday
     highestWinningScore = getHighestWinningScore(contestData, dateStr)
-    lowestWinningScore = getLowestWinningScore(contestData, dateStr, type='non5050')
-    for (i in 1:length(entryFeesFor5050)) lowestWinningScores_5050s[[i]] = c(lowestWinningScores_5050s[[i]], getLowestWinningScore(contestData, dateStr, type='5050', entryFee=entryFeesFor5050[i]))
+    lowestWinningScore = getLowestWinningScore(contestData, dateStr, type='TOURNAMENT')
+    for (i in 1:length(entryFeesFor5050)) lowestWinningScores_5050s[[i]] = c(lowestWinningScores_5050s[[i]], getLowestWinningScore(contestData, dateStr, type='FIFTY_FIFTY', entryFee=entryFeesFor5050[i]))
 
     #print results
     cat('allRmse=', round(myRmse, 2), sep='')

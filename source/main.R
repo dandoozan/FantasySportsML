@@ -39,7 +39,7 @@
 #D-Use only boruta confirmed: 57_bconf_xgb: 10/27-11/14, 105/229, 266, 52, 7.051704/7.732884, 0.488, 7.011773/7.934879/7.161589, Inf, 7.844367/17.9021, 0.9388054
 #D-Retune: 58_retune_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.589, 6.509602/7.962631/6.678165, Inf, 7.92412/16.70604, 0.9365133
 #D-Add contest type: 59_contestType_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.592, 6.509602/7.962631/6.678165, Inf, 7.92412/16.70604, 0.9364618
-
+#D-Plot only true tournaments: 60_tourneys_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.582, 6.509602/7.962631/6.678165, Inf, 7.92412/16.70604, 0.9320178
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -53,8 +53,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '59'
-NAME = 'contestType'
+NUMBER = '60'
+NAME = 'tourneys'
 
 PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
