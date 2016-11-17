@@ -553,12 +553,19 @@ ROTOGRINDER_KNOWN_MISSING = {
 TBX_MISSING_PLAYERS = {}
 
 #------------ Misc ------------
+def replaceUnicodeChars(string):
+    return string.replace(u'\u00c1', 'A').replace(u'\u00e1', 'a').replace(u'\u00e9', 'e').replace(u'\u00ed', 'i').replace(u'\u00f3', 'o')
 def joinFirstLastNames(obj, firstNameKey, lastNameKey):
     return ' '.join([getValue(obj, firstNameKey), getValue(obj, lastNameKey)])
 def getNameValue(obj, key, prefix=''):
     return getValue(obj, key, prefix).lower()
 def getValue(obj, key, prefix=''):
-    return obj[prefix + key].strip()
+    value = obj[prefix + key]
+    if util.isUnicode(value):
+        return replaceUnicodeChars(value).strip()
+    if util.isString(value):
+        return value.strip()
+    return value
 def setValue(obj, key, newValue, prefix=''):
     obj[prefix + key] = newValue
 def removePercentSigns(obj, keys, prefix):
@@ -593,40 +600,42 @@ def findYearJsonFile(fullPathToDir, dateStr):
 #------------ Parse Row ------------
 def parseFanDuelRow(row, dateStr, prefix):
     #add Name, which is a join of firstname and lastname
-    row['Name'] = joinFirstLastNames(row, 'First Name', 'Last Name')
+    setValue(row, 'Name', joinFirstLastNames(row, 'First Name', 'Last Name'))
 
     #add date to row
-    row['Date'] = dateStr
+    setValue(row, 'Date', dateStr)
 
     #add IsHome
-    row['Home'] = 'Home' if (getValue(row, 'Game').split('@')[1].strip() == getValue(row, 'Team')) else 'Away'
+    setValue(row, 'Home', 'Home' if (getValue(row, 'Game').split('@')[1].strip() == getValue(row, 'Team')) else 'Away')
 
-    #set '' to 'None' in injury cols
-    if getValue(row, 'InjuryIndicator') == '':
-        row['InjuryIndicator'] = 'None'
-    if getValue(row, 'InjuryDetails') == '':
-        row['InjuryDetails'] = 'None'
-
-    #lowercase injury values
-    setValue(row, 'InjuryIndicator', getValue(row, 'InjuryIndicator').lower())
-    setValue(row, 'InjuryDetails', getValue(row, 'InjuryDetails').lower())
+    #set '' to 'none' in injury cols
+    #also lowercase the value if it's not ''
+    injuryIndicator = getValue(row, 'InjuryIndicator')
+    setValue(row, 'InjuryIndicator', 'none' if injuryIndicator == '' else injuryIndicator.lower())
+    injuryDetails = getValue(row, 'InjuryDetails')
+    setValue(row, 'InjuryDetails', 'none' if injuryDetails == '' else injuryDetails.lower())
 
     return getNameValue(row, 'Name'), row
 def parseFanDuelJsonRow(row, dateStr, prefix):
-    #-lowercase injury values
     #'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
 
     #add Name, which is a join of firstname and lastname
-    row['Name'] = joinFirstLastNames(row, 'first_name', 'last_name')
+    setValue(row, 'Name', joinFirstLastNames(row, 'first_name', 'last_name'))
 
     #add date to row
-    row['Date'] = dateStr
+    setValue(row, 'Date', dateStr)
 
     #set nulls to 'None' in injury cols
-    if row['InjuryIndicator'] == None:
-        row['InjuryIndicator'] = 'None'
-    if row['InjuryDetails'] == None:
-        row['InjuryDetails'] = 'None'
+    if getValue(row, 'InjuryIndicator') == None:
+        setValue(row, 'InjuryIndicator', 'none')
+    if getValue(row, 'InjuryDetails') == None:
+        setValue(row, 'InjuryDetails', 'none')
+
+    #set nulls to 0 in FPPG and GamesPlayed
+    if getValue(row, 'FPPG') == None:
+        setValue(row, 'FPPG', 0)
+    if getValue(row, 'GamesPlayed') == None:
+        setValue(row, 'GamesPlayed', 0)
 
     return getNameValue(row, 'Name'), row
 def parseRotoGuruRow(row, dateStr, prefix):
@@ -814,13 +823,13 @@ def loadFanDuelJsonFile(fullPathFilename, keyRenameMap, prefix, delimiter):
         #find team full name
         for team in teams:
             if team['id'] == teamId:
-                teamName = team['full_name']
+                teamName = team['code']
                 break
         #find opponent team full name
         opponentTeamId = awayTeamId if isHome else homeTeamId
         for team in teams:
             if team['id'] == opponentTeamId:
-                opponentTeamName = team['full_name']
+                opponentTeamName = team['code']
                 break
 
         #set team, opponent, and home
@@ -1048,6 +1057,7 @@ def writeData(fullPathFilename, data):
 DATA_SOURCES = [
     {
         'name': 'FanDuel_fromPlayersManuallyDownloaded',
+        'isBaseData': True,
         'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded'),
         'keyRenameMap': {
@@ -1056,25 +1066,27 @@ DATA_SOURCES = [
             'Injury Details': 'InjuryDetails',
         },
         'parseRowFunction': parseFanDuelRow,
-        'endDate': util.getDate(2016, 11, 11),
+        'endDate': util.getDate(2016, 11, 7),
     },
-    #{
-    #    'name': 'FanDuel_fromPlayers',
-    #    'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
-    #    'findFileFunction': findJsonFile,
-    #    'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players'),
-    #    'keyRenameMap': {
-    #        'position': 'Position',
-    #        'fppg': 'FPPG',
-    #        'played': 'GamesPlayed',
-    #        'salary': 'Salary',
-    #        'injury_status': 'InjuryIndicator',
-    #        'injury_details': 'InjuryDetails',
-    #    },
-    #    'loadFileFunction': loadFanDuelJsonFile,
-    #    'parseRowFunction': parseFanDuelJsonRow,
-    #    'startDate': util.getDate(2016, 11, 8),
-    #},
+    {
+        'name': 'FanDuel_fromPlayers',
+        'isBaseData': True,
+        'extendFeatures': False,
+        'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players'),
+        'keyRenameMap': {
+            'position': 'Position',
+            'fppg': 'FPPG',
+            'played': 'GamesPlayed',
+            'salary': 'Salary',
+            'injury_status': 'InjuryIndicator',
+            'injury_details': 'InjuryDetails',
+        },
+        'loadFileFunction': loadFanDuelJsonFile,
+        'parseRowFunction': parseFanDuelJsonRow,
+        'startDate': util.getDate(2016, 11, 8),
+    },
     {
         'name': 'RotoGuru',
         'containsY': True,
@@ -1685,7 +1697,7 @@ DATA_SOURCES = [
 
 
 #load fanduel data
-data = None
+data = {}
 
 for dataSource in DATA_SOURCES:
     name = dataSource['name']
@@ -1693,10 +1705,12 @@ for dataSource in DATA_SOURCES:
 
     containsY = util.getObjValue(dataSource, 'containsY', False)
     delimiter = util.getObjValue(dataSource, 'delimiter', ',')
+    extendFeatures = util.getObjValue(dataSource, 'extendFeatures', True)
     features = dataSource['features']
     findFileFunction = util.getObjValue(dataSource, 'findFileFunction', findCsvFile)
     fullPathToDir = dataSource['fullPathToDir']
     handleDuplicates = util.getObjValue(dataSource, 'handleDuplicates', None)
+    isBaseData = util.getObjValue(dataSource, 'isBaseData', False)
     isOpp = util.getObjValue(dataSource, 'isOpp', False)
     isTeam = util.getObjValue(dataSource, 'isTeam', False)
     keyRenameMap = util.getObjValue(dataSource, 'keyRenameMap', {})
@@ -1709,10 +1723,12 @@ for dataSource in DATA_SOURCES:
     endDate = util.getObjValue(dataSource, 'endDate', END_DATE)
 
     newData = loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, startDate, endDate, keyRenameMap, delimiter, prefix)
-    X_NAMES.extend(features)
 
-    if data == None:
-        data = newData
+    if extendFeatures:
+        X_NAMES.extend(features)
+
+    if isBaseData:
+        data.update(newData)
     else:
         mergeData(data, newData, name, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate)
 

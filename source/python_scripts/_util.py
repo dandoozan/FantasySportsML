@@ -144,6 +144,12 @@ def printArray(arr):
         print a
 
 
+#================= check type ===================
+def isString(value):
+    return (type(value) is str)
+def isUnicode(value):
+    return (type(value) is unicode)
+
 #================= misc ===================
 def removePercentSign(string):
     if string[-1] == '%':

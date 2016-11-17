@@ -31,6 +31,7 @@
 #D-Use boruta confirmed features: 49_boruta_xgb: 10/27-11/11, 95/230, 266, 79, 6.90763/7.720568, 1.436, 7.084831/6.903145/7.027715, Inf, 7.728519/16.21745, 0.9611085
 #D-Add boruta tentative: 50_borutaTntv_xgb: 10/27-11/11, 123/230, 266, 105, 6.719698/7.685369, 2.258, 6.867719/6.948294/6.86174, Inf, 7.771497/16.60619, 0.9041602
 #D-Remove RG_MW_fd_current: 51_rmFdCurr_xgb: 10/27-11/11, 122/229, 266, 93, 6.789944/7.691975, 2.113, 6.929501/6.911408/6.903851, Inf, 7.756041/17.04462, 0.9323927
+#D-Use auto-downloaded FD data: 52_autoFD_xgb: 10/27-11/11, 122/229, 266, 108, 6.703789/7.685564, 2.383, 6.832482/6.924322/6.824815, Inf, 7.784987/19.37958, 0.9208128
 
 #-retune xgb
 
@@ -53,9 +54,9 @@ setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = F
-NUMBER = '51'
-NAME = 'rmFdCurr'
+PROD_RUN = T
+NUMBER = '52'
+NAME = 'autoFD'
 
 PLOT = 'scores' #fi, scores, cv
 MAX_COV = Inf
