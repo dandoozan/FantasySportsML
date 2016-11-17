@@ -34,6 +34,7 @@
 #D-Use auto-downloaded FD data: 52_autoFD_xgb: 10/27-11/11, 122/229, 266, 108, 6.703789/7.685564, 2.383, 6.832482/6.924322/6.824815, Inf, 7.784987/19.37958, 0.9208128
 #D-add dates (up to 11/14): 53_nov14_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.596, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
 #-make better plots: 54_plot_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.522, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
+#-Tune like kaggler: 55_tunek_xgb: 10/27-11/14, 122/229, 266, 50, 7.050717/7.725374, 0.514, 7.009162/7.895815/7.180566, Inf, 7.803517/19.19325, 0.9434116
 
 #-retune xgb
 
@@ -57,14 +58,14 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '54'
-NAME = 'plot'
+NUMBER = '55'
+NAME = 'tunek'
 
-PLOT = 'scores' #fi, scores, cv
+PLOT = 'cv' #fi, scores, cv
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || T
+MAKE_TEAMS = PROD_RUN || F
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 
 FEATURES_TO_USE = c(F.BORUTA.CONFIRMED, F.BORUTA.TENTATIVE)
@@ -85,8 +86,12 @@ data = setup(ALG, FEATURES_TO_USE, END_DATE, PROD_RUN, FILENAME)
 hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)
 baseModel = createBaseModel(data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
 
-timeElapsed = system.time(teamStats <- if(MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, PROD_RUN) else list())
-cat('Time taken to make teams: ', timeElapsed[3], '\n', sep='')
+if (MAKE_TEAMS) {
+  timeElapsed = system.time(teamStats <- makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, PROD_RUN))
+  cat('Time taken to make teams: ', timeElapsed[3], '\n', sep='')
+} else {
+  teamStats = list()
+}
 
 makePlots(PLOT, data, Y_NAME, FEATURES_TO_USE, FILENAME, teamStats, PROD_RUN)
 
