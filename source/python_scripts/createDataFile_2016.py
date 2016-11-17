@@ -6,7 +6,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = util.getDate(2016, 10, 25)
 ONE_DAY = util.getOneDay()
-END_DATE = util.getDate(2016, 11, 11)
+END_DATE = util.getDate(2016, 11, 14)
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -548,6 +548,8 @@ ROTOGRINDER_KNOWN_MISSING = {
 
     'alex abrines',
     'richaun holmes',
+    'archie goodwin',
+    'yogi ferrell',
 }
 
 TBX_MISSING_PLAYERS = {}
@@ -1349,6 +1351,8 @@ DATA_SOURCES = [
             '2016-11-09': { 'rakeem christmas' },
             '2016-11-10': { 'georgios papagiannis' },
             '2016-11-11': { 'rakeem christmas', 'georgios papagiannis' },
+            '2016-11-12': { 'rakeem christmas' },
+            '2016-11-14': { 'rakeem christmas' },
         },
         'loadFileFunction': loadRotoGrinderStartingLineupsFile,
         'parseRowFunction': parseRotoGrinderStartingLineupsRow,

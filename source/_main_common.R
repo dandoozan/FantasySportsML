@@ -11,7 +11,7 @@ source('../ml-common/util.R')
 source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
-END_DATE = '2016-11-11'
+END_DATE = '2016-11-14'
 Y_NAME = 'FantasyPoints'
 
 #possible duplicates:

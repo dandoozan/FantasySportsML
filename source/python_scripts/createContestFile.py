@@ -17,6 +17,7 @@ COL_NAMES = ['Date', 'Title', 'Entries', 'MaxEntries', 'MaxEntriesPerUser',
         'LastWinningRank', 'LastWinningScore', 'Is5050']
 
 def loadDataFromTxtFile(fullPathFilename):
+    print '    Loading file: ' + fullPathFilename + '...'
     data = {}
 
     f = open(fullPathFilename)
@@ -81,23 +82,29 @@ def loadDataFromTxtFile(fullPathFilename):
     return data
 
 def loadDataFromJsonFile(fullPathFilename):
+    print '    Loading file: ' + fullPathFilename + '...'
     jsonData = util.loadJsonFile(fullPathFilename)
 
     #convert values to int, float, etc just to catch errors
-    contestData = jsonData['contests'][0]
+    contest = jsonData['contests'][0]
+
+    if fd.contestIsCancelled(contest):
+        print '        Bummer,contest was cancelled'
+        return None
+
     return {
-        'Title': contestData['name'].strip().replace(',', ''),
-        'Entries': int(contestData['entries']['count']),
-        'MaxEntries': int(contestData['size']['max']),
-        'EntryFee': int(contestData['entry_fee']),
-        'H2H': contestData['h2h'],
-        'MaxEntriesPerUser': int(contestData['max_entries_per_user']),
-        'Pot': float(contestData['prizes']['total']),
-        'HighestScore': float(contestData['scoring']['highest_score']),
-        'LastWinningIndex': int(contestData['scoring']['last_winning_index']),
-        'LastWinningRank': int(contestData['scoring']['last_winning_rank']),
-        'LastWinningScore': float(contestData['scoring']['last_winning_score']),
-        'Is5050': (1 if fd.is5050Contest(contestData) else 0),
+        'Title': contest['name'].strip().replace(',', ''),
+        'Entries': int(contest['entries']['count']),
+        'MaxEntries': int(contest['size']['max']),
+        'EntryFee': int(contest['entry_fee']),
+        'H2H': contest['h2h'],
+        'MaxEntriesPerUser': int(contest['max_entries_per_user']),
+        'Pot': float(contest['prizes']['total']),
+        'HighestScore': float(contest['scoring']['highest_score']),
+        'LastWinningIndex': int(contest['scoring']['last_winning_index']),
+        'LastWinningRank': int(contest['scoring']['last_winning_rank']),
+        'LastWinningScore': float(contest['scoring']['last_winning_score']),
+        'Is5050': (1 if fd.is5050Contest(contest) else 0),
     }
 
 #============= main =============
@@ -114,8 +121,10 @@ while currDate < TODAY:
         for filename in filenames:
             fullPathFilename = util.createFullPathFilename(fullPathDirName, filename)
             fileData = loadDataFromTxtFile(fullPathFilename) if util.isTxtFile(filename) else loadDataFromJsonFile(fullPathFilename)
-            fileData['Date'] = currDateStr
-            data.append(fileData)
+            if fileData:
+                fileData['Date'] = currDateStr
+                data.append(fileData)
+
     else:
         util.headsUp('No dir found for date=' + currDateStr)
     currDate = currDate + ONE_DAY
