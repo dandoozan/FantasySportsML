@@ -34,7 +34,7 @@
 #D-Use auto-downloaded FD data: 52_autoFD_xgb: 10/27-11/11, 122/229, 266, 108, 6.703789/7.685564, 2.383, 6.832482/6.924322/6.824815, Inf, 7.784987/19.37958, 0.9208128
 #D-add dates (up to 11/14): 53_nov14_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.596, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
 #D-make better plots: 54_plot_xgb: 10/27-11/14, 122/229, 266, 99, 6.938578/7.729703, 2.522, 6.89587/7.901851/7.05387, Inf, 7.859666/17.93269, 0.921751
-#D-Tune like kaggler: 55_tunek_xgb: 10/27-11/14, 122/229, 266, 50, 7.050717/7.725374, 0.514, 7.009162/7.895815/7.180566, Inf, 7.803517/19.19325, 0.9434116
+#D-Tune like kaggler: 55_tunek_xgb: 10/27-11/14, 122/229, 266, 50, 7.050717/7.725374, 0.514, 7.009162/7.895815/7.180566, Inf, 7.803517/19.19325, 0.9434116 <-- new best with new dates
 #D-Use new boruta confirmed and tentative: 56_boruta_xgb: 10/27-11/14, 129/229, 266, 54, 7.01587/7.726528, 3.345, 6.981771/7.893756/7.125948, Inf, 7.82811/17.04404, 0.9245518
 #D-Use only boruta confirmed: 57_bconf_xgb: 10/27-11/14, 105/229, 266, 52, 7.051704/7.732884, 0.488, 7.011773/7.934879/7.161589, Inf, 7.844367/17.9021, 0.9388054
 #D-Retune: 58_retune_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.589, 6.509602/7.962631/6.678165, Inf, 7.92412/16.70604, 0.9365133
@@ -50,17 +50,17 @@ setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '58'
 NAME = 'retune'
 
-PLOT = '' #fi, scores, cv
+PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
 END_DATE = '2016-11-14'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 4
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || F
+MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 Y_NAME = 'FantasyPoints'
 

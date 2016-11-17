@@ -140,9 +140,9 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   contests = contests[contests$Date == dateStr,]
   if (type != 'all') {
     if (type == '5050') {
-      contests = contests[contests$Is5050 == 1,]
+      contests = contests[contests$Type == 'FIFTY_FIFTY',]
     } else if (type == 'non5050') {
-      contests = contests[contests$Is5050 == 0,]
+      contests = contests[contests$Type != 'FIFTY_FIFTY',]
     }
   }
   if (entryFee > -1) {

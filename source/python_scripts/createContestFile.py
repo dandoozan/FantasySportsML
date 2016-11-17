@@ -14,7 +14,7 @@ DATE_FORMAT = '%Y-%m-%d'
 
 COL_NAMES = ['Date', 'Title', 'Entries', 'MaxEntries', 'MaxEntriesPerUser',
         'H2H', 'EntryFee', 'Pot', 'HighestScore', 'LastWinningIndex',
-        'LastWinningRank', 'LastWinningScore', 'Is5050']
+        'LastWinningRank', 'LastWinningScore', 'Type']
 
 def loadDataFromTxtFile(fullPathFilename):
     print '    Loading file: ' + fullPathFilename + '...'
@@ -76,8 +76,8 @@ def loadDataFromTxtFile(fullPathFilename):
     data['LastWinningRank'] = int(re.sub(r'(st|nd|rd|th)', '', prevSp[0].strip()))
     data['LastWinningScore'] = float(prevSp[-1].strip())
 
-    #set 5050 to always be 0
-    data['Is5050'] = 0
+    #set type to tournament
+    data['Type'] = fd.CONTEST_TYPES['tournament']
 
     return data
 
@@ -104,7 +104,7 @@ def loadDataFromJsonFile(fullPathFilename):
         'LastWinningIndex': int(contest['scoring']['last_winning_index']),
         'LastWinningRank': int(contest['scoring']['last_winning_rank']),
         'LastWinningScore': float(contest['scoring']['last_winning_score']),
-        'Is5050': (1 if fd.is5050Contest(contest) else 0),
+        'Type': fd.getContestType(contest),
     }
 
 #============= main =============
