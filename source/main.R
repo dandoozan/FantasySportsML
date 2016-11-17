@@ -61,11 +61,14 @@ NUMBER = '55'
 NAME = 'tunek'
 
 PLOT = 'multiscores' #fi, scores, cv
+PLOT_START_DATE = '2016-11-05'
+END_DATE = '2016-11-14'
 MAX_COV = Inf
-NUM_HILL_CLIMBING_TEAMS = 4
+NUM_HILL_CLIMBING_TEAMS = 2
 ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
+Y_NAME = 'FantasyPoints'
 
 FEATURES_TO_USE = c(F.BORUTA.CONFIRMED, F.BORUTA.TENTATIVE)
 
@@ -83,14 +86,7 @@ createTeamPrediction = function(train, test, yName, xNames) {
 data = setup(ALG, FEATURES_TO_USE, END_DATE, PROD_RUN, FILENAME)
 hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)
 baseModel = createBaseModel(data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
-
-if (MAKE_TEAMS) {
-  timeElapsed = system.time(teamStats <- makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, PROD_RUN))
-  cat('Time taken to make teams: ', timeElapsed[3], '\n', sep='')
-} else {
-  teamStats = list()
-}
-
+teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, PROD_RUN) else list()
 makePlots(PLOT, data, Y_NAME, FEATURES_TO_USE, FILENAME, teamStats, PROD_RUN)
 
 cat('Done!\n')

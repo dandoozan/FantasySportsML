@@ -11,9 +11,6 @@ source('../ml-common/util.R')
 source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
-END_DATE = '2016-11-14'
-Y_NAME = 'FantasyPoints'
-
 #possible duplicates:
 # Salary, RG_MW_fd_current <-- duplicate REMOVE
 # RG_saldiff, RG_MW_fd_change <-- no, saldiff is between fd and dk (fd-dk)
@@ -347,7 +344,8 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
   for (i in 1:numHillClimbingTeams) myTeamHillClimbingActualFPs[[i]] = numeric()
   medianActualFPs = c()
 
-  dateStrs = getUniqueDates(data)[-1] #-1 uses all but the first element
+  dateStrs = getUniqueDates(data)
+  dateStrs = dateStrs[(dateStrs>=PLOT_START_DATE) & (dateStrs<=END_DATE)]
   for (dateStr in dateStrs) {
     cat('    ', dateStr, ': ', sep='')
 
