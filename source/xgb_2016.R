@@ -107,22 +107,22 @@ plotCVErrorRates = function(data, yName, xNames, ylim=NULL, save=FALSE, filename
     ylim = c(0, max(cvErrors, trainErrors))
   }
 
-  if (save) png(createPlotFilename('XGBErrorRates', filename), width=500, height=350)
+  if (save) startSavePlot('XGBErrorRates', filename)
   plot(trainErrors, type='l', col='blue', ylim=ylim, main='Train Error vs. CV Error', xlab='Num Rounds', ylab='Error')
   lines(cvErrors, col='red')
-  legend(x='topright', legend=c('train', 'cv'), fill=c('blue', 'red'), inset=0.02)
-  if (save) dev.off()
+  addLegend(labels=c('train', 'cv'), colors=c('blue', 'red'))
+  if (save) endSavePlot()
 }
-plotImportances = function(model, xNames, maxFeatures=50, save=FALSE) {
+plotImportances = function(model, xNames, maxFeatures=50, save=FALSE, filename='') {
   cat('    Plotting Feature Importances...\n')
 
   featureNames = colnames(oneHotEncode(data[, xNames]))
 
   importances = xgb.importance(feature_names=featureNames, model=model)
   importances = importances[1:min(nrow(importances), maxFeatures), ]
-  if (save) png(paste0('plots/Importances_', FILENAME, '.png'), width=500, height=max(nrow(importances)*10, 350))
+  if (save) startSavePlot('Importances', filename, height=max(nrow(importances)*20, 700))
   print(xgb.plot.importance(importance_matrix=importances))
-  if (save) dev.off()
+  if (save) endSavePlot()
 }
 
 findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSeedsToTry=1) {
