@@ -226,7 +226,7 @@ headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
 prevDataValues = None
 lastDate = util.parseAsDate(util.parseBaseFilename(util.getLastFileInDir(parentDir)))
-currDate = lastDate - ONE_DAY
+currDate = lastDate
 while currDate <= seasonEndDate:
     currDateStr = util.formatDate(currDate)
     fullPathFilename = util.createFullPathFilename(parentDir, util.createJsonFilename(currDateStr))
