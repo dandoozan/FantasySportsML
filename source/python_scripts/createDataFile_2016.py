@@ -6,7 +6,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = util.getDate(2016, 10, 25)
 ONE_DAY = util.getOneDay()
-END_DATE = util.getDate(2016, 11, 14)
+END_DATE = util.getTodayAsDate()
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -467,8 +467,7 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'kelly olynyk',
         'tim quarterman',
     },
-    '2016-11-10': {
-    },
+    '2016-11-10': {},
     '2016-11-11': {
         'danuel house',
     },
@@ -476,6 +475,9 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'archie goodwin',
         'john jenkins',
         'josh mcroberts',
+    },
+    '2016-11-16': {
+        'alonzo gee',
     },
     'never': {
         'alec burks', #no games
@@ -498,6 +500,7 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'grant jerrett',
         'greg stiemsma',
         'henry sims',
+        'jerryd bayless',
         'j.p. tokoto',
         'joel anthony',
         'john holland',
@@ -515,8 +518,10 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'paul pierce', #no games
         'phil pressey',
         'reggie bullock', #no games
+        'reggie jackson',
         'r.j. hunter', #no games
         'tiago splitter', #no games
+        'tyreke evans',
         'wayne ellington', #no games
     }
 }
@@ -550,6 +555,7 @@ ROTOGRINDER_KNOWN_MISSING = {
     'richaun holmes',
     'archie goodwin',
     'yogi ferrell',
+    'alonzo gee',
 }
 
 TBX_MISSING_PLAYERS = {}
@@ -596,8 +602,6 @@ def findNbaFile(fullPathToDir, dateStr):
             return fullPathFilename
         usedDiffFile = True
     return None
-def findYearJsonFile(fullPathToDir, dateStr):
-    return util.createFullPathFilename(fullPathToDir, util.createJsonFilename(str(util.parseDate(dateStr).year)))
 
 #------------ Parse Row ------------
 def parseFanDuelRow(row, dateStr, prefix):
@@ -678,9 +682,12 @@ def parseRotoGrinderPlayerProjectionsRow(row, dateStr, prefix):
     row['RG_saldiff'] = 0 if row['RG_saldiff'] == None else int(row['RG_saldiff'])
     row['RG_rankdiff'] = 0 if row['RG_rankdiff'] == None else int(row['RG_rankdiff'])
 
+    #set nulls to 0s for 'line'
+    row['RG_line'] = 0 if row['RG_line'] == None else int(row['RG_line'])
+
     #parse everything else to int/float to make sure
     #they're all in the right format
-    intCols = ['RG_line', 'RG_movement']
+    intCols = ['RG_movement']
     floatCols = ['RG_overunder', 'RG_points', 'RG_ppdk',
         'RG_total', 'RG_contr', 'RG_minutes',
         'RG_points15', 'RG_points19', 'RG_points20',
@@ -983,12 +990,11 @@ def playerDidNotPlayOnOrUpToDate(date, name):
 
     #then, check each date starting with tomorrow up to the end
     currDate = date + ONE_DAY
-    currDateStr = util.formatDate(currDate)
-    while currDateStr in PLAYERS_WHO_DID_NOT_PLAY_UP_TO:
-        if name in PLAYERS_WHO_DID_NOT_PLAY_UP_TO[currDateStr]:
+    while currDate <= END_DATE:
+        currDateStr = util.formatDate(currDate)
+        if currDateStr in PLAYERS_WHO_DID_NOT_PLAY_UP_TO and name in PLAYERS_WHO_DID_NOT_PLAY_UP_TO[currDateStr]:
             return True
         currDate = currDate + ONE_DAY
-        currDateStr = util.formatDate(currDate)
     return False
 def getTeam(playerData):
     return playerData['Team']
@@ -1001,7 +1007,7 @@ def playerIsInData(data, name, isTeam):
                 return True
     return False
 
-def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate):
+def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate, endDate):
     print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
@@ -1015,7 +1021,7 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, contai
                 if obj2Name in obj2[dateStr]:
                     playerData.update(obj2[dateStr][obj2Name])
                 else:
-                    date = util.parseDate(dateStr)
+                    date = util.parseAsDate(dateStr)
                     if playerIsKnownToBeMissing(dateStr, name, knownMissingObj) \
                             or playerDidNotPlayOnOrUpToDate(date - ONE_DAY if usePrevDay else date, name) \
                             or playerIsInData(obj2, name, isTeam): #it's oh well in this case; at least i know it's not a name mismatch
@@ -1036,7 +1042,8 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, contai
                         util.headsUp('Name not found in obj2, date=' + dateStr + ', name=' + name)
         else:
             #stop if i'm expecting the date to be in obj2
-            if util.parseAsDate(dateStr) >= startDate:
+            date = util.parseAsDate(dateStr)
+            if date >= startDate and date <= endDate:
                 util.stop('Date not found in obj2, date=' + dateStr)
 
 def writeData(fullPathFilename, data):
@@ -1060,6 +1067,7 @@ DATA_SOURCES = [
     {
         'name': 'FanDuel_fromPlayersManuallyDownloaded',
         'isBaseData': True,
+        'endDate': util.getDate(2016, 11, 7),
         'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded'),
         'keyRenameMap': {
@@ -1068,7 +1076,6 @@ DATA_SOURCES = [
             'Injury Details': 'InjuryDetails',
         },
         'parseRowFunction': parseFanDuelRow,
-        'endDate': util.getDate(2016, 11, 7),
     },
     {
         'name': 'FanDuel_fromPlayers',
@@ -1093,6 +1100,7 @@ DATA_SOURCES = [
         'name': 'RotoGuru',
         'containsY': True,
         'delimiter': ';',
+        'endDate': util.getYesterdayAsDate(),
         'features': ['FantasyPoints'],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru', '2016'),
         'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
@@ -1214,6 +1222,9 @@ DATA_SOURCES = [
             'a.j. hammons',
             'jordan farmar',
             'lance stephenson',
+
+            #2016-11-18
+            'alonzo gee',
         },
         'parseRowFunction': parseNumberFireRow,
         'prefix': 'NF_',
@@ -1353,6 +1364,8 @@ DATA_SOURCES = [
             '2016-11-11': { 'rakeem christmas', 'georgios papagiannis' },
             '2016-11-12': { 'rakeem christmas' },
             '2016-11-14': { 'rakeem christmas' },
+            '2016-11-16': { 'rakeem christmas', 'georgios papagiannis' },
+            '2016-11-18': { 'rakeem christmas', 'georgios papagiannis' },
         },
         'loadFileFunction': loadRotoGrinderStartingLineupsFile,
         'parseRowFunction': parseRotoGrinderStartingLineupsRow,
@@ -1587,8 +1600,8 @@ DATA_SOURCES = [
             'NBA_PB_DRAFT_ROUND',
             'NBA_PB_DRAFT_NUMBER',
         ],
-        'findFileFunction': findYearJsonFile,
-        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'PlayerBios'),
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'PlayerBios', '2016'),
         'loadFileFunction': loadNbaJsonFile,
         'parseRowFunction': parseNbaRow,
         'prefix': 'NBA_PB_',
@@ -1734,7 +1747,7 @@ for dataSource in DATA_SOURCES:
     if isBaseData:
         data.update(newData)
     else:
-        mergeData(data, newData, name, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate)
+        mergeData(data, newData, name, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate, endDate)
 
 writeData(OUTPUT_FILE, data)
 

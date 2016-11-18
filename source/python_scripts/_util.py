@@ -119,6 +119,9 @@ def parseAsDate(dateStr, dateFormat='%Y-%m-%d'):
     return datetime.date(parsedDatetime.year, parsedDatetime.month, parsedDatetime.day)
 def formatDate(date, dateFormat='%Y-%m-%d'):
     return date.strftime(dateFormat)
+def getTodayAsDate():
+    from datetime import date
+    return date.today()
 def getOneDay():
     from datetime import timedelta
     return timedelta(days=1)
@@ -126,8 +129,7 @@ def getOneWeek():
     from datetime import timedelta
     return timedelta(weeks=1)
 def getYesterdayAsDate():
-    import datetime
-    return datetime.date.today() - getOneDay()
+    return getTodayAsDate() - getOneDay()
 def getDate(year, month, day):
     import datetime
     return(datetime.date(year, month, day))
