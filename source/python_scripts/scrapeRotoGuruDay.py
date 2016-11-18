@@ -4,9 +4,7 @@ import datetime
 import scraper
 import _util as util
 
-PARENT_DIR = util.joinDirs('data', 'rawDataFromRotoGuru')
-DATE_FORMAT = '%Y-%m-%d'
-SEASON_START_DATE = datetime.date(2016, 10, 25)
+PARENT_DIR = util.joinDirs('data', 'rawDataFromRotoGuru', '2016')
 YESTERDAY = util.getYesterdayAsDate()
 ONE_DAY = util.getOneDay()
 SLEEP = 5
@@ -28,7 +26,7 @@ def downloadData(date):
     return data
 
 def writeData(data, fullPathFilename):
-    print 'Writing %d lines of data to %s' %(len(data), fullPathFilename)
+    print '    Writing %d lines of data to %s' %(len(data), fullPathFilename)
 
     f = open(fullPathFilename, 'w')
     for line in data:
@@ -37,16 +35,16 @@ def writeData(data, fullPathFilename):
 
 #=============== Main ================
 
-currDate = SEASON_START_DATE
-while currDate < YESTERDAY:
+lastDate = util.parseAsDate(util.parseBaseFilename(util.getLastFileInDir(PARENT_DIR)))
+currDate = lastDate
+while currDate <= YESTERDAY:
     currDateStr = util.formatDate(currDate)
+    print '%s data for %s...' % ('Overwriting' if currDate == lastDate else 'Downloading', currDateStr)
     fullPathFilename = util.createFullPathFilename(PARENT_DIR, util.createCsvFilename(currDateStr))
-    if util.fileExists(fullPathFilename):
-        print '    Skipping date because file exists: ' + fullPathFilename
-    else:
-        data = downloadData(currDate)
-        writeData(data, fullPathFilename)
-        scraper.sleep(SLEEP)
+    data = downloadData(currDate)
+    writeData(data, fullPathFilename)
     currDate = currDate + ONE_DAY
+    if currDate <= YESTERDAY:
+        scraper.sleep(SLEEP)
 
 print 'Done!'

@@ -8,6 +8,10 @@ def createDirIfNecessary(fullPathToDir):
 def getFilesInDir(fullPathToDir):
     import os
     return [f for f in os.listdir(fullPathToDir) if (os.path.isfile(os.path.join(fullPathToDir, f)) and f[:1] != '.')]
+def getLastFileInDir(fullPathToDir):
+    filenames = getFilesInDir(fullPathToDir)
+    filenames.sort()
+    return filenames[-1]
 def createFullPathFilename(fullPathToParentDir, filename):
     import os
     return os.path.join(fullPathToParentDir, filename)
@@ -26,6 +30,8 @@ def createJsonFilename(baseFilename):
     return baseFilename + '.json'
 def createTxtFilename(baseFilename):
     return baseFilename + '.txt'
+def parseBaseFilename(filename):
+    return filename[:filename.find('.')]
 def loadCsvFile(fullPathFilename, keyRenameMap=None, delimiter=',', prefix=''):
     import csv
     data = []
