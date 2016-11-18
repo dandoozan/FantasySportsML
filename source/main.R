@@ -46,6 +46,9 @@
 #D-Use floor: 64_cov05_floor_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.633, 6.509602/7.962631/6.678165, 0.5, 10.19702/15.93937, 0.8762993
 #D-Use ceil, cov=Inf: 65_covInf_ceil_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.631, 6.509602/7.962631/6.678165, Inf, 10.46674/22.11585, 0.9450008
 #D-Use floor, cov=Inf: 66_covInf_floor_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.617, 6.509602/7.962631/6.678165, Inf, 10.19702/16.56721, 0.9054912
+#D-Remove projections: 67_noProj_xgb: 10/27-11/14, 211/229, 266, 39, 6.674566/7.760814, 11.824, 6.635393/7.992468/6.846707, Inf, 7.894667/17.21335, 0.918429
+#-Rerun boruta
+
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -59,20 +62,20 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '66'
-NAME = 'covInf_floor'
+NUMBER = '67'
+NAME = 'noProj'
 
-PLOT = 'scores' #fi, scores, cv
+PLOT = 'fi' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
 END_DATE = '2016-11-14'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 10
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || T
+MAKE_TEAMS = PROD_RUN || F
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 Y_NAME = 'FantasyPoints'
 
-FEATURES_TO_USE = c(F.BORUTA.CONFIRMED)
+FEATURES_TO_USE = c(F.ALL.SANSPROJECTIONS)
 
 #================= Functions =================
 

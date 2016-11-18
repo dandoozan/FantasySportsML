@@ -12,17 +12,14 @@ source('source/_getData_2016.R')
 source('source/_createTeam.R')
 
 #How to run boruta:
-  #-Open Terminal
-  #-df
   #-R
   #-rm(list = ls())
   #-source('~/Desktop/ML/df/source/_getData_2016.R')
   #-source('~/Desktop/ML/df/source/_main_common.R')
   #-d = getData()
-  #-f = setdiff(colnames(d), c('FantasyPoints', 'Date', 'Name'))
   #-library(Boruta)
   #-set.seed(13)
-  #-b = Boruta(d[, f], d$FantasyPoints, doTrace=2)
+  #-b = Boruta(d[, F.ALL], d$FantasyPoints, doTrace=2)
   #-paste(names(b$finalDecision[b$finalDecision=='Confirmed']), collapse='\', \'')
   #-paste(names(b$finalDecision[b$finalDecision=='Tentative']), collapse='\', \'')
   #-paste(names(b$finalDecision[b$finalDecision=='Rejected']), collapse='\', \'')
@@ -52,7 +49,7 @@ F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk', 'RG_line',  'RG_movem
 F.RG.ADVANCEDPLAYERSTATS = c('RG_ADV_D_RT', 'RG_ADV_O_RT', 'RG_ADV_POW_AST', 'RG_ADV_POW_BLK', 'RG_ADV_POW_PTS', 'RG_ADV_POW_REB', 'RG_ADV_POW_STL', 'RG_ADV_EFGPCT', 'RG_ADV_TSPCT', 'RG_ADV_USGPCT')
 F.RG.MARKETWATCH = c('RG_MW_dk_current', 'RG_MW_dk_change', 'RG_MW_fa_current',  'RG_MW_fa_change', 'RG_MW_y_current', 'RG_MW_y_change', 'RG_MW_dd_current', 'RG_MW_dd_change', 'RG_MW_rstr_current', 'RG_MW_rstr_change', 'RG_MW_fd_change', 'RG_MW_fdft_current', 'RG_MW_fdft_change')
 F.RG.START = c('RG_START_Order', 'RG_START_Starter', 'RG_START_Status')
-#F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
+F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
 F.RG.OVD.BASIC = c('RG_OVD_AST', 'RG_OVD_STL', 'RG_OVD_FGM', 'RG_OVD_TO', 'RG_OVD_3PM', 'RG_OVD_BLK', 'RG_OVD_FGPCT', 'RG_OVD_REB', 'RG_OVD_PTS', 'RG_OVD_FGA')
 F.RG.OVD.OPP.BASIC = c('RG_OVD_OPP_AST', 'RG_OVD_OPP_STL', 'RG_OVD_OPP_FGM', 'RG_OVD_OPP_TO', 'RG_OVD_OPP_3PM', 'RG_OVD_OPP_BLK', 'RG_OVD_OPP_FGPCT', 'RG_OVD_OPP_REB', 'RG_OVD_OPP_PTS', 'RG_OVD_OPP_FGA')
 F.RG.BACK2BACK = c('RG_B2B_Situation')
@@ -69,6 +66,15 @@ F.BORUTA.CONFIRMED = c('FPPG', 'GamesPlayed', 'Salary', 'InjuryIndicator', 'Inju
 F.BORUTA.TENTATIVE = c('Team', 'RG_line', 'RG_ADV_POW_BLK', 'RG_MW_dk_change', 'RG_OVD_OPP_AST', 'NBA_S_P_TRAD_W_PCT', 'NBA_S_P_TRAD_FG3M', 'NBA_S_P_TRAD_FT_PCT', 'NBA_S_P_TRAD_OREB', 'NBA_S_P_ADV_NET_RATING', 'NBA_PB_AGE', 'NBA_PB_PLAYER_HEIGHT_INCHES', 'NBA_PB_COLLEGE', 'NBA_PB_DRAFT_YEAR', 'NBA_PB_DRAFT_ROUND', 'NBA_S_T_TRAD_W_PCT', 'NBA_S_T_TRAD_FGM', 'NBA_S_T_TRAD_FGA', 'NBA_S_T_TRAD_FT_PCT', 'NBA_S_T_TRAD_AST', 'NBA_S_T_TRAD_STL', 'NBA_S_T_TRAD_PF', 'NBA_S_T_TRAD_PTS', 'NBA_S_T_TRAD_PLUS_MINUS')
 F.BORUTA.REJECTED = c('Position', 'Home', 'Opponent', 'RG_movement', 'RG_rankdiff', 'RG_saldiff', 'RG_diff20', 'RG_rank_diff20', 'RG_ADV_D_RT', 'RG_ADV_O_RT', 'RG_ADV_EFGPCT', 'RG_ADV_TSPCT', 'RG_START_Status', 'RG_MW_fa_change', 'RG_MW_y_change', 'RG_MW_rstr_change', 'RG_MW_fd_change', 'RG_MW_fdft_change', 'RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK', 'RG_OVD_AST', 'RG_OVD_STL', 'RG_OVD_FGM', 'RG_OVD_TO', 'RG_OVD_3PM', 'RG_OVD_BLK', 'RG_OVD_FGPCT', 'RG_OVD_REB', 'RG_OVD_PTS', 'RG_OVD_FGA', 'RG_OVD_OPP_STL', 'RG_OVD_OPP_FGM', 'RG_OVD_OPP_TO', 'RG_OVD_OPP_3PM', 'RG_OVD_OPP_BLK', 'RG_OVD_OPP_FGPCT', 'RG_OVD_OPP_REB', 'RG_OVD_OPP_PTS', 'RG_OVD_OPP_FGA', 'RG_B2B_Situation', 'RG_B2B_OPP_Situation', 'NBA_S_P_TRAD_FG3_PCT', 'NBA_S_P_TRAD_BLK', 'NBA_S_P_TRAD_BLKA', 'NBA_S_P_TRAD_DD2', 'NBA_S_P_TRAD_TD3', 'NBA_S_P_DEF_PCT_BLK', 'NBA_S_P_DEF_DEF_WS', 'NBA_PB_COUNTRY', 'NBA_S_T_TRAD_GP', 'NBA_S_T_TRAD_W', 'NBA_S_T_TRAD_L', 'NBA_S_T_TRAD_MIN', 'NBA_S_T_TRAD_FTM', 'NBA_S_T_TRAD_FTA', 'NBA_S_T_TRAD_OREB', 'NBA_S_T_TRAD_DREB', 'NBA_S_T_TRAD_REB', 'NBA_S_T_TRAD_BLK', 'NBA_S_T_TRAD_BLKA', 'NBA_S_T_TRAD_PFD', 'NBA_S_OPPT_TRAD_GP', 'NBA_S_OPPT_TRAD_W', 'NBA_S_OPPT_TRAD_L', 'NBA_S_OPPT_TRAD_W_PCT', 'NBA_S_OPPT_TRAD_MIN', 'NBA_S_OPPT_TRAD_FGM', 'NBA_S_OPPT_TRAD_FGA', 'NBA_S_OPPT_TRAD_FG_PCT', 'NBA_S_OPPT_TRAD_FG3M', 'NBA_S_OPPT_TRAD_FG3A', 'NBA_S_OPPT_TRAD_FG3_PCT', 'NBA_S_OPPT_TRAD_FTM', 'NBA_S_OPPT_TRAD_FTA', 'NBA_S_OPPT_TRAD_FT_PCT', 'NBA_S_OPPT_TRAD_OREB', 'NBA_S_OPPT_TRAD_DREB', 'NBA_S_OPPT_TRAD_REB', 'NBA_S_OPPT_TRAD_AST', 'NBA_S_OPPT_TRAD_TOV', 'NBA_S_OPPT_TRAD_STL', 'NBA_S_OPPT_TRAD_BLK', 'NBA_S_OPPT_TRAD_BLKA', 'NBA_S_OPPT_TRAD_PF', 'NBA_S_OPPT_TRAD_PFD', 'NBA_S_OPPT_TRAD_PTS', 'NBA_S_OPPT_TRAD_PLUS_MINUS', 'OPP_DVP_FPPG', 'OPP_DVP_RANK')
 
+F.ALL = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.MARKETWATCH, F.RG.START, F.RG.DVP,
+          F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC, F.RG.BACK2BACK, F.RG.BACK2BACK.OPP, F.NBA.SEASON.PLAYER.TRADITIONAL,
+          F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.SEASON.PLAYER.DEFENSE, F.NBA.PLAYERBIOS, F.NBA.SEASON.TEAM.TRADITIONAL,
+          F.NBA.SEASON.OPPTEAM.TRADITIONAL, F.MINE)
+F.ALL.SANSPROJECTIONS = setdiff(F.ALL, c(
+                                  c('NF_FP', 'RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58', 'TEAM_RG_points', 'TEAMMATES_RG_points') #projected fantasy points
+                                  #,c('RG_salary20', 'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58', 'RG_MW_dk_current', 'RG_MW_fa_current', 'RG_MW_y_current', 'RG_MW_dd_current', 'RG_MW_rstr_current', 'RG_MW_fdft_current') #salaries
+                                  #,c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'RG_minutes') #projected specific stats
+                                ))
 
 setup = function(algToUse, featuresToUse, endDate, prodRun, filename) {
   if (algToUse == 'xgb') {
