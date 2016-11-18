@@ -36,6 +36,10 @@ PLAYER_CATEGORIES = {
             'DraftPick': '',
             'DraftYear': '',
             'Height': '',
+            'MeasureType': 'Base',
+            'PaceAdjust': 'N',
+            'PlusMinus': 'N',
+            'Rank': 'N',
             'Weight': '',
         },
     },
@@ -47,7 +51,10 @@ PLAYER_CATEGORIES = {
             'DraftPick': '',
             'DraftYear': '',
             'Height': '',
+            'MeasureType': 'Base',
+            'PaceAdjust': 'N',
             'PlusMinus': 'Y',
+            'Rank': 'N',
             'Weight': '',
         },
     },
@@ -60,7 +67,10 @@ PLAYER_CATEGORIES = {
             'DraftYear': '',
             'Height': '',
             'MeasureType': 'Advanced',
+            'PaceAdjust': 'N',
             'PerMode': 'Totals',
+            'PlusMinus': 'N',
+            'Rank': 'N',
             'Weight': '',
         },
     },
@@ -73,7 +83,10 @@ PLAYER_CATEGORIES = {
             'DraftYear': '',
             'Height': '',
             'MeasureType': 'Opponent',
+            'PaceAdjust': 'N',
             'PerMode': 'Per100Possessions',
+            'PlusMinus': 'N',
+            'Rank': 'N',
             'Weight': '',
         },
     },
@@ -86,6 +99,9 @@ PLAYER_CATEGORIES = {
             'DraftYear': '',
             'Height': '',
             'MeasureType': 'Defense',
+            'PaceAdjust': 'N',
+            'PlusMinus': 'N',
+            'Rank': 'N',
             'Weight': '',
         },
     },
@@ -98,6 +114,9 @@ PLAYER_CATEGORIES = {
             'DraftYear': '',
             'Height': '',
             'MeasureType': 'Scoring',
+            'PaceAdjust': 'N',
+            'PlusMinus': 'N',
+            'Rank': 'N',
             'Weight': '',
         },
     },
@@ -110,15 +129,25 @@ PLAYER_CATEGORIES = {
             'DraftYear': '',
             'Height': '',
             'MeasureType': 'Usage',
+            'PaceAdjust': 'N',
             'PerMode': 'Totals',
+            'PlusMinus': 'N',
+            'Rank': 'N',
             'Weight': '',
         },
     },
     'PlayerBios': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerbiostats?',
         'urlParams': {
-
-        }
+            'College': '',
+            'Country': '',
+            'DateFrom': '',
+            'DateTo': '',
+            'DraftPick': '',
+            'DraftYear': '',
+            'Height': '',
+            'Weight': '',
+        },
     }
 }
 TEAM_CATEGORIES = {
@@ -127,6 +156,12 @@ TEAM_CATEGORIES = {
         'headers': {
             'Referer': 'http://stats.nba.com/league/team/'
         },
+        'urlParams': {
+            'MeasureType': 'Base',
+            'PaceAdjust': 'N',
+            'PlusMinus': 'N',
+            'Rank': 'N',
+        }
     },
     'Advanced': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashteamstats?',
@@ -135,7 +170,10 @@ TEAM_CATEGORIES = {
         },
         'urlParams': {
             'MeasureType': 'Advanced',
+            'PaceAdjust': 'N',
             'PerMode': 'Totals',
+            'PlusMinus': 'N',
+            'Rank': 'N',
         },
     },
     'FourFactors': {
@@ -145,11 +183,13 @@ TEAM_CATEGORIES = {
         },
         'urlParams': {
             'MeasureType': 'Four Factors',
+            'PaceAdjust': 'N',
             'PerMode': 'Totals',
+            'PlusMinus': 'N',
+            'Rank': 'N',
         },
     },
 }
-
 
 def createUrlParams(startDate, endDate, season, extraParams):
     dateFormat = '%m/%d/%Y'
@@ -163,18 +203,14 @@ def createUrlParams(startDate, endDate, season, extraParams):
         'LastNGames': '0',
         'LeagueID': '00',
         'Location': '',
-        'MeasureType': 'Base',
         'Month': '0',
         'OpponentTeamID': '0',
         'Outcome': '',
         'PORound': '0',
-        'PaceAdjust': 'N',
         'PerMode': 'PerGame',
         'Period': '0',
         'PlayerExperience': '',
         'PlayerPosition': '',
-        'PlusMinus': 'N',
-        'Rank': 'N',
         'Season': season,
         'SeasonSegment': '',
         'SeasonType': 'Regular Season',
@@ -209,8 +245,8 @@ def getSummary(isDaily, isTeam, category, season):
 
 #=============== Main ================
 
-isDaily = raw_input('Daily (leave blank for no)? ').strip() == 'y'
-isTeam = raw_input('Team (leave blank for no)? ').strip() == 'y'
+isDaily = raw_input('Season (leave blank for yes)? ').strip() == 'n'
+isTeam = raw_input('Player (leave blank for yes)? ').strip() == 'n'
 categoryInput = raw_input('Enter Category (if other than Traditional): ').strip()
 category = 'Traditional' if categoryInput == '' else categoryInput
 seasonInput = raw_input('Enter season (if other than 2016): ').strip()
@@ -230,9 +266,8 @@ baseUrl = categoryObj['baseUrl']
 urlParams = categoryObj['urlParams'] if 'urlParams' in categoryObj else {}
 headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
-prevDataValues = None
 lastDate = util.parseAsDate(util.parseBaseFilename(util.getLastFileInDir(parentDir)))
-currDate = lastDate
+currDate = lastDate + ONE_DAY
 while currDate <= seasonEndDate:
     currDateStr = util.formatDate(currDate)
     fullPathFilename = util.createFullPathFilename(parentDir, util.createJsonFilename(currDateStr))
@@ -245,12 +280,10 @@ while currDate <= seasonEndDate:
     #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
 
     dataValues = getDataValues(jsonData)
-    if len(dataValues) > 0 and dataValues != prevDataValues:
+    if len(dataValues) > 0:
         scraper.writeJsonData(jsonData, fullPathFilename, prettyPrint=True)
     else:
         util.stop('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
-
-    prevDataValues = dataValues
 
     currDate = currDate + ONE_DAY
     if currDate <= seasonEndDate:
