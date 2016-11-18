@@ -30,7 +30,7 @@ SEASONS = {
 PLAYER_CATEGORIES = {
     'Traditional': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'params': {
+        'urlParams': {
             'College': '',
             'Country': '',
             'DraftPick': '',
@@ -41,7 +41,7 @@ PLAYER_CATEGORIES = {
     },
     'Traditional_Diff': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'params': {
+        'urlParams': {
             'College': '',
             'Country': '',
             'DraftPick': '',
@@ -53,7 +53,7 @@ PLAYER_CATEGORIES = {
     },
     'Advanced': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'params': {
+        'urlParams': {
             'College': '',
             'Country': '',
             'DraftPick': '',
@@ -66,7 +66,7 @@ PLAYER_CATEGORIES = {
     },
     'Opponent': {
         'baseUrl': 'http://stats.nba.com/stats/leagueplayerondetails?',
-        'params': {
+        'urlParams': {
             'College': '',
             'Country': '',
             'DraftPick': '',
@@ -79,7 +79,7 @@ PLAYER_CATEGORIES = {
     },
     'Defense': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'params': {
+        'urlParams': {
             'College': '',
             'Country': '',
             'DraftPick': '',
@@ -91,7 +91,7 @@ PLAYER_CATEGORIES = {
     },
     'Scoring': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'params': {
+        'urlParams': {
             'College': '',
             'Country': '',
             'DraftPick': '',
@@ -103,7 +103,7 @@ PLAYER_CATEGORIES = {
     },
     'Usage': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerstats?',
-        'params': {
+        'urlParams': {
             'College': '',
             'Country': '',
             'DraftPick': '',
@@ -114,6 +114,12 @@ PLAYER_CATEGORIES = {
             'Weight': '',
         },
     },
+    'PlayerBios': {
+        'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerbiostats?',
+        'urlParams': {
+
+        }
+    }
 }
 TEAM_CATEGORIES = {
     'Traditional': {
@@ -127,7 +133,7 @@ TEAM_CATEGORIES = {
         'headers': {
             'Referer': 'http://stats.nba.com/league/team/'
         },
-        'params': {
+        'urlParams': {
             'MeasureType': 'Advanced',
             'PerMode': 'Totals',
         },
@@ -137,7 +143,7 @@ TEAM_CATEGORIES = {
         'headers': {
             'Referer': 'http://stats.nba.com/league/team/'
         },
-        'params': {
+        'urlParams': {
             'MeasureType': 'Four Factors',
             'PerMode': 'Totals',
         },
@@ -145,12 +151,12 @@ TEAM_CATEGORIES = {
 }
 
 
-def createUrlParams(startDate, endDate, season, params):
+def createUrlParams(startDate, endDate, season, extraParams):
     dateFormat = '%m/%d/%Y'
     urlParams = {
         'Conference': '',
         'DateFrom': startDate.strftime(dateFormat) if startDate else '', #eg.'10/27/2015',
-        'DateTo': endDate.strftime(dateFormat),
+        'DateTo': endDate.strftime(dateFormat) if endDate else '',
         'Division': '',
         'GameScope': '',
         'GameSegment': '',
@@ -178,7 +184,7 @@ def createUrlParams(startDate, endDate, season, params):
         'VsConference': '',
         'VsDivision': '',
     }
-    urlParams.update(params)
+    urlParams.update(extraParams)
     return urlParams
 def createHeaders(hdrs):
     headers = {
@@ -221,7 +227,7 @@ seasonEndDate = seasonObj['endDate']
 
 categoryObj = TEAM_CATEGORIES[category] if isTeam else PLAYER_CATEGORIES[category]
 baseUrl = categoryObj['baseUrl']
-params = categoryObj['params'] if 'params' in categoryObj else {}
+urlParams = categoryObj['urlParams'] if 'urlParams' in categoryObj else {}
 headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
 prevDataValues = None
@@ -233,7 +239,7 @@ while currDate <= seasonEndDate:
     print '\n%s data for %s...' % ('Overwriting' if util.fileExists(fullPathFilename) else 'Downloading', currDateStr)
 
     startDate = currDate if isDaily else None
-    url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], params))
+    url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], urlParams))
 
     jsonData = scraper.downloadJson(url, createHeaders(headers))
     #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
