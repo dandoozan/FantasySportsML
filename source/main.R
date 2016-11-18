@@ -41,7 +41,11 @@
 #D-Add contest type: 59_contestType_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.592, 6.509602/7.962631/6.678165, Inf, 7.92412/16.70604, 0.9364618
 #D-Plot only true tournaments: 60_tourneys_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.582, 6.509602/7.962631/6.678165, Inf, 7.92412/16.70604, 0.9320178
 #D-Plot 10 hill climbing teams: 61_10teams_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.596, 6.509602/7.962631/6.678165, Inf, 7.92412/16.70604, 0.9320178
-#-Set MAX_COV to 0.5: 62_cov05_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.578, 6.509602/7.962631/6.678165, 0.5, 7.92412/17.74164, 0.9296532
+#D-Set MAX_COV to 0.5: 62_cov05_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.578, 6.509602/7.962631/6.678165, 0.5, 7.92412/17.74164, 0.9296532
+#D-Use ceil: 63_cov05_ceil_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.59, 6.509602/7.962631/6.678165, 0.5, 10.46674/22.11585, 0.9450008
+#D-Use floor: 64_cov05_floor_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.633, 6.509602/7.962631/6.678165, 0.5, 10.19702/15.93937, 0.8762993
+#D-Use ceil, cov=Inf: 65_covInf_ceil_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.631, 6.509602/7.962631/6.678165, Inf, 10.46674/22.11585, 0.9450008
+#D-Use floor, cov=Inf: 66_covInf_floor_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.617, 6.509602/7.962631/6.678165, Inf, 10.19702/16.56721, 0.9054912
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -55,13 +59,13 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '62'
-NAME = 'cov05'
+NUMBER = '66'
+NAME = 'covInf_floor'
 
 PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
 END_DATE = '2016-11-14'
-MAX_COV = 0.5
+MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 10
 ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || T
