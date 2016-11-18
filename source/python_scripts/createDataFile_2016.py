@@ -1094,7 +1094,7 @@ DATA_SOURCES = [
         'containsY': True,
         'delimiter': ';',
         'features': ['FantasyPoints'],
-        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru'),
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru', '2016'),
         'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
         'knownMissingObj': {
             '2016-10-25': {

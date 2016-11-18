@@ -23,7 +23,7 @@ SEASONS = {
     '2016': {
         'str': '2016-17',
         'startDate': date(2016, 10, 25),
-        'endDate': util.getYesterdayAsDate() - ONE_DAY,
+        'endDate': util.getYesterdayAsDate(),
     },
 }
 
@@ -224,31 +224,30 @@ baseUrl = categoryObj['baseUrl']
 params = categoryObj['params'] if 'params' in categoryObj else {}
 headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
-currDate = seasonStartDate
 prevDataValues = None
+lastDate = util.parseAsDate(util.parseBaseFilename(util.getLastFileInDir(parentDir)))
+currDate = lastDate - ONE_DAY
 while currDate <= seasonEndDate:
-    print '\nDownloading data for ' + str(currDate) + '...'
-    fullPathFilename = util.createFullPathFilename(parentDir, util.createJsonFilename(util.formatDate(currDate)))
-    if util.fileExists(fullPathFilename):
-        print '    Skipping date because file exists: ' + fullPathFilename
+    currDateStr = util.formatDate(currDate)
+    fullPathFilename = util.createFullPathFilename(parentDir, util.createJsonFilename(currDateStr))
+    print '\n%s data for %s...' % ('Overwriting' if util.fileExists(fullPathFilename) else 'Downloading', currDateStr)
+
+    startDate = currDate if isDaily else None
+    url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], params))
+
+    jsonData = scraper.downloadJson(url, createHeaders(headers))
+    #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
+
+    dataValues = getDataValues(jsonData)
+    if len(dataValues) > 0 and dataValues != prevDataValues:
+        scraper.writeJsonData(jsonData, fullPathFilename, prettyPrint=True)
     else:
-        startDate = currDate if isDaily else None
-        url = scraper.createUrl(baseUrl, createUrlParams(startDate, currDate, seasonObj['str'], params))
+        util.stop('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
 
-        jsonData = scraper.downloadJson(url, createHeaders(headers))
-        #jsonData = json.load(open(PARENT_DIR + '/tbx_2015-10-27.json'))
-
-        dataValues = getDataValues(jsonData)
-        if len(dataValues) > 0 and dataValues != prevDataValues:
-            scraper.writeJsonData(jsonData, fullPathFilename, prettyPrint=False)
-        else:
-            util.headsUp('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
-
-        prevDataValues = dataValues
-
-        print '    Sleeping for %d seconds...' % SLEEP
-        time.sleep(SLEEP)
+    prevDataValues = dataValues
 
     currDate = currDate + ONE_DAY
+    if currDate <= seasonEndDate:
+        scraper.sleep(SLEEP)
 
 print 'Done!  Finished ' + getSummary(isDaily, isTeam, category, season)

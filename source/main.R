@@ -55,6 +55,7 @@
 #-remove 10/26 and add RG Offense Vs Defense Advanced
 #-remove F.RG.ADVANCEDPLAYERSTATS bc there are too many NAs
 #-increase numTries in createTeam_HillClimbing to get a better hill climbing team
+#-rescrape all nba data to get updated stats
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')

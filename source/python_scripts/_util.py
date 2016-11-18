@@ -121,7 +121,10 @@ def formatDate(date, dateFormat='%Y-%m-%d'):
     return date.strftime(dateFormat)
 def getOneDay():
     from datetime import timedelta
-    return timedelta(1)
+    return timedelta(days=1)
+def getOneWeek():
+    from datetime import timedelta
+    return timedelta(weeks=1)
 def getYesterdayAsDate():
     import datetime
     return datetime.date.today() - getOneDay()
