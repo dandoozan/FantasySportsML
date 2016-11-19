@@ -6,7 +6,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = util.getDate(2016, 10, 25)
 ONE_DAY = util.getOneDay()
-END_DATE = util.getTodayAsDate()
+END_DATE = util.getYesterdayAsDate()
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []

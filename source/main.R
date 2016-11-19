@@ -50,6 +50,7 @@
 #D-Rerun boruta: 68_boruta_xgb: 10/27-11/14, 104/229, 266, 39, 6.813247/7.742457, 0.698, 6.749739/7.947403/6.938571, Inf, 7.844551/18.45305, 0.9623523
 #D-Fix bug in greedy team: 69_greedy_xgb: 10/27-11/14, 104/230, 266, 39, 6.813247/7.742457, 1.102, 6.749739/7.947403/6.938571, Inf, 7.844551/17.59835, 0.9624888
 #D-Retune xgb params: 70_retune_xgb: 10/27-11/14, 104/230, 266, 39, 6.631999/7.767962, 1.049, 6.588949/7.888081/6.763689, Inf, 7.902768/15.55635, 0.948499
+#D-Add dates up to yesterday (11/18): 71_nov18_xgb:  10/27-11/18, 104/230, 266, 41, 6.707493/7.760857, 1.653, 6.719638/7.945174/6.88318, Inf, 7.879964/16.12162, 0.9473712
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -64,12 +65,12 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '70'
-NAME = 'retune'
+NUMBER = '71'
+NAME = 'nov18'
 
 PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
-END_DATE = '2016-11-14'
+END_DATE = '2016-11-18'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 10
 ALG = 'xgb'

@@ -85,9 +85,6 @@ imputeMissingValues = function(data) {
   data[is.na(data$RG_START_Status), 'RG_START_Status'] = 'B'
   data$RG_START_Status = factor(data$RG_START_Status)
 
-  #----------RG.BACK2BACK-----------
-
-
   #----------F.NBA.SEASON.PLAYER.[X]-----------
   #Set all NBA col NAs to 0.  These all have the same 754 NA rows
   for (colName in F.NBA.SEASON.PLAYER.TRADITIONAL) {
