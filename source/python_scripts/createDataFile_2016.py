@@ -738,6 +738,10 @@ def parseRotoGrinderMarketWatchRow(row, dateStr, prefix):
         setValue(newRow, site + '_change', change, prefix)
         setValue(newRow, site + '_current', current, prefix)
     return getNameValue(row, 'player'), newRow
+def parseRotoGrinderOptimalLineupRow(row, dateStr, prefix):
+    #set onteam to 1
+    newRow = { prefix + 'OnTeam': 1 }
+    return getNameValue(row, 'Player', prefix), newRow
 def parseRotoGrinderDefenseVsPositionCheatSheetRow(row, dateStr, prefix):
     #convert each to int/float
     util.mapSome(int, row, util.addPrefixToArray([ 'CRK', 'SFRK', 'SGRK', 'PFRK', 'PGRK'], prefix))
@@ -870,6 +874,10 @@ def loadRotoGrinderStartingLineupsFile(fullPathFilename, keyRenameMap, prefix, d
 def loadRotoGrinderMarketWatchFile(fullPathFilename, keyRenameMap, prefix, delimiter):
     jsonData = util.loadJsonFile(fullPathFilename)
     return jsonData.values()
+def loadRotoGrinderOptimalLineupFile(fullPathFilename, keyRenameMap, prefix, delimiter):
+    csvData = loadCsvFile(fullPathFilename, keyRenameMap, prefix, delimiter)
+    #remove last row
+    return csvData[:-1]
 
 #------------ Common ------------
 def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
@@ -908,14 +916,8 @@ def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowF
     currDate = startDate
     while currDate <= endDate:
         currDateStr = util.formatDate(currDate)
-        dateData = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
-        if dateData:
-            data[currDateStr] = dateData
-        else:
-            #util.headsUp('Data not found for date=' + currDateStr)
-            pass
+        data[currDateStr] = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
         currDate = currDate + ONE_DAY
-
     return data
 
 def hasExactMatch(key, obj):
@@ -1007,7 +1009,7 @@ def playerIsInData(data, name, isTeam):
                 return True
     return False
 
-def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate, endDate):
+def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, ignoreMissingNames, knownMissingObj, containsY, usePrevDay, startDate, endDate):
     print 'Merging data...'
     dateStrs = obj1.keys()
     dateStrs.sort()
@@ -1020,9 +1022,10 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, knownMissingObj, contai
                 obj2Name = findMatchingName(name, obj2[dateStr], isTeam)
                 if obj2Name in obj2[dateStr]:
                     playerData.update(obj2[dateStr][obj2Name])
-                else:
+                else: #name is missing from data
                     date = util.parseAsDate(dateStr)
-                    if playerIsKnownToBeMissing(dateStr, name, knownMissingObj) \
+                    if ignoreMissingNames \
+                            or playerIsKnownToBeMissing(dateStr, name, knownMissingObj) \
                             or playerDidNotPlayOnOrUpToDate(date - ONE_DAY if usePrevDay else date, name) \
                             or playerIsInData(obj2, name, isTeam): #it's oh well in this case; at least i know it's not a name mismatch
                         #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
@@ -1399,6 +1402,15 @@ DATA_SOURCES = [
         'startDate': util.getDate(2016, 10, 26),
     },
     {
+        'name': 'RotoGrinderOptimalTeam',
+        'features': [ 'RG_OL_OnTeam' ],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'OptimalLineup'),
+        'ignoreMissingNames': True,
+        'loadFileFunction': loadRotoGrinderOptimalLineupFile,
+        'parseRowFunction': parseRotoGrinderOptimalLineupRow,
+        'prefix': 'RG_OL_',
+    },
+    {
         'name': 'RotoGrinderDefenseVsPositionCheatSheet',
         'features': [
             'RG_OPP_DVP_CFPPG',
@@ -1711,7 +1723,113 @@ DATA_SOURCES = [
     #    'parseRowFunction': ,
     #},
 ]
+'''
+#tbx
+DATA_SOURCES = [
+    {
+        'name': 'FanDuel_fromPlayersManuallyDownloaded',
+        'isBaseData': True,
+        'endDate': util.getDate(2016, 11, 7),
+        'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players_manuallyDownloaded'),
+        'keyRenameMap': {
+            'Played': 'GamesPlayed',
+            'Injury Indicator': 'InjuryIndicator',
+            'Injury Details': 'InjuryDetails',
+        },
+        'parseRowFunction': parseFanDuelRow,
+    },
+    {
+        'name': 'FanDuel_fromPlayers',
+        'isBaseData': True,
+        'extendFeatures': False,
+        'features': ['Date', 'Name','Position','FPPG','GamesPlayed','Salary','Home','Team','Opponent','InjuryIndicator','InjuryDetails'],
+        'findFileFunction': findJsonFile,
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromFanDuel', 'Players'),
+        'keyRenameMap': {
+            'position': 'Position',
+            'fppg': 'FPPG',
+            'played': 'GamesPlayed',
+            'salary': 'Salary',
+            'injury_status': 'InjuryIndicator',
+            'injury_details': 'InjuryDetails',
+        },
+        'loadFileFunction': loadFanDuelJsonFile,
+        'parseRowFunction': parseFanDuelJsonRow,
+        'startDate': util.getDate(2016, 11, 8),
+    },
+    {
+        'name': 'RotoGuru',
+        'containsY': True,
+        'delimiter': ';',
+        'endDate': util.getYesterdayAsDate(),
+        'features': ['FantasyPoints'],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru', '2016'),
+        'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
+        'knownMissingObj': {
+            '2016-10-25': {
+                'cory jefferson', #he didn't play according to stats.nba.com
+                'louis amundson', #he didn't play according to stats.nba.com
+                'damien inglis', #he didn't play according to stats.nba.com
+                'phil pressey', #he didn't play according to stats.nba.com
+                'greg stiemsma', #he didn't play according to stats.nba.com
+                'patricio garino', #this guy isn't even on nba.com
+                'chasson randle', #this guy isn't even on nba.com
+                'j.p. tokoto', #this guy isn't even on nba.com
+                'livio jean-charles', #this guy isn't even on nba.com
+                'markel brown', #he didn't play according to stats.nba.com
+                'joel anthony', #he didn't play according to stats.nba.com
+                'grant jerrett', #he didn't play according to stats.nba.com
+                'henry sims', #he didn't play according to stats.nba.com
+                'chris johnson', #he didn't play according to stats.nba.com
+                'dahntay jones', #he didn't play according to stats.nba.com
+                'elliot williams', #he didn't play according to stats.nba.com
+                'john holland', #he didn't play according to stats.nba.com
+                'cameron jones', #this guy isn't even on nba.com
+                'jonathan holmes', #this guy isn't even on nba.com
+            },'2016-10-31': {
+                'taurean prince', #he didn't play according to stats.nba.com
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-01': {
+                'jerami grant', #he didn't play according to stats.nba.com
+            },
+            '2016-11-02': {
+                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-04': {
+                'taurean prince', #he didn't play according to stats.nba.com
+                'walter tavares', #he didn't play according to stats.nba.com
+                'joel bolomboy', #he didn't play according to stats.nba.com
+            },
+            '2016-11-05': {
+                'taurean prince', #he actually did play, but only for 2 min and didn't accumulate any stats
+                'walter tavares', #he didn't play according to stats.nba.com
+            },
+            '2016-11-07': {
+                'lance stephenson',
+            },
+            '2016-11-08': {
+                'jordan farmar',
+                'lance stephenson',
+                'walter tavares',
+            },
+        },
+        'parseRowFunction': parseRotoGuruRow,
+    },
+    {
+        'name': 'RotoGrinderOptimalTeam',
+        'features': [ 'RG_OL_OnTeam' ],
+        'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGrinders', 'OptimalLineup'),
+        'ignoreMissingNames': True,
+        'loadFileFunction': loadRotoGrinderOptimalLineupFile,
+        'parseRowFunction': parseRotoGrinderOptimalLineupRow,
+        'prefix': 'RG_OL_',
+    },
 
+]
+'''
 
 #load fanduel data
 data = {}
@@ -1727,6 +1845,7 @@ for dataSource in DATA_SOURCES:
     findFileFunction = util.getObjValue(dataSource, 'findFileFunction', findCsvFile)
     fullPathToDir = dataSource['fullPathToDir']
     handleDuplicates = util.getObjValue(dataSource, 'handleDuplicates', None)
+    ignoreMissingNames = util.getObjValue(dataSource, 'ignoreMissingNames', False)
     isBaseData = util.getObjValue(dataSource, 'isBaseData', False)
     isOpp = util.getObjValue(dataSource, 'isOpp', False)
     isTeam = util.getObjValue(dataSource, 'isTeam', False)
@@ -1747,7 +1866,7 @@ for dataSource in DATA_SOURCES:
     if isBaseData:
         data.update(newData)
     else:
-        mergeData(data, newData, name, isTeam, isOpp, knownMissingObj, containsY, usePrevDay, startDate, endDate)
+        mergeData(data, newData, name, isTeam, isOpp, ignoreMissingNames, knownMissingObj, containsY, usePrevDay, startDate, endDate)
 
 writeData(OUTPUT_FILE, data)
 
