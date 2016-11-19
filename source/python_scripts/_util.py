@@ -10,8 +10,10 @@ def getFilesInDir(fullPathToDir):
     return [f for f in os.listdir(fullPathToDir) if (os.path.isfile(os.path.join(fullPathToDir, f)) and f[:1] != '.')]
 def getLastFileInDir(fullPathToDir):
     filenames = getFilesInDir(fullPathToDir)
-    filenames.sort()
-    return filenames[-1]
+    if len(filenames) > 0:
+        filenames.sort()
+        return filenames[-1]
+    return None
 def createFullPathFilename(fullPathToParentDir, filename):
     import os
     return os.path.join(fullPathToParentDir, filename)

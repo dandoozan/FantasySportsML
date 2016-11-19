@@ -268,8 +268,8 @@ endDate = util.getObjValue(categoryObj, 'endDate', seasonEndDate) if season == '
 urlParams = categoryObj['urlParams'] if 'urlParams' in categoryObj else {}
 headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
-lastDate = util.parseAsDate(util.parseBaseFilename(util.getLastFileInDir(parentDir)))
-currDate = lastDate + ONE_DAY
+lastFileInDir = util.getLastFileInDir(parentDir)
+currDate = util.parseAsDate(util.parseBaseFilename(lastFileInDir)) + ONE_DAY if lastFileInDir else seasonStartDate
 while currDate <= endDate:
     currDateStr = util.formatDate(currDate)
     fullPathFilename = util.createFullPathFilename(parentDir, util.createJsonFilename(currDateStr))
