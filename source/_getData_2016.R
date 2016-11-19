@@ -99,7 +99,7 @@ imputeMissingValues = function(data) {
   #----------F.NBA.PLAYERBIOS-----------
   #set NAs to 0 or 'None' for players who haven't played this season (all of their
   #stats are NA because they aren't listed in NBA PlayerBios)
-  playersWhoHaveNotPlayedThisSeason = c('Brandan Wright', 'Bruno Caboclo', 'Caris LeVert', 'Chinanu Onuaku', 'Derrick Jones Jr.', 'Devin Harris', 'Josh Huestis', 'Jrue Holiday', 'Nerlens Noel', 'Patrick Beverley', 'Reggie Bullock', 'Wayne Ellington', 'Brice Johnson', 'Festus Ezeli', 'Mike Scott', 'Paul Pierce', 'Tiago Splitter', 'Alec Burks', 'Damian Jones', 'Marshall Plumlee', 'R.J. Hunter')
+  playersWhoHaveNotPlayedThisSeason = c('Brandan Wright', 'Bruno Caboclo', 'Caris LeVert', 'Chinanu Onuaku', 'Derrick Jones Jr.', 'Devin Harris', 'Josh Huestis', 'Jrue Holiday', 'Nerlens Noel', 'Patrick Beverley', 'Reggie Bullock', 'Wayne Ellington', 'Brice Johnson', 'Festus Ezeli', 'Mike Scott', 'Paul Pierce', 'Tiago Splitter', 'Alec Burks', 'Damian Jones', 'Marshall Plumlee', 'R.J. Hunter', 'Tyreke Evans', 'Jerryd Bayless', 'Reggie Jackson')
   data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_AGE', 'NBA_PB_PLAYER_HEIGHT_INCHES', 'NBA_PB_PLAYER_WEIGHT', 'NBA_PB_DRAFT_YEAR')] = 0
   data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_DRAFT_ROUND', 'NBA_PB_DRAFT_NUMBER')] = 1000
   data[data$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_COLLEGE', 'NBA_PB_COUNTRY')] = 'None'

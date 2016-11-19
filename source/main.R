@@ -62,17 +62,17 @@ setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '68'
 NAME = 'boruta'
 
-PLOT = 'fi' #fi, scores, cv
+PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
 END_DATE = '2016-11-14'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 10
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || F
+MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 Y_NAME = 'FantasyPoints'
 

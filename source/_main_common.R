@@ -397,3 +397,16 @@ makePlots = function(toPlot, data, yName, xNames, filename, teamStats=list(), pr
   if (prodRun || toPlot == 'fi') plotImportances(baseModel, xNames, save=prodRun, filename=filename)
   doPlots(toPlot, prodRun, data, yName, xNames, filename)
 }
+
+getTeamForToday = function() {
+  todayStr = as.character(Sys.Date())
+  d = getData()
+  sp = splitDataIntoTrainTest(d, 'start', todayStr)
+  train = sp$train
+  test = sp$test
+
+  prediction = createTeamPrediction(train, test, Y_NAME, FEATURES_TO_USE)
+  predictionDF = test
+  predictionDF[[Y_NAME]] = prediction
+  return(createTeam_Greedy(predictionDF))
+}

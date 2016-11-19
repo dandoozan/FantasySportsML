@@ -28,16 +28,25 @@ computeCov = function(players) {
   cov = ifelse(is.nan(cov), Inf, cov)
   return(cov)
 }
-printPlayer = function(player) {
-  cat('    ', as.character(player$Position), ', ', sep='')
-  cat(paste(player[, c('Name', 'Salary')], collapse=', '), sep='')
-  cat(', ', round(player$FantasyPoints, 2), sep='')
-  cat(' (', round(player$RG_deviation, 2), ')', sep='')
-  #cat(', ', round(player$PPD, 2), sep='')
-  cat(', ', round(player$cov, 2), sep='')
+printPlayer = function(player, full=F) {
+  if (full) {
+    cat('    ', player$Name, sep='')
+    cat(', ', as.character(player$Position), sep='')
+    #cat(', ', as.character(player$Team), sep='')
+    #cat(', ', as.character(player$Opponent), sep='')
+    cat(', $', player$Salary, sep='')
+    cat(', ', round(player$FantasyPoints, 2), sep='')
+  } else {
+    cat('    ', as.character(player$Position), ', ', sep='')
+    cat(paste(player[, c('Name', 'Salary')], collapse=', '), sep='')
+    cat(', ', round(player$FantasyPoints, 2), sep='')
+    cat(' (', round(player$RG_deviation, 2), ')', sep='')
+    #cat(', ', round(player$PPD, 2), sep='')
+    cat(', ', round(player$cov, 2), sep='')
+  }
   cat('\n')
 }
-printTeam = function(team) {
+printTeam = function(team, full=F) {
   if (is.null(team)) {
     cat('No team\n')
   } else {
@@ -45,8 +54,12 @@ printTeam = function(team) {
       team$cov = computeCov(team)
     }
 
-    for (i in 1:nrow(team)) {
-      printPlayer(team[i,])
+    positions = c('PG', 'SG', 'SF', 'PF', 'C')
+    for (position in positions) {
+      playersAtPosition = team[team$Position==position,]
+      for (i in 1:nrow(playersAtPosition)) {
+        printPlayer(playersAtPosition[i,], full)
+      }
     }
     cat('    Total Amount spent:', computeAmountSpent(team), '\n')
     cat('    Total Fantasy Points:', round(computeTeamFP(team), 2), '\n')
