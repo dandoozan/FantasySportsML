@@ -32,6 +32,8 @@ def createJsonFilename(baseFilename):
     return baseFilename + '.json'
 def createTxtFilename(baseFilename):
     return baseFilename + '.txt'
+def createPyFilename(baseFilename):
+    return baseFilename + '.py'
 def parseBaseFilename(filename):
     return filename[:filename.find('.')]
 def loadCsvFile(fullPathFilename, keyRenameMap=None, delimiter=',', prefix=''):
