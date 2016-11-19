@@ -138,6 +138,7 @@ PLAYER_CATEGORIES = {
     },
     'PlayerBios': {
         'baseUrl': 'http://stats.nba.com/stats/leaguedashplayerbiostats?',
+        'endDate': util.getTodayAsDate(),
         'urlParams': {
             'College': '',
             'Country': '',
@@ -263,12 +264,13 @@ seasonEndDate = seasonObj['endDate']
 
 categoryObj = TEAM_CATEGORIES[category] if isTeam else PLAYER_CATEGORIES[category]
 baseUrl = categoryObj['baseUrl']
+endDate = util.getObjValue(categoryObj, 'endDate', seasonEndDate) if season == '2016' else seasonEndDate
 urlParams = categoryObj['urlParams'] if 'urlParams' in categoryObj else {}
 headers = categoryObj['headers'] if 'headers' in categoryObj else {}
 
 lastDate = util.parseAsDate(util.parseBaseFilename(util.getLastFileInDir(parentDir)))
 currDate = lastDate + ONE_DAY
-while currDate <= seasonEndDate:
+while currDate <= endDate:
     currDateStr = util.formatDate(currDate)
     fullPathFilename = util.createFullPathFilename(parentDir, util.createJsonFilename(currDateStr))
     print '\n%s data for %s...' % ('Overwriting' if util.fileExists(fullPathFilename) else 'Downloading', currDateStr)

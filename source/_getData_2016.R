@@ -5,9 +5,8 @@
     #-Season,Player,Traditional,2016
     #-Season,Player,Advanced,2016
     #-Season,Player,Defense,2016
+    #-Season,Player,PlayerBios,2016
     #-Season,Team,Traditional,2016
-  #-save nba playerbios json data (http://stats.nba.com/stats/leaguedashplayerbiostats?College=&Conference=&Country=&DateFrom=&DateTo=&Division=&DraftPick=&DraftYear=&GameScope=&GameSegment=&Height=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PerMode=PerGame&Period=0&PlayerExperience=&PlayerPosition=&Season=2016-17&SeasonSegment=&SeasonType=Regular+Season&ShotClockRange=&StarterBench=&TeamID=0&VsConference=&VsDivision=&Weight=)
-  #-change END_DATE in createDataFile_2016.py
   #-create data_2016.csv (python source/python_scripts/createDataFile_2016.py)
     #-recheck the 'never' played names
     #-Resolve missing names

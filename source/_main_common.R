@@ -430,7 +430,7 @@ makePlots = function(toPlot, data, yName, xNames, filename, teamStats=list(), pr
 
 printTeamForToday = function() {
   d = getData()
-  sp = splitDataIntoTrainTest(d, 'start', as.character(Sys.Date()))
+  sp = splitDataIntoTrainTest(d, 'start', '2016-11-18') #as.character(Sys.Date()))
   train = sp$train
   test = sp$test
 
