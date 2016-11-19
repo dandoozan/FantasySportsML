@@ -160,10 +160,11 @@ getBetterTeam = function(data, team, amountUnderBudget, verbose=F) {
       for (i in 1:numPlayers) {
         teamPlayer = team[team$Position == position,][i,]
         fpDiff = players$FantasyPoints - teamPlayer$FantasyPoints
+        fpDiff[fpDiff <= 0] = NA #remove players who have a lower or equal FP
         salaryDiff = players$Salary - teamPlayer$Salary
-        salaryDiff[salaryDiff > amountUnderBudget] = NA
-        salaryDiff[salaryDiff < 0] = NA
-        if (sum(!is.na(salaryDiff)) > 0) {
+        salaryDiff[salaryDiff > amountUnderBudget] = NA #remove players whose salary will take me over the limit
+        salaryDiff[salaryDiff < 0] = NA #remove players who have a lower salary
+        if (sum(!is.na(fpDiff) & !is.na(salaryDiff)) > 0) {
           ppdg = computePPD(fpDiff, salaryDiff)
           maxPpdg = max(ppdg, na.rm=T)
           if (maxPpdg > bestPpdg) {

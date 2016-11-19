@@ -48,7 +48,7 @@
 #D-Use floor, cov=Inf: 66_covInf_floor_xgb: 10/27-11/14, 105/229, 266, 53, 6.517612/7.722402, 0.617, 6.509602/7.962631/6.678165, Inf, 10.19702/16.56721, 0.9054912
 #D-Remove projections: 67_noProj_xgb: 10/27-11/14, 211/229, 266, 39, 6.674566/7.760814, 11.824, 6.635393/7.992468/6.846707, Inf, 7.894667/17.21335, 0.918429
 #D-Rerun boruta: 68_boruta_xgb: 10/27-11/14, 104/229, 266, 39, 6.813247/7.742457, 0.698, 6.749739/7.947403/6.938571, Inf, 7.844551/18.45305, 0.9623523
-#-Retune
+#D-Fix bug in greedy team: 69_greedy_xgb: 10/27-11/14, 104/230, 266, 39, 6.813247/7.742457, 1.102, 6.749739/7.947403/6.938571, Inf, 7.844551/17.59835, 0.9624888
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -62,9 +62,9 @@ setwd('/Users/dan/Desktop/ML/df')
 source('source/_main_common.R')
 
 #Globals
-PROD_RUN = F
-NUMBER = '68'
-NAME = 'boruta'
+PROD_RUN = T
+NUMBER = '69'
+NAME = 'greedy'
 
 PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'

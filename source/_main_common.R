@@ -428,7 +428,7 @@ makePlots = function(toPlot, data, yName, xNames, filename, teamStats=list(), pr
   doPlots(toPlot, prodRun, data, yName, xNames, filename)
 }
 
-getTeamForToday = function() {
+printTeamForToday = function() {
   d = getData()
   sp = splitDataIntoTrainTest(d, 'start', as.character(Sys.Date()))
   train = sp$train
@@ -437,5 +437,6 @@ getTeamForToday = function() {
   prediction = createTeamPrediction(train, test, Y_NAME, FEATURES_TO_USE)
   predictionDF = test
   predictionDF[[Y_NAME]] = prediction
-  return(createTeam_Greedy(predictionDF))
+  cat('Team:\n')
+  printTeam(createTeam_Greedy(predictionDF), full=T)
 }
