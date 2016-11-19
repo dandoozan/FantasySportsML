@@ -41,10 +41,10 @@ source('source/_createTeam.R')
 # RG_ADV_TSPCT, NBA_S_P_ADV_TS_PCT <-- no
 # RG_ADV_USGPCT, NBA_S_P_ADV_USG_PCT <-- no
 
-#features excluded: FantasyPoints, Date, Name
+#features excluded: FantasyPoints, Minutes, Date, Name
 F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent')
 F.FANDUEL = c('Date', 'Name', 'Position', 'FPPG', 'GamesPlayed', 'Salary', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
-F.ROTOGURU = c('FantasyPoints')
+F.ROTOGURU = c('FantasyPoints', 'Minutes')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
 F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk', 'RG_line',  'RG_movement', 'RG_overunder', 'RG_total', 'RG_contr', 'RG_pownpct', 'RG_rank', 'RG_rankdiff', 'RG_saldiff', 'RG_deviation', 'RG_minutes', 'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20', 'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
 F.RG.ADVANCEDPLAYERSTATS = c('RG_ADV_D_RT', 'RG_ADV_O_RT', 'RG_ADV_POW_AST', 'RG_ADV_POW_BLK', 'RG_ADV_POW_PTS', 'RG_ADV_POW_REB', 'RG_ADV_POW_STL', 'RG_ADV_EFGPCT', 'RG_ADV_TSPCT', 'RG_ADV_USGPCT')
@@ -72,7 +72,7 @@ F.ALL = setdiff(c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.
           F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC, F.RG.BACK2BACK, F.RG.BACK2BACK.OPP, F.NBA.SEASON.PLAYER.TRADITIONAL,
           F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.SEASON.PLAYER.DEFENSE, F.NBA.PLAYERBIOS, F.NBA.SEASON.TEAM.TRADITIONAL,
           F.NBA.SEASON.OPPTEAM.TRADITIONAL, F.MINE),
-          c('FantasyPoints', 'Date', 'Name'))
+          c(F.ROTOGURU, 'Date', 'Name'))
 F.ALL.SANSPROJECTIONS = setdiff(F.ALL, c(
                                   c('NF_FP', 'RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58', 'TEAM_RG_points', 'TEAMMATES_RG_points') #projected fantasy points
                                   #,c('RG_salary20', 'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58', 'RG_MW_dk_current', 'RG_MW_fa_current', 'RG_MW_y_current', 'RG_MW_dd_current', 'RG_MW_rstr_current', 'RG_MW_fdft_current') #salaries
@@ -431,13 +431,13 @@ makePlots = function(toPlot, data, yName, xNames, filename, teamStats=list(), pr
 }
 
 #----------------- utility functions ----------------
-getPredictionForDate = function(dateStr) {
+getPredictionForDate = function(dateStr, featuresToUse=FEATURES_TO_USE) {
   d = getData()
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test
 
-  prediction = createTeamPrediction(train, test, Y_NAME, FEATURES_TO_USE)
+  prediction = createTeamPrediction(train, test, Y_NAME, featuresToUse)
   test$Prediction = prediction
   return(test)
 }

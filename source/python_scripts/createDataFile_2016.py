@@ -648,6 +648,10 @@ def parseRotoGuruRow(row, dateStr, prefix):
     #convert to float just to make sure all values can be parsed to floats
     row['FantasyPoints'] = float(row['FantasyPoints'].strip())
 
+    #set 'DNP' and 'NA' to 0 in Minutes
+    minutes = getValue(row, 'Minutes')
+    row['Minutes'] = 0. if (minutes == 'DNP' or minutes == 'NA') else float(minutes)
+
     #reverse name bc it's in format: 'lastname, firstname'
     playerName = row['Name'].strip().split(', ')
     playerName.reverse()
@@ -1031,7 +1035,7 @@ def mergeData(obj1, obj2, dataSourceName, isTeam, isOpp, ignoreMissingNames, kno
                         #util.headsUp('Found known missing player, date=' + dateStr + ', name=' + name)
                         if containsY:
                             #set FantasyPoints to 0 for these people who are known to be missing
-                            playerData.update({ 'FantasyPoints': 0 })
+                            playerData.update({ 'FantasyPoints': 0, 'Minutes': 0 })
                     else:
                         #tbx
                         if dataSourceName not in TBX_MISSING_PLAYERS:
@@ -1104,7 +1108,7 @@ DATA_SOURCES = [
         'containsY': True,
         'delimiter': ';',
         'endDate': util.getYesterdayAsDate(),
-        'features': ['FantasyPoints'],
+        'features': ['FantasyPoints', 'Minutes'],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru', '2016'),
         'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
         'knownMissingObj': {

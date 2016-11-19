@@ -3,6 +3,7 @@
 #-Use FPPG, GamesPlayed, NBA_S_P_TRAD_MIN: dates=11/05-11/18, train/cvErrors=7.229933/9.089477, Trn/CV/Train=7.360246/8.624631/7.322529
 #-Add InjuryIndicator: 6.984573/8.280182, 7.008483/8.283887/7.121777
 #-Add OPP_DVP_RANK:
+  #-diff b/n prediction and FP increases as DVP rank decreases and vice versa
 
 
 
@@ -33,7 +34,7 @@ MAKE_TEAMS = PROD_RUN || F
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 Y_NAME = 'FantasyPoints'
 
-FEATURES_TO_USE = c('FPPG', 'GamesPlayed', 'NBA_S_P_TRAD_MIN', 'InjuryIndicator', 'OPP_DVP_RANK')
+FEATURES_TO_USE = c('FPPG', 'GamesPlayed', 'NBA_S_P_TRAD_MIN', 'InjuryIndicator')#, 'OPP_DVP_RANK')
 
 #================= Functions =================
 
