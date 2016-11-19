@@ -121,6 +121,13 @@ imputeMissingValues = function(data) {
   data$NBA_PB_DRAFT_ROUND = as.numeric(data$NBA_PB_DRAFT_ROUND)
   data$NBA_PB_DRAFT_NUMBER = as.numeric(data$NBA_PB_DRAFT_NUMBER)
 
+  #----------F.NBA.TODAY-----------
+  #Set alll NAs to 0s for NBA TODAY stats.  There were 1296 NAs and all
+  #of them had FantasyPoints of 0, so they are for players who did not play
+  for (colName in F.NBA.TODAY) {
+    data[is.na(data[[colName]]), colName] = 0
+  }
+
   #----------NBA.SEASON.TEAM.TRADITIONAL and NBA.SEASON.OPPTEAM.TRADITIONAL-----------
   #The NAs are for team's first games (because I look for the previous day's
   #data, but since there is none, then the NBA_TEAM_[X] features are NA), so set
