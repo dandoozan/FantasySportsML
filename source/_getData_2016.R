@@ -166,16 +166,15 @@ featureEngineer = function(data) {
   return(data)
 }
 
-getData = function(endDate=NULL) {
-  cat('Getting data...\n')
+getData = function(startDate='2016-10-25', endDate=as.character(Sys.Date())) {
+
+  cat('Getting data (', format(as.Date(startDate), '%m/%d'),'-', format(as.Date(endDate), '%m/%d'),')...\n', sep='')
 
   #load data
   full = loadData()
 
-  #remove any data after endDate
-  if (!is.null(endDate)) {
-    full = full[full$Date <= endDate,]
-  }
+  #remove data before startDate and after endDate
+  full = full[(full$Date >= startDate) & (full$Date <= endDate),]
 
   #impute missing values
   full = imputeMissingValues(full)
@@ -189,4 +188,10 @@ getData = function(endDate=NULL) {
 getContestData = function() {
   cat('Getting contest data...\n')
   return(read.csv(paste0('data/data_contests_2016.csv'), stringsAsFactors=F, na.strings=c('')))
+}
+
+#----------------- utility functions ----------------
+getDataForDate = function(dateStr) {
+  d = getData()
+  return(d[d$Date == dateStr,])
 }

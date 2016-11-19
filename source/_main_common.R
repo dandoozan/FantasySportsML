@@ -79,7 +79,7 @@ F.ALL.SANSPROJECTIONS = setdiff(F.ALL, c(
                                   #,c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'RG_minutes') #projected specific stats
                                 ))
 
-setup = function(algToUse, featuresToUse, endDate, prodRun, filename) {
+setup = function(algToUse, featuresToUse, startDate, endDate, prodRun, filename) {
   if (algToUse == 'xgb') {
     source('source/xgb_2016.R')
   } else if (algToUse == 'rf') {
@@ -89,7 +89,7 @@ setup = function(algToUse, featuresToUse, endDate, prodRun, filename) {
   if (prodRun) cat('PROD RUN: ', filename, '\n', sep='')
 
   #load data
-  data = getData(endDate)
+  data = getData(startDate, endDate)
 
   #print number of feature to use
   cat('Number of features to use: ', length(featuresToUse), '/', length(colnames(data)), '\n', sep='')
@@ -428,6 +428,18 @@ makePlots = function(toPlot, data, yName, xNames, filename, teamStats=list(), pr
   }
   if (prodRun || toPlot == 'fi') plotImportances(baseModel, xNames, save=prodRun, filename=filename)
   doPlots(toPlot, prodRun, data, yName, xNames, filename)
+}
+
+#----------------- utility functions ----------------
+getPredictionForDate = function(dateStr) {
+  d = getData()
+  sp = splitDataIntoTrainTest(d, 'start', dateStr)
+  train = sp$train
+  test = sp$test
+
+  prediction = createTeamPrediction(train, test, Y_NAME, FEATURES_TO_USE)
+  test$Prediction = prediction
+  return(test)
 }
 
 printTeamForToday = function() {
