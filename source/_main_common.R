@@ -48,6 +48,7 @@ F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF
 F.RG.PP = c('RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk', 'RG_line',  'RG_movement', 'RG_overunder', 'RG_total', 'RG_contr', 'RG_pownpct', 'RG_rank', 'RG_rankdiff', 'RG_saldiff', 'RG_deviation', 'RG_minutes', 'RG_rank20', 'RG_diff20', 'RG_rank_diff20', 'RG_salary20', 'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58')
 F.RG.ADVANCEDPLAYERSTATS = c('RG_ADV_D_RT', 'RG_ADV_O_RT', 'RG_ADV_POW_AST', 'RG_ADV_POW_BLK', 'RG_ADV_POW_PTS', 'RG_ADV_POW_REB', 'RG_ADV_POW_STL', 'RG_ADV_EFGPCT', 'RG_ADV_TSPCT', 'RG_ADV_USGPCT')
 F.RG.MARKETWATCH = c('RG_MW_dk_current', 'RG_MW_dk_change', 'RG_MW_fa_current',  'RG_MW_fa_change', 'RG_MW_y_current', 'RG_MW_y_change', 'RG_MW_dd_current', 'RG_MW_dd_change', 'RG_MW_rstr_current', 'RG_MW_rstr_change', 'RG_MW_fd_change', 'RG_MW_fdft_current', 'RG_MW_fdft_change')
+F.RG.OPTIMALLINEUP = c('RG_OL_OnTeam')
 F.RG.START = c('RG_START_Order', 'RG_START_Starter', 'RG_START_Status')
 F.RG.DVP = c('RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK')
 F.RG.OVD.BASIC = c('RG_OVD_AST', 'RG_OVD_STL', 'RG_OVD_FGM', 'RG_OVD_TO', 'RG_OVD_3PM', 'RG_OVD_BLK', 'RG_OVD_FGPCT', 'RG_OVD_REB', 'RG_OVD_PTS', 'RG_OVD_FGA')
@@ -66,7 +67,7 @@ F.BORUTA.CONFIRMED = c('FPPG', 'GamesPlayed', 'Salary', 'Team', 'InjuryIndicator
 F.BORUTA.TENTATIVE = c('RG_rankdiff', 'RG_ADV_D_RT', 'RG_ADV_O_RT', 'RG_MW_dk_change', 'RG_MW_rstr_change', 'RG_MW_fd_change', 'RG_OVD_OPP_AST', 'NBA_S_P_TRAD_FG3_PCT', 'NBA_S_P_TRAD_FT_PCT', 'NBA_S_P_TRAD_BLK', 'NBA_S_P_ADV_NET_RATING', 'NBA_S_P_DEF_PCT_BLK', 'NBA_S_P_DEF_DEF_WS', 'NBA_PB_COLLEGE', 'NBA_PB_DRAFT_ROUND', 'NBA_S_T_TRAD_W_PCT', 'NBA_S_T_TRAD_FGA', 'NBA_S_T_TRAD_FTM', 'NBA_S_T_TRAD_FTA', 'NBA_S_T_TRAD_FT_PCT', 'NBA_S_T_TRAD_OREB', 'NBA_S_T_TRAD_DREB', 'NBA_S_T_TRAD_REB', 'NBA_S_T_TRAD_BLK', 'NBA_S_T_TRAD_BLKA', 'NBA_S_T_TRAD_PF', 'NBA_S_T_TRAD_PFD', 'NBA_S_T_TRAD_PTS', 'NBA_S_T_TRAD_PLUS_MINUS', 'NBA_S_OPPT_TRAD_STL')
 F.BORUTA.REJECTED = c('Position', 'Home', 'Opponent', 'RG_movement', 'RG_rank_diff20', 'RG_ADV_EFGPCT', 'RG_ADV_TSPCT', 'RG_MW_fa_change', 'RG_MW_y_change', 'RG_MW_fdft_change', 'RG_START_Status', 'RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK', 'RG_OVD_AST', 'RG_OVD_STL', 'RG_OVD_FGM', 'RG_OVD_TO', 'RG_OVD_3PM', 'RG_OVD_BLK', 'RG_OVD_FGPCT', 'RG_OVD_REB', 'RG_OVD_PTS', 'RG_OVD_FGA', 'RG_OVD_OPP_STL', 'RG_OVD_OPP_FGM', 'RG_OVD_OPP_TO', 'RG_OVD_OPP_3PM', 'RG_OVD_OPP_BLK', 'RG_OVD_OPP_FGPCT', 'RG_OVD_OPP_REB', 'RG_OVD_OPP_PTS', 'RG_OVD_OPP_FGA', 'RG_B2B_Situation', 'RG_B2B_OPP_Situation', 'NBA_S_P_TRAD_BLKA', 'NBA_S_P_TRAD_DD2', 'NBA_S_P_TRAD_TD3', 'NBA_PB_COUNTRY', 'NBA_S_T_TRAD_GP', 'NBA_S_T_TRAD_W', 'NBA_S_T_TRAD_L', 'NBA_S_T_TRAD_MIN', 'NBA_S_OPPT_TRAD_GP', 'NBA_S_OPPT_TRAD_W', 'NBA_S_OPPT_TRAD_L', 'NBA_S_OPPT_TRAD_W_PCT', 'NBA_S_OPPT_TRAD_MIN', 'NBA_S_OPPT_TRAD_FGM', 'NBA_S_OPPT_TRAD_FGA', 'NBA_S_OPPT_TRAD_FG_PCT', 'NBA_S_OPPT_TRAD_FG3M', 'NBA_S_OPPT_TRAD_FG3A', 'NBA_S_OPPT_TRAD_FG3_PCT', 'NBA_S_OPPT_TRAD_FTM', 'NBA_S_OPPT_TRAD_FTA', 'NBA_S_OPPT_TRAD_FT_PCT', 'NBA_S_OPPT_TRAD_OREB', 'NBA_S_OPPT_TRAD_DREB', 'NBA_S_OPPT_TRAD_REB', 'NBA_S_OPPT_TRAD_AST', 'NBA_S_OPPT_TRAD_TOV', 'NBA_S_OPPT_TRAD_BLK', 'NBA_S_OPPT_TRAD_BLKA', 'NBA_S_OPPT_TRAD_PF', 'NBA_S_OPPT_TRAD_PFD', 'NBA_S_OPPT_TRAD_PTS', 'NBA_S_OPPT_TRAD_PLUS_MINUS', 'OPP_DVP_FPPG', 'OPP_DVP_RANK')
 
-F.ALL = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.MARKETWATCH, F.RG.START, F.RG.DVP,
+F.ALL = c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.MARKETWATCH, F.RG.OPTIMALLINEUP, F.RG.START, F.RG.DVP,
           F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC, F.RG.BACK2BACK, F.RG.BACK2BACK.OPP, F.NBA.SEASON.PLAYER.TRADITIONAL,
           F.NBA.SEASON.PLAYER.ADVANCED, F.NBA.SEASON.PLAYER.DEFENSE, F.NBA.PLAYERBIOS, F.NBA.SEASON.TEAM.TRADITIONAL,
           F.NBA.SEASON.OPPTEAM.TRADITIONAL, F.MINE)
@@ -157,6 +158,13 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   return(NA)
 }
 
+getRgTeam = function(test) {
+  rgTeam = test[test$RG_OL_OnTeam == 1,]
+  if (sum(rgTeam$FantasyPoints == 0) || nrow(rgTeam) < 9) {
+    return(NULL)
+  }
+  return(rgTeam)
+}
 computeActualFP = function(team, test) {
   return(sum(getTeamIndividualActualFPs(team, test)))
 }
@@ -178,7 +186,7 @@ printRGTrnCVError = function(data, yName, xNames, createModel, computeError) {
   cat('    RG Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
 }
 
-plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), entryFeesFor5050=c(), greedyTeamExpected=c(), greedyTeamActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), name='Scores', save=FALSE, main='Title', filename='') {
+plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), entryFeesFor5050=c(), greedyTeamExpected=c(), greedyTeamActual=c(), rgTeamExpected=c(), rgTeamActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), name='Scores', save=FALSE, main='Title', filename='') {
   cat('    Plotting ', name, '...\n', sep='')
 
   if (save) startSavePlot(name, filename)
@@ -192,8 +200,8 @@ plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), entryFeesFor505
   numLowest5050s = length(lowest5050s)
 
   #get ymin and ymax
-  minValue = min(yLow, greedyTeamExpected, greedyTeamActual, medianActualFPs, na.rm=T)
-  maxValue = max(yHigh, greedyTeamExpected, greedyTeamActual, medianActualFPs, na.rm=T)
+  minValue = min(yLow, greedyTeamExpected, greedyTeamActual, rgTeamExpected, rgTeamActual, medianActualFPs, na.rm=T)
+  maxValue = max(yHigh, greedyTeamExpected, greedyTeamActual, rgTeamExpected, rgTeamActual, medianActualFPs, na.rm=T)
   if (numLowest5050s > 0) {
     for (i in 1:numLowest5050s) {
       minValue = min(minValue, lowest5050s[[i]], na.rm=T)
@@ -223,6 +231,19 @@ plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), entryFeesFor505
       labels = c(labels, paste0('50/50 $', entryFeesFor5050[i], ' Contests'))
       colors = c(colors, colors5050[i])
     }
+  }
+
+  #draw rg expected
+  if (length(rgTeamExpected) > 0) {
+    lines(dates, rgTeamExpected, col='blue')
+    labels = c(labels, 'RG Team Expected')
+    colors = c(colors, 'blue')
+  }
+  #draw rg actual
+  if (length(rgTeamActual) > 0) {
+    lines(dates, rgTeamActual, col='orange')
+    labels = c(labels, 'RG Team Actual')
+    colors = c(colors, 'orange')
   }
 
   #draw greedy expected
@@ -289,6 +310,8 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
   myTeamRmses = c()
   myTeamGreedyExpectedFPs = c()
   myTeamHillClimbingExpectedFPs = c()
+  rgTeamExpectedFPs = c()
+  rgTeamActualFPs = c()
   highestWinningScores = c()
   lowestWinningScores = c()
   lowestWinningScores_5050s = vector('list', length(entryFeesFor5050))
@@ -320,6 +343,9 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     myTeamGreedy = createTeam_Greedy(predictionDF, maxCov=maxCov)
     myTeamExpectedFP = computeTeamFP(myTeamGreedy)
     myTeamActualFP = computeActualFP(myTeamGreedy, test)
+    rgTeam = getRgTeam(predictionDF)
+    rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam)
+    rgTeamActualFP = if (is.null(rgTeam)) NA else computeActualFP(rgTeam, test)
     myTeamRmse = computeError(getTeamIndividualActualFPs(myTeamGreedy, test), myTeamGreedy$FantasyPoints)
     allMyTeamActualFPs = c(myTeamActualFP)
     if (prodRun || toPlot == 'multiscores') {
@@ -355,6 +381,8 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     rgRmses = c(rgRmses, rgRmse)
     myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
     myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
+    rgTeamExpectedFPs = c(rgTeamExpectedFPs, rgTeamExpectedFP)
+    rgTeamActualFPs = c(rgTeamActualFPs, rgTeamActualFP)
     myTeamRmses = c(myTeamRmses, myTeamRmse)
     highestWinningScores = c(highestWinningScores, highestWinningScore)
     lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
@@ -377,6 +405,8 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     myTeamActualFPs=myTeamActualFPs,
     myTeamHillClimbingActualFPs=myTeamHillClimbingActualFPs,
     medianActualFPs=medianActualFPs,
+    rgTeamExpectedFPs=rgTeamExpectedFPs,
+    rgTeamActualFPs=rgTeamActualFPs,
     myTeamRmses=myTeamRmses,
     scoreRatios=scoreRatios,
     highestWinningScores=highestWinningScores,
@@ -399,9 +429,8 @@ makePlots = function(toPlot, data, yName, xNames, filename, teamStats=list(), pr
 }
 
 getTeamForToday = function() {
-  todayStr = as.character(Sys.Date())
   d = getData()
-  sp = splitDataIntoTrainTest(d, 'start', todayStr)
+  sp = splitDataIntoTrainTest(d, 'start', as.character(Sys.Date()))
   train = sp$train
   test = sp$test
 

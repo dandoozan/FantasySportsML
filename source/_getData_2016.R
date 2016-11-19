@@ -72,6 +72,11 @@ imputeMissingValues = function(data) {
     data[is.na(data[[colName]]), colName] = 0
   }
 
+  #----------RG.OPTIMALLINEUP-----------
+  #Set all NAs to 0 for RG_OL_OnTeam because it means that the player was not
+  #on the team.
+  data[is.na(data$RG_OL_OnTeam), 'RG_OL_OnTeam'] = 0
+
   #----------RG.START-----------
   #The NAs in RG.START mean that the player did not play that day,
   #so set Starter=0, Order=20 (max order=15), and Status='B' (bc most are 'B')
