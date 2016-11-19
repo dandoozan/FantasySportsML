@@ -49,6 +49,7 @@
 #D-Remove projections: 67_noProj_xgb: 10/27-11/14, 211/229, 266, 39, 6.674566/7.760814, 11.824, 6.635393/7.992468/6.846707, Inf, 7.894667/17.21335, 0.918429
 #D-Rerun boruta: 68_boruta_xgb: 10/27-11/14, 104/229, 266, 39, 6.813247/7.742457, 0.698, 6.749739/7.947403/6.938571, Inf, 7.844551/18.45305, 0.9623523
 #D-Fix bug in greedy team: 69_greedy_xgb: 10/27-11/14, 104/230, 266, 39, 6.813247/7.742457, 1.102, 6.749739/7.947403/6.938571, Inf, 7.844551/17.59835, 0.9624888
+#D-Retune xgb params: 70_retune_xgb: 10/27-11/14, 104/230, 266, 39, 6.631999/7.767962, 1.049, 6.588949/7.888081/6.763689, Inf, 7.902768/15.55635, 0.948499
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -63,8 +64,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '69'
-NAME = 'greedy'
+NUMBER = '70'
+NAME = 'retune'
 
 PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
