@@ -230,9 +230,9 @@ plotScores = function(dateStrs, yLow, yHigh, lowest5050s=list(), entryFeesFor505
     colors5050 = c('red', 'orange', 'purple', 'cyan')
     for (i in 1:numLowest5050s) {
       lines(dates, lowest5050s[[i]], col=colors5050[i])
-      labels = c(labels, paste0('50/50 $', entryFeesFor5050[i], ' Contests'))
-      colors = c(colors, colors5050[i])
     }
+    labels = c(labels, '50/50 Contests')
+    colors = c(colors, colors5050[1])
   }
 
   #draw rg expected

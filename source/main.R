@@ -65,8 +65,8 @@ source('source/_main_common.R')
 
 #Globals
 PROD_RUN = T
-NUMBER = '71'
-NAME = 'nov18'
+NUMBER = '72'
+NAME = 'rgPoints'
 
 PLOT = 'scores' #fi, scores, cv
 PLOT_START_DATE = '2016-10-27'
@@ -83,7 +83,7 @@ FEATURES_TO_USE = c(F.BORUTA.CONFIRMED)
 #================= Functions =================
 
 createTeamPrediction = function(train, test, yName, xNames) {
-  prediction = createPrediction(createModel(train, yName, xNames), test, xNames)
+  prediction = test$RG_points #createPrediction(createModel(train, yName, xNames), test, xNames)
   floor = pmax(prediction - test$RG_deviation, 0)
   ceil = prediction + test$RG_deviation
   return(prediction)
