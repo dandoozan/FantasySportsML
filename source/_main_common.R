@@ -19,7 +19,7 @@ source('source/_createTeam.R')
   #-d = getData()
   #-library(Boruta)
   #-set.seed(13)
-  #-b = Boruta(d[, F.ALL], d$FantasyPoints, doTrace=2)
+  #-b = Boruta(d[, F.ALL], d[[Y_NAME]], doTrace=2)
   #-paste(names(b$finalDecision[b$finalDecision=='Confirmed']), collapse='\', \'')
   #-paste(names(b$finalDecision[b$finalDecision=='Tentative']), collapse='\', \'')
   #-paste(names(b$finalDecision[b$finalDecision=='Rejected']), collapse='\', \'')
@@ -64,7 +64,7 @@ F.NBA.TODAY = c('NBA_TODAY_GP', 'NBA_TODAY_W', 'NBA_TODAY_L', 'NBA_TODAY_W_PCT',
 F.NBA.SEASON.TEAM.TRADITIONAL = c('NBA_S_T_TRAD_GP', 'NBA_S_T_TRAD_W', 'NBA_S_T_TRAD_L', 'NBA_S_T_TRAD_W_PCT', 'NBA_S_T_TRAD_MIN', 'NBA_S_T_TRAD_FGM', 'NBA_S_T_TRAD_FGA', 'NBA_S_T_TRAD_FG_PCT', 'NBA_S_T_TRAD_FG3M', 'NBA_S_T_TRAD_FG3A', 'NBA_S_T_TRAD_FG3_PCT', 'NBA_S_T_TRAD_FTM', 'NBA_S_T_TRAD_FTA', 'NBA_S_T_TRAD_FT_PCT', 'NBA_S_T_TRAD_OREB', 'NBA_S_T_TRAD_DREB', 'NBA_S_T_TRAD_REB', 'NBA_S_T_TRAD_AST', 'NBA_S_T_TRAD_TOV', 'NBA_S_T_TRAD_STL', 'NBA_S_T_TRAD_BLK', 'NBA_S_T_TRAD_BLKA', 'NBA_S_T_TRAD_PF', 'NBA_S_T_TRAD_PFD', 'NBA_S_T_TRAD_PTS', 'NBA_S_T_TRAD_PLUS_MINUS')
 F.NBA.SEASON.OPPTEAM.TRADITIONAL = c('NBA_S_OPPT_TRAD_GP', 'NBA_S_OPPT_TRAD_W', 'NBA_S_OPPT_TRAD_L', 'NBA_S_OPPT_TRAD_W_PCT', 'NBA_S_OPPT_TRAD_MIN', 'NBA_S_OPPT_TRAD_FGM', 'NBA_S_OPPT_TRAD_FGA', 'NBA_S_OPPT_TRAD_FG_PCT', 'NBA_S_OPPT_TRAD_FG3M', 'NBA_S_OPPT_TRAD_FG3A', 'NBA_S_OPPT_TRAD_FG3_PCT', 'NBA_S_OPPT_TRAD_FTM', 'NBA_S_OPPT_TRAD_FTA', 'NBA_S_OPPT_TRAD_FT_PCT', 'NBA_S_OPPT_TRAD_OREB', 'NBA_S_OPPT_TRAD_DREB', 'NBA_S_OPPT_TRAD_REB', 'NBA_S_OPPT_TRAD_AST', 'NBA_S_OPPT_TRAD_TOV', 'NBA_S_OPPT_TRAD_STL', 'NBA_S_OPPT_TRAD_BLK', 'NBA_S_OPPT_TRAD_BLKA', 'NBA_S_OPPT_TRAD_PF', 'NBA_S_OPPT_TRAD_PFD', 'NBA_S_OPPT_TRAD_PTS', 'NBA_S_OPPT_TRAD_PLUS_MINUS')
 F.MINE = c('OPP_DVP_FPPG', 'OPP_DVP_RANK', 'TEAM_RG_points', 'TEAMMATES_RG_points')
-F.TOEXCLUDE = c(F.ROTOGURU, F.NBA.TODAY, 'Date', 'Name')
+F.TOEXCLUDE = c(Y_NAME, F.ROTOGURU, F.NBA.TODAY, 'Date', 'Name')
 
 F.ALL = setdiff(c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.MARKETWATCH, F.RG.OPTIMALLINEUP, F.RG.START, F.RG.DVP,
                     F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC, F.RG.BACK2BACK, F.RG.BACK2BACK.OPP, F.NBA.SEASON.PLAYER.TRADITIONAL,
@@ -162,18 +162,18 @@ getLowestWinningScore = function(contests, dateStr, type='all', entryFee=-1) {
   return(NA)
 }
 
-getRgTeam = function(test) {
+getRgTeam = function(test, yName) {
   rgTeam = test[test$RG_OL_OnTeam == 1,]
-  if (sum(rgTeam$FantasyPoints == 0) || nrow(rgTeam) < 9) {
+  if (sum(rgTeam[[yName]] == 0) || nrow(rgTeam) < 9) {
     return(NULL)
   }
   return(rgTeam)
 }
-computeActualFP = function(team, test) {
-  return(sum(getTeamIndividualActualFPs(team, test)))
+computeActualFP = function(team, test, yName) {
+  return(sum(getTeamIndividualActualFPs(team, test, yName)))
 }
-getTeamIndividualActualFPs = function(team, test) {
-  return(test[test$Name %in% team$Name, 'FantasyPoints'])
+getTeamIndividualActualFPs = function(team, test, yName) {
+  return(test[test$Name %in% team$Name, yName])
 }
 
 printRGTrnCVError = function(data, yName, xNames, createModel, computeError) {
@@ -344,17 +344,17 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     #create my teams for today
     predictionDF = test
     predictionDF[[yName]] = prediction
-    myTeamGreedy = createTeam_Greedy(predictionDF, maxCov=maxCov)
-    myTeamExpectedFP = computeTeamFP(myTeamGreedy)
-    myTeamActualFP = computeActualFP(myTeamGreedy, test)
-    rgTeam = getRgTeam(predictionDF)
-    rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam)
-    rgTeamActualFP = if (is.null(rgTeam)) NA else computeActualFP(rgTeam, test)
-    myTeamRmse = computeError(getTeamIndividualActualFPs(myTeamGreedy, test), myTeamGreedy$FantasyPoints)
+    myTeamGreedy = createTeam_Greedy(predictionDF, yName, maxCov=maxCov)
+    myTeamExpectedFP = computeTeamFP(myTeamGreedy, yName)
+    myTeamActualFP = computeActualFP(myTeamGreedy, test, yName)
+    rgTeam = getRgTeam(predictionDF, yName)
+    rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, yName)
+    rgTeamActualFP = if (is.null(rgTeam)) NA else computeActualFP(rgTeam, test, yName)
+    myTeamRmse = computeError(getTeamIndividualActualFPs(myTeamGreedy, test, yName), myTeamGreedy[[yName]])
     allMyTeamActualFPs = c(myTeamActualFP)
     if (prodRun || toPlot == 'multiscores') {
       for (i in 1:numHillClimbingTeams) {
-        hillClimbingActualFP = computeActualFP(createTeam_HillClimbing(predictionDF, maxCov=maxCov), test)
+        hillClimbingActualFP = computeActualFP(createTeam_HillClimbing(predictionDF, yName, maxCov=maxCov), test, yName)
         myTeamHillClimbingActualFPs[[i]] = c(myTeamHillClimbingActualFPs[[i]], hillClimbingActualFP)
         allMyTeamActualFPs = c(allMyTeamActualFPs, hillClimbingActualFP)
       }

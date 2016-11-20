@@ -1,5 +1,7 @@
 #todo:
 #D-Add dates up to yesterday (11/18): 71_nov18_xgb:  10/27-11/18, 104/230, 266, 41, 6.707493/7.760857, 1.653, 6.719638/7.945174/6.88318, Inf, 7.879964/16.12162, 0.9473712
+#D-Use NBA FP as Y_NAME: 73_nbaFp_xgb: 10/27-11/18, 104/260, 266, 43, 6.69183/7.771218, 1.574, 6.653663/8.075014/6.870274, Inf, 7.942952/18.6436, 0.9284567
+
 #-Use FPPG, GamesPlayed, NBA_S_P_TRAD_MIN: dates=11/05-11/18, train/cvErrors=7.229933/9.089477, Trn/CV/Train=7.360246/8.624631/7.322529
 #-Add InjuryIndicator: 6.984573/8.280182, 7.008483/8.283887/7.121777
 #-Add OPP_DVP_RANK:
@@ -17,23 +19,24 @@
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
-source('source/_main_common.R')
 
 #Globals
-PROD_RUN = F
-NUMBER = '72'
-NAME = 'rgPoints'
+PROD_RUN = T
+NUMBER = '73'
+NAME = 'nbaFp'
 
-PLOT = 'fi' #fi, scores, cv
+PLOT = 'scores' #fi, scores, cv
 START_DATE = '2016-10-25' #'2016-11-05'
 END_DATE = '2016-11-18'
 PLOT_START_DATE = '2016-10-27'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 10
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || F
+MAKE_TEAMS = PROD_RUN || T
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
-Y_NAME = 'FantasyPoints'
+Y_NAME = 'FP'
+
+source('source/_main_common.R')
 
 FEATURES_TO_USE = F.BORUTA.CONFIRMED
 #FEATURES_TO_USE = c('FPPG', 'GamesPlayed', 'NBA_S_P_TRAD_MIN', 'InjuryIndicator')#, 'OPP_DVP_RANK')

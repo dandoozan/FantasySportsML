@@ -148,16 +148,16 @@ getUniqueDates = function(data) {
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
 
-  #create OPP_DVP_FPPG and OPP_DVP_RANK, which is the opponent's
-  #defense vs position points allowed and rank, respectively against
-  #each player's own position
-  data$OPP_DVP_FPPG = NA
-  data$OPP_DVP_RANK = NA
-  for (position in levels(data$Position)) {
-    data[data$Position == position, 'OPP_DVP_FPPG'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'FPPG')]
-    data[data$Position == position, 'OPP_DVP_RANK'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'RK')]
-  }
+  #----------F.NBA.TODAY-----------
+  #compute FP using NBA data
+  data$FP = (data$NBA_TODAY_PTS * 1) + #points: 1
+    (data$NBA_TODAY_AST * 1.5) + #assists: 1.5
+    (data$NBA_TODAY_BLK * 2) + #blocks: 2
+    (data$NBA_TODAY_REB * 1.2) + #rebounds: 1.2
+    (data$NBA_TODAY_STL * 2) + #steals: 2
+    (data$NBA_TODAY_TOV * -1) #turnovers: -1
 
+  #----------F.RG.PP-----------
   #add team RG expected points and teammates' RG expected scores
   data$TEAM_RG_points = 0
   dateStrs = getUniqueDates(data)
@@ -169,6 +169,17 @@ featureEngineer = function(data) {
     }
   }
   data$TEAMMATES_RG_points = round(data$TEAM_RG_points - data$RG_points, 2)
+
+  #----------F.RG.DVP-----------
+  #create OPP_DVP_FPPG and OPP_DVP_RANK, which is the opponent's
+  #defense vs position points allowed and rank, respectively against
+  #each player's own position
+  data$OPP_DVP_FPPG = NA
+  data$OPP_DVP_RANK = NA
+  for (position in levels(data$Position)) {
+    data[data$Position == position, 'OPP_DVP_FPPG'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'FPPG')]
+    data[data$Position == position, 'OPP_DVP_RANK'] = data[data$Position == position, paste0('RG_OPP_DVP_', position, 'RK')]
+  }
 
   return(data)
 }
