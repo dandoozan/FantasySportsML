@@ -119,7 +119,7 @@ if rgTournamentLinksUrl:
         #3. for each contest, download its results from api.fanduel.com
         cnt = 1
         for contest in contests:
-            print '\nDownloading Contest (%d / %d): %s...' % (contest, cnt, len(contests))
+            print '\nDownloading Contest (%d / %d): %s...' % (cnt, len(contests), contest)
 
             jsonData = scraper.downloadJson(createFanduelApiUrl(contest), createHeaders(contest, xAuthToken))
             scraper.writeJsonData(jsonData, scraper.createJsonFilename(PARENT_DIR, contest))

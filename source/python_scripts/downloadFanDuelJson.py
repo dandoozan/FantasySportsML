@@ -49,6 +49,7 @@ def downloadFixtureList(xAuthToken):
     referer = 'https://www.fanduel.com/games'
     url = 'https://api.fanduel.com/fixture-lists'
     jsonData = json.load(open(createFullPathFilename(dirName, 'tbx_'))) if TEST else downloadData(url, xAuthToken, referer)
+    #writeData(jsonData, 'tbx_FixtureLists')
     return parseFixtureList(jsonData)
 
 def findContestId(jsonData):
@@ -58,7 +59,7 @@ def findContestId(jsonData):
         contestId = fd.getContestId(contest)
         if fd.isValidContestId(contestId):
             return contestId
-    util.stop('Contest Id was not found or was a different format than expected, contestId=' + contestId)
+    util.stop('Contest Id was not found or was a different format than expected')
 def downloadContests(xAuthToken, fixtureList):
     dirName = 'Contests'
     referer = 'https://www.fanduel.com/games'
@@ -89,6 +90,9 @@ def downloadPlayers(xAuthToken, fixtureList, contestId):
 xAuthToken = raw_input('Enter X-Auth-Token: ') #'d6d05fe2f3047e6126e3b0df7c70d62f238a26f1bdeaaf915cb83054368757fc'# raw_input('Enter X-Auth-Token: ')
 
 print 'Downloading Fixture Lists...'
+#16997=11/20 nba early only
+#16998=11/20 nba main
+#16999=11/20 nba late night
 fixtureList = downloadFixtureList(xAuthToken)
 print 'Got fixture list:', fixtureList
 scraper.sleep(SLEEP)
