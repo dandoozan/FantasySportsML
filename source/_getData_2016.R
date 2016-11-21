@@ -145,17 +145,16 @@ imputeMissingValues = function(data) {
 getUniqueDates = function(data) {
   return(sort(unique(data$Date)))
 }
+computeFP = function(pts, ast, blk, reb, stl, tov) {
+  return(pts + (ast*1.5) + (blk*2) + (reb*1.2) + (stl*2) + (tov*-1))
+}
 featureEngineer = function(data) {
   cat('    Feature engineering...\n')
 
   #----------F.NBA.TODAY-----------
-  #compute FP using NBA data
-  data$FP = (data$NBA_TODAY_PTS * 1) + #points: 1
-    (data$NBA_TODAY_AST * 1.5) + #assists: 1.5
-    (data$NBA_TODAY_BLK * 2) + #blocks: 2
-    (data$NBA_TODAY_REB * 1.2) + #rebounds: 1.2
-    (data$NBA_TODAY_STL * 2) + #steals: 2
-    (data$NBA_TODAY_TOV * -1) #turnovers: -1
+  #compute FP and AVG_FP using NBA data
+  data$FP = computeFP(data$NBA_TODAY_PTS, data$NBA_TODAY_AST, data$NBA_TODAY_BLK, data$NBA_TODAY_REB, data$NBA_TODAY_STL, data$NBA_TODAY_TOV)
+  data$AVG_FP = computeFP(data$NBA_S_P_TRAD_PTS, data$NBA_S_P_TRAD_AST, data$NBA_S_P_TRAD_BLK, data$NBA_S_P_TRAD_REB, data$NBA_S_P_TRAD_STL, data$NBA_S_P_TRAD_TOV)
 
   #----------F.RG.PP-----------
   #add team RG expected points and teammates' RG expected scores
