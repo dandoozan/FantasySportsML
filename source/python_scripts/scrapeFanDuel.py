@@ -97,7 +97,7 @@ def createHeaders(contest, xAuthToken):
 
 #=============== Main ================
 
-xAuthToken = raw_input('Enter X-Auth-Token: ')
+xAuthToken = util.getCommandLineArgument()
 
 print 'Scraping contest results for yesterday: ', YESTERDAY
 

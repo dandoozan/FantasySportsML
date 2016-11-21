@@ -65,7 +65,7 @@ def findContestsToDownload():
 
 #=============== main ==================
 
-xAuthToken = raw_input('Enter X-Auth-Token: ')
+xAuthToken = util.getCommandLineArgument()
 
 #first, get contests to download
 contestsToDownload = findContestsToDownload()

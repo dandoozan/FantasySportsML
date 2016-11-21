@@ -87,7 +87,7 @@ def downloadPlayers(xAuthToken, fixtureList, contestId):
 #then, download contests using xAuthToken and fixtureList, and save top contest id as contestId
 #then, download player list using xAuthToken, fixtureList and contestId
 
-xAuthToken = raw_input('Enter X-Auth-Token: ') #'d6d05fe2f3047e6126e3b0df7c70d62f238a26f1bdeaaf915cb83054368757fc'# raw_input('Enter X-Auth-Token: ')
+xAuthToken = util.getCommandLineArgument()
 
 print 'Downloading Fixture Lists...'
 #16997=11/20 nba early only

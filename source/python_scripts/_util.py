@@ -166,7 +166,23 @@ def isUnicode(value):
     return (type(value) is unicode)
 
 #================= misc ===================
+def getCommandLineArgument():
+    return getCommandLineArguments(1)[0]
+def getCommandLineArguments(numArgs):
+    import sys
+    cmdLineArgs = sys.argv[1:]
+    if len(cmdLineArgs) != numArgs:
+        exit('Incorrect number of arguments.  You must have %d command line arguments' % numArgs)
+    return cmdLineArgs
+def readInput(msg):
+    return raw_input(msg).strip()
 def removePercentSign(string):
     if string[-1] == '%':
         return string[:-1]
     return string
+def sleep(seconds):
+    import time
+    print '    Sleeping for %d seconds' % seconds
+    time.sleep(seconds)
+
+

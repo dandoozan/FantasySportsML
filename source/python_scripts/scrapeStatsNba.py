@@ -1,3 +1,4 @@
+import sys
 from datetime import date, timedelta
 import time
 import json
@@ -246,12 +247,20 @@ def getSummary(isDaily, isTeam, category, season):
 
 #=============== Main ================
 
-isDaily = raw_input('Season (leave blank for yes)? ').strip() == 'n'
-isTeam = raw_input('Player (leave blank for yes)? ').strip() == 'n'
-categoryInput = raw_input('Enter Category (if other than Traditional): ').strip()
-category = 'Traditional' if categoryInput == '' else categoryInput
-seasonInput = raw_input('Enter season (if other than 2016): ').strip()
-season = '2016' if seasonInput == '' else seasonInput
+cmdLineArgs = util.getCommandLineArguments(4)
+
+#verify command line args
+if cmdLineArgs[0] != 'Daily' and cmdLineArgs[0] != 'Season' \
+        and cmdLineArgs[1] != 'Team' and cmdLineArgs[1] != 'Player' \
+        and cmdLineArgs[1] == 'Player' and cmdLineArgs[2] not in PLAYER_CATEGORIES \
+        and cmdLineArgs[1] == 'Team' and cmdLineArgs[2] not in TEAM_CATEGORIES \
+        and cmdLineArgs[3] not in SEASONS:
+    exit('***Got an unexpected command line argument')
+
+isDaily = cmdLineArgs[0] == 'Daily'
+isTeam = cmdLineArgs[1] == 'Team'
+category = cmdLineArgs[2]
+season = cmdLineArgs[3]
 
 print 'Running ' + getSummary(isDaily, isTeam, category, season) + '...'
 
