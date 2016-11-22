@@ -2,7 +2,6 @@ import sys
 import _util as util
 
 PYTHON_SOURCE_DIR = util.joinDirs('source', 'python_scripts')
-SLEEP = 10
 
 xAuthToken = util.readInput('Enter X-Auth-Token: ')
 filesToRun = [
@@ -23,5 +22,5 @@ for fileToRun in filesToRun:
     sys.argv.extend(args)
     execfile(fullPathFilename)
 
-    util.sleep(SLEEP)
+    util.sleep(10)
     print '\n'
