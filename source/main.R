@@ -2,6 +2,7 @@
 #D-Add dates up to yesterday (11/18): 71_nov18_xgb:  10/27-11/18, 104/230, 266, 41, 6.707493/7.760857, 1.653, 6.719638/7.945174/6.88318, Inf, 7.879964/16.12162, 0.9473712
 #D-Use NBA FP as Y_NAME: 73_nbaFp_xgb: 10/27-11/18, 104/260, 266, 43, 6.69183/7.771218, 1.574, 6.653663/8.075014/6.870274, Inf, 7.942952/18.6436, 0.9284567
 #D-Remove GTD and Out players: 74_rmGtdOut_xgbL: 10/27-11/18, 102/261, 266, 37, 6.938448/8.016219, 0.914, 6.930815/7.886743/7.095053, Inf, 8.103604/14.58009, 0.9388279
+#-verify double up contests
 
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
 #-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
@@ -20,7 +21,7 @@ rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '74'
 NAME = 'rmGtdOut'
 
@@ -30,6 +31,9 @@ END_DATE = '2016-11-18'
 PLOT_START_DATE = '2016-10-27'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 10
+CONTESTS_TO_PLOT = list(
+  list(type='FIFTY_FIFTY', entryFee=2, minEntries=0, label='50/50 $2 Contests', color='red' ),
+  list(type='DOUBLE_UP', entryFee=2, minEntries=200, label='DoubleUp $2 >200Entries', color='orange' ))
 ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
@@ -54,7 +58,7 @@ createTeamPrediction = function(train, test, yName, xNames) {
 data = setup(ALG, FEATURES_TO_USE, START_DATE, END_DATE, PROD_RUN, FILENAME)
 hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)
 baseModel = createBaseModel(data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
-teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, PROD_RUN) else list()
-makePlots(PLOT, data, Y_NAME, FEATURES_TO_USE, FILENAME, teamStats, PROD_RUN)
+teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, PLOT, CONTESTS_TO_PLOT, PROD_RUN) else list()
+makePlots(PLOT, data, Y_NAME, FEATURES_TO_USE, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
 
 cat('Done!\n')
