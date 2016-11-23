@@ -8,14 +8,15 @@ import _fanDuelCommon as fd
 CONTESTS_DIR = util.joinDirs('data', 'rawDataFromFanDuel', 'Contests')
 CONTEST_RESULTS_DIR = util.joinDirs('data', 'rawDataFromFanDuel', 'ContestResults')
 SLEEP = 30
+ONE_DAY = util.getOneDay()
+START_DATE = util.getDate(2016, 11, 7)
+END_DATE = util.getYesterdayAsDate()
 
 def getContestId(contest):
     return contest['id']
 def getContestUrl(contest):
     return contest['_url']
 
-def parseDateStrFromFilename(filename):
-    return filename[:filename.find('.')]
 def parseContestGroup(contestId):
     return contestId[:contestId.find('-')]
 
@@ -42,24 +43,30 @@ def findContestsToDownload():
     print 'Finding contests to donwload...'
     contestsToDownload = []
 
-    filenames = util.getFilesInDir(CONTESTS_DIR)
-    for filename in filenames:
-        numContests = 0
-        jsonDataFromFile = util.loadJsonFile(util.createFullPathFilename(CONTESTS_DIR, filename))
-        contests = jsonDataFromFile['contests']
-        for contest in contests:
-            dateStr = parseDateStrFromFilename(filename)
-            if fd.is5050Contest(contest) \
-                and fd.getEntryFee(contest) <= 10 \
-                and not contestAlreadyDownloaded(dateStr, contest):
-                contestsToDownload.append({
-                    'contestId': getContestId(contest),
-                    'url': getContestUrl(contest),
-                    'dateStr': dateStr,
-                })
-                numContests += 1
+    currDate = START_DATE
+    while currDate <= END_DATE:
+        currDateStr = util.formatDate(currDate)
+        fullPathFilename = util.createFullPathFilename(CONTESTS_DIR, util.createJsonFilename(currDateStr))
+        if util.fileExists(fullPathFilename):
+            jsonDataFromFile = util.loadJsonFile(fullPathFilename)
+            numContests = 0
+            contests = jsonDataFromFile['contests']
+            for contest in contests:
+                if ((fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 10) \
+                    or (fd.isDoubleUp(contest) and fd.getEntryFee(contest) <= 2 and fd.getContestMaxEntries(contest) > 200)) \
+                    and not contestAlreadyDownloaded(currDateStr, contest):
+                    contestsToDownload.append({
+                        'contestId': getContestId(contest),
+                        'url': getContestUrl(contest),
+                        'dateStr': currDateStr,
+                    })
+                    numContests += 1
+            print '    Found %d contests in file: %s' % (numContests, fullPathFilename)
+        else:
+            if currDateStr != '2016-11-20': #dont alert on this date since i know its missing
+                util.headsUp('File doesn\'t exist: ' + fullPathFilename)
+        currDate = currDate + ONE_DAY
 
-        print '    Found %d contests in file: %s' % (numContests, filename)
     return contestsToDownload
 
 

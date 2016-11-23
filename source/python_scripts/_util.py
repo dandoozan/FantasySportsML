@@ -137,6 +137,8 @@ def getYesterdayAsDate():
 def getDate(year, month, day):
     import datetime
     return(datetime.date(year, month, day))
+def getSeasonStartDate():
+    return getDate(2016, 10, 25)
 
 #================= error stuff ===================
 def headsUp(msg):

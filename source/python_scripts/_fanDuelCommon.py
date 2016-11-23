@@ -2,10 +2,14 @@ import _util as util
 
 CONTEST_TYPES = {
     '5050': 'FIFTY_FIFTY',
+    'doubleUp': 'DOUBLE_UP',
     'h2h': 'H2H',
-    'muliplier': 'MULTIPLIER',
     'league': 'LEAGUE',
+    'quadrupleUp': 'QUADRUPLE_UP',
+    'quintupleUp': 'QUINTUPLE_UP',
     'tournament': 'TOURNAMENT',
+    'tripleUp': 'TRIPLE_UP',
+    'tripleDouble': 'TRIPLE_DOUBLE',
 }
 
 #------------ Getters ------------
@@ -21,37 +25,58 @@ def getContestPot(contest):
     return float(contest['prizes']['total'])
 
 #------------ Contest types ------------
-def is5050Contest(contest):
+def searchContestName(string, contest):
     import re
-    return not not re.match('50/50 Contest \(\$\d+ - Top 50% Win\)', getContestName(contest))
+    return not not re.search(string, getContestName(contest))
+def matchContestName(string, contest):
+    import re
+    return not not re.match(string, getContestName(contest))
+def is5050Contest(contest):
+    return matchContestName('50/50 Contest \(\$\d+ - Top 50% Win\)', contest)
 def isH2HContest(contest):
     return contest['h2h'] != None
 def isLeagueContest(contest):
     maxEntries = getContestMaxEntries(contest)
-    return maxEntries >=3 and maxEntries <= 100
+    return (not is5050Contest(contest)) \
+        and (not isH2HContest(contest)) \
+        and (not isMultiplierContest(contest)) \
+        and maxEntries >=3 and maxEntries <= 100
+def _isXupleUp(upleStr, contest):
+    #Note upleStr is expected to be 'Double', 'Triple', etc
+    return searchContestName((' %s Up ' % upleStr), contest)
+def isDoubleUp(contest):
+    return _isXupleUp('Double', contest)
+def isTripleUp(contest):
+    return _isXupleUp('Triple', contest)
+def isQuadrupleUp(contest):
+    return _isXupleUp('Quadruple', contest)
+def isQuintupleUp(contest):
+    return _isXupleUp('Quintuple', contest)
+def isTripleDouble(contest):
+    return searchContestName(' Triple Double ', contest)
 def isMultiplierContest(contest):
-    import re
-    #Search for:
-    #-Double Up, Triple Up, Quadruple Up, Quintuple Up
-    #-Triple Double
-    return not not re.search(' ((Double|Triple|Quadruple|Quintuple) Up|Triple Double) ', getContestName(contest))
+    return isDoubleUp(contest) or isTripleUp(contest) or isQuadrupleUp(contest) or isQuintupleUp(contest) or isTripleDouble(contest)
 def isTournamentContest(contest):
-    import re
-    return getContestMaxEntries(contest) > 100 and getContestPot(contest) > 1000
+    return (not is5050Contest(contest)) \
+        and (not isH2HContest(contest)) \
+        and (not isMultiplierContest(contest)) \
+        and (not isLeagueContest(contest)) \
+        and getContestMaxEntries(contest) > 100 and getContestPot(contest) > 1000
 def getContestType(contest):
-    #Types: H2H, FIFTY_FIFTY, MULTIPLIER, LEAGUE, TOURNAMENT
-    #First check for H2H,
-    #then FIFTY_FIFTY,
-    #then MULTIPLIER,
-    #then LEAGUE (3-100 players)
-    #then TOURNAMENT (>1000 players)
-    #then throw error if there are any contests left
     if isH2HContest(contest):
         return CONTEST_TYPES['h2h']
     if is5050Contest(contest):
         return CONTEST_TYPES['5050']
-    if isMultiplierContest(contest):
-        return CONTEST_TYPES['muliplier']
+    if isDoubleUp(contest):
+        return CONTEST_TYPES['doubleUp']
+    if isTripleUp(contest):
+        return CONTEST_TYPES['tripleUp']
+    if isQuadrupleUp(contest):
+        return CONTEST_TYPES['quadrupleUp']
+    if isQuintupleUp(contest):
+        return CONTEST_TYPES['quintupleUp']
+    if isTripleDouble(contest):
+        return CONTEST_TYPES['tripleDouble']
     if isLeagueContest(contest):
         return CONTEST_TYPES['league']
     if isTournamentContest(contest):
