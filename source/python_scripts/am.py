@@ -6,13 +6,6 @@ PYTHON_SOURCE_DIR = util.joinDirs('source', 'python_scripts')
 xAuthToken = util.readInput('Enter X-Auth-Token: ')
 filesToRun = [
     { 'baseFilename': 'scrapeFanDuel', 'args': [xAuthToken] },
-    { 'baseFilename': 'scrapeRotoGuruDay', },
-    { 'baseFilename': 'scrapeStatsNba', 'args': ['Daily', 'Player', 'Traditional', '2016']},
-    { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Player', 'Traditional', '2016']},
-    { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Player', 'Advanced', '2016']},
-    { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Player', 'Defense', '2016']},
-    { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Player', 'PlayerBios', '2016']},
-    { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Team', 'Traditional', '2016']},
     { 'baseFilename': 'downloadFanDuelContestResults', 'args': [xAuthToken] },
 ]
 

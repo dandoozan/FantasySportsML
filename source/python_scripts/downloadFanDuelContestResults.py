@@ -52,8 +52,9 @@ def findContestsToDownload():
             numContests = 0
             contests = jsonDataFromFile['contests']
             for contest in contests:
-                if ((fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 10) \
-                    or (fd.isDoubleUp(contest) and fd.getEntryFee(contest) <= 2 and fd.getContestMaxEntries(contest) > 200)) \
+                if ((fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 2) \
+                    or (fd.isDoubleUp(contest) and fd.getEntryFee(contest) <= 2 and fd.getContestMaxEntries(contest) > 200) \
+                    or (fd.isTripleUp(contest) and fd.getEntryFee(contest) <= 2)) \
                     and not contestAlreadyDownloaded(currDateStr, contest):
                     contestsToDownload.append({
                         'contestId': getContestId(contest),
