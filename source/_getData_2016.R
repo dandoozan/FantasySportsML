@@ -22,15 +22,22 @@ FACTOR_COLS = c('Position', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'Inju
 loadData = function() {
   data = read.csv(paste0('data/data_2016.csv'), stringsAsFactors=F, na.strings=c(''))
 
-  #remove first date (2016-10-25) since it has GamesPlayed at like 76, and FPPG was based on last season
-  data = data[data$Date != SEASON_START_DATE,]
-
   #convert cols to factors
   for (col in FACTOR_COLS) {
     data[[col]] = factor(data[[col]])
   }
 
   return(data)
+}
+
+filterData = function(df, startDate, endDate) {
+  #remove data before startDate and after endDate
+  df = df[(df$Date >= startDate) & (df$Date <= endDate),]
+
+  #remove GTD and OUT players
+  df = df[df$InjuryIndicator == 'none',]
+
+  return(df)
 }
 
 imputeMissingValues = function(data) {
@@ -183,15 +190,15 @@ featureEngineer = function(data) {
   return(data)
 }
 
-getData = function(startDate='2016-10-25', endDate=as.character(Sys.Date())) {
+getData = function(startDate='2016-10-26', endDate=as.character(Sys.Date())) {
 
   cat('Getting data (', format(as.Date(startDate), '%m/%d'),'-', format(as.Date(endDate), '%m/%d'),')...\n', sep='')
 
   #load data
   full = loadData()
 
-  #remove data before startDate and after endDate
-  full = full[(full$Date >= startDate) & (full$Date <= endDate),]
+  #filter data
+  full = filterData(full, startDate, endDate)
 
   #impute missing values
   full = imputeMissingValues(full)

@@ -1,14 +1,11 @@
 #todo:
 #D-Add dates up to yesterday (11/18): 71_nov18_xgb:  10/27-11/18, 104/230, 266, 41, 6.707493/7.760857, 1.653, 6.719638/7.945174/6.88318, Inf, 7.879964/16.12162, 0.9473712
 #D-Use NBA FP as Y_NAME: 73_nbaFp_xgb: 10/27-11/18, 104/260, 266, 43, 6.69183/7.771218, 1.574, 6.653663/8.075014/6.870274, Inf, 7.942952/18.6436, 0.9284567
+#D-Remove GTD and Out players: 74_rmGtdOut_xgbL: 10/27-11/18, 102/261, 266, 37, 6.938448/8.016219, 0.914, 6.930815/7.886743/7.095053, Inf, 8.103604/14.58009, 0.9388279
 
-#-Use FPPG, GamesPlayed, NBA_S_P_TRAD_MIN: dates=11/05-11/18, train/cvErrors=7.229933/9.089477, Trn/CV/Train=7.360246/8.624631/7.322529
-#-Add InjuryIndicator: 6.984573/8.280182, 7.008483/8.283887/7.121777
-#-Add OPP_DVP_RANK:
-  #-diff b/n prediction and FP increases as DVP rank decreases and vice versa
-  #-does FP go down when DVP rank goes up
-
-
+#-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
+#-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
+#-Add NBA_S_P_ADV_PACE:
 
 #-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -16,30 +13,32 @@
 #-remove F.RG.ADVANCEDPLAYERSTATS bc there are too many NAs
 #-increase numTries in createTeam_HillClimbing to get a better hill climbing team
 #-rescrape all nba data to get updated stats
+#-make sure 11/20 has all data for all players and teams that played that day since I scraped it late
+#-maybe only use data from 11/5 onward or only the last X (2?) weeks
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
 PROD_RUN = T
-NUMBER = '73'
-NAME = 'nbaFp'
+NUMBER = '74'
+NAME = 'rmGtdOut'
 
 PLOT = 'scores' #fi, scores, cv
-START_DATE = '2016-10-25' #'2016-11-05'
+START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-18'
 PLOT_START_DATE = '2016-10-27'
 MAX_COV = Inf
 NUM_HILL_CLIMBING_TEAMS = 10
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || T
+MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 Y_NAME = 'FP'
 
 source('source/_main_common.R')
 
 FEATURES_TO_USE = F.BORUTA.CONFIRMED
-#FEATURES_TO_USE = c('FPPG', 'GamesPlayed', 'NBA_S_P_TRAD_MIN', 'InjuryIndicator')#, 'OPP_DVP_RANK')
+#FEATURES_TO_USE = c('AVG_FP', 'NBA_S_P_TRAD_GP', 'InjuryIndicator', 'NBA_S_P_ADV_PACE')
 
 #================= Functions =================
 
