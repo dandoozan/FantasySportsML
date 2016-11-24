@@ -6,7 +6,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = util.getDate(2016, 10, 25)
 ONE_DAY = util.getOneDay()
-END_DATE = util.getYesterdayAsDate()
+END_DATE = util.getDate(2016, 11, 18)# util.getYesterdayAsDate()
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -49,6 +49,7 @@ KNOWN_ALIASES = {
     'a.j. hammons': 'aj hammons',
     'c.j. wilcox': 'cj wilcox',
     'c.j. watson': 'cj watson',
+    'r.j. hunter': 'rj hunter',
 
     #RotoGrinderStartingLineups
     'tim hardaway jr.': 'tim hardaway',
@@ -969,7 +970,7 @@ def findMatchingName(name, newData, isTeam):
         else:
             if hasExactMatch(misMatchedName, newData):
                 return misMatchedName
-
+    '''comment this out bc it makes the program run slow.  Uncomment if i need to automatically find mismatched names for new data
     #then, check all permutations of the name and its reverse
     #print 'No match found for player=', name, ', searching for similar names...'
     playerMatches = findAllPlayerMatches(name, newData)
@@ -983,7 +984,7 @@ def findMatchingName(name, newData, isTeam):
         #add it to the known mismatches
         nameMap[name] = newName
         return newName
-
+    #'''
     #if all fails return name, and let the parent handle it
     return name
 
@@ -1107,7 +1108,7 @@ DATA_SOURCES = [
         'name': 'RotoGuru',
         'containsY': True,
         'delimiter': ';',
-        'endDate': util.getYesterdayAsDate(),
+        #'endDate': util.getYesterdayAsDate(),
         'features': ['FantasyPoints', 'Minutes'],
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromRotoGuru', '2016'),
         'keyRenameMap': { 'FD Pts': 'FantasyPoints' },
