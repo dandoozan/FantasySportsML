@@ -52,6 +52,10 @@ imputeMissingValues = function(data) {
   }
 
   #----------RG.PP-----------
+  #first, create InRotoGrinders feature.  All RG entries will have points, so use
+  #points to determine which players are in RG
+  data$InRotoGrinders = ifelse(is.na(data$RG_points), 0, 1)
+
   #set RG rank NAs to 0, but maybe consider something else (Inf?) since
   #generally lower rank is better, and since these don't have a rank, it
   #probably means that they're a bad player
