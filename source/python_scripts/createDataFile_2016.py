@@ -888,9 +888,7 @@ def loadRotoGrinderOptimalLineupFile(fullPathFilename, keyRenameMap, prefix, del
 def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, dateStr, keyRenameMap={}, delimiter=',', prefix=''):
     data = {}
 
-    #filename = util.createJsonFilename(dateStr) if isJson else util.createCsvFilename(dateStr)
     fullPathFilename = findFileFunction(fullPathToDir, dateStr)
-
     print '    Loading file: %s...' % fullPathFilename
 
     if fullPathFilename and util.fileExists(fullPathFilename):
@@ -900,15 +898,11 @@ def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRow
             if playerName in data:
                 if handleDuplicates:
                     util.headsUp('Found duplicate name: ' + playerName)
-                    newPlayerData = handleDuplicates(data[playerName], playerData)
-                    if newPlayerData:
-                        data[playerName] = newPlayerData
-                    else:
+                    playerData = handleDuplicates(data[playerName], playerData)
+                    if not playerData:
                         util.stop('Handle duplicates failed to give back new data')
                 else:
-                    util.stop('Got a duplicate name: ' + playerName)
-            #if fullPathFilename == 'data/rawDataFromRotoGrinders/PlayerProjections/2016-10-26.json':
-            #    print playerData
+                    util.stop('Got a duplicate name and no handleDuplicates function, name=' + playerName)
             data[playerName] = util.filterObj(features, playerData)
     else:
         util.stop('File not found for date=' + dateStr)
