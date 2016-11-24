@@ -108,7 +108,7 @@ createBaseModel = function(data, yName, xNames, createModel, createPrediction, c
   printModelResults(baseModel)
 
   #print trn/cv, train error
-  printTrnCvTrainErrors(baseModel, data, yName, xNames, createModel, createPrediction, computeError)
+  printTrnCvTrainErrors(baseModel, data[data$InRotoGrinders == 1,], yName, xNames, createModel, createPrediction, computeError)
   printRGTrnCVError(data, yName, xNames, createModel, computeError)
 
   return(baseModel)

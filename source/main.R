@@ -4,6 +4,7 @@
 #D-Remove GTD and Out players: 74_rmGtdOut_xgbL: 10/27-11/18, 102/261, 266, 37, 6.938448/8.016219, 0.914, 6.930815/7.886743/7.095053, Inf, 8.103604/14.58009, 0.9388279
 #D-Plot balance: 75_balance_xgb: 10/27-11/18, 102/261, 266, 37, 6.938448/8.016219, 0.921, 6.930815/7.886743/7.095053, Inf, Gain=$4, 8.103604/14.58009, 0.919391
 #D-Fix bug in createDataFile: 76_dataBug_xgb: 10/27-11/18, 102/261, 266, 37, 6.938443/8.016218, 0.93, 6.930815/7.886737/7.095035, Inf, $4, 8.09966/14.42227, 0.9167998
+#D-Compute cv rmse with same as RG data: 77_RGrmse_xgb: 10/27-11/18, 102/261, 266, 37, 6.938443/8.016218, 0.905, 7.557726/8.381168/7.727685, Inf, $4, 8.09966/14.42227, 0.9167998
 
 #-verify double up contests
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
@@ -24,8 +25,8 @@ setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
 PROD_RUN = T
-NUMBER = '76'
-NAME = 'dataBug'
+NUMBER = '77'
+NAME = 'RGrmse'
 
 PLOT = 'balance' #fi, scores, cv
 START_DATE = '2016-10-26' #'2016-11-05'
