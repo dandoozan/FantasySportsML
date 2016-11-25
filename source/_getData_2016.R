@@ -1,12 +1,5 @@
 
 #How to add dates (up to date before yesterday)
-  #-download rotoguru data (python source/python_scripts/scrapeRotoGuruDay.py)
-  #-download nba data (python source/python_scripts/scrapeStatsNba.py)
-    #-Season,Player,Traditional,2016
-    #-Season,Player,Advanced,2016
-    #-Season,Player,Defense,2016
-    #-Season,Player,PlayerBios,2016
-    #-Season,Team,Traditional,2016
   #-create data_2016.csv (python source/python_scripts/createDataFile_2016.py)
     #-recheck the 'never' played names
     #-Resolve missing names

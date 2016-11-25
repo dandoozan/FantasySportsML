@@ -6,7 +6,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = util.getDate(2016, 10, 25)
 ONE_DAY = util.getOneDay()
-END_DATE = util.getDate(2016, 11, 18)# util.getYesterdayAsDate()
+END_DATE = util.getDate(2016, 11, 23)# util.getYesterdayAsDate()
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -28,7 +28,7 @@ KNOWN_ALIASES = {
     'j.j. barea': ['jose juan barea', 'jose barea'],
     'ish smith': 'ishmael smith',
     'luc richard mbah a moute': 'luc mbah a moute',
-    'derrick jones jr.': 'derrick jones',
+    'derrick jones jr.': ['derrick jones, jr.', 'derrick jones'],
     'timothe luwawu-cabarrot': 'timothe luwawu',
     'maurice ndour': 'maurice n\'dour',
     'wesley matthews': 'wes matthews',
@@ -477,8 +477,31 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'john jenkins',
         'josh mcroberts',
     },
+    '2016-11-15': {
+        'r.j. hunter',
+    },
     '2016-11-16': {
         'alonzo gee',
+    },
+    '2016-11-17': {
+        'patrick beverley',
+    },
+    '2016-11-18': {
+        'jrue holiday',
+        'paul pierce',
+        'reggie bullock',
+    },
+    '2016-11-19': {
+        'derrick jones jr.',
+    },
+    '2016-11-20': {
+        'marshall plumlee',
+    },
+    '2016-11-21': {
+        'jerryd bayless',
+    },
+    '2016-11-22': {
+        'anthony brown',
     },
     'never': {
         'alec burks', #no games
@@ -494,33 +517,26 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
         'dahntay jones',
         'damian jones', #no games
         'damien inglis',
-        'derrick jones jr.', #no games
         'devin harris', #no games
         'elliot williams',
         'festus ezeli', #no games
         'grant jerrett',
         'greg stiemsma',
         'henry sims',
-        'jerryd bayless',
+        'ian mahinmi',
         'j.p. tokoto',
         'joel anthony',
         'john holland',
         'jonathan holmes',
         'josh huestis', #no games
-        'jrue holiday', #no games
         'livio jean-charles',
         'louis amundson',
         'markel brown',
-        'marshall plumlee', #no games
         'mike scott', #no games
         'nerlens noel', #no games
         'patricio garino',
-        'patrick beverley', #no games
-        'paul pierce', #no games
         'phil pressey',
-        'reggie bullock', #no games
         'reggie jackson',
-        'r.j. hunter', #no games
         'tiago splitter', #no games
         'tyreke evans',
         'wayne ellington', #no games
@@ -557,6 +573,13 @@ ROTOGRINDER_KNOWN_MISSING = {
     'archie goodwin',
     'yogi ferrell',
     'alonzo gee',
+
+    #2016-11-21
+    'jerryd bayless',
+
+    #2016-11-23
+    'anthony brown',
+
 }
 
 TBX_MISSING_PLAYERS = {}
@@ -1190,7 +1213,6 @@ DATA_SOURCES = [
             'nerlens noel',
             'nicolas brussino',
             'timothe luwawu-cabarrot',
-            'derrick jones jr.',
             'chris mccullough',
             'treveon graham',
             'chinanu onuaku',
@@ -1227,6 +1249,9 @@ DATA_SOURCES = [
 
             #2016-11-18
             'alonzo gee',
+
+            #2016-11-23
+            'anthony brown',
         },
         'parseRowFunction': parseNumberFireRow,
         'prefix': 'NF_',
@@ -1368,6 +1393,9 @@ DATA_SOURCES = [
             '2016-11-14': { 'rakeem christmas' },
             '2016-11-16': { 'rakeem christmas', 'georgios papagiannis' },
             '2016-11-18': { 'rakeem christmas', 'georgios papagiannis' },
+            '2016-11-20': { 'rakeem christmas' },
+            '2016-11-21': { 'rakeem christmas' },
+            '2016-11-23': { 'rakeem christmas' },
         },
         'loadFileFunction': loadRotoGrinderStartingLineupsFile,
         'parseRowFunction': parseRotoGrinderStartingLineupsRow,
@@ -1905,10 +1933,10 @@ for dataSource in DATA_SOURCES:
     else:
         mergeData(data, newData, name, isTeam, isOpp, ignoreMissingNames, knownMissingObj, containsY, usePrevDay, startDate, endDate)
 
-writeData(OUTPUT_FILE, data)
-
-if len(TBX_MISSING_PLAYERS) > 0:
-    print 'Missing players:'
+if len(TBX_MISSING_PLAYERS) == 0:
+    writeData(OUTPUT_FILE, data)
+else:
+    print '\nNot writing data because missing players were found:'
     dataSourceNames = TBX_MISSING_PLAYERS.keys()
     dataSourceNames.sort()
     for dataSourceName in dataSourceNames:
