@@ -294,7 +294,7 @@ while currDate <= endDate:
     if len(dataValues) > 0:
         scraper.writeJsonData(jsonData, fullPathFilename, prettyPrint=True)
     else:
-        util.stop('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
+        util.headsUp('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
 
     currDate = currDate + ONE_DAY
     if currDate <= seasonEndDate:
