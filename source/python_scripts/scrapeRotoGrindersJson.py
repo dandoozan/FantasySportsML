@@ -156,7 +156,7 @@ def scrapePage(dirName, url, jsonPrefix):
     if data:
         scraper.writeJsonData(data, scraper.createJsonFilename(fullPathDirName, FILENAME))
     else:
-        util.stop('NO DATA FOUND FOR' + dirName)
+        util.stop('NO DATA FOUND FOR ' + dirName)
 
     print '    Sleeping for %d seconds' % SLEEP
     time.sleep(SLEEP)

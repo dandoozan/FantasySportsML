@@ -1260,8 +1260,8 @@
         }
       },
       "injured": false,
-      "injury_details": "eye",
-      "injury_status": "gtd",
+      "injury_details": null,
+      "injury_status": null,
       "jersey_number": 23,
       "known_name": null,
       "last_name": "Green",
@@ -2026,7 +2026,7 @@
       "known_name": null,
       "last_name": "Noel",
       "news": {
-        "latest": "2016-11-17T01:55:29Z"
+        "latest": "2016-11-25T18:58:36Z"
       },
       "played": 67,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-23825/",
@@ -2266,7 +2266,7 @@
       "known_name": null,
       "last_name": "Randle",
       "news": {
-        "latest": "2016-11-25T01:03:16Z"
+        "latest": "2016-11-25T19:09:12Z"
       },
       "played": 15,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-42669/",
@@ -3306,7 +3306,7 @@
       "known_name": null,
       "last_name": "Embiid",
       "news": {
-        "latest": "2016-11-24T03:40:05Z"
+        "latest": "2016-11-25T22:58:55Z"
       },
       "played": 11,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-49111/",
@@ -4340,13 +4340,13 @@
         }
       },
       "injured": false,
-      "injury_details": null,
-      "injury_status": null,
+      "injury_details": "personal",
+      "injury_status": "o",
       "jersey_number": 5,
       "known_name": null,
       "last_name": "Barton",
       "news": {
-        "latest": "2016-11-23T15:32:53Z"
+        "latest": "2016-11-25T19:06:06Z"
       },
       "played": 6,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-17333/",
@@ -5220,13 +5220,13 @@
         }
       },
       "injured": false,
-      "injury_details": "illness",
-      "injury_status": "gtd",
+      "injury_details": null,
+      "injury_status": null,
       "jersey_number": 13,
       "known_name": null,
       "last_name": "Noah",
       "news": {
-        "latest": "2016-11-24T16:37:52Z"
+        "latest": "2016-11-25T23:04:11Z"
       },
       "played": 12,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-9483/",
@@ -6466,7 +6466,7 @@
       "known_name": null,
       "last_name": "Young",
       "news": {
-        "latest": "2016-11-25T01:36:00Z"
+        "latest": "2016-11-25T19:13:14Z"
       },
       "played": 16,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-9737/",
@@ -6506,7 +6506,7 @@
       "known_name": null,
       "last_name": "Carter-Williams",
       "news": {
-        "latest": "2016-11-25T16:57:06Z"
+        "latest": "2016-11-25T22:51:48Z"
       },
       "played": 3,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-16201/",
@@ -6740,13 +6740,13 @@
         }
       },
       "injured": false,
-      "injury_details": "illness",
-      "injury_status": "gtd",
+      "injury_details": null,
+      "injury_status": null,
       "jersey_number": 12,
       "known_name": null,
       "last_name": "Henderson",
       "news": {
-        "latest": "2016-11-25T17:16:19Z"
+        "latest": "2016-11-25T23:00:30Z"
       },
       "played": 14,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-9951/",
@@ -7706,7 +7706,7 @@
       "known_name": null,
       "last_name": "Murray",
       "news": {
-        "latest": "2016-11-23T16:36:13Z"
+        "latest": "2016-11-25T21:26:34Z"
       },
       "played": 15,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-66108/",
@@ -7786,7 +7786,7 @@
       "known_name": null,
       "last_name": "Korver",
       "news": {
-        "latest": "2016-11-23T18:37:05Z"
+        "latest": "2016-11-25T21:16:49Z"
       },
       "played": 13,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-9870/",
@@ -10346,7 +10346,7 @@
       "known_name": null,
       "last_name": "Onuaku",
       "news": {
-        "latest": "2016-11-21T17:28:36Z"
+        "latest": "2016-11-25T19:57:49Z"
       },
       "played": null,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-58505/",
@@ -13386,7 +13386,7 @@
       "known_name": null,
       "last_name": "Jones Jr.",
       "news": {
-        "latest": "2016-11-19T21:42:07Z"
+        "latest": "2016-11-25T20:08:01Z"
       },
       "played": 1,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-66968/",
@@ -13946,7 +13946,7 @@
       "known_name": null,
       "last_name": "Miller",
       "news": {
-        "latest": "2016-11-25T18:31:24Z"
+        "latest": "2016-11-25T19:13:25Z"
       },
       "played": 3,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-9734/",
@@ -16420,13 +16420,13 @@
         }
       },
       "injured": false,
-      "injury_details": "illness",
-      "injury_status": "gtd",
+      "injury_details": null,
+      "injury_status": null,
       "jersey_number": 22,
       "known_name": null,
       "last_name": "Holmes",
       "news": {
-        "latest": "2016-11-23T22:24:37Z"
+        "latest": "2016-11-25T23:01:51Z"
       },
       "played": 12,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-23447/",
@@ -16900,13 +16900,13 @@
         }
       },
       "injured": false,
-      "injury_details": null,
-      "injury_status": null,
+      "injury_details": "suspension",
+      "injury_status": "o",
       "jersey_number": 7,
       "known_name": null,
       "last_name": "Johnson",
       "news": {
-        "latest": "2016-11-20T18:07:34Z"
+        "latest": "2016-11-25T22:56:09Z"
       },
       "played": 15,
       "player_card_url": "https://www.fanduel.com/mobile/games/17061/players/17061-58350/",
