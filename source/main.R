@@ -8,6 +8,9 @@
 #D-Add dates (up to 11/23): 78_nov23_xgb: 10/27-11/23, 102/262, 266, 38, 7.071784/8.028437, 1.448, 7.540131/8.983257/7.852722, Inf, 8.138115/14.33826, 0.9119179
 #D-Use RG, NF data for trn/cv errors: 79_RGAndNF_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.155, 7.555149/9.139898/7.863341, Inf, 8.138115/14.33826, 0.9119179
 #D-Plot team using RG points: 80_plotRG_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.268, 7.555149/9.139898/7.863341, Inf, 8.138115/14.33826, 0.9119179
+#D-Make RG,NF error apples-to-apples: 81_RGNFerrors_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.132, 7.033946/8.14378/7.191407, RG/Mine=9.037832/9.032108, NF/Mine=8.849512/8.338964, 8.138115/14.33826, 0.9119179
+#-rerun boruta
+#-retune
 
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
 #-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
@@ -27,10 +30,10 @@ setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
 PROD_RUN = T
-NUMBER = '80'
-NAME = 'plotRG'
+NUMBER = '81'
+NAME = 'RGNFerrors'
 
-PLOT = 'balance' #fi, scores, cv, rmses
+PLOT = '' #fi, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-10-27'

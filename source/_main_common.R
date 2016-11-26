@@ -111,21 +111,25 @@ createBaseModel = function(data, yName, xNames, createModel, createPrediction, c
 printErrors = function(model, data, yName, xNames, createModel, createPrediction, computeError) {
   cat('Computing Errors...\n')
 
-  #limit data to only whats in both RG and NF so im comparing apples-to-apples
-  data = data[data$InRGAndNF == 1,]
-
   #split data into trn, cv
   split = splitData(data, yName)
   trn = split$train
   cv = split$cv
 
   trnModel = createModel(trn, yName, xNames)
-  trnError = computeError(trn[, yName], createPrediction(trnModel, trn, xNames))
-  cvError = computeError(cv[, yName], createPrediction(trnModel, cv, xNames))
-  trainError = computeError(data[, yName], createPrediction(model, data, xNames))
+  trnError = computeError(trn[[yName]], createPrediction(trnModel, trn, xNames))
+  cvPrediction = createPrediction(trnModel, cv, xNames)
+  cvError = computeError(cv[[yName]], cvPrediction)
+  trainError = computeError(data[[yName]], createPrediction(model, data, xNames))
   cat('    Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
-  cat('    RG CV Error: ', computeError(cv[, yName], cv$RG_points), '\n', sep='')
-  cat('    NF CV Error: ', computeError(cv[, yName], cv$NF_FP), '\n', sep='')
+
+  #print rg error
+  cvWithRGData = cv[cv$InRotoGrinders == 1,]
+  cat('    CV RG/Mine: ', computeError(cvWithRGData[[yName]], cvWithRGData$RG_points), '/', computeError(cvWithRGData[[yName]], cvPrediction[which(cv$InRotoGrinders == 1)]), '\n', sep='')
+
+  #print nf error
+  cvWithNFData = cv[cv$InNumberFire == 1,]
+  cat('    CV NF/Mine: ', computeError(cvWithNFData[[yName]], cvWithNFData$NF_FP), '/', computeError(cvWithNFData[[yName]], cvPrediction[which(cv$InNumberFire == 1)]), '\n', sep='')
 }
 
 findFirstIndexOfDate = function(data, date) {
