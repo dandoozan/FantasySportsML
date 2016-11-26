@@ -193,7 +193,7 @@ getTeamIndividualActualFPs = function(team, test, yName) {
   return(test[test$Name %in% team$Name, yName])
 }
 
-plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list(), contestsToPlot=list(), greedyTeamExpected=c(), greedyTeamActual=c(), rgTeamExpected=c(), rgTeamActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), balance=c(), name='Scores', save=FALSE, main='Title', filename='') {
+plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list(), contestsToPlot=list(), greedyTeamExpected=c(), greedyTeamActual=c(), rgTeamExpected=c(), rgTeamActual=c(), myTeamUsingRGPointsActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), balance=c(), name='Scores', save=FALSE, main='Title', filename='') {
   cat('    Plotting ', name, '...\n', sep='')
 
   if (save) startSavePlot(name, filename)
@@ -222,8 +222,8 @@ plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list()
   numContestLowests = length(contestLowests)
 
   #get ymin and ymax
-  yMin = min(bandLow, greedyTeamExpected, greedyTeamActual, rgTeamExpected, rgTeamActual, medianActualFPs, na.rm=T)
-  yMax = max(bandHigh, greedyTeamExpected, greedyTeamActual, rgTeamExpected, rgTeamActual, medianActualFPs, na.rm=T)
+  yMin = min(bandLow, greedyTeamExpected, greedyTeamActual, rgTeamExpected, rgTeamActual, myTeamUsingRGPointsActual, medianActualFPs, na.rm=T)
+  yMax = max(bandHigh, greedyTeamExpected, greedyTeamActual, rgTeamExpected, rgTeamActual, myTeamUsingRGPointsActual, medianActualFPs, na.rm=T)
   if (numContestLowests > 0) {
     for (i in 1:numContestLowests) {
       yMin = min(yMin, contestLowests[[i]], na.rm=T)
@@ -268,7 +268,14 @@ plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list()
   #draw rg actual
   if (length(rgTeamActual) > 0) {
     lines(dates, rgTeamActual, col='orange')
-    labels = c(labels, 'RG Team Actual')
+    labels = c(labels, 'RG Team')
+    colors = c(colors, 'orange')
+  }
+
+  #draw my team using rg points
+  if (length(myTeamUsingRGPointsActual) > 0) {
+    lines(dates, myTeamUsingRGPointsActual, col='orange')
+    labels = c(labels, 'My Team Using RG Points')
     colors = c(colors, 'orange')
   }
 
@@ -299,8 +306,8 @@ plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list()
     }
   } else {
     if (length(greedyTeamActual) > 0) {
-      #draw greedy as green
-      color = 'blue'
+      #draw greedy
+      color = 'red'
       lines(dates, greedyTeamActual, col=color)
       labels = c(labels, 'My Team')
       colors = c(colors, color)
@@ -312,7 +319,7 @@ plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list()
   abline(h=seq((yMin - yMin%%spacing), (yMax - yMax%%spacing + spacing), spacing), v=dates, col='gray', lty='dotted')
 
   #add legend
-  addLegend(labels, colors)
+  addLegend(rev(labels), rev(colors))
 
   #add date axis
   axis.Date(side=1, dates, format="%m/%d")
@@ -320,6 +327,11 @@ plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list()
   if (save) endSavePlot()
 }
 
+getPredictionDF = function(prediction, test, yName) {
+  predictionDF = test
+  predictionDF[[yName]] = prediction
+  return(predictionDF)
+}
 makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
@@ -337,6 +349,7 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
   myTeamRmses = c()
   myTeamGreedyExpectedFPs = c()
   myTeamHillClimbingExpectedFPs = c()
+  myTeamUsingRGPointsActualFPs = c()
   rgTeamExpectedFPs = c()
   rgTeamActualFPs = c()
   highestWinningScores = c()
@@ -368,14 +381,15 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     fdRmse = computeError(test[[yName]], test$FPPG)
 
     #create my teams for today
-    predictionDF = test
-    predictionDF[[yName]] = prediction
+    predictionDF = getPredictionDF(prediction, test, yName)
     myTeamGreedy = createTeam_Greedy(predictionDF, yName, maxCov=maxCov)
     myTeamExpectedFP = computeTeamFP(myTeamGreedy, yName)
     myTeamActualFP = computeActualFP(myTeamGreedy, test, yName)
     rgTeam = getRgTeam(predictionDF, yName)
     rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, yName)
     rgTeamActualFP = if (is.null(rgTeam)) NA else computeActualFP(rgTeam, test, yName)
+    myTeamUsingRGPoints = createTeam_Greedy(getPredictionDF(test$RG_points, test, yName), yName, maxCov=maxCov)
+    myTeamUsingRGPointsActualFP = computeActualFP(myTeamUsingRGPoints, test, yName)
     myTeamRmse = computeError(getTeamIndividualActualFPs(myTeamGreedy, test, yName), myTeamGreedy[[yName]])
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
@@ -426,6 +440,7 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     rgRmses = c(rgRmses, rgRmse)
     myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
     myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
+    myTeamUsingRGPointsActualFPs = c(myTeamUsingRGPointsActualFPs, myTeamUsingRGPointsActualFP)
     rgTeamExpectedFPs = c(rgTeamExpectedFPs, rgTeamExpectedFP)
     rgTeamActualFPs = c(rgTeamActualFPs, rgTeamActualFP)
     myTeamRmses = c(myTeamRmses, myTeamRmse)
@@ -455,6 +470,7 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     medianActualFPs=medianActualFPs,
     rgTeamExpectedFPs=rgTeamExpectedFPs,
     rgTeamActualFPs=rgTeamActualFPs,
+    myTeamUsingRGPointsActualFPs=myTeamUsingRGPointsActualFPs,
     myTeamRmses=myTeamRmses,
     scoreRatios=scoreRatios,
     highestWinningScores=highestWinningScores,
@@ -467,7 +483,7 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
 makePlots = function(toPlot, data, yName, xNames, filename, contestsToPlot, teamStats=list(), prodRun) {
   cat('Creating plots...\n')
   if (length(teamStats) > 0) {
-    if (prodRun || toPlot == 'balance') plotScores(teamStats$dateStrs, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamActual=teamStats$myTeamActualFPs, balance=teamStats$balances, main='How I Would\'ve Done', name='Balance', save=prodRun, filename=filename)
+    if (prodRun || toPlot == 'balance') plotScores(teamStats$dateStrs, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamActual=teamStats$myTeamActualFPs, myTeamUsingRGPointsActual=teamStats$myTeamUsingRGPointsActualFPs, balance=teamStats$balances, main='How I Would\'ve Done', name='Balance', save=prodRun, filename=filename)
     #if (prodRun || toPlot == 'scores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, main='My Team Vs. Actual Contests', name='Scores', save=prodRun, filename=filename)
     #if (prodRun || toPlot == 'multiscores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamActual=teamStats$myTeamActualFPs, hillClimbingTeams=teamStats$myTeamHillClimbingActualFPs, medianActualFPs=teamStats$medianActualFPs, main='My Teams Vs. Actual Contests', name='Multiscores', save=prodRun, filename=filename)
     if (prodRun || toPlot == 'rmse_scoreratios') plotByDate2Axis(teamStats$dateStrs, teamStats$myRmses, ylab='RMSE', ylim=c(5, 12), y2=teamStats$scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=prodRun, name='RMSE_ScoreRatios', filename=filename)
