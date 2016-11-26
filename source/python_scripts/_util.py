@@ -71,9 +71,10 @@ def writeCsvFile(colNames, dataArr, fullPathFilename):
         writer = csv.DictWriter(f, fieldnames=colNames)
         writer.writeheader()
         writer.writerows(dataArr)
-def writeJsonData(jsonData, fullPathFilename, prettyPrint=True):
+def writeJsonData(jsonData, fullPathFilename, prettyPrint=True, verbose=False):
     import json
-    print '    Writing data to ' + fullPathFilename + '...'
+    if verbose:
+        print '    Writing data to ' + fullPathFilename + '...'
     f = open(fullPathFilename, 'w')
     if prettyPrint:
         json.dump(jsonData, f, indent=2, separators=(',', ': '), sort_keys=True)
@@ -123,9 +124,14 @@ def parseAsDate(dateStr, dateFormat='%Y-%m-%d'):
     return datetime.date(parsedDatetime.year, parsedDatetime.month, parsedDatetime.day)
 def formatDate(date, dateFormat='%Y-%m-%d'):
     return date.strftime(dateFormat)
+def formatDatetime(date, dateFormat='%Y-%m-%dT%H-%M-%S'):
+    return date.strftime(dateFormat)
 def getTodayAsDate():
     from datetime import date
     return date.today()
+def getTodayAsDatetime():
+    from datetime import datetime
+    return datetime.today()
 def getOneDay():
     from datetime import timedelta
     return timedelta(days=1)

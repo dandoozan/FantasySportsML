@@ -1,7 +1,6 @@
 import os
 from datetime import datetime, timedelta
 import json
-import scraper
 import _util as util
 
 SEASON = '2015'
@@ -334,7 +333,7 @@ def loadDataFromRotoGuru(fullPathFilename):
             data[date] = {}
 
         if name in data[date]:
-            scraper.headsUp('Uh oh, got a duplicate name. Name=' + name + ', date=' + date)
+            util.headsUp('Uh oh, got a duplicate name. Name=' + name + ', date=' + date)
             exit()
 
         data[date][createKey(name, team)] = {
@@ -381,7 +380,7 @@ def loadNbaDataFromJsonFile(fullPathFilename, prefix=''):
         key = createKey(row[nameIndex], row[teamIndex])
         if key in data:
             #TBX_DUPLICATE_NAMES[name] = fullPathFilename
-            #scraper.headsUp('Got a duplicate name, name=' + name + ', filename=' + fullPathFilename)
+            #util.headsUp('Got a duplicate name, name=' + name + ', filename=' + fullPathFilename)
 
             #Got a duplicate name. This only happens right now in Opponent
             #Replace it if the new GP is greater than the old GP
@@ -405,7 +404,7 @@ def loadNbaTeamDataFromJsonFile(fullPathFilename, prefix=''):
     for row in rowData:
         key = row[teamNameIndex] #just use the team name for the key
         if key in data:
-            scraper.stop('Got a duplicate team, team=' + key + ', filename=' + fullPathFilename)
+            util.stop('Got a duplicate team, team=' + key + ', filename=' + fullPathFilename)
         data[key] = dict(zip(colNames, row))
     return data
 def findApplicableFile(fullPathToDir, date, season):

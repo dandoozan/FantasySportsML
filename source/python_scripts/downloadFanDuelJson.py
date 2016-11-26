@@ -1,5 +1,4 @@
 import re
-from datetime import date
 import json
 import scraper
 import _util as util
@@ -7,7 +6,7 @@ import _fanDuelCommon as fd
 
 TEST = False
 
-TODAY_STR = date.today().strftime('%Y-%m-%d')
+FILENAME = util.formatDatetime(util.getTodayAsDatetime())
 PARENT_DIR = util.joinDirs('data', 'rawDataFromFanDuel')
 SLEEP = 10
 
@@ -34,7 +33,7 @@ def downloadData(url, xAuthToken, referer, customHeaders={}):
     #util.printObj(createHeaders(xAuthToken, referer, customHeaders))
     return scraper.downloadJson(url, createHeaders(xAuthToken, referer, customHeaders))
 def createFullPathFilename(dirName, prefix=''):
-    return util.createFullPathFilename(util.joinDirs(PARENT_DIR, dirName), prefix + util.createJsonFilename(TODAY_STR))
+    return util.createFullPathFilename(util.joinDirs(PARENT_DIR, dirName), prefix + util.createJsonFilename(FILENAME))
 def writeData(data, dirName):
     util.writeJsonData(data, createFullPathFilename(dirName))
 
@@ -95,12 +94,12 @@ print 'Downloading Fixture Lists...'
 #16999=11/20 nba late night
 fixtureList = downloadFixtureList(xAuthToken)
 print 'Got fixture list:', fixtureList
-scraper.sleep(SLEEP)
+util.sleep(SLEEP)
 
 print '\nDownloading Contests...'
 contestId = downloadContests(xAuthToken, fixtureList)
 print 'Got contest id:', contestId
-scraper.sleep(SLEEP)
+util.sleep(SLEEP)
 
 print '\nDownloading Players...'
 downloadPlayers(xAuthToken, fixtureList, contestId)

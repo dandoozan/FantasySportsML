@@ -1,11 +1,9 @@
-from datetime import date
-import time
 from bs4 import BeautifulSoup
 import scraper
 
 PARENT_DIR = 'data/rawDataFromNumberFire'
 URL = 'https://www.numberfire.com/nba/daily-fantasy/daily-basketball-projections'
-FILENAME = date.today().strftime('%Y-%m-%d')
+FILENAME = util.formatDate(util.getTodayAsDate())
 #FILENAME = '2016-10-25'
 
 def parseData(data):

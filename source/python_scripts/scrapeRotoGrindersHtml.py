@@ -1,5 +1,3 @@
-from datetime import date
-import time
 from bs4 import BeautifulSoup
 import scraper
 import _util as util
@@ -116,7 +114,6 @@ for page in pagesToScrape:
     else:
         util.stop('No data was parsed, not writing data')
 
-    print '    Sleeping for %d seconds' % SLEEP
-    time.sleep(SLEEP)
+    util.sleep(SLEEP)
 
 print 'Done!'

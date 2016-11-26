@@ -1,6 +1,4 @@
-import urllib2
 from bs4 import BeautifulSoup
-import datetime
 import scraper
 import _util as util
 
@@ -45,6 +43,6 @@ while currDate <= YESTERDAY:
     writeData(data, fullPathFilename)
     currDate = currDate + ONE_DAY
     if currDate <= YESTERDAY:
-        scraper.sleep(SLEEP)
+        util.sleep(SLEEP)
 
 print 'Done!'

@@ -1,11 +1,9 @@
-from datetime import date
-import time
 import json
 import scraper
 import _util as util
 
 ROTO_GRINDER_DIR = 'data/rawDataFromRotoGrinders'
-FILENAME = date.today().strftime('%Y-%m-%d')
+FILENAME = util.formatDate(util.getTodayAsDate())
 SLEEP = 10
 
 PAGES_TO_SCRAPE = [
@@ -154,12 +152,10 @@ def scrapePage(dirName, url, jsonPrefix):
     pageSource = scraper.downloadPageSource(url).split('\n')
     data = parseData(pageSource, jsonPrefix)
     if data:
-        scraper.writeJsonData(data, scraper.createJsonFilename(fullPathDirName, FILENAME))
+        util.writeJsonData(data, util.createFullPathFilename(fullPathDirName, util.createJsonFilename(FILENAME)))
     else:
         util.stop('NO DATA FOUND FOR ' + dirName)
-
-    print '    Sleeping for %d seconds' % SLEEP
-    time.sleep(SLEEP)
+    util.sleep(SLEEP)
 
 #=============== Main ================
 for page in PAGES_TO_SCRAPE:

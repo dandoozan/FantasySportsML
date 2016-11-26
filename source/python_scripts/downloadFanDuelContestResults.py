@@ -95,7 +95,7 @@ for contest in contestsToDownload:
     else:
         jsonData = scraper.downloadJson(url, createHeaders(contestId, xAuthToken))
         util.writeJsonData(jsonData, fullPathFilename)
-        scraper.sleep(SLEEP)
+        util.sleep(SLEEP)
     cnt += 1
 
 print 'Done!'

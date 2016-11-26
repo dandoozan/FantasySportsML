@@ -292,12 +292,12 @@ while currDate <= endDate:
 
     dataValues = getDataValues(jsonData)
     if len(dataValues) > 0:
-        scraper.writeJsonData(jsonData, fullPathFilename, prettyPrint=True)
+        util.writeJsonData(jsonData, fullPathFilename, prettyPrint=True)
     else:
         util.headsUp('NO DATA FOUND FOR=' + currDate.strftime(DATE_FORMAT_FILENAME))
 
     currDate = currDate + ONE_DAY
     if currDate <= seasonEndDate:
-        scraper.sleep(SLEEP)
+        util.sleep(SLEEP)
 
 print 'Done!  Finished ' + getSummary(isDaily, isTeam, category, season)

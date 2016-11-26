@@ -1,5 +1,4 @@
 import re
-from datetime import date, timedelta
 from bs4 import BeautifulSoup
 import json
 import scraper
@@ -14,14 +13,14 @@ import _util as util
 TEST = False
 
 RG_FORUM_URL = 'https://rotogrinders.com/threads/category/main'
-TODAY = date.today()
-YESTERDAY = TODAY - timedelta(1)
-PARENT_DIR = 'data/rawDataFromFanDuel/ContestResults/' + YESTERDAY.strftime('%Y-%m-%d')
+TODAY = util.getTodayAsDate()
+YESTERDAY = TODAY - util.getOneDay()
+PARENT_DIR = 'data/rawDataFromFanDuel/ContestResults/' + util.formatDate(YESTERDAY)
 SLEEP = 10
 
 def isContestLinksUrl(url, date):
     #https://rotogrinders.com/threads/daily-fantasy-tournament-links-saturday-october-29th-1512252
-    dateStr = date.strftime('%A-%B-%-d').lower()
+    dateStr = util.formatDate(date, '%A-%B-%-d').lower()
     regexPattern = 'https://rotogrinders.com/threads/daily-fantasy-tournament-links-%s(st|nd|rd|th)-\d+' % dateStr
     return not not re.match(regexPattern, url)
 
@@ -59,7 +58,7 @@ def scrapeContestsFromRotoGrinder(url):
 
     contests = []
 
-    pageSource = open(PARENT_DIR + '/' + YESTERDAY.strftime('%Y-%m-%d') + '.html') if TEST else scraper.downloadPageSource(url)
+    pageSource = open(PARENT_DIR + '/' + util.formatDate(YESTERDAY) + '.html') if TEST else scraper.downloadPageSource(url)
     soup = BeautifulSoup(pageSource, 'html.parser')
     div = soup.find('div', class_='content')
     if div:
@@ -108,13 +107,13 @@ util.createDirIfNecessary(PARENT_DIR)
 rgTournamentLinksUrl = scrapeRotoGrinderForum(RG_FORUM_URL, YESTERDAY)
 if rgTournamentLinksUrl:
     print '    Found contest page: ' + rgTournamentLinksUrl
-    scraper.sleep(SLEEP)
+    util.sleep(SLEEP)
 
     #2. scrape contest urls from 'Daily Fantasy Tournament Links - [Date]' page
     contests = scrapeContestsFromRotoGrinder(rgTournamentLinksUrl)
     if len(contests) > 0:
         print '    Found %d contests' % len(contests)
-        scraper.sleep(SLEEP)
+        util.sleep(SLEEP)
 
         #3. for each contest, download its results from api.fanduel.com
         cnt = 1
@@ -122,14 +121,14 @@ if rgTournamentLinksUrl:
             print '\nDownloading Contest (%d / %d): %s...' % (cnt, len(contests), contest)
 
             jsonData = scraper.downloadJson(createFanduelApiUrl(contest), createHeaders(contest, xAuthToken))
-            scraper.writeJsonData(jsonData, scraper.createJsonFilename(PARENT_DIR, contest))
+            util.writeJsonData(jsonData, util.createFullPathFilename(PARENT_DIR, util.createJsonFilename(contest)))
 
-            scraper.sleep(SLEEP)
+            util.sleep(SLEEP)
 
             cnt += 1
     else:
-        scraper.headsUp('No contests found on RotoGrinder Contest Page')
+        util.headsUp('No contests found on RotoGrinder Contest Page')
 else:
-    scraper.headsUp('No contest link found on forum')
+    util.headsUp('No contest link found on forum')
 
 print 'Done!'

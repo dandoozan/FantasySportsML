@@ -1,4 +1,3 @@
-import scraper
 import _util as util
 
 DATA_DIR = 'data'
@@ -622,7 +621,7 @@ def findNbaFile(fullPathToDir, dateStr):
         fullPathFilename = util.createFullPathFilename(fullPathToDir, util.createJsonFilename(util.formatDate(currDate)))
         if util.fileExists(fullPathFilename):
             if usedDiffFile:
-                scraper.headsUp('Used different file for date=' + dateStr + ', file used=' + fullPathFilename)
+                util.headsUp('Used different file for date=' + dateStr + ', file used=' + fullPathFilename)
             return fullPathFilename
         usedDiffFile = True
     return None
