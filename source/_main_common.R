@@ -100,18 +100,32 @@ setup = function(algToUse, featuresToUse, startDate, endDate, prodRun, filename)
 }
 
 createBaseModel = function(data, yName, xNames, createModel, createPrediction, computeError) {
-
   #create model
   cat('Creating Model...\n', sep='')
   timeElapsed = system.time(baseModel <- createModel(data, yName, xNames))
   cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
   printModelResults(baseModel)
-
-  #print trn/cv, train error
-  printTrnCvTrainErrors(baseModel, data[data$InRotoGrinders == 1,], yName, xNames, createModel, createPrediction, computeError)
-  printRGTrnCVError(data, yName, xNames, createModel, computeError)
-
   return(baseModel)
+}
+
+printErrors = function(model, data, yName, xNames, createModel, createPrediction, computeError) {
+  cat('Computing Errors...\n')
+
+  #limit data to only whats in both RG and NF so im comparing apples-to-apples
+  data = data[data$InRGAndNF == 1,]
+
+  #split data into trn, cv
+  split = splitData(data, yName)
+  trn = split$train
+  cv = split$cv
+
+  trnModel = createModel(trn, yName, xNames)
+  trnError = computeError(trn[, yName], createPrediction(trnModel, trn, xNames))
+  cvError = computeError(cv[, yName], createPrediction(trnModel, cv, xNames))
+  trainError = computeError(data[, yName], createPrediction(model, data, xNames))
+  cat('    Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
+  cat('    RG CV Error: ', computeError(cv[, yName], cv$RG_points), '\n', sep='')
+  cat('    NF CV Error: ', computeError(cv[, yName], cv$NF_FP), '\n', sep='')
 }
 
 findFirstIndexOfDate = function(data, date) {
@@ -177,20 +191,6 @@ computeActualFP = function(team, test, yName) {
 }
 getTeamIndividualActualFPs = function(team, test, yName) {
   return(test[test$Name %in% team$Name, yName])
-}
-
-printRGTrnCVError = function(data, yName, xNames, createModel, computeError) {
-  #split data into train, cv
-  split = splitData(data, yName)
-  train = split$train
-  cv = split$cv
-
-  #compute train and cv errors
-  model = createModel(train, yName, xNames)
-  trnError = computeError(train[, yName], train$RG_points)
-  cvError = computeError(cv[, yName], cv$RG_points)
-  trainError = computeError(data[, yName], data$RG_points)
-  cat('    RG Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
 }
 
 plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list(), contestsToPlot=list(), greedyTeamExpected=c(), greedyTeamActual=c(), rgTeamExpected=c(), rgTeamActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), balance=c(), name='Scores', save=FALSE, main='Title', filename='') {

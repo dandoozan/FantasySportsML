@@ -6,8 +6,8 @@
 #D-Fix bug in createDataFile: 76_dataBug_xgb: 10/27-11/18, 102/261, 266, 37, 6.938443/8.016218, 0.93, 6.930815/7.886737/7.095035, Inf, $4, 8.09966/14.42227, 0.9167998
 #D-Compute cv rmse with same as RG data: 77_RGrmse_xgb: 10/27-11/18, 102/262, 266, 37, 6.938443/8.016218, 0.905, 7.557726/8.381168/7.727685, Inf, $4, 8.09966/14.42227, 0.9167998
 #D-Add dates (up to 11/23): 78_nov23_xgb: 10/27-11/23, 102/262, 266, 38, 7.071784/8.028437, 1.448, 7.540131/8.983257/7.852722, Inf, 8.138115/14.33826, 0.9119179
+#D-Use RG, NF data for trn/cv errors: 79_RGAndNF_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.155, 7.555149/9.139898/7.863341, Inf, 8.138115/14.33826, 0.9119179
 
-#-verify double up contests
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
 #-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
 #-Add NBA_S_P_ADV_PACE:
@@ -26,10 +26,10 @@ setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
 PROD_RUN = T
-NUMBER = '78'
-NAME = 'nov23'
+NUMBER = '79'
+NAME = 'RGAndNF'
 
-PLOT = 'balance' #fi, scores, cv
+PLOT = 'rmses' #fi, scores, cv
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-10-27'
@@ -63,6 +63,7 @@ createTeamPrediction = function(train, test, yName, xNames) {
 data = setup(ALG, FEATURES_TO_USE, START_DATE, END_DATE, PROD_RUN, FILENAME)
 hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)
 baseModel = createBaseModel(data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
+printErrors(baseModel, data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
 teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
 makePlots(PLOT, data, Y_NAME, FEATURES_TO_USE, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
 
