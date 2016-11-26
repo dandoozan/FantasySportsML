@@ -80,7 +80,7 @@ def writeData(colNames, rowData, fullPathFilename):
 
 print '\nScraping NumberFire...'
 
-pageSource = scraper.downloadPageSource(URL)
+pageSource = scraper.downloadPageSource(URL, verbose=True)
 #pageSource = open(PARENT_DIR + '/' + FILENAME + '.html')
 colNames, rowData = parseData(pageSource)
 writeData(colNames, rowData, createFilename(PARENT_DIR, FILENAME))

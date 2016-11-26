@@ -3,7 +3,7 @@ import scraper
 import _util as util
 
 PARENT_DIR = 'data/rawDataFromRotoGrinders'
-FILENAME = date.today().strftime('%Y-%m-%d')
+FILENAME = util.formatDate(util.getTodayAsDate())
 SLEEP = 5
 
 pagesToScrape = [
@@ -69,7 +69,7 @@ def getRowData(table):
     return rowData
 
 def parseData(data, tableClassName):
-    print '    Parsing data...'
+    #print '    Parsing data...'
     colNames = None
     rowData = None
     soup = BeautifulSoup(data, 'html.parser')
@@ -85,7 +85,7 @@ def createFilename(parentDir, dirName, baseFilename):
     return parentDir + '/' + dirName + '/' + baseFilename + '.csv'
 
 def writeData(colNames, rowData, fullPathFilename):
-    print '    Writing data to ' + fullPathFilename + '...'
+    #print '    Writing data to ' + fullPathFilename + '...'
 
     f = open(fullPathFilename, 'w')
 
@@ -105,7 +105,7 @@ for page in pagesToScrape:
     tableClassName = page['tableClassName']
     url = page['url']
 
-    print '\nScraping %s...' % dirName
+    print 'Scraping %s...' % dirName
 
     pageSource = scraper.downloadPageSource(url)
     colNames, rowData = parseData(pageSource, tableClassName)

@@ -129,7 +129,7 @@ TEAM_STATS_PAGES_TO_SCRAPE = [
 ]
 
 def parseData(data, jsonPrefix):
-    print '    Parsing data...'
+    #print '    Parsing data...'
 
     for line in data:
         line = line.strip()
@@ -144,7 +144,7 @@ def parseData(data, jsonPrefix):
     return None
 
 def scrapePage(dirName, url, jsonPrefix):
-    print '\nScraping %s...' % dirName
+    print 'Scraping %s...' % dirName
 
     fullPathDirName = util.joinDirs(ROTO_GRINDER_DIR, dirName)
     #util.createDirIfNecessary(fullPathDirName)
