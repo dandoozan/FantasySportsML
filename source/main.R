@@ -8,8 +8,8 @@
 #D-Add dates (up to 11/23): 78_nov23_xgb: 10/27-11/23, 102/262, 266, 38, 7.071784/8.028437, 1.448, 7.540131/8.983257/7.852722, Inf, 8.138115/14.33826, 0.9119179
 #D-Use RG, NF data for trn/cv errors: 79_RGAndNF_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.155, 7.555149/9.139898/7.863341, Inf, 8.138115/14.33826, 0.9119179
 #D-Plot team using RG points: 80_plotRG_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.268, 7.555149/9.139898/7.863341, Inf, 8.138115/14.33826, 0.9119179
-#D-Make RG,NF error apples-to-apples: 81_RGNFerrors_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.132, 7.033946/8.14378/7.191407, RG/Mine=9.037832/9.032108, NF/Mine=8.849512/8.338964, 8.138115/14.33826, 0.9119179
-#-rerun boruta
+#D-Make RG,NF error apples-to-apples: 81_RGNFerrors_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.132, 7.033946/8.14378/7.191407, RG/Mine=9.037832/9.032108, NF/Mine=8.849512/8.338964, Inf, 8.138115/14.33826, 0.9119179
+#D-Rerun boruta: 82_boruta_xgb: 10/27-11/23, 121/264, 266, 45, 6.923147/8.007204, 4.332, 6.921224/8.103531/7.065831, Inf, 8.113962/16.7418, 0.9296685
 #-retune
 
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
@@ -30,10 +30,10 @@ setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
 PROD_RUN = T
-NUMBER = '81'
-NAME = 'RGNFerrors'
+NUMBER = '82'
+NAME = 'boruta'
 
-PLOT = '' #fi, scores, cv, rmses
+PLOT = 'balance' #fi, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-10-27'
@@ -45,13 +45,9 @@ CONTESTS_TO_PLOT = list(
 ALG = 'xgb'
 MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'balance'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
-Y_NAME = 'FP'
 STARTING_BALANCE = 25
 
 source('source/_main_common.R')
-
-FEATURES_TO_USE = F.BORUTA.CONFIRMED
-#FEATURES_TO_USE = c('AVG_FP', 'NBA_S_P_TRAD_GP', 'InjuryIndicator', 'NBA_S_P_ADV_PACE')
 
 #================= Functions =================
 
@@ -64,11 +60,12 @@ createTeamPrediction = function(train, test, yName, xNames) {
 
 #================= Main =================
 
-data = setup(ALG, FEATURES_TO_USE, START_DATE, END_DATE, PROD_RUN, FILENAME)
-hyperParams = findBestHyperParams(data, Y_NAME, FEATURES_TO_USE)
-baseModel = createBaseModel(data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
-printErrors(baseModel, data, Y_NAME, FEATURES_TO_USE, createModel, createPrediction, computeError)
-teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, FEATURES_TO_USE, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
-makePlots(PLOT, data, Y_NAME, FEATURES_TO_USE, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+data = setup(ALG, START_DATE, END_DATE, PROD_RUN, FILENAME)
+featuresToUse = getFeaturesToUse(data)
+hyperParams = findBestHyperParams(data, Y_NAME, featuresToUse)
+baseModel = createBaseModel(data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
+printErrors(baseModel, data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
+teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
+makePlots(PLOT, data, Y_NAME, featuresToUse, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
 
 cat('Done!\n')
