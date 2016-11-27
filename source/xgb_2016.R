@@ -64,16 +64,16 @@ getHyperParams = function() {
     gamma = 0,#0 #Larger value=less overfitting
 
     #range=[1,∞], default=6, toTry=3,5,7,9,12,15,17,25
-    max_depth = 4,#10 #Lower value=less overfitting
+    max_depth = 2,#10 #Lower value=less overfitting
 
     #range=(0,1], default=1, toTry=0.6,0.7,0.8,0.9,1.0
-    subsample = 0.9,#1 #ratio of sample of data to use for each instance (eg. 0.5=50% of data). Lower value=less overfitting
+    subsample = 1,#1 #ratio of sample of data to use for each instance (eg. 0.5=50% of data). Lower value=less overfitting
 
     #range=[0,∞], default=1, toTry=1,3,5,7
-    min_child_weight = 6,#5 #Larger value=less overfitting
+    min_child_weight = 5,#5 #Larger value=less overfitting
 
     #range=(0,1], default=1, toTry=0.6,0.7,0.8,0.9,1.0
-    colsample_bytree = 0.6,#0.2 #ratio of cols (features) to use in each tree. Lower value=less overfitting
+    colsample_bytree = 0.2,#0.2 #ratio of cols (features) to use in each tree. Lower value=less overfitting
 
     #----Parameters for Linear Booster:-----
     #range=[0,∞], default=0, toTry=0->1000 or more

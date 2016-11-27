@@ -530,7 +530,7 @@ makePlots = function(toPlot, data, yName, xNames, filename, contestsToPlot, team
 
 #----------------- utility functions ----------------
 getPredictionForDate = function(dateStr, yName, xNames) {
-  d = getData(START_DATE)
+  d = getData()
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test

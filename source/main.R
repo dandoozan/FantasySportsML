@@ -10,7 +10,8 @@
 #D-Plot team using RG points: 80_plotRG_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.268, 7.555149/9.139898/7.863341, Inf, 8.138115/14.33826, 0.9119179
 #D-Make RG,NF error apples-to-apples: 81_RGNFerrors_xgb: 10/27-11/23, 102/264, 266, 38, 7.071784/8.028437, 1.132, 7.033946/8.14378/7.191407, RG/Mine=9.037832/9.032108, NF/Mine=8.849512/8.338964, Inf, 8.138115/14.33826, 0.9119179
 #D-Rerun boruta: 82_boruta_xgb: 10/27-11/23, 121/264, 266, 45, 6.923147/8.007204, 4.332, 6.921224/8.103531/7.065831, Inf, 8.113962/16.7418, 0.9296685
-#-retune
+#D-Retune: 83_retune_xgb: 10/27-11/23, 121/264, 266, 53, 7.701541/8.002063, 3.455, 7.694258/8.06044/7.756014, Inf, -$8, 8.081185/15.86138, 0.9107249
+#-set plot start date to 11/7
 
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
 #-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
@@ -24,16 +25,18 @@
 #-rescrape all nba data to get updated stats
 #-make sure 11/20 has all data for all players and teams that played that day since I scraped it late
 #-maybe only use data from 11/5 onward or only the last X (2?) weeks
+#-add back projected points features
+#-run findBestSeedAndNrounds for every date rather than once at beginning on all data
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
 PROD_RUN = T
-NUMBER = '82'
-NAME = 'boruta'
+NUMBER = '83'
+NAME = 'retune'
 
-PLOT = 'balance' #fi, scores, cv, rmses
+PLOT = '' #fi, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-10-27'
