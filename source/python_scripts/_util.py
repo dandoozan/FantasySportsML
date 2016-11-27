@@ -36,6 +36,8 @@ def createPyFilename(baseFilename):
     return baseFilename + '.py'
 def parseBaseFilename(filename):
     return filename[:filename.find('.')]
+def parseDateFromDateTimeFilename(filename):
+    return filename[:filename.find('T')]
 def loadCsvFile(fullPathFilename, keyRenameMap=None, delimiter=',', prefix=''):
     import csv
     data = []
@@ -145,6 +147,7 @@ def getDate(year, month, day):
     return(datetime.date(year, month, day))
 def getSeasonStartDate():
     return getDate(2016, 10, 25)
+
 
 #================= error stuff ===================
 def headsUp(msg):

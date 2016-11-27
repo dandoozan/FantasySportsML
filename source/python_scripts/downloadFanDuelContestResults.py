@@ -11,6 +11,10 @@ SLEEP = 30
 ONE_DAY = util.getOneDay()
 START_DATE = util.getDate(2016, 11, 7)
 END_DATE = util.getYesterdayAsDate()
+KNOWN_MISSING_DATES = {
+    '2016-11-20',
+    '2016-11-24',
+}
 
 def getContestId(contest):
     return contest['id']
@@ -39,32 +43,39 @@ def createHeaders(contestId, xAuthToken):
 def contestAlreadyDownloaded(dateStr, contest):
     return util.fileExists(util.createFullPathFilename(util.joinDirs(CONTEST_RESULTS_DIR, dateStr), util.createJsonFilename(getContestId(contest))))
 
+def findFilename(fullPathToDir, dateStr):
+    filenames = util.getFilesInDir(fullPathToDir)
+    filenames.reverse() #go in reverse direction so that I find the latest contest file when there are multiple for one day
+    for filename in filenames:
+        if util.parseBaseFilename(filename) == dateStr \
+                or util.parseDateFromDateTimeFilename(filename) == dateStr:
+            return filename
 def findContestsToDownload():
-    print 'Finding contests to donwload...'
+    print 'Finding contests to download...'
     contestsToDownload = []
 
     currDate = START_DATE
     while currDate <= END_DATE:
         currDateStr = util.formatDate(currDate)
-        fullPathFilename = util.createFullPathFilename(CONTESTS_DIR, util.createJsonFilename(currDateStr))
-        if util.fileExists(fullPathFilename):
-            jsonDataFromFile = util.loadJsonFile(fullPathFilename)
-            numContests = 0
-            contests = jsonDataFromFile['contests']
-            for contest in contests:
-                if ((fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 2) \
-                    or (fd.isDoubleUp(contest) and fd.getEntryFee(contest) <= 2 and fd.getContestMaxEntries(contest) > 200) \
-                    or (fd.isTripleUp(contest) and fd.getEntryFee(contest) <= 2)) \
-                    and not contestAlreadyDownloaded(currDateStr, contest):
-                    contestsToDownload.append({
-                        'contestId': getContestId(contest),
-                        'url': getContestUrl(contest),
-                        'dateStr': currDateStr,
-                    })
-                    numContests += 1
-            print '    Found %d contests in file: %s' % (numContests, fullPathFilename)
-        else:
-            if currDateStr != '2016-11-20': #dont alert on this date since i know its missing
+        if currDateStr not in KNOWN_MISSING_DATES:
+            fullPathFilename = util.createFullPathFilename(CONTESTS_DIR, findFilename(CONTESTS_DIR, currDateStr))
+            if util.fileExists(fullPathFilename):
+                jsonDataFromFile = util.loadJsonFile(fullPathFilename)
+                numContests = 0
+                contests = jsonDataFromFile['contests']
+                for contest in contests:
+                    if ((fd.is5050Contest(contest) and fd.getEntryFee(contest) <= 2) \
+                        or (fd.isDoubleUp(contest) and fd.getEntryFee(contest) <= 2 and fd.getContestMaxEntries(contest) > 200) \
+                        or (fd.isTripleUp(contest) and fd.getEntryFee(contest) <= 2)) \
+                        and not contestAlreadyDownloaded(currDateStr, contest):
+                        contestsToDownload.append({
+                            'contestId': getContestId(contest),
+                            'url': getContestUrl(contest),
+                            'dateStr': currDateStr,
+                        })
+                        numContests += 1
+                print '    Found %d contests in file: %s' % (numContests, fullPathFilename)
+            else:
                 util.headsUp('File doesn\'t exist: ' + fullPathFilename)
         currDate = currDate + ONE_DAY
 
