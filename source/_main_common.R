@@ -330,6 +330,22 @@ plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list()
 
   if (save) endSavePlot()
 }
+plotRmseByFP = function(d, prediction, yName, dateStr='') {
+  rmses = c()
+  rgRmses = c()
+  interval = 1
+  for (i in seq(0, max(d[[yName]]), interval)) {
+    rows = which(d[[yName]] >= i)# which((d[[yName]] >= i) & (d[[yName]] < (i + interval)))
+    #cat('num rows at i=', i, ': ', length(rows), '\n')
+    rmses = c(rmses, computeError(d[[yName]][rows], prediction[rows]))
+
+    rgRows = intersect(rows, which(d$InRotoGrinders==1))
+    rgRmses = c(rgRmses, computeError(d[[yName]][rgRows], d$RG_points[rgRows]))
+  }
+  #cat('Max FP=', max(d[[yName]]), ', ', '\n')
+  plot(rmses, xlab='Fantasy Points', main=dateStr)
+  points(rgRmses, col='orange')
+}
 
 getPredictionDF = function(prediction, test, yName) {
   predictionDF = test
@@ -378,6 +394,7 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     test = trainTest$test
 
     prediction = createTeamPrediction(train, test, yName, xNames)
+    #plotRmseByFP(test, prediction, yName, date=dateStr)
 
     myRmse = computeError(test[[yName]], prediction)
     nfRmse = computeError(test[[yName]], test$NF_FP)
