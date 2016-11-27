@@ -32,11 +32,11 @@ rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '83'
 NAME = 'retune'
 
-PLOT = '' #fi, scores, cv, rmses
+PLOT = 'balance' #fi, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-10-27'
@@ -68,7 +68,7 @@ featuresToUse = getFeaturesToUse(data)
 hyperParams = findBestHyperParams(data, Y_NAME, featuresToUse)
 baseModel = createBaseModel(data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
 printErrors(baseModel, data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
-teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
+teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, PREDICTION_NAME, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
 makePlots(PLOT, data, Y_NAME, featuresToUse, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
 
 cat('Done!\n')

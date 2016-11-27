@@ -1,4 +1,8 @@
-#HillClimbing did better than Greedy:
+#How to compare hillClimbing and greedy teams:
+  #-d=getPredictionForDate('2016-11-20', Y_NAME)
+  #-computeTeamFP(createTeam_HillClimbing(d, Y_NAME, maxNumTries=100, verbose=T), Y_NAME)
+  #-computeTeamFP(createTeam_Greedy(d, Y_NAME), Y_NAME)
+#Dates that HillClimbing did better than Greedy:
   #-2016-11-20: hillClimbing=277.6335, greedy=277.3362
   #-2016-11-14: 297.9614, 297.4812
   #-2016-11-13: 279.4533, 278.3486

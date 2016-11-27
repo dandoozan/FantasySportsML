@@ -43,6 +43,7 @@ source('source/_createTeam.R')
 # RG_ADV_USGPCT, NBA_S_P_ADV_USG_PCT <-- no
 
 Y_NAME = 'FP'
+PREDICTION_NAME = 'Prediction'
 
 #features excluded: FantasyPoints, Minutes, Date, Name
 F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent')
@@ -204,12 +205,6 @@ getRgTeam = function(test, yName) {
   }
   return(rgTeam)
 }
-computeActualFP = function(team, test, yName) {
-  return(sum(getTeamIndividualActualFPs(team, test, yName)))
-}
-getTeamIndividualActualFPs = function(team, test, yName) {
-  return(test[test$Name %in% team$Name, yName])
-}
 
 plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list(), contestsToPlot=list(), greedyTeamExpected=c(), greedyTeamActual=c(), rgTeamExpected=c(), rgTeamActual=c(), myTeamUsingRGPointsActual=c(), hillClimbingTeams=list(), medianActualFPs=c(), balance=c(), name='Scores', save=FALSE, main='Title', filename='') {
   cat('    Plotting ', name, '...\n', sep='')
@@ -361,12 +356,7 @@ plotRmseByFP = function(d, prediction, yName, dateStr='') {
   points(rgRmses, col='orange')
 }
 
-getPredictionDF = function(prediction, test, yName) {
-  predictionDF = test
-  predictionDF[[yName]] = prediction
-  return(predictionDF)
-}
-makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
+makeTeams = function(data, yName, xNames, predictionName, maxCov, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
   contestData = getContestData()
@@ -408,6 +398,7 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     test = trainTest$test
 
     prediction = createTeamPrediction(train, test, yName, xNames)
+    test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, yName, date=dateStr)
 
     myRmse = computeError(test[[yName]], prediction)
@@ -416,16 +407,15 @@ makeTeams = function(data, yName, xNames, maxCov, numHillClimbingTeams, createTe
     fdRmse = computeError(test[[yName]], test$FPPG)
 
     #create my teams for today
-    predictionDF = getPredictionDF(prediction, test, yName)
-    myTeamGreedy = createTeam_Greedy(predictionDF, yName, maxCov=maxCov)
-    myTeamExpectedFP = computeTeamFP(myTeamGreedy, yName)
-    myTeamActualFP = computeActualFP(myTeamGreedy, test, yName)
-    rgTeam = getRgTeam(predictionDF, yName)
-    rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, yName)
-    rgTeamActualFP = if (is.null(rgTeam)) NA else computeActualFP(rgTeam, test, yName)
-    myTeamUsingRGPoints = createTeam_Greedy(getPredictionDF(test$RG_points, test, yName), yName, maxCov=maxCov)
-    myTeamUsingRGPointsActualFP = computeActualFP(myTeamUsingRGPoints, test, yName)
-    myTeamRmse = computeError(getTeamIndividualActualFPs(myTeamGreedy, test, yName), myTeamGreedy[[yName]])
+    myTeamGreedy = createTeam_Greedy(test, predictionName, maxCov=maxCov)
+    myTeamExpectedFP = computeTeamFP(myTeamGreedy, predictionName)
+    myTeamActualFP = computeTeamFP(myTeamGreedy, yName)
+    rgTeam = getRgTeam(test, yName)
+    rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, 'RG_points')
+    rgTeamActualFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, yName)
+    myTeamUsingRGPoints = createTeam_Greedy(test, 'RG_points', maxCov=maxCov)
+    myTeamUsingRGPointsActualFP = computeTeamFP(myTeamUsingRGPoints, yName)
+    myTeamRmse = computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]])
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
     #   for (i in 1:numHillClimbingTeams) {
@@ -521,20 +511,22 @@ makePlots = function(toPlot, data, yName, xNames, filename, contestsToPlot, team
     if (prodRun || toPlot == 'balance') plotScores(teamStats$dateStrs, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamActual=teamStats$myTeamActualFPs, myTeamUsingRGPointsActual=teamStats$myTeamUsingRGPointsActualFPs, balance=teamStats$balances, main='How I Would\'ve Done', name='Balance', save=prodRun, filename=filename)
     #if (prodRun || toPlot == 'scores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, main='My Team Vs. Actual Contests', name='Scores', save=prodRun, filename=filename)
     #if (prodRun || toPlot == 'multiscores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamActual=teamStats$myTeamActualFPs, hillClimbingTeams=teamStats$myTeamHillClimbingActualFPs, medianActualFPs=teamStats$medianActualFPs, main='My Teams Vs. Actual Contests', name='Multiscores', save=prodRun, filename=filename)
-    if (prodRun || toPlot == 'rmse_scoreratios') plotByDate2Axis(teamStats$dateStrs, teamStats$myRmses, ylab='RMSE', ylim=c(5, 12), y2=teamStats$scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=prodRun, name='RMSE_ScoreRatios', filename=filename)
-    if (prodRun || toPlot == 'rmses') plotLinesByDate(teamStats$dateStrs, list(teamStats$myRmses, teamStats$fdRmses, teamStats$nfRmses, teamStats$rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=prodRun, name='RMSEs', filename=filename)
+    #if (prodRun || toPlot == 'rmse_scoreratios') plotByDate2Axis(teamStats$dateStrs, teamStats$myRmses, ylab='RMSE', ylim=c(5, 12), y2=teamStats$scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=prodRun, name='RMSE_ScoreRatios', filename=filename)
+    #if (prodRun || toPlot == 'rmses') plotLinesByDate(teamStats$dateStrs, list(teamStats$myRmses, teamStats$fdRmses, teamStats$nfRmses, teamStats$rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=prodRun, name='RMSEs', filename=filename)
   }
   if (prodRun || toPlot == 'fi') plotImportances(baseModel, xNames, save=prodRun, filename=filename)
   doPlots(toPlot, prodRun, data, yName, xNames, filename)
 }
 
 #----------------- utility functions ----------------
-getPredictionForDate = function(dateStr, yName, xNames) {
+getPredictionForDate = function(dateStr, yName) {
   d = getData()
+  featuresToUse = getFeaturesToUse(d)
+
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test
-  return(getPredictionDF(createTeamPrediction(train, test, yName, xNames), test, yName))
+  return(getPredictionDF(createTeamPrediction(train, test, yName, featuresToUse), test, yName))
 }
 
 printTeamForToday = function() {
