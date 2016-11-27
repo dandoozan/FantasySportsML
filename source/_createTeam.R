@@ -1,3 +1,10 @@
+#HillClimbing did better than Greedy:
+  #-2016-11-20: hillClimbing=277.6335, greedy=277.3362
+  #-2016-11-14: 297.9614, 297.4812
+  #-2016-11-13: 279.4533, 278.3486
+  #-2016-11-06: 284.9245, 284.8462
+  #-2016-11-03: 289.1288, 287.2326
+
 SALARY_CAP = 60000
 
 createFirstAvailableTeam = function(allPlayers) {
@@ -295,14 +302,14 @@ createTeam_HillClimbing = function(allPlayers, yName, maxCov=Inf, maxNumTries=1,
       allPlayers = shuffle(allPlayers)
       initialTeam = createFirstAvailableTeam(allPlayers)
     }
-    team = climbHill(initialTeam, allPlayers, yName, verbose)
+    team = climbHill(initialTeam, allPlayers, yName, verbose=F)
     teamFP = computeTeamFP(team, yName)
-    #cat('numTriesWithoutFindingBetterTeam=', numTriesWithoutFindingBetterTeam, ', fp=', teamFP,'\n')
+    if (verbose) cat('numTriesWithoutFindingBetterTeam=', numTriesWithoutFindingBetterTeam, ', fp=', teamFP,'\n')
     if (teamFP > bestTeamFP) {
       bestTeam = team
       bestTeamFP = teamFP
       numTriesWithoutFindingBetterTeam = 0
-      #cat('    Found new best team, fp=', bestTeamFP, '\n')
+      if (verbose) cat('    Found new best team, fp=', bestTeamFP, '\n')
     } else {
       numTriesWithoutFindingBetterTeam = numTriesWithoutFindingBetterTeam + 1
     }
