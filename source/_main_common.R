@@ -529,15 +529,37 @@ getPredictionForDate = function(dateStr, yName) {
   return(getPredictionDF(createTeamPrediction(train, test, yName, featuresToUse), test, yName))
 }
 
-printTeamForToday = function() {
+getTeamForDate = function(dateStr, yName, rg=F, maxCov=Inf) {
+  #Dates investigated:
+    #-11/22:
+      #-Dwight Howard (38.60012 -> 21.2) - unlucky (ATL lost in a blowout, but they were supposed to win handily)
+      #-Julius Randle (29.01744 -> 9.0) - he was hurt (hip bruise), which caused him to play bad, but his injury wasn't official and he started and played a lot of minutes as expected
+    #-11/18
+
   d = getData()
-  sp = splitDataIntoTrainTest(d, 'start', '2016-11-18') #as.character(Sys.Date()))
+  featuresToUse = c(F.BORUTA.CONFIRMED)
+
+  sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test
 
-  prediction = createTeamPrediction(train, test, Y_NAME, FEATURES_TO_USE)
-  predictionDF = test
-  predictionDF[[Y_NAME]] = prediction
-  cat('Team:\n')
-  printTeam(createTeam_Greedy(predictionDF), full=T)
+  test$Prediction = createTeamPrediction(train, test, yName, featuresToUse)
+  test$FPDiff = abs(test$Prediction - test[[yName]])
+
+  #set minFP, meanFP, and stdevFP
+  test$MinFP = 0
+  test$MeanFP = 0
+  test$StDevFP = 0
+  for (i in 1:nrow(test)) {
+    name = test[i, 'Name']
+    trainFPs = train[train$Name == name, yName]
+    if (length(trainFPs) > 0) {
+      test[i, 'MinFP'] = min(trainFPs)
+      test[i, 'MeanFP'] = mean(trainFPs)
+      test[i, 'StDevFP'] = psd(trainFPs)
+    }
+  }
+
+  team = if (rg) createTeam_Greedy(test, 'RG_points', maxCov=maxCov) else createTeam_Greedy(test, 'Prediction', maxCov=maxCov)
+  return(team)
 }

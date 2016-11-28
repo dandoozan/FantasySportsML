@@ -32,7 +32,7 @@ rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '84'
 NAME = 'plotNov7'
 
