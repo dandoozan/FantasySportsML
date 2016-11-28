@@ -7,7 +7,7 @@ FILENAME = util.formatDate(util.getTodayAsDate())
 #FILENAME = '2016-10-25'
 
 def parseData(data):
-    print '    Parsing data...'
+    #print '    Parsing data...'
 
     rowData = []
     colNames = []
@@ -63,7 +63,7 @@ def createFilename(parentDir, baseFilename):
     return parentDir + '/' + baseFilename + '.csv'
 
 def writeData(colNames, rowData, fullPathFilename):
-    print '    Writing data to ' + fullPathFilename + '...'
+    #print '    Writing data to ' + fullPathFilename + '...'
 
     f = open(fullPathFilename, 'w')
 
@@ -78,7 +78,7 @@ def writeData(colNames, rowData, fullPathFilename):
 
 #=============== Main ================
 
-print '\nScraping NumberFire...'
+print 'Scraping NumberFire...'
 
 pageSource = scraper.downloadPageSource(URL)
 #pageSource = open(PARENT_DIR + '/' + FILENAME + '.html')
