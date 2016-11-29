@@ -532,9 +532,19 @@ getPredictionForDate = function(dateStr, yName) {
 getTeamForDate = function(dateStr, yName, rg=F, maxCov=Inf) {
   #Dates investigated:
     #-11/22:
-      #-Dwight Howard (38.60012 -> 21.2) - unlucky (ATL lost in a blowout, but they were supposed to win handily)
+      #-Dwight Howard (38.60012 -> 21.2) - unlucky (ATL lost in a blowout, but they were supposed to win handily); however NOP's DVP vs C was execellent, so maybe I should've taken that more into account
       #-Julius Randle (29.01744 -> 9.0) - he was hurt (hip bruise), which caused him to play bad, but his injury wasn't official and he started and played a lot of minutes as expected
     #-11/18
+      #-Wesley Matthews (24.21 -> 13.9)
+        #-his stdev and cov is quite high (11.41, 0.56),
+        #-also his team was expected to score low (RG_total=91.25)
+        #-also dvp rank is 20, which is pretty strong
+      #-LeBron James (47.74 -> 29.1)
+        #-blowout win, which vegas odds predicted i think <-- i think this is the main cause that he had fewer minutes
+        #-dvp rank is 23
+        #-b2b = 3in4
+      #-Isaiah Thomas (40.09 -> 25.4)
+        #-blowout loss
 
   d = getData()
   featuresToUse = c(F.BORUTA.CONFIRMED)
@@ -543,23 +553,44 @@ getTeamForDate = function(dateStr, yName, rg=F, maxCov=Inf) {
   train = sp$train
   test = sp$test
 
-  test$Prediction = createTeamPrediction(train, test, yName, featuresToUse)
-  test$FPDiff = abs(test$Prediction - test[[yName]])
+  test$Pred = round(createTeamPrediction(train, test, yName, featuresToUse), 2)
+  test$Diff = test[[yName]] - test$Pred
+  test$PctDiff = round(test$Diff / test$Pred * 100, 2)
+
+  team = if (rg) createTeam_Greedy(test, 'RG_points', maxCov=maxCov) else createTeam_Greedy(test, 'Pred', maxCov=maxCov)
 
   #set minFP, meanFP, and stdevFP
-  test$MinFP = 0
-  test$MeanFP = 0
-  test$StDevFP = 0
-  for (i in 1:nrow(test)) {
-    name = test[i, 'Name']
+  team$MinFP = 0
+  team$MeanFP = 0
+  team$StDev = 0
+  for (i in 1:nrow(team)) {
+    name = team[i, 'Name']
     trainFPs = train[train$Name == name, yName]
     if (length(trainFPs) > 0) {
-      test[i, 'MinFP'] = min(trainFPs)
-      test[i, 'MeanFP'] = mean(trainFPs)
-      test[i, 'StDevFP'] = psd(trainFPs)
+      team[i, 'MinFP'] = min(trainFPs)
+      team[i, 'MeanFP'] = round(mean(trainFPs), 2)
+      team[i, 'StDev'] = round(psd(trainFPs), 2)
     }
   }
+  team$myCov = round(team$StDev / team$MeanFP, 2)
 
-  team = if (rg) createTeam_Greedy(test, 'RG_points', maxCov=maxCov) else createTeam_Greedy(test, 'Prediction', maxCov=maxCov)
+  #rename some cols
+  team$pos = team$Position
+  team$avgMins = team$NBA_S_P_TRAD_MIN
+  team$mins = team$NBA_TODAY_MIN
+  team$rgPred = team$RG_points
+  team$rgStDev = round(team$RG_deviation, 2)
+  team$ovrundr = team$RG_overunder
+  team$line = team$RG_line
+  team$total = team$RG_total
+  team$dvp = team$OPP_DVP_RANK
+  team$sal = team$Salary
+  team$ppdk = round(team$PPD, 2)
+  team$rgCov = round(team$cov, 2)
+  team$b2b = team$RG_B2B_Situation
+
   return(team)
+
+  #print
+  #t[order(t$PctDiff), c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'rgPred', 'MeanFP', 'AVG_FP', 'MinFP', 'StDev', 'myCov', 'ovrundr', 'line', 'total', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'b2b')]
 }

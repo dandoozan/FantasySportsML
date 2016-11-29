@@ -217,3 +217,7 @@ getDataForDate = function(dateStr) {
   d = getData()
   return(d[d$Date == dateStr,])
 }
+getDataUpToDate = function(dateStr) {
+  d = getData()
+  return(d[d$Date < dateStr,])
+}
