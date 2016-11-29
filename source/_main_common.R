@@ -386,6 +386,8 @@ makeTeams = function(data, yName, xNames, predictionName, maxCov, numHillClimbin
   balances = c()
 
   currBalance = startingBalance
+  numWins = 0
+  numLosses = 0
 
   dateStrs = getUniqueDates(data)
   dateStrs = dateStrs[(dateStrs>=PLOT_START_DATE) & (dateStrs<=END_DATE)]
@@ -443,6 +445,11 @@ makeTeams = function(data, yName, xNames, predictionName, maxCov, numHillClimbin
     #adjust balance
     currBalance = currBalance + amountWonLost
     balances = c(balances, currBalance)
+    if (amountWonLost > 0) {
+      numWins = numWins + 1
+    } else if (amountWonLost < 0) {
+      numLosses = numLosses + 1
+    }
 
     #print results
     cat('allRmse=', round(myRmse, 2), sep='')
@@ -474,7 +481,10 @@ makeTeams = function(data, yName, xNames, predictionName, maxCov, numHillClimbin
   }
 
   #print final balance
-  cat('Balance: $', currBalance, ', Gain: $', (currBalance - startingBalance), '\n', sep='')
+  cat('Balance: ', getCurrencyString(currBalance), sep='')
+  cat(', Gain: ', getCurrencyString(currBalance - startingBalance), sep='')
+  cat(', Wins/Losses: ', numWins, '/' , numLosses, sep='')
+  cat('\n')
 
   #print mean of rmses
   cat('Mean RMSE of all players/team: ', mean(myRmses), '/', mean(myTeamRmses), '\n', sep='')
