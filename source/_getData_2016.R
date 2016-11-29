@@ -33,6 +33,12 @@ filterData = function(d, startDate, endDate) {
   return(d)
 }
 
+fillNAsInCols = function(d, colNames, value) {
+  for (colName in colNames) {
+    d[is.na(d[[colName]]), colName] = value
+  }
+  return(d)
+}
 imputeMissingValues = function(d) {
   cat('    Imputing missing values...\n')
 
@@ -45,76 +51,55 @@ imputeMissingValues = function(d) {
   #set all NAs to 0 in NumberFire cols (all the cols are predictive cols,
   #so if they dont have a value for a player, i think it's safe to assume
   #they're 'predicting' he'll get 0 in it
-  for (colName in F.NUMBERFIRE) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
+  d = fillNAsInCols(d, F.NUMBERFIRE, 0)
 
   #----------RG.PP-----------
   #set RG rank NAs to 0, but maybe consider something else (Inf?) since
   #generally lower rank is better, and since these don't have a rank, it
   #probably means that they're a bad player
-  d[is.na(d$RG_rank), 'RG_rank'] = 1000
-  d[is.na(d$RG_rank20), 'RG_rank20'] = 1000
+  d = fillNAsInCols(d, c('RG_rank', 'RG_rank20'), 1000)
 
   #set all NAs to 0 in RotoGrinder cols (same reason as above)
-  for (colName in F.RG.PP) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
+  d = fillNAsInCols(d, F.RG.PP, 0)
 
   #----------RG.ADVANCEDPLAYERSTATS-----------
   #They all have 1454 NAs, which is a lot.  I guess set them all to 0, but that
   #is quite a lot of data that RG doesn't have on these players (about 40% of nrows), so
   #maybe it'd be better to remove RG.ADVANCEDPLAYERSTATS altogether
-  for (colName in F.RG.ADVANCEDPLAYERSTATS) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
+  d = fillNAsInCols(d, F.RG.ADVANCEDPLAYERSTATS, 0)
 
   #----------RG.MARKETWATCH-----------
   #Set the NAs to 0s for MarketWatch features. They all have the same 484
   #NAs.  I'm not sure that 0 is best, but that's all I can think of to do
-  for (colName in F.RG.MARKETWATCH) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
+  d = fillNAsInCols(d, F.RG.MARKETWATCH, 0)
 
   #----------RG.OPTIMALLINEUP-----------
   #Set all NAs to 0 for RG_OL_OnTeam because it means that the player was not
   #on the team.
-  d[is.na(d$RG_OL_OnTeam), 'RG_OL_OnTeam'] = 0
+  d = fillNAsInCols(d, 'RG_OL_OnTeam', 0)
 
   #----------RG.START-----------
   #The NAs in RG.START mean that the player did not play that day,
   #so set Starter=0, Order=20 (max order=15), and Status='B' (bc most are 'B')
   #There are 451 NAs in all 3 (they all have the same NAs)
-  d[is.na(d$RG_START_Order), 'RG_START_Order'] = 20
-  d[is.na(d$RG_START_Starter), 'RG_START_Starter'] = 0
-  d[is.na(d$RG_START_Status), 'RG_START_Status'] = 'B'
+  d = fillNAsInCols(d, 'RG_START_Order', 20)
+  d = fillNAsInCols(d, 'RG_START_Starter', 0)
+  d = fillNAsInCols(d, 'RG_START_Status', 'B')
   d$RG_START_Status = factor(d$RG_START_Status)
 
   #----------F.NBA.SEASON.PLAYER.[X]-----------
   #Set all NBA col NAs to 0.  These all have the same 754 NA rows
-  for (colName in F.NBA.SEASON.PLAYER.TRADITIONAL) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
-  for (colName in F.NBA.SEASON.PLAYER.ADVANCED) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
-  for (colName in F.NBA.SEASON.PLAYER.DEFENSE) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
+  d = fillNAsInCols(d, F.NBA.SEASON.PLAYER.TRADITIONAL, 0)
+  d = fillNAsInCols(d, F.NBA.SEASON.PLAYER.ADVANCED, 0)
+  d = fillNAsInCols(d, F.NBA.SEASON.PLAYER.DEFENSE, 0)
 
   #----------F.NBA.PLAYERBIOS-----------
   #set NAs to 0 or 'None' for players who haven't played this season (all of their
   #stats are NA because they aren't listed in NBA PlayerBios)
-  playersWhoHaveNotPlayedThisSeason = c('Brandan Wright', 'Bruno Caboclo', 'Caris LeVert', 'Chinanu Onuaku', 'Derrick Jones Jr.', 'Devin Harris', 'Josh Huestis', 'Jrue Holiday', 'Nerlens Noel', 'Patrick Beverley', 'Reggie Bullock', 'Wayne Ellington', 'Brice Johnson', 'Festus Ezeli', 'Mike Scott', 'Paul Pierce', 'Tiago Splitter', 'Alec Burks', 'Damian Jones', 'Marshall Plumlee', 'R.J. Hunter', 'Tyreke Evans', 'Jerryd Bayless', 'Reggie Jackson')
-  d[d$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_AGE', 'NBA_PB_PLAYER_HEIGHT_INCHES', 'NBA_PB_PLAYER_WEIGHT', 'NBA_PB_DRAFT_YEAR')] = 0
-  d[d$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_DRAFT_ROUND', 'NBA_PB_DRAFT_NUMBER')] = 1000
-  d[d$Name %in% playersWhoHaveNotPlayedThisSeason, c('NBA_PB_COLLEGE', 'NBA_PB_COUNTRY')] = 'None'
+  d = fillNAsInCols(d, c('NBA_PB_AGE', 'NBA_PB_PLAYER_HEIGHT_INCHES', 'NBA_PB_PLAYER_WEIGHT', 'NBA_PB_DRAFT_YEAR'), 0)
+  d = fillNAsInCols(d, c('NBA_PB_DRAFT_ROUND', 'NBA_PB_DRAFT_NUMBER'), 1000)
+  d = fillNAsInCols(d, c('NBA_PB_COLLEGE', 'NBA_PB_COUNTRY'), 'None')
   d$NBA_PB_COLLEGE = factor(d$NBA_PB_COLLEGE)
-
-  #set NAs to 'None' for players who don't have Country listed in NBA.com
-  #There are 5 players
-  playersWithNoCountry = c('Dario Saric', 'Semaj Christon', 'Jonathon Simmons', 'Tomas Satoransky', 'Jordan McRae')
-  d[d$Name %in% playersWithNoCountry, 'NBA_PB_COUNTRY'] = 'None'
   d$NBA_PB_COUNTRY = factor(d$NBA_PB_COUNTRY)
 
   #set 'Undrafted' to 0 in NBA_DRAFT_YEAR and 1000 in NBA_DRAFT_ROUND, NBA_DRAFT_NUMBER
@@ -129,20 +114,14 @@ imputeMissingValues = function(d) {
   #----------F.NBA.TODAY-----------
   #Set alll NAs to 0s for NBA TODAY stats.  There were 1296 NAs and all
   #of them had FantasyPoints of 0, so they are for players who did not play
-  for (colName in F.NBA.TODAY) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
+  d = fillNAsInCols(d, F.NBA.TODAY, 0)
 
   #----------NBA.SEASON.TEAM.TRADITIONAL and NBA.SEASON.OPPTEAM.TRADITIONAL-----------
   #The NAs are for team's first games (because I look for the previous day's
   #data, but since there is none, then the NBA_TEAM_[X] features are NA), so set
   #them all to 0 (they all have the same 345 NAs)
-  for (colName in F.NBA.SEASON.TEAM.TRADITIONAL) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
-  for (colName in F.NBA.SEASON.OPPTEAM.TRADITIONAL) {
-    d[is.na(d[[colName]]), colName] = 0
-  }
+  d = fillNAsInCols(d, F.NBA.SEASON.TEAM.TRADITIONAL, 0)
+  d = fillNAsInCols(d, F.NBA.SEASON.OPPTEAM.TRADITIONAL, 0)
 
   return(d)
 }
@@ -156,10 +135,20 @@ computeFP = function(pts, ast, blk, reb, stl, tov) {
 featureEngineer = function(d) {
   cat('    Feature engineering...\n')
 
-  #----------F.NBA.TODAY-----------
-  #compute FP and AVG_FP using NBA data
+  #compute FP
   d$FP = computeFP(d$NBA_TODAY_PTS, d$NBA_TODAY_AST, d$NBA_TODAY_BLK, d$NBA_TODAY_REB, d$NBA_TODAY_STL, d$NBA_TODAY_TOV)
   d$AVG_FP = computeFP(d$NBA_S_P_TRAD_PTS, d$NBA_S_P_TRAD_AST, d$NBA_S_P_TRAD_BLK, d$NBA_S_P_TRAD_REB, d$NBA_S_P_TRAD_STL, d$NBA_S_P_TRAD_TOV)
+
+  #compute AvgFP
+  d$AvgFP = 0
+  names = unique(d$Name)
+  for (name in names) {
+    playerData = d[d$Name == name,]
+    dateStrs = getUniqueDates(playerData)[-1]
+    for (dateStr in dateStrs) {
+      d[d$Name == name & d$Date == dateStr, 'AvgFP'] = mean(playerData[playerData$Date < dateStr, 'FP'])
+    }
+  }
 
   #----------F.RG.PP-----------
   #add team RG expected points and teammates' RG expected scores
@@ -213,11 +202,9 @@ getContestData = function() {
 }
 
 #----------------- utility functions ----------------
-getDataForDate = function(dateStr) {
-  d = getData()
+getDataForDate = function(d, dateStr) {
   return(d[d$Date == dateStr,])
 }
-getDataUpToDate = function(dateStr) {
-  d = getData()
+getDataUpToDate = function(d, dateStr) {
   return(d[d$Date < dateStr,])
 }

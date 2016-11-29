@@ -13,6 +13,7 @@
 #D-Retune: 83_retune_xgb: 10/27-11/23, 121/264, 266, 53, 7.701541/8.002063, 3.455, 7.694258/8.06044/7.756014, Inf, -$8, 8.081185/10.13511, 0.9107249
 #D-Start plot from 11/7: 84_plotNov7_xgb: 10/27-11/23, 121/264, 266, 53, 7.701541/8.002063, 2.725, 7.694258/8.06044/7.756014, Inf, -$8, 8.094706/9.56801, 0.9151632
 #D-Retune xgb params: 85_retune_xgb: 10/27-11/23, 121/264, 266, 55, 7.400829/7.981152, 3.778, 7.394017/8.098042/7.503997, Inf, $8, 8.085093/10.28753, 0.9251442
+#D-Fix PlayerBios NA imputation: 86_fixPBNA_xgb: 10/27-11/23, 121/265, 266, 50, 7.455275/7.990815, 2.643, 7.42947/8.135216/7.523257, Inf, $0, 8/8, 8.076828/10.12836, 0.9109897
 
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
 #-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
@@ -33,9 +34,9 @@ rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
-PROD_RUN = F
-NUMBER = '85'
-NAME = 'retune'
+PROD_RUN = T
+NUMBER = '86'
+NAME = 'fixPBNA'
 
 PLOT = 'balance' #fi, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
