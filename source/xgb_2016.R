@@ -28,7 +28,7 @@ createModel = function(data, yName, xNames) {
 }
 createPrediction = function(model, newData, xNames) {
   #return(predict(model, newData[, xNames]))
-  return(predict(model, data.matrix(oneHotEncode(newData[, xNames]))))
+  return(predict(model, data.matrix(oneHotEncode(newData, xNames))))
 }
 computeError = function(y, yhat) {
   return(rmse(y, yhat))
@@ -116,7 +116,7 @@ plotCVErrorRates = function(data, yName, xNames, ylim=NULL, save=FALSE, filename
 plotImportances = function(model, xNames, maxFeatures=50, save=FALSE, filename='') {
   cat('    Plotting Feature Importances...\n')
 
-  featureNames = colnames(oneHotEncode(data[, xNames]))
+  featureNames = colnames(oneHotEncode(data, xNames))
 
   importances = xgb.importance(feature_names=featureNames, model=model)
   importances = importances[1:min(nrow(importances), maxFeatures), ]
@@ -172,13 +172,13 @@ findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSee
 getDMatrix = function(data, yName, xNames) {
   set.seed(634)
   #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
-  return(xgb.DMatrix(data.matrix(oneHotEncode(data[, xNames])), label=data[, yName]))
+  return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=data[, yName]))
 }
 
-oneHotEncode = function(data) {
-  #data = data[, setdiff(colnames(data), c('Date', 'Name'))]
-  dmy = caret::dummyVars('~.', data, fullRank=T)
-  return(data.frame(predict(dmy, data)))
+oneHotEncode = function(d, xNames) {
+  dataToUse = if(length(xNames) == 1) convertToDataFrame(d[[xNames]], xNames) else d[, xNames]
+  dmy = caret::dummyVars('~.', dataToUse, fullRank=T)
+  return(data.frame(predict(dmy, dataToUse)))
 }
 
 printModelResults = function(model) {

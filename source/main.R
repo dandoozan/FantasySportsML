@@ -15,12 +15,13 @@
 #D-Retune xgb params: 85_retune_xgb: 10/27-11/23, 121/264, 266, 55, 7.400829/7.981152, 3.778, 7.394017/8.098042/7.503997, Inf, $8, 8.085093/10.28753, 0.9251442
 #D-Fix PlayerBios NA imputation: 86_fixPBNA_xgb: 10/27-11/23, 121/265, 266, 50, 7.455275/7.990815, 2.643, 7.42947/8.135216/7.523257, Inf, $0, 8/8, 8.076828/10.12836, 0.9109897
 #D-Retune xgb params: 87_retune_xgb: 10/27-11/23, 121/265, 266, 48, 7.353933/7.986254, 4.16, 7.357119/8.094131/7.435808, Inf, -$4, 7/9, 8.071163/10.13492, 0.9291407
+#-Use MeanFP, NBA_S_P_TRAD_GP:
 
 #-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
 #-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
 #-Add NBA_S_P_ADV_PACE:
 
-#-use combination of MAX_COVS, floor, ceil, hillClimbing numTries to get good prediction
+#-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
 #-remove 10/26 and add RG Offense Vs Defense Advanced
 #-remove F.RG.ADVANCEDPLAYERSTATS bc there are too many NAs
