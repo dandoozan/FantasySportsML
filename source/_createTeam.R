@@ -21,7 +21,7 @@ createFirstAvailableTeam = function(allPlayers) {
 
     #if there are not enough players in the position, return NA
     if (sum(!is.na(allPlayers[allPlayers$Position == position, 'Position'])) < numPlayersToChoose) {
-      stop('Cannot create team because there are not enough ', position, 's\n')
+      #cat('Cannot create team because there are not enough ', position, 's\n')
       return(NULL)
     }
 

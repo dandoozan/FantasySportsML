@@ -410,14 +410,17 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
 
     #create my teams for today
     myTeamGreedy = createTeam_Greedy(test, predictionName, maxCovs=maxCovs)
-    myTeamExpectedFP = computeTeamFP(myTeamGreedy, predictionName)
-    myTeamActualFP = computeTeamFP(myTeamGreedy, yName)
+    foundTeam = if (is.null(myTeamGreedy)) FALSE else TRUE
+    myTeamExpectedFP = if(foundTeam) computeTeamFP(myTeamGreedy, predictionName) else NA
+    myTeamActualFP = if(foundTeam) computeTeamFP(myTeamGreedy, yName) else NA
     rgTeam = getRgTeam(test, yName)
-    rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, 'RG_points')
-    rgTeamActualFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, yName)
+    foundRGTeam = if (is.null(rgTeam)) FALSE else TRUE
+    rgTeamExpectedFP = if (foundRGTeam) computeTeamFP(rgTeam, 'RG_points') else NA
+    rgTeamActualFP = if (foundRGTeam) computeTeamFP(rgTeam, yName) else NA
     myTeamUsingRGPoints = createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs)
-    myTeamUsingRGPointsActualFP = computeTeamFP(myTeamUsingRGPoints, yName)
-    myTeamRmse = computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]])
+    foundMyTeamUsingRGPoints = if (is.null(myTeamUsingRGPoints)) FALSE else TRUE
+    myTeamUsingRGPointsActualFP = if(foundMyTeamUsingRGPoints) computeTeamFP(myTeamUsingRGPoints, yName) else NA
+    myTeamRmse = if (foundTeam) computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]]) else NA
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
     #   for (i in 1:numHillClimbingTeams) {
@@ -437,7 +440,7 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
       contestToPlot = contestsToPlot[[i]]
       contestLow = getLowestWinningScore(contestData, dateStr, type=contestToPlot$type, entryFee=contestToPlot$entryFee, maxEntries=contestToPlot$maxEntries, maxEntriesPerUser=contestToPlot$maxEntriesPerUser)
       contestLowests[[i]] = c(contestLowests[[i]], contestLow)
-      if (!is.na(contestLow)) {
+      if (foundTeam && !is.na(contestLow)) {
         amountWonLost = amountWonLost + (if (medianActualFP >= contestLow) contestToPlot$winAmount else -contestToPlot$entryFee)
       }
     }
@@ -463,6 +466,7 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
     #cat(', high=', round(highestWinningScore, 2), sep='')
     #cat(', gain=', amountWonLost, sep='')
     cat(', balance=', currBalance, sep='')
+    #cat(', te=', nrow(test), sep='')
     cat('\n')
 
     #add data to arrays to plot
