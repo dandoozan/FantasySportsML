@@ -20,7 +20,7 @@
 #-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
 #-Add NBA_S_P_ADV_PACE:
 
-#-use combination of MAX_COV, floor, ceil, hillClimbing numTries to get good prediction
+#-use combination of MAX_COVS, floor, ceil, hillClimbing numTries to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
 #-remove 10/26 and add RG Offense Vs Defense Advanced
 #-remove F.RG.ADVANCEDPLAYERSTATS bc there are too many NAs
@@ -35,15 +35,16 @@ rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
 
 #Globals
-PROD_RUN = T
+PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
 
-PLOT = '' #fi, scores, cv, rmses
+PLOT = 'balance' #fi, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-11-07'
-MAX_COV = Inf
+.MAX_COV = Inf
+MAX_COVS = list(C=.MAX_COV, SF=.MAX_COV, SG=.MAX_COV, PF=.MAX_COV, PG=.MAX_COV)
 NUM_HILL_CLIMBING_TEAMS = 10
 CONTESTS_TO_PLOT = list(
   #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
@@ -59,8 +60,8 @@ source('source/_main_common.R')
 
 createTeamPrediction = function(train, test, yName, xNames) {
   prediction = createPrediction(createModel(train, yName, xNames), test, xNames)
-  floor = pmax(prediction - test$RG_deviation, 0)
-  ceil = prediction + test$RG_deviation
+  floor = pmax(prediction - test$StDevFP, 0)
+  ceil = prediction + test$StDevFP
   return(prediction)
 }
 
@@ -71,7 +72,7 @@ featuresToUse = getFeaturesToUse(data)
 hyperParams = findBestHyperParams(data, Y_NAME, featuresToUse)
 baseModel = createBaseModel(data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
 printErrors(baseModel, data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
-teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, PREDICTION_NAME, MAX_COV, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
+teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
 makePlots(PLOT, data, Y_NAME, featuresToUse, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
 
 cat('Done!\n')

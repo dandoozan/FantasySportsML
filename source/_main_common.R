@@ -356,12 +356,12 @@ plotRmseByFP = function(d, prediction, yName, dateStr='') {
   points(rgRmses, col='orange')
 }
 
-makeTeams = function(data, yName, xNames, predictionName, maxCov, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
+makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
   contestData = getContestData()
 
-  cat('    Creating teams with max cov:', maxCov, '\n')
+  cat('    Creating teams with max covs:', paste0(paste0(names(maxCovs), '='), maxCovs, collapse=', '), '\n')
   #these are arrays to plot later
   myRmses = c()
   nfRmses = c()
@@ -409,19 +409,19 @@ makeTeams = function(data, yName, xNames, predictionName, maxCov, numHillClimbin
     fdRmse = computeError(test[[yName]], test$FPPG)
 
     #create my teams for today
-    myTeamGreedy = createTeam_Greedy(test, predictionName, maxCov=maxCov)
+    myTeamGreedy = createTeam_Greedy(test, predictionName, maxCovs=maxCovs)
     myTeamExpectedFP = computeTeamFP(myTeamGreedy, predictionName)
     myTeamActualFP = computeTeamFP(myTeamGreedy, yName)
     rgTeam = getRgTeam(test, yName)
     rgTeamExpectedFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, 'RG_points')
     rgTeamActualFP = if (is.null(rgTeam)) NA else computeTeamFP(rgTeam, yName)
-    myTeamUsingRGPoints = createTeam_Greedy(test, 'RG_points', maxCov=maxCov)
+    myTeamUsingRGPoints = createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs)
     myTeamUsingRGPointsActualFP = computeTeamFP(myTeamUsingRGPoints, yName)
     myTeamRmse = computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]])
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
     #   for (i in 1:numHillClimbingTeams) {
-    #     hillClimbingActualFP = computeActualFP(createTeam_HillClimbing(predictionDF, yName, maxCov=maxCov), test, yName)
+    #     hillClimbingActualFP = computeActualFP(createTeam_HillClimbing(predictionDF, yName, maxCovs=maxCovs), test, yName)
     #     myTeamHillClimbingActualFPs[[i]] = c(myTeamHillClimbingActualFPs[[i]], hillClimbingActualFP)
     #     allMyTeamActualFPs = c(allMyTeamActualFPs, hillClimbingActualFP)
     #   }
@@ -518,7 +518,7 @@ makeTeams = function(data, yName, xNames, predictionName, maxCov, numHillClimbin
 makePlots = function(toPlot, data, yName, xNames, filename, contestsToPlot, teamStats=list(), prodRun) {
   cat('Creating plots...\n')
   if (length(teamStats) > 0) {
-    if (prodRun || toPlot == 'balance') plotScores(teamStats$dateStrs, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamActual=teamStats$myTeamActualFPs, myTeamUsingRGPointsActual=teamStats$myTeamUsingRGPointsActualFPs, balance=teamStats$balances, main='How I Would\'ve Done', name='Balance', save=prodRun, filename=filename)
+    if (prodRun || toPlot == 'balance') plotScores(teamStats$dateStrs, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, myTeamUsingRGPointsActual=teamStats$myTeamUsingRGPointsActualFPs, balance=teamStats$balances, main='How I Would\'ve Done', name='Balance', save=prodRun, filename=filename)
     #if (prodRun || toPlot == 'scores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, main='My Team Vs. Actual Contests', name='Scores', save=prodRun, filename=filename)
     #if (prodRun || toPlot == 'multiscores') plotScores(teamStats$dateStrs, teamStats$lowestWinningScores, teamStats$highestWinningScores, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamActual=teamStats$myTeamActualFPs, hillClimbingTeams=teamStats$myTeamHillClimbingActualFPs, medianActualFPs=teamStats$medianActualFPs, main='My Teams Vs. Actual Contests', name='Multiscores', save=prodRun, filename=filename)
     #if (prodRun || toPlot == 'rmse_scoreratios') plotByDate2Axis(teamStats$dateStrs, teamStats$myRmses, ylab='RMSE', ylim=c(5, 12), y2=teamStats$scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=prodRun, name='RMSE_ScoreRatios', filename=filename)
@@ -539,7 +539,7 @@ getPredictionForDate = function(dateStr, yName) {
   return(getPredictionDF(createTeamPrediction(train, test, yName, featuresToUse), test, yName))
 }
 
-getTeamForDate = function(dateStr, yName, rg=F, maxCov=Inf) {
+getTeamForDate = function(dateStr, yName, rg=F, maxCovs=list()) {
   #Dates investigated:
     #-11/22:
       #-Dwight Howard (38.60012 -> 21.2) - unlucky (ATL lost in a blowout, but they were supposed to win handily); however NOP's DVP vs C was execellent, so maybe I should've taken that more into account
@@ -567,22 +567,22 @@ getTeamForDate = function(dateStr, yName, rg=F, maxCov=Inf) {
   test$Diff = test[[yName]] - test$Pred
   test$PctDiff = round(test$Diff / test$Pred * 100, 2)
 
-  team = if (rg) createTeam_Greedy(test, 'RG_points', maxCov=maxCov) else createTeam_Greedy(test, 'Pred', maxCov=maxCov)
+  team = if (rg) createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs) else createTeam_Greedy(test, 'Pred', maxCovs=maxCovs)
 
   #set minFP, meanFP, and stdevFP
-  team$MinFP = 0
-  team$MeanFP = 0
-  team$StDev = 0
+  team$minFP = 0
+  team$meanFP = 0
+  team$stDev = 0
   for (i in 1:nrow(team)) {
     name = team[i, 'Name']
     trainFPs = train[train$Name == name, yName]
     if (length(trainFPs) > 0) {
-      team[i, 'MinFP'] = min(trainFPs)
-      team[i, 'MeanFP'] = round(mean(trainFPs), 2)
-      team[i, 'StDev'] = round(psd(trainFPs), 2)
+      team[i, 'minFP'] = min(trainFPs)
+      team[i, 'meanFP'] = round(mean(trainFPs), 2)
+      team[i, 'stDev'] = round(psd(trainFPs), 2)
     }
   }
-  team$myCov = round(team$StDev / team$MeanFP, 2)
+  team$myCov = round(team$stDev / team$meanFP, 2)
 
   #rename some cols
   team$pos = team$Position
@@ -596,11 +596,11 @@ getTeamForDate = function(dateStr, yName, rg=F, maxCov=Inf) {
   team$dvp = team$OPP_DVP_RANK
   team$sal = team$Salary
   team$ppdk = round(team$PPD, 2)
-  team$rgCov = round(team$cov, 2)
   team$b2b = team$RG_B2B_Situation
+  team$gp = team$NBA_S_P_TRAD_GP
 
   return(team)
 
   #print
-  #t[order(t$PctDiff), c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'rgPred', 'MeanFP', 'AVG_FP', 'MinFP', 'StDev', 'myCov', 'ovrundr', 'line', 'total', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'b2b')]
+  #t[order(t$PctDiff), c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'rgPred', 'meanFP', 'MeanFP', 'minFP', 'stDev', 'myCov', 'ovrundr', 'line', 'total', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'b2b')]
 }

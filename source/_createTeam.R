@@ -33,12 +33,6 @@ createFirstAvailableTeam = function(allPlayers) {
 computePPD = function(fantasyPoints, salary) {
   return(fantasyPoints / salary * 1000)
 }
-computeCov = function(players, yName) {
-  #cov is the 'Coefficient of Variance', which is the stdev / mean
-  cov = players$RG_deviation / players[[yName]]
-  cov = ifelse(is.nan(cov), Inf, cov)
-  return(cov)
-}
 printPlayer = function(player, yName, full=F) {
   if (full) {
     cat('    ', player$Name, sep='')
@@ -53,7 +47,7 @@ printPlayer = function(player, yName, full=F) {
     cat(', ', round(player[[yName]], 2), sep='')
     cat(' (', round(player$RG_deviation, 2), ')', sep='')
     #cat(', ', round(player$PPD, 2), sep='')
-    cat(', ', round(player$cov, 2), sep='')
+    cat(', ', round(player$COV, 2), sep='')
   }
   cat('\n')
 }
@@ -61,10 +55,6 @@ printTeam = function(team, yName, full=F) {
   if (is.null(team)) {
     cat('No team\n')
   } else {
-    if (!('cov' %in% colnames(team))) {
-      team$cov = computeCov(team, yName)
-    }
-
     positions = c('PG', 'SG', 'SF', 'PF', 'C')
     for (position in positions) {
       playersAtPosition = team[team$Position==position,]
@@ -204,10 +194,18 @@ getBetterTeam = function(data, yName, team, amountUnderBudget, verbose=F) {
   }
   return(team)
 }
-createTeam_Greedy = function(allPlayers, yName, maxCov=Inf, verbose=F) {
-  #remove players whose Coefficient of Variation is > cov
-  allPlayers$cov = computeCov(allPlayers, yName)
-  allPlayers = removeRows(allPlayers, allPlayers[allPlayers$cov > maxCov,])
+removePlayersBasedOnCov = function(allPlayers, maxCovs) {
+  if (length(maxCovs) > 0) {
+    for (position in names(maxCovs)) {
+      maxCov = maxCovs[[position]]
+      allPlayers = removeRows(allPlayers, allPlayers[(allPlayers$Position == position) & (allPlayers$COV > maxCov),])
+    }
+  }
+  return(allPlayers)
+}
+createTeam_Greedy = function(allPlayers, yName, maxCovs=list(), verbose=F) {
+  #remove players whose Coefficient of Variation is > maxCov
+  allPlayers = removePlayersBasedOnCov(allPlayers, maxCovs)
 
   #add PPD coumn
   allPlayers$PPD = computePPD(allPlayers[[yName]], allPlayers$Salary)
@@ -288,10 +286,9 @@ climbHill = function(team, allPlayers, yName, verbose=F) {
   }
   return(team)
 }
-createTeam_HillClimbing = function(allPlayers, yName, maxCov=Inf, maxNumTries=1, verbose=F) {
-  #remove players whose Coefficient of Variation is > cov
-  allPlayers$cov = computeCov(allPlayers, yName)
-  allPlayers = removeRows(allPlayers, allPlayers[allPlayers$cov > maxCov,])
+createTeam_HillClimbing = function(allPlayers, yName, maxCovs=list(), maxNumTries=1, verbose=F) {
+  #remove players whose Coefficient of Variation is > maxCov
+  allPlayers = removePlayersBasedOnCov(allPlayers, maxCovs)
 
   bestTeam = NULL
   bestTeamFP = -Inf

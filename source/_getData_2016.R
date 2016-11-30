@@ -139,16 +139,23 @@ featureEngineer = function(d) {
   d$FP = computeFP(d$NBA_TODAY_PTS, d$NBA_TODAY_AST, d$NBA_TODAY_BLK, d$NBA_TODAY_REB, d$NBA_TODAY_STL, d$NBA_TODAY_TOV)
   d$AVG_FP = computeFP(d$NBA_S_P_TRAD_PTS, d$NBA_S_P_TRAD_AST, d$NBA_S_P_TRAD_BLK, d$NBA_S_P_TRAD_REB, d$NBA_S_P_TRAD_STL, d$NBA_S_P_TRAD_TOV)
 
-  #compute AvgFP
-  d$AvgFP = 0
+  #compute MeanFP, StDevFP, MinFP, COV
+  d$MeanFP = 0
+  d$StDevFP = 0
+  d$MinFP = 0
   names = unique(d$Name)
   for (name in names) {
     playerData = d[d$Name == name,]
     dateStrs = getUniqueDates(playerData)[-1]
     for (dateStr in dateStrs) {
-      d[d$Name == name & d$Date == dateStr, 'AvgFP'] = mean(playerData[playerData$Date < dateStr, 'FP'])
+      rows = which(d$Name == name & d$Date == dateStr)
+      fpsUpToDate = playerData[playerData$Date < dateStr, 'FP']
+      d[rows, 'MeanFP'] = mean(fpsUpToDate)
+      d[rows, 'StDevFP'] = psd(fpsUpToDate)
+      d[rows, 'MinFP'] = min(fpsUpToDate)
     }
   }
+  d$COV = ifelse(d$MeanFP == 0, Inf, d$StDevFP / d$MeanFP)
 
   #----------F.RG.PP-----------
   #add team RG expected points and teammates' RG expected scores
