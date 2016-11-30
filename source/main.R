@@ -15,11 +15,9 @@
 #D-Retune xgb params: 85_retune_xgb: 10/27-11/23, 121/264, 266, 55, 7.400829/7.981152, 3.778, 7.394017/8.098042/7.503997, Inf, $8, 8.085093/10.28753, 0.9251442
 #D-Fix PlayerBios NA imputation: 86_fixPBNA_xgb: 10/27-11/23, 121/265, 266, 50, 7.455275/7.990815, 2.643, 7.42947/8.135216/7.523257, Inf, $0, 8/8, 8.076828/10.12836, 0.9109897
 #D-Retune xgb params: 87_retune_xgb: 10/27-11/23, 121/265, 266, 48, 7.353933/7.986254, 4.16, 7.357119/8.094131/7.435808, Inf, -$4, 7/9, 8.071163/10.13492, 0.9291407
-#-Use MeanFP, NBA_S_P_TRAD_GP:
 
-#-Use AVG_FP, NBA_S_P_TRAD_GP: dates=11/05-11/18, train/cvErrors=7.669375/9.117033, Trn/CV/Train=7.703522/8.877059/7.814077
-#-Add InjuryIndicator: 7.275631/8.38811,  7.347842/8.29548/7.404794
-#-Add NBA_S_P_ADV_PACE:
+#-Use RG_points, NF_FP: train/cvErrors=7.799588/8.079554, Trn/CV/Train=7.794999/8.146878/7.841864
+#-Add
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -40,7 +38,7 @@ PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
 
-PLOT = 'balance' #fi, scores, cv, rmses
+PLOT = 'fi' #fi, bal, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-11-07'
@@ -51,7 +49,7 @@ CONTESTS_TO_PLOT = list(
   #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
   list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
 ALG = 'xgb'
-MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'balance'
+MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 STARTING_BALANCE = 25
 

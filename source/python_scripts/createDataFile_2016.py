@@ -578,7 +578,6 @@ ROTOGRINDER_KNOWN_MISSING = {
 
     #2016-11-23
     'anthony brown',
-
 }
 
 TBX_MISSING_PLAYERS = {}
