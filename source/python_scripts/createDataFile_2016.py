@@ -1258,13 +1258,13 @@ DATA_SOURCES = [
         'name': 'RotoGrinderPlayerProjections',
         'handleDuplicates': handleRotoGrinderDuplicates,
         'features': [
-            #15=DD
+            #15=DD, DraftDay
             #19=?
-            #20=DK
-            #28=fa
-            #43=FDraft (fdft)
-            #50=Y!
-            #58=rstr
+            #20=DK, DraftKings
+            #28=fa, FantasyAces
+            #43=FDraft (fdft), FantasyDraft
+            #50=Y!, Yahoo
+            #58=rstr, Rosters
 
             #Projection
             'RG_ceil',

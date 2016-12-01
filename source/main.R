@@ -16,8 +16,8 @@
 #D-Fix PlayerBios NA imputation: 86_fixPBNA_xgb: 10/27-11/23, 121/265, 266, 50, 7.455275/7.990815, 2.643, 7.42947/8.135216/7.523257, Inf, $0, 8/8, 8.076828/10.12836, 0.9109897
 #D-Retune xgb params: 87_retune_xgb: 10/27-11/23, 121/265, 266, 48, 7.353933/7.986254, 4.16, 7.357119/8.094131/7.435808, Inf, -$4, 7/9, 8.071163/10.13492, 0.9291407
 
-#-Use RG_points, NF_FP: train/cvErrors=7.799588/8.079554, Trn/CV/Train=7.794999/8.146878/7.841864
-#-Add
+#-Use RG_points, NF_FP: train/cvErrors=7.799588/8.079554, Trn/CV/Train=7.794999/8.146878/7.841864, $8, 10/6, 8.107805/9.329115, 0.9542339
+
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -38,7 +38,7 @@ PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
 
-PLOT = 'fi' #fi, bal, scores, cv, rmses
+PLOT = 'bal' #fi, bal, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-11-07'

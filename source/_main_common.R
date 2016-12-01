@@ -544,7 +544,8 @@ getPredictionForDate = function(dateStr, yName) {
   return(getPredictionDF(createTeamPrediction(train, test, yName, featuresToUse), test, yName))
 }
 
-getTeamForDate = function(dateStr, yName, rg=F, maxCovs=list()) {
+getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
+  maxCovs = list(C=maxCov, SF=maxCov, SG=maxCov, PF=maxCov, PG=maxCov)
   #Dates investigated:
     #-11/22:
       #-Dwight Howard (38.60012 -> 21.2) - unlucky (ATL lost in a blowout, but they were supposed to win handily); however NOP's DVP vs C was execellent, so maybe I should've taken that more into account
@@ -560,9 +561,24 @@ getTeamForDate = function(dateStr, yName, rg=F, maxCovs=list()) {
         #-b2b = 3in4
       #-Isaiah Thomas (40.09 -> 25.4)
         #-blowout loss
+    #-11/21
+      #-Brandon Knight (25.36 -> 11.7 (-53.86)):
+        #-b2b: could be 3-in-4, or multiple away games in a row, or flight from east to west coast, something along those lines
+        #-cov: is high (0.41)
+      #-Josh Richardson (24.36 -> 11.9 (-51.15)):
+        #-away game?: it was the 2nd away game in a row
+        #-injury?: he had an injury at the start of the season so missed the first 4 games
+        #-cov: is somewhat high (0.34)
+    #-11/19
+      #-Markieff Morris (26.42 -> 6.0 (-77.29))
+        #-Injury: he got injured in the second quarter, so didnt play after that
+    #-11/14
+      #-Kelly Olynyk (24.55 -> 14.1 (-42.57))
+        #-cov: is somewhat high at 0.38
+        #-dvp was strong at 20
+        #-gp: only 3 games played
 
-  d = getData()
-  featuresToUse = c(F.BORUTA.CONFIRMED)
+  featuresToUse = getFeaturesToUse(d)
 
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
@@ -585,16 +601,19 @@ getTeamForDate = function(dateStr, yName, rg=F, maxCovs=list()) {
       team[i, 'minFP'] = min(trainFPs)
       team[i, 'meanFP'] = round(mean(trainFPs), 2)
       team[i, 'stDev'] = round(psd(trainFPs), 2)
+      team[i, 'avgMins'] = mean(train[train$Name == name, 'NBA_TODAY_MIN'])
     }
   }
   team$myCov = round(team$stDev / team$meanFP, 2)
 
   #rename some cols
   team$pos = team$Position
-  team$avgMins = team$NBA_S_P_TRAD_MIN
-  team$mins = team$NBA_TODAY_MIN
   team$rgPred = team$RG_points
+  team$nfPred = team$NF_FP
   team$rgStDev = round(team$RG_deviation, 2)
+  team$rgMins = team$RG_minutes
+  team$nfMins = team$NF_Min
+  team$mins = team$NBA_TODAY_MIN
   team$ovrundr = team$RG_overunder
   team$line = team$RG_line
   team$total = team$RG_total
@@ -603,9 +622,12 @@ getTeamForDate = function(dateStr, yName, rg=F, maxCovs=list()) {
   team$ppdk = round(team$PPD, 2)
   team$b2b = team$RG_B2B_Situation
   team$gp = team$NBA_S_P_TRAD_GP
+  team$MeanFP = round(team$MeanFP, 2)
+  team$StDevFP = round(team$StDevFP, 2)
+  team$COV = round(team$COV, 2)
 
-  return(team)
+  return(team[order(team$PctDiff),])
 
   #print
-  #t[order(t$PctDiff), c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'rgPred', 'meanFP', 'MeanFP', 'minFP', 'stDev', 'myCov', 'ovrundr', 'line', 'total', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'b2b')]
+  #t[, c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'rgPred', 'nfPred', 'meanFP', 'MeanFP', 'minFP', 'MinFP', 'stDev', 'StDevFP', 'myCov', 'COV', 'ovrundr', 'line', 'total', 'rgMins', 'nfMins', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'gp', 'b2b', 'RG_START_Order')]
 }
