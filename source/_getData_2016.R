@@ -30,6 +30,9 @@ filterData = function(d, startDate, endDate) {
   #remove GTD and OUT players
   d = d[d$InjuryIndicator == 'none',]
 
+  #remove players who are not in RG and NF
+  d = d[!is.na(d$RG_points) & !is.na(d$NF_FP),]
+
   return(d)
 }
 

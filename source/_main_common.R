@@ -561,6 +561,7 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
         #-b2b = 3in4
       #-Isaiah Thomas (40.09 -> 25.4)
         #-blowout loss
+    #----------
     #-11/21
       #-Brandon Knight (25.36 -> 11.7 (-53.86)):
         #-b2b: could be 3-in-4, or multiple away games in a row, or flight from east to west coast, something along those lines
@@ -577,6 +578,17 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
         #-cov: is somewhat high at 0.38
         #-dvp was strong at 20
         #-gp: only 3 games played
+    #-------
+    #-11/18
+      #-Kevin Love (36.28 -> 25.1 (-30.82))
+        #-blowout win
+        #-b2b: 3in4
+    #-11/16
+      #-Kelly Olynyk (23.1 -> 12.8 (-44.59))
+        #-RGvNF: wide prediction spread b/n NF and RG (NF=28.2, RG=20.98)
+        #-OU: low scoring game (ou=200.5)
+
+
 
   featuresToUse = getFeaturesToUse(d)
 

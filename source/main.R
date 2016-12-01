@@ -17,6 +17,8 @@
 #D-Retune xgb params: 87_retune_xgb: 10/27-11/23, 121/265, 266, 48, 7.353933/7.986254, 4.16, 7.357119/8.094131/7.435808, Inf, -$4, 7/9, 8.071163/10.13492, 0.9291407
 
 #-Use RG_points, NF_FP: train/cvErrors=7.799588/8.079554, Trn/CV/Train=7.794999/8.146878/7.841864, $8, 10/6, 8.107805/9.329115, 0.9542339
+#-Remove players not in RG and NF: 8.502619/8.841369, 8.419662/9.240263/8.552652, $0, 8/8, 8.921783/8.938733, 0.941946
+
 
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
