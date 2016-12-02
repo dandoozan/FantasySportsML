@@ -19,21 +19,21 @@
 
 #================= Functions ===================
 
-createModel = function(data, yName, xNames) {
+createModel = function(data, yName, xNames, amountToAddToY) {
   set.seed(hyperParams$seed)
-  return(xgb.train(data=getDMatrix(data, yName, xNames),
+  return(xgb.train(data=getDMatrix(data, yName, xNames, amountToAddToY),
                    params=getHyperParams(),
                    nrounds=hyperParams$nrounds,
                    verbose=0))
 }
-createPrediction = function(model, newData, xNames) {
+createPrediction = function(model, newData, xNames, amountToAddToY) {
   #return(predict(model, newData[, xNames]))
   #return(predict(model, data.matrix(oneHotEncode(newData, xNames))))
-  return(exp(predict(model, data.matrix(oneHotEncode(newData, xNames)))) - 3)
+  return(exp(predict(model, data.matrix(oneHotEncode(newData, xNames)))) - amountToAddToY)
 }
-computeError = function(y, yhat) {
+computeError = function(y, yhat, amountToAddToY) {
   #return(rmse(y, yhat))
-  return(rmse(log(y + 3), log(yhat + 3)))
+  return(rmse(log(y + amountToAddToY), log(yhat + amountToAddToY)))
 }
 
 #these are the params i used for gblinear
@@ -91,10 +91,10 @@ getHyperParams = function() {
   ))
 }
 
-plotCVErrorRates = function(data, yName, xNames, ylim=NULL, save=FALSE, filename='') {
+plotCVErrorRates = function(data, yName, xNames, amountToAddToY, ylim=NULL, save=FALSE, filename='') {
   cat('    Plotting CV Error Rates...\n')
 
-  dataAsDMatrix = getDMatrix(data, yName, xNames)
+  dataAsDMatrix = getDMatrix(data, yName, xNames, amountToAddToY)
 
   set.seed(hyperParams$seed)
   cvRes = xgb.cv(data=dataAsDMatrix,
@@ -127,10 +127,10 @@ plotImportances = function(model, xNames, maxFeatures=50, save=FALSE, filename='
   if (save) endSavePlot()
 }
 
-findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSeedsToTry=1) {
+findBestSeedAndNrounds = function(data, yName, xNames, amountToAddToY, earlyStopRound=10, numSeedsToTry=1) {
   cat('Finding best seed and nrounds.  Trying ', numSeedsToTry, ' seeds...\n', sep='')
 
-  dataAsDMatrix = getDMatrix(data, yName, xNames)
+  dataAsDMatrix = getDMatrix(data, yName, xNames, amountToAddToY)
   initialNrounds = 10000
   maximize = FALSE
   bestSeed = 1
@@ -171,11 +171,11 @@ findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSee
   return(list(seed=bestSeed, nrounds=bestNrounds))
 }
 
-getDMatrix = function(data, yName, xNames) {
+getDMatrix = function(data, yName, xNames, amountToAddToY) {
   set.seed(634)
   #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
   #return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=data[, yName]))
-  return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=log(data[, yName] + 3)))
+  return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=log(data[, yName] + amountToAddToY)))
 }
 
 oneHotEncode = function(d, xNames) {
@@ -187,13 +187,13 @@ oneHotEncode = function(d, xNames) {
 printModelResults = function(model) {
   return()
 }
-findBestHyperParams = function(data, yName, xNames) {
+findBestHyperParams = function(data, yName, xNames, amountToAddToY) {
   #find best seed and nrounds
-  return(findBestSeedAndNrounds(data, yName, xNames))
+  return(findBestSeedAndNrounds(data, yName, xNames, amountToAddToY))
 }
 
-doPlots = function(toPlot, prodRun, data, yName, xNames, filename) {
-  if (prodRun || toPlot=='cv') plotCVErrorRates(data, yName, xNames, ylim=c(0, 15), save=prodRun, filename=filename)
+doPlots = function(toPlot, prodRun, data, yName, xNames, amountToAddToY, filename) {
+  if (prodRun || toPlot=='cv') plotCVErrorRates(data, yName, xNames, amountToAddToY, ylim=c(0, 15), save=prodRun, filename=filename)
 }
 #============= Main ================
 

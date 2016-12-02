@@ -115,16 +115,16 @@ getFeaturesToUse = function(d) {
   return(featuresToUse)
 }
 
-createBaseModel = function(data, yName, xNames, createModel, createPrediction, computeError) {
+createBaseModel = function(data, yName, xNames, amountToAddToY, createModel) {
   #create model
   cat('Creating Model...\n', sep='')
-  timeElapsed = system.time(baseModel <- createModel(data, yName, xNames))
+  timeElapsed = system.time(baseModel <- createModel(data, yName, xNames, amountToAddToY))
   cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
   printModelResults(baseModel)
   return(baseModel)
 }
 
-printErrors = function(model, data, yName, xNames, createModel, createPrediction, computeError) {
+printErrors = function(model, data, yName, xNames, amountToAddToY, createModel, createPrediction, computeError) {
   cat('Computing Errors...\n')
 
   #split data into trn, cv
@@ -132,20 +132,20 @@ printErrors = function(model, data, yName, xNames, createModel, createPrediction
   trn = split$train
   cv = split$cv
 
-  trnModel = createModel(trn, yName, xNames)
-  trnError = computeError(trn[[yName]], createPrediction(trnModel, trn, xNames))
-  cvPrediction = createPrediction(trnModel, cv, xNames)
-  cvError = computeError(cv[[yName]], cvPrediction)
-  trainError = computeError(data[[yName]], createPrediction(model, data, xNames))
+  trnModel = createModel(trn, yName, xNames, amountToAddToY)
+  trnError = computeError(trn[[yName]], createPrediction(trnModel, trn, xNames, amountToAddToY), amountToAddToY)
+  cvPrediction = createPrediction(trnModel, cv, xNames, amountToAddToY)
+  cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
+  trainError = computeError(data[[yName]], createPrediction(model, data, xNames, amountToAddToY), amountToAddToY)
   cat('    Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
 
   #print rg error
   cvWithRGData = cv[cv$InRotoGrinders == 1,]
-  cat('    CV RG/Mine: ', computeError(cvWithRGData[[yName]], cvWithRGData$RG_points), '/', computeError(cvWithRGData[[yName]], cvPrediction[which(cv$InRotoGrinders == 1)]), '\n', sep='')
+  cat('    CV RG/Mine: ', computeError(cvWithRGData[[yName]], cvWithRGData$RG_points, amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvPrediction[which(cv$InRotoGrinders == 1)], amountToAddToY), '\n', sep='')
 
   #print nf error
   cvWithNFData = cv[cv$InNumberFire == 1,]
-  cat('    CV NF/Mine: ', computeError(cvWithNFData[[yName]], cvWithNFData$NF_FP), '/', computeError(cvWithNFData[[yName]], cvPrediction[which(cv$InNumberFire == 1)]), '\n', sep='')
+  cat('    CV NF/Mine: ', computeError(cvWithNFData[[yName]], cvWithNFData$NF_FP, amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvPrediction[which(cv$InNumberFire == 1)], amountToAddToY), '\n', sep='')
 }
 
 findFirstIndexOfDate = function(data, date) {
@@ -347,17 +347,17 @@ plotRmseByFP = function(d, prediction, yName, dateStr='') {
   for (i in seq(0, max(d[[yName]]), interval)) {
     rows = which(d[[yName]] >= i)# which((d[[yName]] >= i) & (d[[yName]] < (i + interval)))
     #cat('num rows at i=', i, ': ', length(rows), '\n')
-    rmses = c(rmses, computeError(d[[yName]][rows], prediction[rows]))
+    rmses = c(rmses, computeError(d[[yName]][rows], prediction[rows], amountToAddToY))
 
     rgRows = intersect(rows, which(d$InRotoGrinders==1))
-    rgRmses = c(rgRmses, computeError(d[[yName]][rgRows], d$RG_points[rgRows]))
+    rgRmses = c(rgRmses, computeError(d[[yName]][rgRows], d$RG_points[rgRows], amountToAddToY))
   }
   #cat('Max FP=', max(d[[yName]]), ', ', '\n')
   plot(rmses, xlab='Fantasy Points', main=dateStr)
   points(rgRmses, col='orange')
 }
 
-makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
+makeTeams = function(data, yName, xNames, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
   contestData = getContestData()
@@ -400,14 +400,14 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
     train = trainTest$train
     test = trainTest$test
 
-    prediction = createTeamPrediction(train, test, yName, xNames)
+    prediction = createTeamPrediction(train, test, yName, xNames, amountToAddToY)
     test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, yName, date=dateStr)
 
-    myRmse = computeError(test[[yName]], prediction)
-    nfRmse = computeError(test[[yName]], test$NF_FP)
-    rgRmse = computeError(test[[yName]], test$RG_points)
-    fdRmse = computeError(test[[yName]], test$FPPG)
+    myRmse = computeError(test[[yName]], prediction, amountToAddToY)
+    nfRmse = computeError(test[[yName]], test$NF_FP, amountToAddToY)
+    rgRmse = computeError(test[[yName]], test$RG_points, amountToAddToY)
+    fdRmse = computeError(test[[yName]], test$FPPG, amountToAddToY)
 
     #create my teams for today
     myTeamGreedy = createTeam_Greedy(test, predictionName, maxCovs=maxCovs)
@@ -421,7 +421,7 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
     myTeamUsingRGPoints = createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs)
     foundMyTeamUsingRGPoints = if (is.null(myTeamUsingRGPoints)) FALSE else TRUE
     myTeamUsingRGPointsActualFP = if(foundMyTeamUsingRGPoints) computeTeamFP(myTeamUsingRGPoints, yName) else NA
-    myTeamRmse = if (foundTeam) computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]]) else NA
+    myTeamRmse = if (foundTeam) computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]], amountToAddToY) else NA
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
     #   for (i in 1:numHillClimbingTeams) {
@@ -521,7 +521,7 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
   ))
 }
 
-makePlots = function(toPlot, data, yName, xNames, filename, contestsToPlot, teamStats=list(), prodRun) {
+makePlots = function(toPlot, data, yName, xNames, amountToAddToY, filename, contestsToPlot, teamStats=list(), prodRun) {
   cat('Creating plots...\n')
   if (length(teamStats) > 0) {
     if (prodRun || toPlot == 'bal') plotScores(teamStats$dateStrs, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, myTeamUsingRGPointsActual=teamStats$myTeamUsingRGPointsActualFPs, balance=teamStats$balances, main='How I Would\'ve Done', name='Balance', save=prodRun, filename=filename)
@@ -531,7 +531,15 @@ makePlots = function(toPlot, data, yName, xNames, filename, contestsToPlot, team
     #if (prodRun || toPlot == 'rmses') plotLinesByDate(teamStats$dateStrs, list(teamStats$myRmses, teamStats$fdRmses, teamStats$nfRmses, teamStats$rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=prodRun, name='RMSEs', filename=filename)
   }
   if (prodRun || toPlot == 'fi') plotImportances(baseModel, xNames, save=prodRun, filename=filename)
-  doPlots(toPlot, prodRun, data, yName, xNames, filename)
+  doPlots(toPlot, prodRun, data, yName, xNames, amountToAddToY, filename)
+}
+
+computeAmountToAddToY = function(d, yName) {
+  minValue = min(d[[yName]])
+  if (minValue > 0) {
+    return(0)
+  }
+  return(abs(minValue) + 1)
 }
 
 #----------------- utility functions ----------------
@@ -542,7 +550,7 @@ getPredictionForDate = function(dateStr, yName) {
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test
-  return(getPredictionDF(createTeamPrediction(train, test, yName, featuresToUse), test, yName))
+  return(getPredictionDF(createTeamPrediction(train, test, yName, featuresToUse), test, yName, amountToAddToY))
 }
 
 getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
@@ -616,7 +624,7 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
   train = sp$train
   test = sp$test
 
-  test$Pred = round(createTeamPrediction(train, test, yName, featuresToUse), 2)
+  test$Pred = round(createTeamPrediction(train, test, yName, featuresToUse, amountToAddToY), 2)
   test$Diff = test[[yName]] - test$Pred
   test$PctDiff = round(test$Diff / test$Pred * 100, 2)
 

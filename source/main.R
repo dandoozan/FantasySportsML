@@ -60,8 +60,8 @@ source('source/_main_common.R')
 
 #================= Functions =================
 
-createTeamPrediction = function(train, test, yName, xNames) {
-  prediction = createPrediction(createModel(train, yName, xNames), test, xNames)
+createTeamPrediction = function(train, test, yName, xNames, amountToAddToY) {
+  prediction = createPrediction(createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
   floor = pmax(prediction - test$StDevFP, 0)
   ceil = prediction + test$StDevFP
   return(prediction)
@@ -70,11 +70,12 @@ createTeamPrediction = function(train, test, yName, xNames) {
 #================= Main =================
 
 data = setup(ALG, START_DATE, END_DATE, PROD_RUN, FILENAME)
+amountToAddToY = 3#computeAmountToAddToY(data, Y_NAME)
 featuresToUse = getFeaturesToUse(data)
-hyperParams = findBestHyperParams(data, Y_NAME, featuresToUse)
-baseModel = createBaseModel(data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
-printErrors(baseModel, data, Y_NAME, featuresToUse, createModel, createPrediction, computeError)
-teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
-makePlots(PLOT, data, Y_NAME, featuresToUse, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+hyperParams = findBestHyperParams(data, Y_NAME, featuresToUse, amountToAddToY)
+baseModel = createBaseModel(data, Y_NAME, featuresToUse, amountToAddToY, createModel)
+printErrors(baseModel, data, Y_NAME, featuresToUse, amountToAddToY, createModel, createPrediction, computeError)
+teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
+makePlots(PLOT, data, Y_NAME, featuresToUse, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
 
 cat('Done!\n')
