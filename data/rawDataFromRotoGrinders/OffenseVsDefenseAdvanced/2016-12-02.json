@@ -1,0 +1,200 @@
+[
+  {
+    "AVGRTG": "100.08",
+    "DEFRTG": "105.25",
+    "OFFENSE": "ORL",
+    "OFFRTG": "94.91",
+    "OPPONENT": "PHI",
+    "PACE": "99.90",
+    "PPG": "92.28",
+    "PPG-A": "97.94",
+    "PTS": "95.11"
+  },
+  {
+    "AVGRTG": "98.11",
+    "DEFRTG": "100.74",
+    "OFFENSE": "PHI",
+    "OFFRTG": "95.48",
+    "OPPONENT": "ORL",
+    "PACE": "99.90",
+    "PPG": "97.94",
+    "PPG-A": "92.28",
+    "PTS": "95.11"
+  },
+  {
+    "AVGRTG": "105.28",
+    "DEFRTG": "106.41",
+    "OFFENSE": "MIN",
+    "OFFRTG": "104.15",
+    "OPPONENT": "NYK",
+    "PACE": "99.61",
+    "PPG": "103.11",
+    "PPG-A": "103.44",
+    "PTS": "103.28"
+  },
+  {
+    "AVGRTG": "104.16",
+    "DEFRTG": "105.10",
+    "OFFENSE": "NYK",
+    "OFFRTG": "103.22",
+    "OPPONENT": "MIN",
+    "PACE": "99.61",
+    "PPG": "103.44",
+    "PPG-A": "103.11",
+    "PTS": "103.28"
+  },
+  {
+    "AVGRTG": "104.34",
+    "DEFRTG": "105.24",
+    "OFFENSE": "LAL",
+    "OFFRTG": "103.44",
+    "OPPONENT": "TOR",
+    "PACE": "100.75",
+    "PPG": "106.60",
+    "PPG-A": "109.72",
+    "PTS": "108.16"
+  },
+  {
+    "AVGRTG": "108.99",
+    "DEFRTG": "106.51",
+    "OFFENSE": "TOR",
+    "OFFRTG": "111.46",
+    "OPPONENT": "LAL",
+    "PACE": "100.75",
+    "PPG": "109.72",
+    "PPG-A": "106.60",
+    "PTS": "108.16"
+  },
+  {
+    "AVGRTG": "103.52",
+    "DEFRTG": "104.39",
+    "OFFENSE": "SAC",
+    "OFFRTG": "102.65",
+    "OPPONENT": "BOS",
+    "PACE": "99.63",
+    "PPG": "103.17",
+    "PPG-A": "105.00",
+    "PTS": "104.08"
+  },
+  {
+    "AVGRTG": "106.43",
+    "DEFRTG": "106.52",
+    "OFFENSE": "BOS",
+    "OFFRTG": "106.33",
+    "OPPONENT": "SAC",
+    "PACE": "99.63",
+    "PPG": "105.00",
+    "PPG-A": "103.17",
+    "PTS": "104.08"
+  },
+  {
+    "AVGRTG": "99.68",
+    "DEFRTG": "97.31",
+    "OFFENSE": "DET",
+    "OFFRTG": "102.05",
+    "OPPONENT": "ATL",
+    "PACE": "99.78",
+    "PPG": "99.40",
+    "PPG-A": "101.84",
+    "PTS": "100.62"
+  },
+  {
+    "AVGRTG": "100.40",
+    "DEFRTG": "101.11",
+    "OFFENSE": "ATL",
+    "OFFRTG": "99.69",
+    "OPPONENT": "DET",
+    "PACE": "99.78",
+    "PPG": "101.84",
+    "PPG-A": "99.40",
+    "PTS": "100.62"
+  },
+  {
+    "AVGRTG": "104.43",
+    "DEFRTG": "101.48",
+    "OFFENSE": "LAC",
+    "OFFRTG": "107.39",
+    "OPPONENT": "NOP",
+    "PACE": "101.62",
+    "PPG": "108.58",
+    "PPG-A": "102.84",
+    "PTS": "105.71"
+  },
+  {
+    "AVGRTG": "99.55",
+    "DEFRTG": "98.40",
+    "OFFENSE": "NOP",
+    "OFFRTG": "100.70",
+    "OPPONENT": "LAC",
+    "PACE": "101.62",
+    "PPG": "102.84",
+    "PPG-A": "108.58",
+    "PTS": "105.71"
+  },
+  {
+    "AVGRTG": "105.12",
+    "DEFRTG": "100.60",
+    "OFFENSE": "CLE",
+    "OFFRTG": "109.63",
+    "OPPONENT": "CHI",
+    "PACE": "100.35",
+    "PPG": "111.31",
+    "PPG-A": "104.41",
+    "PTS": "107.86"
+  },
+  {
+    "AVGRTG": "104.18",
+    "DEFRTG": "103.07",
+    "OFFENSE": "CHI",
+    "OFFRTG": "105.28",
+    "OPPONENT": "CLE",
+    "PACE": "100.35",
+    "PPG": "104.41",
+    "PPG-A": "111.31",
+    "PTS": "107.86"
+  },
+  {
+    "AVGRTG": "101.69",
+    "DEFRTG": "101.84",
+    "OFFENSE": "WAS",
+    "OFFRTG": "101.54",
+    "OPPONENT": "SAS",
+    "PACE": "98.35",
+    "PPG": "102.76",
+    "PPG-A": "102.74",
+    "PTS": "102.75"
+  },
+  {
+    "AVGRTG": "105.79",
+    "DEFRTG": "103.99",
+    "OFFENSE": "SAS",
+    "OFFRTG": "107.58",
+    "OPPONENT": "WAS",
+    "PACE": "98.35",
+    "PPG": "102.74",
+    "PPG-A": "102.76",
+    "PTS": "102.75"
+  },
+  {
+    "AVGRTG": "106.97",
+    "DEFRTG": "104.48",
+    "OFFENSE": "HOU",
+    "OFFRTG": "109.46",
+    "OPPONENT": "DEN",
+    "PACE": "102.78",
+    "PPG": "109.28",
+    "PPG-A": "106.50",
+    "PTS": "107.89"
+  },
+  {
+    "AVGRTG": "104.06",
+    "DEFRTG": "107.38",
+    "OFFENSE": "DEN",
+    "OFFRTG": "100.74",
+    "OPPONENT": "HOU",
+    "PACE": "102.78",
+    "PPG": "106.50",
+    "PPG-A": "109.28",
+    "PTS": "107.89"
+  }
+]
