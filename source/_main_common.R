@@ -535,12 +535,13 @@ makePlots = function(toPlot, data, yName, xNames, amountToAddToY, filename, cont
 }
 
 computeAmountToAddToY = function(d, yName) {
-  return(3)
-  # minValue = min(d[[yName]])
-  # if (minValue > 0) {
-  #   return(0)
-  # }
-  # return(abs(minValue) + 1)
+  minValue = min(d[[yName]])
+  if (minValue > 0) {
+    return(0)
+  }
+  amountToAddToY = abs(minValue) + 1
+  cat('Adding ', amountToAddToY, ' to Y\n', sep='')
+  return(amountToAddToY)
 }
 
 #----------------- utility functions ----------------

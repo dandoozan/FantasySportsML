@@ -70,7 +70,6 @@ createTeamPrediction = function(train, test, yName, xNames, amountToAddToY) {
 #================= Main =================
 
 data = setup(ALG, START_DATE, END_DATE, PROD_RUN, FILENAME)
-#data[[Y_NAME]] = ifelse(data[[Y_NAME]] < 0, 0, data[[Y_NAME]])
 amountToAddToY = computeAmountToAddToY(data, Y_NAME)
 featuresToUse = getFeaturesToUse(data)
 hyperParams = findBestHyperParams(data, Y_NAME, featuresToUse, amountToAddToY)

@@ -140,6 +140,9 @@ featureEngineer = function(d) {
 
   #compute FP
   d$FP = computeFP(d$NBA_TODAY_PTS, d$NBA_TODAY_AST, d$NBA_TODAY_BLK, d$NBA_TODAY_REB, d$NBA_TODAY_STL, d$NBA_TODAY_TOV)
+  d$FP0 = ifelse(d$FP < 0, 0, d$FP) #set all FPs < 0 to 0
+  d$FP1 = d$FP + runif(length(d$FP), -1, 1) #add random +/-1
+  d$FP2 = d$FP + runif(length(d$FP), -2, 2) #add random +/-2
   d$AVG_FP = computeFP(d$NBA_S_P_TRAD_PTS, d$NBA_S_P_TRAD_AST, d$NBA_S_P_TRAD_BLK, d$NBA_S_P_TRAD_REB, d$NBA_S_P_TRAD_STL, d$NBA_S_P_TRAD_TOV)
 
   #compute MeanFP, StDevFP, MinFP, COV
