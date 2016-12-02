@@ -535,11 +535,12 @@ makePlots = function(toPlot, data, yName, xNames, amountToAddToY, filename, cont
 }
 
 computeAmountToAddToY = function(d, yName) {
-  minValue = min(d[[yName]])
-  if (minValue > 0) {
-    return(0)
-  }
-  return(abs(minValue) + 1)
+  return(3)
+  # minValue = min(d[[yName]])
+  # if (minValue > 0) {
+  #   return(0)
+  # }
+  # return(abs(minValue) + 1)
 }
 
 #----------------- utility functions ----------------
@@ -551,6 +552,41 @@ getPredictionForDate = function(dateStr, yName) {
   train = sp$train
   test = sp$test
   return(getPredictionDF(createTeamPrediction(train, test, yName, featuresToUse), test, yName, amountToAddToY))
+}
+getCvPrediction = function(d, yName) {
+  featuresToUse = getFeaturesToUse(d)
+  amountToAddToY = computeAmountToAddToY(d, yName)
+
+  split = splitData(d, yName)
+  trn = split$train
+  cv = split$cv
+
+  trnModel = createModel(trn, yName, featuresToUse, amountToAddToY)
+  trnError = computeError(trn[[yName]], createPrediction(trnModel, trn, featuresToUse, amountToAddToY), amountToAddToY)
+  cvPrediction = createPrediction(trnModel, cv, featuresToUse, amountToAddToY)
+  cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
+  #trainError = computeError(d[[yName]], createPrediction(model, data, featuresToUse, amountToAddToY), amountToAddToY)
+
+  cv$Pred = cvPrediction
+  cv$Diff = cv[[yName]] - cv$Pred
+  cv$PctDiff = cv$Diff / cv$Pred * 100
+
+  return(cv)
+}
+getDataPrediction = function(d, yName) {
+  featuresToUse = getFeaturesToUse(d)
+  amountToAddToY = computeAmountToAddToY(d, yName)
+
+  model = createModel(d, yName, featuresToUse, amountToAddToY)
+  prediction = createPrediction(model, d, featuresToUse, amountToAddToY)
+
+  d$Pred = prediction
+  d$Diff = d[[yName]] - d$Pred
+  d$PctDiff = d$Diff / d$Pred * 100
+
+  return(d)
+
+  #plot(PctDiff~RG_B2B_Situation, d[d$Pred > 15,])
 }
 
 getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
