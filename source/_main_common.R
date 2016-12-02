@@ -457,6 +457,7 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
 
     #print results
     cat('allRmse=', round(myRmse, 2), sep='')
+    cat(', rgRmse=', round(rgRmse, 2), sep='')
     cat(', teamRmse=', round(myTeamRmse, 2), sep='')
     #cat(', expected=', round(myTeamExpectedFP, 2), sep='')
     #cat(', actual=', round(myTeamActualFP, 2), sep='')
@@ -492,7 +493,7 @@ makeTeams = function(data, yName, xNames, predictionName, maxCovs, numHillClimbi
   cat('\n')
 
   #print mean of rmses
-  cat('Mean RMSE of all players/team: ', mean(myRmses), '/', mean(myTeamRmses), '\n', sep='')
+  cat('Mean RMSE of all players/rg/team: ', mean(myRmses), '/', mean(rgRmses), '/', mean(myTeamRmses), '\n', sep='')
 
   #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
   scoreRatios = myTeamActualFPs/lowestWinningScores
