@@ -579,6 +579,13 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
         #-cov: is somewhat high at 0.38
         #-dvp was strong at 20
         #-gp: only 3 games played
+        #-b2b: 3in4
+      #-Eric Gordon (23.58 -> 17.7 (-24.94))
+        #-line: -737 (major overdogs), and it was indeed a blowout, which is probably the reason
+        #-dvp: 11
+      #-Ryan Anderson (22.76 -> 17.4 (-23.55))
+        #-line: -737, same reasons as above since he also plays for HOU
+        #-dvp: 18
     #-------
     #-11/18
       #-Kevin Love (36.28 -> 25.1 (-30.82))
@@ -588,6 +595,18 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
       #-Kelly Olynyk (23.1 -> 12.8 (-44.59))
         #-RGvNF: wide prediction spread b/n NF and RG (NF=28.2, RG=20.98)
         #-OU: low scoring game (ou=200.5)
+    #-------
+    #-11/19
+      #-Robin Lopez (22.76 -> 19.2 (-15.64))
+        #-OU: 202.5
+        #-dvp: 21
+    #-11/9
+      #-Wesley Matthews (21.44 -> 0 (-100))
+        #He did not play, and according to espn it was bc he "got the night off on the back end of a back-to-back"
+        #-b2b: 3in4-B2B
+        #-line: 1975 (major underdogs)
+        #-dvp: 18
+
 
 
 

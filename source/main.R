@@ -31,6 +31,7 @@
 #-maybe only use data from 11/5 onward or only the last X (2?) weeks
 #-add back projected points features
 #-run findBestSeedAndNrounds for every date rather than once at beginning on all data
+#-use RG_points51 as a feature
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
