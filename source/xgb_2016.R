@@ -29,9 +29,11 @@ createModel = function(data, yName, xNames) {
 createPrediction = function(model, newData, xNames) {
   #return(predict(model, newData[, xNames]))
   return(predict(model, data.matrix(oneHotEncode(newData, xNames))))
+  #return(exp(predict(model, data.matrix(oneHotEncode(newData, xNames)))) - 3)
 }
 computeError = function(y, yhat) {
-  return(rmse(y, yhat))
+  #return(rmse(y, yhat))
+  return(rmse(log(y + 3), log(yhat + 3)))
 }
 
 #these are the params i used for gblinear
@@ -173,6 +175,7 @@ getDMatrix = function(data, yName, xNames) {
   set.seed(634)
   #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
   return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=data[, yName]))
+  #return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=log(data[, yName] + 3)))
 }
 
 oneHotEncode = function(d, xNames) {

@@ -18,8 +18,8 @@
 
 #-Use RG_points, NF_FP: train/cvErrors=7.799588/8.079554, Trn/CV/Train=7.794999/8.146878/7.841864, $8, 10/6, 8.107805/9.329115, 0.9542339
 #-Remove players not in RG and NF: 8.502619/8.841369, 8.419662/9.240263/8.552652, $0, 8/8, 8.921783/8.938733, 0.941946
-
-
+#-Use rmsle as error: 8.502619/8.841369, 0.5412207/0.5780044/0.5486122, RG=0.578914/0.5780044, NF=0.6198487/0.5780044, $0, 8/8, 0.5556841/0.5651253/0.335886, 0.941946
+#-Use log(y) as y:
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
