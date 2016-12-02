@@ -94,6 +94,8 @@ setup = function(algToUse, startDate, endDate, prodRun, filename) {
     source('source/xgb_2016.R')
   } else if (algToUse == 'rf') {
     source('source/rf2_2016.R')
+  } else if (algToUse == 'glm') {
+    source('source/glm_2016.R')
   }
 
   if (prodRun) cat('PROD RUN: ', filename, '\n', sep='')

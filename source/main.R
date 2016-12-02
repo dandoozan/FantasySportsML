@@ -51,7 +51,7 @@ NUM_HILL_CLIMBING_TEAMS = 10
 CONTESTS_TO_PLOT = list(
   #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
   list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
-ALG = 'xgb'
+ALG = 'glm'
 MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 STARTING_BALANCE = 25
