@@ -28,8 +28,8 @@ createModel = function(data, yName, xNames) {
 }
 createPrediction = function(model, newData, xNames) {
   #return(predict(model, newData[, xNames]))
-  return(predict(model, data.matrix(oneHotEncode(newData, xNames))))
-  #return(exp(predict(model, data.matrix(oneHotEncode(newData, xNames)))) - 3)
+  #return(predict(model, data.matrix(oneHotEncode(newData, xNames))))
+  return(exp(predict(model, data.matrix(oneHotEncode(newData, xNames)))) - 3)
 }
 computeError = function(y, yhat) {
   #return(rmse(y, yhat))
@@ -174,8 +174,8 @@ findBestSeedAndNrounds = function(data, yName, xNames, earlyStopRound=10, numSee
 getDMatrix = function(data, yName, xNames) {
   set.seed(634)
   #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
-  return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=data[, yName]))
-  #return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=log(data[, yName] + 3)))
+  #return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=data[, yName]))
+  return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=log(data[, yName] + 3)))
 }
 
 oneHotEncode = function(d, xNames) {
