@@ -3,7 +3,7 @@
 #D-Use log(y): 0.5597699/0.5754786/0.5629384, 0.578914/0.5754786, 0.6198487/0.5754786, -$8, 6/10, 0.5606038/0.5651253/0.4276129, 0.9191064
 
 #================= Functions ===================
-createModel = function(d, yName, xNames, amountToAddToY) {
+createModel = function(d, yName, xNames, hyperParams, amountToAddToY) {
   set.seed(754)
   #return(cv.glmnet(x=as.matrix(d[, xNames]), y=d[[yName]]))
   return(cv.glmnet(x=as.matrix(d[, xNames]), y=log(d[[yName]] + amountToAddToY)))

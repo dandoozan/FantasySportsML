@@ -5,56 +5,60 @@
 library(randomForest) #randomForest
 
 #============== Functions ===============
-createModel = function(data, yName, xNames, amountToAddToY) {
-  set.seed(754)
-  return(randomForest(x=data[, xNames],
-                      #y=data[[yName]],
-                      y=log(data[[yName]] + amountToAddToY),
-                      ntree=hyperParams$ntree))
-}
-createPrediction = function(model, newData, xNames, amountToAddToY) {
-  #return(predict(model, newData))
-  return(exp(predict(model, newData)) - amountToAddToY)
-}
-computeError = function(y, yhat, amountToAddToY) {
-  #return(rmse(y, yhat))
-  return(rmse(log(y + amountToAddToY), log(yhat + amountToAddToY)))
-}
-printModelResults = function(model) {
-  cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
-}
-findBestHyperParams = function(d, yName, xNames, amountToAddToY) {
-  return(list(ntree=100))
-}
-doPlots = function(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename) {
-  if (prodRun || toPlot == 'fi') plotImportances(model, save=prodRun, filename=filename)
-}
+rf = function() {
+  return(list(
+    createModel = function(data, yName, xNames, hyperParams, amountToAddToY) {
+      set.seed(754)
+      return(randomForest(x=data[, xNames],
+                          #y=data[[yName]],
+                          y=log(data[[yName]] + amountToAddToY),
+                          ntree=hyperParams$ntree))
+    },
+    createPrediction = function(model, newData, xNames, amountToAddToY) {
+      #return(predict(model, newData))
+      return(exp(predict(model, newData)) - amountToAddToY)
+    },
+    computeError = function(y, yhat, amountToAddToY) {
+      #return(rmse(y, yhat))
+      return(rmse(log(y + amountToAddToY), log(yhat + amountToAddToY)))
+    },
+    printModelResults = function(model, hyperParams, d, yName, xNames, amountToAddToY) {
+      cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
+    },
+    findBestHyperParams = function(d, yName, xNames, amountToAddToY) {
+      return(list(ntree=100))
+    },
+    doPlots = function(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename) {
+      if (prodRun || toPlot == 'fi') plotImportances(model, save=prodRun, filename=filename)
+    },
 
-#I do not understand any of this code, I borrowed it from a kaggler
-plotImportances = function(model, maxFeatures=50, save=FALSE, filename='') {
-  cat('Plotting Feature Importances...\n')
+    #I do not understand any of this code, I borrowed it from a kaggler
+    plotImportances = function(model, maxFeatures=50, save=FALSE, filename='') {
+      cat('Plotting Feature Importances...\n')
 
-  # Get importance
-  importances = randomForest::importance(model)
+      # Get importance
+      importances = randomForest::importance(model)
 
-  #DPD: take the top 20 if there are more than 20
-  importances = importances[order(-importances[, 1]), , drop = FALSE][1:min(maxFeatures, nrow(importances)),, drop=F]
+      #DPD: take the top 20 if there are more than 20
+      importances = importances[order(-importances[, 1]), , drop = FALSE][1:min(maxFeatures, nrow(importances)),, drop=F]
 
-  varImportance = data.frame(Variables = row.names(importances),
-                             Importance = round(importances[, 1], 2))
+      varImportance = data.frame(Variables = row.names(importances),
+                                 Importance = round(importances[, 1], 2))
 
-  # Create a rank variable based on importance
-  rankImportance = varImportance %>%
-    mutate(Rank = paste0('#',dense_rank(desc(Importance))))
+      # Create a rank variable based on importance
+      rankImportance = varImportance %>%
+        mutate(Rank = paste0('#',dense_rank(desc(Importance))))
 
-  if (save) startSavePlot('Importances_rf', filename, height=max(nrow(importances)*20, 700))
-  print(ggplot(rankImportance, aes(x = reorder(Variables, Importance),
-                                   y = Importance, fill = Importance)) +
-          geom_bar(stat='identity') +
-          geom_text(aes(x = Variables, y = 0.5, label = Rank),
-                    hjust=0, vjust=0.55, size = 4, colour = 'red') +
-          labs(title='Feature Importances', x='Features') +
-          coord_flip() +
-          theme_few())
-  if (save) endSavePlot()
+      if (save) startSavePlot('Importances_rf', filename, height=max(nrow(importances)*20, 700))
+      print(ggplot(rankImportance, aes(x = reorder(Variables, Importance),
+                                       y = Importance, fill = Importance)) +
+              geom_bar(stat='identity') +
+              geom_text(aes(x = Variables, y = 0.5, label = Rank),
+                        hjust=0, vjust=0.55, size = 4, colour = 'red') +
+              labs(title='Feature Importances', x='Features') +
+              coord_flip() +
+              theme_few())
+      if (save) endSavePlot()
+    }
+  ))
 }
