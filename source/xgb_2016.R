@@ -1,7 +1,8 @@
+library(xgboost) #xgb.train, xgb.cv
+
 #todo:
 # setwd('/Users/dan/Desktop/ML/df')
 #
-# library(xgboost) #xgb.train, xgb.cv
 # library(caret) #dummyVars
 # library(Ckmeans.1d.dp) #xgb.plot.importance
 # library(randomForest) #randomForest
@@ -122,7 +123,7 @@ plotImportances = function(model, xNames, maxFeatures=50, save=FALSE, filename='
 
   importances = xgb.importance(feature_names=featureNames, model=model)
   importances = importances[1:min(nrow(importances), maxFeatures), ]
-  if (save) startSavePlot('Importances', filename, height=max(nrow(importances)*20, 700))
+  if (save) startSavePlot('Importances_xgb', filename, height=max(nrow(importances)*20, 700))
   print(xgb.plot.importance(importance_matrix=importances))
   if (save) endSavePlot()
 }
@@ -192,8 +193,9 @@ findBestHyperParams = function(data, yName, xNames, amountToAddToY) {
   return(findBestSeedAndNrounds(data, yName, xNames, amountToAddToY))
 }
 
-doPlots = function(toPlot, prodRun, data, yName, xNames, amountToAddToY, filename) {
+doPlots = function(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename) {
   if (prodRun || toPlot=='cv') plotCVErrorRates(data, yName, xNames, amountToAddToY, ylim=c(0, 15), save=prodRun, filename=filename)
+  if (prodRun || toPlot == 'fi') plotImportances(model, xNames, save=prodRun, filename=filename)
 }
 #============= Main ================
 

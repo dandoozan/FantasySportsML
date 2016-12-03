@@ -19,7 +19,7 @@
 #-Use RG_points, NF_FP: train/cvErrors=7.799588/8.079554, Trn/CV/Train=7.794999/8.146878/7.841864, $8, 10/6, 8.107805/9.329115, 0.9542339
 #-Remove players not in RG and NF: 8.502619/8.841369, 8.419662/9.240263/8.552652, $0, 8/8, 8.921783/8.938733, 0.941946
 #-Use rmsle as error: 8.502619/8.841369, 0.5412207/0.5780044/0.5486122, RG=0.578914/0.5780044, NF=0.6198487/0.5780044, $0, 8/8, 0.5556841/0.5651253/0.335886, 0.941946
-#-Use log(y) as y: 0.521395/0.541843, 0.5156722/0.566101/0.523897, $16, 12/4, 0.5387099/0.5651253/0.3190233, 0.9792446
+#-Use log(y) as y: 0.521395/0.541843, 0.5156722/0.566101/0.523897, Inf, $16, 12/4, 0.5387099/0.5651253/0.3190233, 0.9792446
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -40,6 +40,7 @@ setwd('/Users/dan/Desktop/ML/df')
 PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
+ALG = 'rf'
 
 PLOT = 'bal' #fi, bal, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
@@ -51,7 +52,6 @@ NUM_HILL_CLIMBING_TEAMS = 10
 CONTESTS_TO_PLOT = list(
   #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
   list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
-ALG = 'glm'
 MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 FILENAME = paste0(NUMBER, '_', NAME, '_', ALG)
 STARTING_BALANCE = 25
@@ -76,6 +76,6 @@ hyperParams = findBestHyperParams(data, Y_NAME, featuresToUse, amountToAddToY)
 baseModel = createBaseModel(data, Y_NAME, featuresToUse, amountToAddToY, createModel)
 printErrors(baseModel, data, Y_NAME, featuresToUse, amountToAddToY, createModel, createPrediction, computeError)
 teamStats = if (MAKE_TEAMS) makeTeams(data, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
-makePlots(PLOT, data, Y_NAME, featuresToUse, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+makePlots(PLOT, data, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
 
 cat('Done!\n')

@@ -1,4 +1,3 @@
-library(xgboost) #xgb.train, xgb.cv
 library(caret) #dummyVars
 library(Ckmeans.1d.dp) #xgb.plot.importance
 library(randomForest) #randomForest
@@ -93,7 +92,7 @@ setup = function(algToUse, startDate, endDate, prodRun, filename) {
   if (algToUse == 'xgb') {
     source('source/xgb_2016.R')
   } else if (algToUse == 'rf') {
-    source('source/rf2_2016.R')
+    source('source/rf_2016.R')
   } else if (algToUse == 'glm') {
     source('source/glm_2016.R')
   }
@@ -523,7 +522,7 @@ makeTeams = function(data, yName, xNames, amountToAddToY, predictionName, maxCov
   ))
 }
 
-makePlots = function(toPlot, data, yName, xNames, amountToAddToY, filename, contestsToPlot, teamStats=list(), prodRun) {
+makePlots = function(toPlot, data, yName, xNames, model, amountToAddToY, filename, contestsToPlot, teamStats=list(), prodRun) {
   cat('Creating plots...\n')
   if (length(teamStats) > 0) {
     if (prodRun || toPlot == 'bal') plotScores(teamStats$dateStrs, contestLowests=teamStats$contestLowests, contestsToPlot=contestsToPlot, greedyTeamExpected=teamStats$myTeamExpectedFPs, greedyTeamActual=teamStats$myTeamActualFPs, myTeamUsingRGPointsActual=teamStats$myTeamUsingRGPointsActualFPs, balance=teamStats$balances, main='How I Would\'ve Done', name='Balance', save=prodRun, filename=filename)
@@ -532,8 +531,8 @@ makePlots = function(toPlot, data, yName, xNames, amountToAddToY, filename, cont
     #if (prodRun || toPlot == 'rmse_scoreratios') plotByDate2Axis(teamStats$dateStrs, teamStats$myRmses, ylab='RMSE', ylim=c(5, 12), y2=teamStats$scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=prodRun, name='RMSE_ScoreRatios', filename=filename)
     #if (prodRun || toPlot == 'rmses') plotLinesByDate(teamStats$dateStrs, list(teamStats$myRmses, teamStats$fdRmses, teamStats$nfRmses, teamStats$rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=prodRun, name='RMSEs', filename=filename)
   }
-  if (prodRun || toPlot == 'fi') plotImportances(baseModel, xNames, save=prodRun, filename=filename)
-  doPlots(toPlot, prodRun, data, yName, xNames, amountToAddToY, filename)
+
+  doPlots(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename)
 }
 
 computeAmountToAddToY = function(d, yName) {
