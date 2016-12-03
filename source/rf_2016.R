@@ -1,5 +1,6 @@
 
 #-Use RG_points, NF_FP: 10/26-11/23, 2/271, MeanOfSquaredResiduals/%VarExplained=87.61809/50.11933, Trn/CV/Train=5.025854/9.693496/5.134203, RG=9.21892/9.693496, NF=9.654601/9.693496, MAX_COV=Inf, Gain=$8, W/L=10/6, Mean RMSE of all players/rg/team=9.410472/8.953031/9.351791, Mean myScore/lowestScore ratio=0.9394312
+#-Use log(y): 10/26-11/23, 2/271, 0.3303115/42.00708, 0.3098712/0.5952686/0.3202836, 0.578914/0.5952686, 0.6198487/0.5952686, Inf, $0, 8/8, 0.568672/0.5651253/0.3851929, 0.9344018
 
 library(randomForest) #randomForest
 
@@ -7,17 +8,17 @@ library(randomForest) #randomForest
 createModel = function(data, yName, xNames, amountToAddToY) {
   set.seed(754)
   return(randomForest(x=data[, xNames],
-                      y=data[[yName]],
+                      #y=data[[yName]],
+                      y=log(data[[yName]] + amountToAddToY),
                       ntree=hyperParams$ntree))
 }
 createPrediction = function(model, newData, xNames, amountToAddToY) {
-  if (is.null(newData)) {
-    return(predict(model))
-  }
-  return(predict(model, newData))
+  #return(predict(model, newData))
+  return(exp(predict(model, newData)) - amountToAddToY)
 }
 computeError = function(y, yhat, amountToAddToY) {
-  return(rmse(y, yhat))
+  #return(rmse(y, yhat))
+  return(rmse(log(y + amountToAddToY), log(yhat + amountToAddToY)))
 }
 printModelResults = function(model) {
   cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
