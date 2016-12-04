@@ -115,8 +115,8 @@ runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
     obj = algs[[algName]]
     hyperParams = obj$findBestHyperParams(d, Y_NAME, featuresToUse, amountToAddToY)
     baseModel = createBaseModel(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
-    #printErrors(obj, baseModel, d, Y_NAME, featuresToUse, amountToAddToY)
-    #teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
+    printErrors(obj, baseModel, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
+    teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
     #makePlots(obj, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
   }
 }
@@ -130,7 +130,7 @@ createBaseModel = function(obj, d, yName, xNames, hyperParams, amountToAddToY) {
   return(baseModel)
 }
 
-printErrors = function(obj, model, data, yName, xNames, amountToAddToY) {
+printErrors = function(obj, model, data, yName, xNames, hyperParams, amountToAddToY) {
   cat('Computing Errors...\n')
 
   #split data into trn, cv
@@ -138,7 +138,7 @@ printErrors = function(obj, model, data, yName, xNames, amountToAddToY) {
   trn = split$train
   cv = split$cv
 
-  trnModel = obj$createModel(trn, yName, xNames, amountToAddToY)
+  trnModel = obj$createModel(trn, yName, xNames, hyperParams, amountToAddToY)
   trnError = obj$computeError(trn[[yName]], obj$createPrediction(trnModel, trn, xNames, amountToAddToY), amountToAddToY)
   cvPrediction = obj$createPrediction(trnModel, cv, xNames, amountToAddToY)
   cvError = obj$computeError(cv[[yName]], cvPrediction, amountToAddToY)
@@ -363,7 +363,7 @@ plotRmseByFP = function(d, prediction, yName, dateStr='') {
   points(rgRmses, col='orange')
 }
 
-makeTeams = function(obj, data, yName, xNames, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
+makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
   contestData = getContestData()
@@ -406,7 +406,7 @@ makeTeams = function(obj, data, yName, xNames, amountToAddToY, predictionName, m
     train = trainTest$train
     test = trainTest$test
 
-    prediction = createTeamPrediction(obj, train, test, yName, xNames, amountToAddToY)
+    prediction = createTeamPrediction(obj, train, test, yName, xNames, hyperParams, amountToAddToY)
     test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, yName, date=dateStr)
 
@@ -551,6 +551,19 @@ computeAmountToAddToY = function(d, yName) {
 }
 
 #----------------- utility functions ----------------
+plotBucketRmses = function(obj, d, yName, predName, amountToAddToY, interval) {
+  intervals = seq(interval, max(d[[predName]]), interval)
+  rmses = c()
+  for (i in intervals) {
+    low = i - interval
+    high = i
+    subset = d[d[[predName]] > low & d[[predName]] <= high,]
+    rmse = obj$computeError(subset[[yName]], subset[[predName]], amountToAddToY)
+    cat(i, ', ', rmse, '\n')
+    rmses = c(rmses, rmse)
+  }
+  plot(intervals, rmses)
+}
 getPredictionForDate = function(dateStr, yName) {
   d = getData()
   featuresToUse = getFeaturesToUse(d)
@@ -560,23 +573,35 @@ getPredictionForDate = function(dateStr, yName) {
   test = sp$test
   return(getPredictionDF(createTeamPrediction(obj, train, test, yName, featuresToUse), test, yName, amountToAddToY))
 }
-getCvPrediction = function(d, yName) {
+getCvPrediction = function(obj, d, yName) {
   featuresToUse = getFeaturesToUse(d)
   amountToAddToY = computeAmountToAddToY(d, yName)
+  hyperParams = obj$findBestHyperParams(d, yName, featuresToUse, amountToAddToY)
 
   split = splitData(d, yName)
   trn = split$train
   cv = split$cv
 
-  trnModel = obj$createModel(trn, yName, featuresToUse, amountToAddToY)
+  trnModel = obj$createModel(trn, yName, featuresToUse, hyperParams, amountToAddToY)
   trnError = obj$computeError(trn[[yName]], obj$createPrediction(trnModel, trn, featuresToUse, amountToAddToY), amountToAddToY)
   cvPrediction = obj$createPrediction(trnModel, cv, featuresToUse, amountToAddToY)
   cvError = obj$computeError(cv[[yName]], cvPrediction, amountToAddToY)
   #trainError = obj$computeError(d[[yName]], obj$createPrediction(model, data, featuresToUse, amountToAddToY), amountToAddToY)
 
   cv$Pred = cvPrediction
-  cv$Diff = cv[[yName]] - cv$Pred
+  cv$Diff = abs(cv[[yName]] - cv$Pred)
   cv$PctDiff = cv$Diff / cv$Pred * 100
+
+  # interval = 5
+  # intervals = seq(interval, nrow(cv), interval)
+  # for (i in intervals) {
+  #   subset = cv[cv$Pred > low & cv$Pred <= high,]
+  #   rmse = obj$computeError(subset[[yName]], subset$Pred, amountToAddToY)
+  #   rmses = c(rmses, rmse)
+  # }
+
+  cv$PredBuckets = cut(cv$Pred, breaks=10)
+  #plot(Diff~PredBuckets, cv)
 
   return(cv)
 }

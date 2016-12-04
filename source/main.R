@@ -33,7 +33,7 @@ NUM_HILL_CLIMBING_TEAMS = 10
 CONTESTS_TO_PLOT = list(
   #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
   list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
-MAKE_TEAMS = PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+MAKE_TEAMS = T#PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 FILENAME = paste0(NUMBER, '_', NAME)
 STARTING_BALANCE = 25
 
@@ -41,8 +41,8 @@ source('source/_main_common.R')
 
 #================= Functions =================
 
-createTeamPrediction = function(obj, train, test, yName, xNames, amountToAddToY) {
-  prediction = obj$createPrediction(obj$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
+createTeamPrediction = function(obj, train, test, yName, xNames, hyperParams, amountToAddToY) {
+  prediction = obj$createPrediction(obj$createModel(train, yName, xNames, hyperParams, amountToAddToY), test, xNames, amountToAddToY)
   floor = pmax(prediction - test$StDevFP, 0)
   ceil = prediction + test$StDevFP
   return(prediction)
