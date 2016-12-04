@@ -1,4 +1,9 @@
 #todo:
+#-Use rmse, logy (RG_points, NF_FP):
+  #-rf: 0.3303115/42.00708, 5.427849/9.789181/5.56946, $0, 8/8, 9.702848/10.49211/9.877602, 0.9344018
+  #-xgb: 0.521395/0.541843, 8.886824/9.610087/9.004735, $16, 12/4, 9.403513/10.75018/9.756688, 0.9792446
+
+
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
 #-remove 10/26 and add RG Offense Vs Defense Advanced

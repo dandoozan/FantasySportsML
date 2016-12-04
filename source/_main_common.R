@@ -371,6 +371,7 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
   cat('    Creating teams with max covs:', paste0(paste0(names(maxCovs), '='), maxCovs, collapse=', '), '\n')
   #these are arrays to plot later
   myRmses = c()
+  myRmses15 = c()
   nfRmses = c()
   rgRmses = c()
   fdRmses = c()
@@ -410,7 +411,9 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
     test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, yName, date=dateStr)
 
-    myRmse = obj$computeError(test[[yName]], prediction, amountToAddToY)
+    myRmse = obj$computeError(test[[yName]], test[[predictionName]], amountToAddToY)
+    test15 = test[test[[predictionName]] >= 15,]
+    myRmse15 = obj$computeError(test15[[yName]], test15[[predictionName]], amountToAddToY)
     nfRmse = obj$computeError(test[[yName]], test$NF_FP, amountToAddToY)
     rgRmse = obj$computeError(test[[yName]], test$RG_points, amountToAddToY)
     fdRmse = obj$computeError(test[[yName]], test$FPPG, amountToAddToY)
@@ -463,8 +466,10 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
 
     #print results
     cat('allRmse=', round(myRmse, 2), sep='')
-    cat(', rgRmse=', round(rgRmse, 2), sep='')
+    #cat(', rgRmse=', round(rgRmse, 2), sep='')
+    cat(', rmse≥15=', round(myRmse15, 2), sep='')
     cat(', teamRmse=', round(myTeamRmse, 2), sep='')
+    #cat(', minFpOnTeam=', min(myTeamGreedy[[predictionName]]), sep='')
     #cat(', expected=', round(myTeamExpectedFP, 2), sep='')
     #cat(', actual=', round(myTeamActualFP, 2), sep='')
     cat(', score=', round(medianActualFP, 2), sep='')
@@ -479,6 +484,7 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
 
     #add data to arrays to plot
     myRmses = c(myRmses, myRmse)
+    myRmses15 = c(myRmses15, myRmse15)
     fdRmses = c(fdRmses, fdRmse)
     nfRmses = c(nfRmses, nfRmse)
     rgRmses = c(rgRmses, rgRmse)
@@ -499,7 +505,7 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
   cat('\n')
 
   #print mean of rmses
-  cat('Mean RMSE of all players/rg/team: ', mean(myRmses), '/', mean(rgRmses), '/', mean(myTeamRmses), '\n', sep='')
+  cat('Mean RMSE of all players/>15/team: ', mean(myRmses), '/', mean(myRmses15), '/', mean(myTeamRmses), '\n', sep='')
 
   #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
   scoreRatios = myTeamActualFPs/lowestWinningScores
@@ -558,6 +564,7 @@ plotBucketRmses = function(obj, d, yName, predName, amountToAddToY, interval) {
     low = i - interval
     high = i
     subset = d[d[[predName]] > low & d[[predName]] <= high,]
+    #rmse = rmse(subset[[yName]], subset[[predName]])
     rmse = obj$computeError(subset[[yName]], subset[[predName]], amountToAddToY)
     cat(i, ', ', rmse, '\n')
     rmses = c(rmses, rmse)

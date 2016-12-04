@@ -19,8 +19,8 @@ rf = function() {
       return(exp(predict(model, newData)) - amountToAddToY)
     },
     computeError = function(y, yhat, amountToAddToY) {
-      #return(rmse(y, yhat))
-      return(rmse(log(y + amountToAddToY), log(yhat + amountToAddToY)))
+      return(rmse(y, yhat))
+      #return(rmse(log(y + amountToAddToY), log(yhat + amountToAddToY)))
     },
     printModelResults = function(model, hyperParams, d, yName, xNames, amountToAddToY) {
       cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
