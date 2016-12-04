@@ -10,13 +10,13 @@ rf = function() {
     createModel = function(data, yName, xNames, hyperParams, amountToAddToY) {
       set.seed(754)
       return(randomForest(x=data[, xNames],
-                          #y=data[[yName]],
-                          y=log(data[[yName]] + amountToAddToY),
+                          y=data[[yName]],
+                          #y=log(data[[yName]] + amountToAddToY),
                           ntree=hyperParams$ntree))
     },
     createPrediction = function(model, newData, xNames, amountToAddToY) {
-      #return(predict(model, newData))
-      return(exp(predict(model, newData)) - amountToAddToY)
+      return(predict(model, newData))
+      #return(exp(predict(model, newData)) - amountToAddToY)
     },
     computeError = function(y, yhat, amountToAddToY) {
       return(rmse(y, yhat))

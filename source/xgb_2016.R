@@ -54,8 +54,8 @@ xgb = function() {
                        verbose=0))
     },
     createPrediction = function(model, newData, xNames, amountToAddToY) {
-      #return(predict(model, data.matrix(oneHotEncode(newData, xNames))))
-      return(exp(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames)))) - amountToAddToY)
+      return(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames))))
+      #return(exp(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames)))) - amountToAddToY)
     },
     computeError = function(y, yhat, amountToAddToY) {
       return(rmse(y, yhat))
@@ -214,8 +214,8 @@ xgb = function() {
     getDMatrix = function(data, yName, xNames, amountToAddToY) {
       set.seed(634)
       #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
-      #return(xgb.DMatrix(data.matrix(oneHotEncode(data, xNames)), label=data[, yName]))
-      return(xgb.DMatrix(data.matrix(xgbObj$oneHotEncode(data, xNames)), label=log(data[, yName] + amountToAddToY)))
+      return(xgb.DMatrix(data.matrix(xgbObj$oneHotEncode(data, xNames)), label=data[, yName]))
+      #return(xgb.DMatrix(data.matrix(xgbObj$oneHotEncode(data, xNames)), label=log(data[, yName] + amountToAddToY)))
     },
     oneHotEncode = function(d, xNames) {
       dataToUse = if(length(xNames) == 1) convertToDataFrame(d[[xNames]], xNames) else d[, xNames]
