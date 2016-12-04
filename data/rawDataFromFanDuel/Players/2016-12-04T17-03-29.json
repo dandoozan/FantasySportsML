@@ -1,0 +1,5002 @@
+{
+  "_meta": {
+    "_primary_document": "players",
+    "players": {
+      "count": 120
+    }
+  },
+  "fixtures": [
+    {
+      "away_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "704"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "698"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "113925",
+      "sport": "NBA",
+      "start_date": "2016-12-05T00:30:00Z",
+      "status": {
+        "final": false,
+        "label": "PENDING",
+        "started": false
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "700"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "686"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "114063",
+      "sport": "NBA",
+      "start_date": "2016-12-04T23:00:00Z",
+      "status": {
+        "final": false,
+        "label": "PENDING",
+        "started": false
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "697"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "699"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "114495",
+      "sport": "NBA",
+      "start_date": "2016-12-05T00:00:00Z",
+      "status": {
+        "final": false,
+        "label": "PENDING",
+        "started": false
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "689"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": null,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "690"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "114885",
+      "sport": "NBA",
+      "start_date": "2016-12-05T02:30:00Z",
+      "status": {
+        "final": false,
+        "label": "PENDING",
+        "started": false
+      },
+      "weather": null
+    }
+  ],
+  "players": [
+    {
+      "first_name": "Russell",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 58.51500244140625,
+      "id": "17182-9642",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9642.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 0,
+      "known_name": null,
+      "last_name": "Westbrook",
+      "news": {
+        "latest": "2016-12-01T11:41:41Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9642/",
+      "position": "PG",
+      "removed": false,
+      "salary": 12600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Anthony",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 54.58420924136513,
+      "id": "17182-15755",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15755.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 23,
+      "known_name": null,
+      "last_name": "Davis",
+      "news": {
+        "latest": "2016-12-03T02:08:04Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15755/",
+      "position": "PF",
+      "removed": false,
+      "salary": 11900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "DeMarcus",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 48.10000128495066,
+      "id": "17182-12362",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/12362.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 15,
+      "known_name": null,
+      "last_name": "Cousins",
+      "news": {
+        "latest": "2016-12-03T13:28:54Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-12362/",
+      "position": "C",
+      "removed": false,
+      "salary": 10900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Chris",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 41.25714401971726,
+      "id": "17182-9623",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9623.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 3,
+      "known_name": null,
+      "last_name": "Paul",
+      "news": {
+        "latest": "2016-12-03T18:04:24Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9623/",
+      "position": "PG",
+      "removed": false,
+      "salary": 9100,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Blake",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 40.095001220703125,
+      "id": "17182-9560",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9560.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 32,
+      "known_name": null,
+      "last_name": "Griffin",
+      "news": {
+        "latest": "2016-12-02T13:36:27Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9560/",
+      "position": "PF",
+      "removed": false,
+      "salary": 9000,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Paul",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 35.6000010172526,
+      "id": "17182-12341",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/12341.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "back",
+      "injury_status": "gtd",
+      "jersey_number": 13,
+      "known_name": null,
+      "last_name": "George",
+      "news": {
+        "latest": "2016-11-26T02:51:58Z"
+      },
+      "played": 12,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-12341/",
+      "position": "SF",
+      "removed": false,
+      "salary": 8300,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Andre",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 35.5,
+      "id": "17182-15557",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15557.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 0,
+      "known_name": null,
+      "last_name": "Drummond",
+      "news": {
+        "latest": "2016-12-01T04:18:26Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15557/",
+      "position": "C",
+      "removed": false,
+      "salary": 7900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Carmelo",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 35.10526315789474,
+      "id": "17182-9508",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9508.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 7,
+      "known_name": null,
+      "last_name": "Anthony",
+      "news": {
+        "latest": "2016-12-03T14:13:11Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9508/",
+      "position": "SF",
+      "removed": false,
+      "salary": 7800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Kristaps",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 34.489473041735195,
+      "id": "17182-63122",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/63122.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 6,
+      "known_name": null,
+      "last_name": "Porzingis",
+      "news": {
+        "latest": "2016-12-01T14:00:45Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-63122/",
+      "position": "PF",
+      "removed": false,
+      "salary": 7500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Reggie",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 30.98227971716772,
+      "id": "17182-14523",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14523.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 1,
+      "known_name": null,
+      "last_name": "Jackson",
+      "news": {
+        "latest": "2016-12-04T16:24:21Z"
+      },
+      "played": 79,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14523/",
+      "position": "PG",
+      "removed": false,
+      "salary": 7200,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jeff",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 32.78947368421053,
+      "id": "17182-9446",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9446.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 44,
+      "known_name": null,
+      "last_name": "Teague",
+      "news": {
+        "latest": "2016-12-01T15:59:31Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9446/",
+      "position": "PG",
+      "removed": false,
+      "salary": 7200,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Nikola",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 31.710000610351564,
+      "id": "17182-14514",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14514.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 9,
+      "known_name": null,
+      "last_name": "Vucevic",
+      "news": {
+        "latest": "2016-12-02T14:15:33Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14514/",
+      "position": "C",
+      "removed": false,
+      "salary": 7100,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jrue",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 28.950000762939453,
+      "id": "17182-9663",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9663.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 11,
+      "known_name": null,
+      "last_name": "Holiday",
+      "news": {
+        "latest": "2016-11-30T17:35:55Z"
+      },
+      "played": 8,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9663/",
+      "position": "PG",
+      "removed": false,
+      "salary": 7100,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Rudy",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 33.19444444444444,
+      "id": "17182-9577",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9577.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 8,
+      "known_name": null,
+      "last_name": "Gay",
+      "news": {
+        "latest": "2016-11-29T03:26:29Z"
+      },
+      "played": 18,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9577/",
+      "position": "SF",
+      "removed": false,
+      "salary": 7000,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Tyreke",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 31.47199951171875,
+      "id": "17182-9692",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9692.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "knee",
+      "injury_status": "o",
+      "jersey_number": 1,
+      "known_name": null,
+      "last_name": "Evans",
+      "news": {
+        "latest": "2016-12-01T19:05:35Z"
+      },
+      "played": 25,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9692/",
+      "position": "SG",
+      "removed": false,
+      "salary": 6900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "DeAndre",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 30.171427408854168,
+      "id": "17182-9561",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9561.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 6,
+      "known_name": null,
+      "last_name": "Jordan",
+      "news": {
+        "latest": "2016-11-30T11:59:51Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9561/",
+      "position": "C",
+      "removed": false,
+      "salary": 6800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Derrick",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 28.857894094366777,
+      "id": "17182-9475",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9475.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 25,
+      "known_name": null,
+      "last_name": "Rose",
+      "news": {
+        "latest": "2016-12-03T14:23:02Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9475/",
+      "position": "PG",
+      "removed": false,
+      "salary": 6600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Victor",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 27.845001220703125,
+      "id": "17182-15684",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15684.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 5,
+      "known_name": null,
+      "last_name": "Oladipo",
+      "news": {
+        "latest": "2016-12-01T12:52:46Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15684/",
+      "position": "SG",
+      "removed": false,
+      "salary": 6400,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Myles",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 30.72222222222222,
+      "id": "17182-58253",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/58253.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 33,
+      "known_name": null,
+      "last_name": "Turner",
+      "news": {
+        "latest": "2016-12-01T20:48:58Z"
+      },
+      "played": 18,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-58253/",
+      "position": "C",
+      "removed": false,
+      "salary": 6400,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Serge",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 26.554998779296874,
+      "id": "17182-9957",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9957.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 7,
+      "known_name": null,
+      "last_name": "Ibaka",
+      "news": {
+        "latest": "2016-11-30T18:01:52Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9957/",
+      "position": "PF",
+      "removed": false,
+      "salary": 6200,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Evan",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 26.410000610351563,
+      "id": "17182-23096",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23096.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 10,
+      "known_name": null,
+      "last_name": "Fournier",
+      "news": {
+        "latest": "2016-12-02T14:10:08Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23096/",
+      "position": "SG",
+      "removed": false,
+      "salary": 5900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Tobias",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 26.852382114955358,
+      "id": "17182-14518",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14518.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 34,
+      "known_name": null,
+      "last_name": "Harris",
+      "news": {
+        "latest": "2016-12-01T15:37:23Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14518/",
+      "position": "PF",
+      "removed": false,
+      "salary": 5800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Kentavious",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 25.200000581287203,
+      "id": "17182-15636",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15636.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 5,
+      "known_name": null,
+      "last_name": "Caldwell-Pope",
+      "news": {
+        "latest": "2016-12-01T04:22:35Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15636/",
+      "position": "SG",
+      "removed": false,
+      "salary": 5700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Darren",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 23.30909035422585,
+      "id": "17182-9624",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9624.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 7,
+      "known_name": null,
+      "last_name": "Collison",
+      "news": {
+        "latest": "2016-11-24T03:47:36Z"
+      },
+      "played": 11,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9624/",
+      "position": "PG",
+      "removed": false,
+      "salary": 5700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Ish",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 25.347618466331845,
+      "id": "17182-12511",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/12511.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 14,
+      "known_name": null,
+      "last_name": "Smith",
+      "news": {
+        "latest": "2016-12-04T16:41:13Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-12511/",
+      "position": "PG",
+      "removed": false,
+      "salary": 5700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Thaddeus",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 23.37894801089638,
+      "id": "17182-9666",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9666.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 21,
+      "known_name": null,
+      "last_name": "Young",
+      "news": {
+        "latest": "2016-11-24T14:14:09Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9666/",
+      "position": "PF",
+      "removed": false,
+      "salary": 5200,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Elfrid",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 24.54499969482422,
+      "id": "17182-19138",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/19138.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 4,
+      "known_name": null,
+      "last_name": "Payton",
+      "news": {
+        "latest": "2016-12-02T14:51:08Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-19138/",
+      "position": "PG",
+      "removed": false,
+      "salary": 5200,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Enes",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 21.75500030517578,
+      "id": "17182-14516",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14516.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 11,
+      "known_name": null,
+      "last_name": "Kanter",
+      "news": {
+        "latest": "2016-11-29T05:16:13Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14516/",
+      "position": "PF",
+      "removed": false,
+      "salary": 4900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Tim",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 25.964999389648437,
+      "id": "17182-16071",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16071.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 2,
+      "known_name": null,
+      "last_name": "Frazier",
+      "news": {
+        "latest": "2016-11-30T14:45:59Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16071/",
+      "position": "PG",
+      "removed": false,
+      "salary": 4900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Monta",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 21.87368453176398,
+      "id": "17182-9526",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9526.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 11,
+      "known_name": null,
+      "last_name": "Ellis",
+      "news": {
+        "latest": "2016-11-21T15:44:08Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9526/",
+      "position": "SG",
+      "removed": false,
+      "salary": 4800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Terrence",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 22.136842426500824,
+      "id": "17182-15757",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15757.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 9,
+      "known_name": null,
+      "last_name": "Jones",
+      "news": {
+        "latest": "2016-11-28T15:04:41Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15757/",
+      "position": "PF",
+      "removed": false,
+      "salary": 4800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Marcus",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 23.276189894903276,
+      "id": "17182-14512",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14512.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 13,
+      "known_name": null,
+      "last_name": "Morris",
+      "news": {
+        "latest": "2016-12-01T15:43:17Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14512/",
+      "position": "SF",
+      "removed": false,
+      "salary": 4800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Steven",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 23.535000610351563,
+      "id": "17182-23169",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23169.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 12,
+      "known_name": null,
+      "last_name": "Adams",
+      "news": {
+        "latest": "2016-11-27T19:45:44Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23169/",
+      "position": "C",
+      "removed": false,
+      "salary": 4700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Glenn",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.664706061868106,
+      "id": "17182-23800",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23800.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 40,
+      "known_name": null,
+      "last_name": "Robinson III",
+      "news": {
+        "latest": "2016-11-28T04:02:45Z"
+      },
+      "played": 17,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23800/",
+      "position": "SF",
+      "removed": false,
+      "salary": 4700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "C.J.",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 20.24615478515625,
+      "id": "17182-9725",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9725.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "knee",
+      "injury_status": "gtd",
+      "jersey_number": 0,
+      "known_name": null,
+      "last_name": "Miles",
+      "news": {
+        "latest": "2016-11-30T16:55:43Z"
+      },
+      "played": 13,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9725/",
+      "position": "SF",
+      "removed": false,
+      "salary": 4700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jon",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 21.80952380952381,
+      "id": "17182-14539",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14539.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 30,
+      "known_name": null,
+      "last_name": "Leuer",
+      "news": {
+        "latest": "2016-11-26T14:49:29Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14539/",
+      "position": "PF",
+      "removed": false,
+      "salary": 4600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "J.J.",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 19.73999938964844,
+      "id": "17182-9655",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9655.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 4,
+      "known_name": null,
+      "last_name": "Redick",
+      "news": {
+        "latest": "2016-12-02T23:42:30Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9655/",
+      "position": "SG",
+      "removed": false,
+      "salary": 4400,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Joakim",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 20.713334147135416,
+      "id": "17182-9483",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9483.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "ankle",
+      "injury_status": "gtd",
+      "jersey_number": 13,
+      "known_name": null,
+      "last_name": "Noah",
+      "news": {
+        "latest": "2016-12-02T22:53:55Z"
+      },
+      "played": 15,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9483/",
+      "position": "C",
+      "removed": false,
+      "salary": 4300,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Bismack",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 18.38420988384046,
+      "id": "17182-14505",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14505.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 11,
+      "known_name": null,
+      "last_name": "Biyombo",
+      "news": {
+        "latest": "2016-12-02T14:59:33Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14505/",
+      "position": "C",
+      "removed": false,
+      "salary": 4300,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Matt",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 18.48421116879112,
+      "id": "17182-9657",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9657.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 22,
+      "known_name": null,
+      "last_name": "Barnes",
+      "news": {
+        "latest": "2016-12-03T13:24:54Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9657/",
+      "position": "SF",
+      "removed": false,
+      "salary": 4200,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "E'Twaun",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 19.51578883120888,
+      "id": "17182-14554",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14554.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 55,
+      "known_name": null,
+      "last_name": "Moore",
+      "news": {
+        "latest": "2016-11-30T19:09:16Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14554/",
+      "position": "SG",
+      "removed": false,
+      "salary": 4200,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Aaron",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 19.5,
+      "id": "17182-41594",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/41594.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 0,
+      "known_name": null,
+      "last_name": "Gordon",
+      "news": {
+        "latest": "2016-12-03T13:12:30Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-41594/",
+      "position": "SF",
+      "removed": false,
+      "salary": 4100,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Justin",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.9947365208676,
+      "id": "17182-16604",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16604.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 8,
+      "known_name": null,
+      "last_name": "Holiday",
+      "news": {
+        "latest": "2016-12-03T00:28:39Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16604/",
+      "position": "SG",
+      "removed": false,
+      "salary": 4100,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Ty",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 19.11052663702714,
+      "id": "17182-9964",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9964.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 10,
+      "known_name": null,
+      "last_name": "Lawson",
+      "news": {
+        "latest": "2016-11-29T03:34:09Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9964/",
+      "position": "PG",
+      "removed": false,
+      "salary": 4100,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Brandon",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 18.173683568050986,
+      "id": "17182-9593",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9593.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 3,
+      "known_name": null,
+      "last_name": "Jennings",
+      "news": {
+        "latest": "2016-12-01T14:25:40Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9593/",
+      "position": "PG",
+      "removed": false,
+      "salary": 4000,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Andre",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 18.285000610351563,
+      "id": "17182-15548",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15548.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 21,
+      "known_name": null,
+      "last_name": "Roberson",
+      "news": {
+        "latest": "2016-11-14T18:34:55Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15548/",
+      "position": "SF",
+      "removed": false,
+      "salary": 4000,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Rodney",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.61111111111111,
+      "id": "17182-9514",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9514.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 2,
+      "known_name": null,
+      "last_name": "Stuckey",
+      "news": {
+        "latest": "2016-11-20T22:58:56Z"
+      },
+      "played": 9,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9514/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Courtney",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 17.205556233723957,
+      "id": "17182-9615",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9615.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "ankle",
+      "injury_status": "gtd",
+      "jersey_number": 5,
+      "known_name": null,
+      "last_name": "Lee",
+      "news": {
+        "latest": "2016-12-03T20:13:50Z"
+      },
+      "played": 18,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9615/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Kyle",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.784210205078125,
+      "id": "17182-17384",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/17384.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 9,
+      "known_name": null,
+      "last_name": "O'Quinn",
+      "news": {
+        "latest": "2016-12-03T14:17:12Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-17384/",
+      "position": "C",
+      "removed": false,
+      "salary": 3900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "D.J.",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 14.464999389648437,
+      "id": "17182-9466",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9466.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 14,
+      "known_name": null,
+      "last_name": "Augustin",
+      "news": {
+        "latest": "2016-12-02T15:08:41Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9466/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3900,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Al",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 14.300000642475329,
+      "id": "17182-9609",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9609.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 7,
+      "known_name": null,
+      "last_name": "Jefferson",
+      "news": {
+        "latest": "2016-12-01T16:54:57Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9609/",
+      "position": "C",
+      "removed": false,
+      "salary": 3800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jamal",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 17.185713995070685,
+      "id": "17182-9448",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9448.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 11,
+      "known_name": null,
+      "last_name": "Crawford",
+      "news": {
+        "latest": "2016-11-15T20:38:57Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9448/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3800,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Kevin",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 9.9636362249201,
+      "id": "17182-12335",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/12335.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "knee",
+      "injury_status": "gtd",
+      "jersey_number": 1,
+      "known_name": null,
+      "last_name": "Seraphin",
+      "news": {
+        "latest": "2016-11-26T02:58:58Z"
+      },
+      "played": 11,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-12335/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Solomon",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 14.625,
+      "id": "17182-15417",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15417.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 44,
+      "known_name": null,
+      "last_name": "Hill",
+      "news": {
+        "latest": "2016-11-28T15:45:10Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15417/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Luc Richard",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.476190476190476,
+      "id": "17182-9796",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9796.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 12,
+      "known_name": null,
+      "last_name": "Mbah a Moute",
+      "news": {
+        "latest": "2016-11-13T13:00:40Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9796/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jordan",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 15.050000190734863,
+      "id": "17182-9565",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9565.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 20,
+      "known_name": null,
+      "last_name": "Farmar",
+      "news": {
+        "latest": "2016-11-07T19:21:16Z"
+      },
+      "played": 2,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9565/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jeff",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 14.821052952816611,
+      "id": "17182-9648",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9648.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 34,
+      "known_name": null,
+      "last_name": "Green",
+      "news": {
+        "latest": "2016-12-02T14:54:26Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9648/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3700,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "C.J.",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 6.217646879308364,
+      "id": "17182-9525",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9525.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 32,
+      "known_name": null,
+      "last_name": "Watson",
+      "news": {
+        "latest": "2016-11-28T18:40:27Z"
+      },
+      "played": 17,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9525/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Anthony",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 7.849999745686849,
+      "id": "17182-16188",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16188.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 21,
+      "known_name": null,
+      "last_name": "Brown",
+      "news": {
+        "latest": "2016-11-20T18:40:51Z"
+      },
+      "played": 6,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16188/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Aaron",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.243749618530273,
+      "id": "17182-9534",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9534.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 0,
+      "known_name": null,
+      "last_name": "Brooks",
+      "news": {
+        "latest": "2016-12-01T20:52:28Z"
+      },
+      "played": 16,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9534/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Omer",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.875,
+      "id": "17182-12423",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/12423.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 3,
+      "known_name": null,
+      "last_name": "Asik",
+      "news": {
+        "latest": "2016-11-30T17:51:21Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-12423/",
+      "position": "C",
+      "removed": false,
+      "salary": 3600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Marreese",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 16.33809552873884,
+      "id": "17182-9671",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9671.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 5,
+      "known_name": null,
+      "last_name": "Speights",
+      "news": {
+        "latest": "2016-11-06T17:09:48Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9671/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Domantas",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.675,
+      "id": "17182-59358",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/59358.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 3,
+      "known_name": null,
+      "last_name": "Sabonis",
+      "news": {
+        "latest": "2016-12-01T21:28:28Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-59358/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Austin",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.74761962890625,
+      "id": "17182-15592",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15592.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 25,
+      "known_name": null,
+      "last_name": "Rivers",
+      "news": {
+        "latest": "2016-10-30T23:44:24Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15592/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3600,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Kosta",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.710526315789474,
+      "id": "17182-9731",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9731.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 41,
+      "known_name": null,
+      "last_name": "Koufos",
+      "news": {
+        "latest": "2016-11-27T23:17:52Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9731/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "\u00c1lex",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 5.96875,
+      "id": "17182-40206",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/40206.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 8,
+      "known_name": null,
+      "last_name": "Abrines",
+      "news": {
+        "latest": "2016-11-27T19:40:42Z"
+      },
+      "played": 16,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-40206/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Willie",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 8.279999796549479,
+      "id": "17182-23823",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23823.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 0,
+      "known_name": null,
+      "last_name": "Cauley-Stein",
+      "news": {
+        "latest": "2016-11-29T20:20:30Z"
+      },
+      "played": 15,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23823/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Archie",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 6.166666666666667,
+      "id": "17182-23824",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23824.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 8,
+      "known_name": null,
+      "last_name": "Goodwin",
+      "news": {
+        "latest": "2016-11-20T17:29:48Z"
+      },
+      "played": 3,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23824/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Joffrey",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.25,
+      "id": "17182-40209",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/40209.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 77,
+      "known_name": null,
+      "last_name": "Lauvergne",
+      "news": {
+        "latest": "2016-11-23T15:51:22Z"
+      },
+      "played": 18,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-40209/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jerami",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 12.663158215974507,
+      "id": "17182-23831",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23831.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 9,
+      "known_name": null,
+      "last_name": "Grant",
+      "news": {
+        "latest": "2016-11-15T04:49:21Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23831/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "C.J.",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 2.012500047683716,
+      "id": "17182-16411",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16411.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 23,
+      "known_name": null,
+      "last_name": "Wilcox",
+      "news": {
+        "latest": "2016-11-28T19:15:41Z"
+      },
+      "played": 8,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16411/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Arron",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.74210558439556,
+      "id": "17182-9507",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9507.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 40,
+      "known_name": null,
+      "last_name": "Afflalo",
+      "news": {
+        "latest": "2016-11-27T23:16:39Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9507/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Cheick",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 1.600000023841858,
+      "id": "17182-66091",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/66091.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 13,
+      "known_name": null,
+      "last_name": "Diallo",
+      "news": {
+        "latest": "2016-12-02T17:40:55Z"
+      },
+      "played": 2,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-66091/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Aron",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 10.647619338262649,
+      "id": "17182-37931",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/37931.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 12,
+      "known_name": null,
+      "last_name": "Baynes",
+      "news": {
+        "latest": "2016-11-16T23:42:31Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-37931/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Anthony",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 7.871428353445871,
+      "id": "17182-9529",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9529.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 2,
+      "known_name": null,
+      "last_name": "Morrow",
+      "news": {
+        "latest": "2016-12-01T13:41:25Z"
+      },
+      "played": 14,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9529/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Wesley",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 8.793332926432292,
+      "id": "17182-12348",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/12348.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 33,
+      "known_name": null,
+      "last_name": "Johnson",
+      "news": {
+        "latest": "2016-11-21T19:23:56Z"
+      },
+      "played": 15,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-12348/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Skal",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 11.600000381469727,
+      "id": "17182-66109",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/66109.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 3,
+      "known_name": null,
+      "last_name": "Labissiere",
+      "news": {
+        "latest": "2016-11-23T18:41:50Z"
+      },
+      "played": 1,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-66109/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Josh",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 5.8,
+      "id": "17182-16191",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16191.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 34,
+      "known_name": null,
+      "last_name": "Huestis",
+      "news": {
+        "latest": "2016-11-05T20:58:51Z"
+      },
+      "played": 5,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16191/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Garrett",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.047368099814967,
+      "id": "17182-11074",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/11074.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 17,
+      "known_name": null,
+      "last_name": "Temple",
+      "news": {
+        "latest": "2016-11-06T14:35:10Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-11074/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Diamond",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 3.5333334604899087,
+      "id": "17182-66117",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/66117.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 0,
+      "known_name": null,
+      "last_name": "Stone",
+      "news": {
+        "latest": "2016-12-02T19:41:25Z"
+      },
+      "played": 3,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-66117/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Rakeem",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 3.366666793823242,
+      "id": "17182-16202",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16202.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 25,
+      "known_name": null,
+      "last_name": "Christmas",
+      "news": {
+        "latest": "2016-11-28T18:24:53Z"
+      },
+      "played": 3,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16202/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Reggie",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 7.125,
+      "id": "17182-15947",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15947.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "lower leg",
+      "injury_status": "o",
+      "jersey_number": 25,
+      "known_name": null,
+      "last_name": "Bullock",
+      "news": {
+        "latest": "2016-12-04T16:49:42Z"
+      },
+      "played": 4,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15947/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Alexis",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 8.299999660915798,
+      "id": "17182-9804",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9804.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 42,
+      "known_name": null,
+      "last_name": "Ajinca",
+      "news": {
+        "latest": "2016-11-28T15:08:09Z"
+      },
+      "played": 9,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9804/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Langston",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 15.6,
+      "id": "17182-17230",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/17230.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 10,
+      "known_name": null,
+      "last_name": "Galloway",
+      "news": {
+        "latest": "2016-11-28T15:13:16Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-17230/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Damjan",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 3.3636363636363638,
+      "id": "17182-55376",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/55376.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 3,
+      "known_name": null,
+      "last_name": "Rudez",
+      "news": {
+        "latest": "2016-11-28T19:17:56Z"
+      },
+      "played": 11,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-55376/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Boban",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 5.266666836208767,
+      "id": "17182-63826",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/63826.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 51,
+      "known_name": null,
+      "last_name": "Marjanovic",
+      "news": {
+        "latest": "2016-11-26T14:23:24Z"
+      },
+      "played": 9,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-63826/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Sasha",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 4.700000127156575,
+      "id": "17182-9567",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9567.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 18,
+      "known_name": null,
+      "last_name": "Vujacic",
+      "news": {
+        "latest": "2016-11-23T18:46:50Z"
+      },
+      "played": 12,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9567/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Brice",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": null,
+      "id": "17182-23654",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23654.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "back",
+      "injury_status": "o",
+      "jersey_number": 10,
+      "known_name": null,
+      "last_name": "Johnson",
+      "news": {
+        "latest": "2016-10-08T17:51:52Z"
+      },
+      "played": null,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23654/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Semaj",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 7.510526155170641,
+      "id": "17182-23148",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23148.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 6,
+      "known_name": null,
+      "last_name": "Christon",
+      "news": {
+        "latest": "2016-11-23T18:04:30Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23148/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Ben",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 9.0,
+      "id": "17182-15727",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15727.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 23,
+      "known_name": null,
+      "last_name": "McLemore",
+      "news": {
+        "latest": "2016-11-29T20:23:20Z"
+      },
+      "played": 15,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15727/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Buddy",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 11.080000305175782,
+      "id": "17182-23665",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23665.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 24,
+      "known_name": null,
+      "last_name": "Hield",
+      "news": {
+        "latest": "2016-11-19T22:53:56Z"
+      },
+      "played": 20,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23665/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Georges",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 2.4692306518554688,
+      "id": "17182-23156",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/23156.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 32,
+      "known_name": null,
+      "last_name": "Niang",
+      "news": {
+        "latest": "2016-11-20T15:19:59Z"
+      },
+      "played": 13,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-23156/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Joe",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 4.657142639160156,
+      "id": "17182-18828",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/18828.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 3,
+      "known_name": null,
+      "last_name": "Young",
+      "news": {
+        "latest": "2016-11-23T16:33:32Z"
+      },
+      "played": 14,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-18828/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Mario",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 6.976922842172476,
+      "id": "17182-63123",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/63123.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 8,
+      "known_name": null,
+      "last_name": "Hezonja",
+      "news": {
+        "latest": "2016-11-14T18:42:13Z"
+      },
+      "played": 13,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-63123/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Henry",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 2.1399999618530274,
+      "id": "17182-66455",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/66455.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 8,
+      "known_name": null,
+      "last_name": "Ellenson",
+      "news": {
+        "latest": "2016-12-04T21:31:20Z"
+      },
+      "played": 5,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-66455/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Guillermo",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 11.787500381469727,
+      "id": "17182-63127",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/63127.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 14,
+      "known_name": null,
+      "last_name": "Hernangomez",
+      "news": {
+        "latest": null
+      },
+      "played": 16,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-63127/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Stephen",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 4.150000095367432,
+      "id": "17182-66966",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/66966.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 33,
+      "known_name": null,
+      "last_name": "Zimmerman Jr.",
+      "news": {
+        "latest": "2016-11-28T19:20:31Z"
+      },
+      "played": 2,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-66966/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Malachi",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 1.5,
+      "id": "17182-66203",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/66203.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 5,
+      "known_name": null,
+      "last_name": "Richardson",
+      "news": {
+        "latest": "2016-11-23T18:38:57Z"
+      },
+      "played": 2,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-66203/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Maurice",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 4.779999923706055,
+      "id": "17182-48799",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/48799.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 2,
+      "known_name": null,
+      "last_name": "Ndour",
+      "news": {
+        "latest": "2016-12-04T16:56:14Z"
+      },
+      "played": 10,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-48799/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Alan",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 4.449999809265137,
+      "id": "17182-21665",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/21665.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 9,
+      "known_name": null,
+      "last_name": "Anderson",
+      "news": {
+        "latest": "2016-10-28T14:01:40Z"
+      },
+      "played": 2,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-21665/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Georgios",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 2.200000047683716,
+      "id": "17182-70821",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/70821.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 13,
+      "known_name": null,
+      "last_name": "Papagiannis",
+      "news": {
+        "latest": "2016-11-23T18:40:13Z"
+      },
+      "played": 1,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-70821/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Mindaugas",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 8.449999809265137,
+      "id": "17182-71345",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/71345.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 91,
+      "known_name": null,
+      "last_name": "Kuzminskas",
+      "news": {
+        "latest": "2016-12-01T14:10:10Z"
+      },
+      "played": 16,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-71345/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Nick",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 1.7799999237060546,
+      "id": "17182-9649",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9649.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 4,
+      "known_name": null,
+      "last_name": "Collison",
+      "news": {
+        "latest": "2016-11-08T18:05:23Z"
+      },
+      "played": 5,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9649/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Brandon",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 6.158333460489909,
+      "id": "17182-9659",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9659.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 30,
+      "known_name": null,
+      "last_name": "Bass",
+      "news": {
+        "latest": "2016-10-28T14:26:59Z"
+      },
+      "played": 12,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9659/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Anthony",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 5.837500095367432,
+      "id": "17182-9920",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9920.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 43,
+      "known_name": null,
+      "last_name": "Tolliver",
+      "news": {
+        "latest": "2016-11-09T19:39:33Z"
+      },
+      "played": 8,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9920/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Kyle",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 4.15,
+      "id": "17182-14532",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14532.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 15,
+      "known_name": null,
+      "last_name": "Singler",
+      "news": {
+        "latest": "2016-11-23T18:49:35Z"
+      },
+      "played": 10,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14532/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "699"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Ron",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 5.849999904632568,
+      "id": "17182-22727",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/22727.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 31,
+      "known_name": null,
+      "last_name": "Baker",
+      "news": {
+        "latest": "2016-11-10T15:25:33Z"
+      },
+      "played": 4,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-22727/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Dante",
+      "fixture": {
+        "_members": [
+          "114495"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.120000203450521,
+      "id": "17182-9940",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9940.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": "knee",
+      "injury_status": "o",
+      "jersey_number": 33,
+      "known_name": null,
+      "last_name": "Cunningham",
+      "news": {
+        "latest": "2016-11-24T23:11:27Z"
+      },
+      "played": 15,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9940/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "697"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Lavoy",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 8.215789794921875,
+      "id": "17182-14549",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/14549.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 5,
+      "known_name": null,
+      "last_name": "Allen",
+      "news": {
+        "latest": "2016-10-13T15:26:47Z"
+      },
+      "played": 19,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-14549/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "689"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Lance",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 7.755555894639757,
+      "id": "17182-16859",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16859.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 42,
+      "known_name": null,
+      "last_name": "Thomas",
+      "news": {
+        "latest": "2016-12-02T23:04:40Z"
+      },
+      "played": 9,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16859/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Darrun",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 6.300000277432528,
+      "id": "17182-16348",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/16348.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 6,
+      "known_name": null,
+      "last_name": "Hilliard",
+      "news": {
+        "latest": "2016-11-26T14:27:52Z"
+      },
+      "played": 11,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-16348/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Beno",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 13.97142828078497,
+      "id": "17182-9693",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9693.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 19,
+      "known_name": null,
+      "last_name": "Udrih",
+      "news": {
+        "latest": "2016-11-26T14:32:40Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9693/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Michael",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 1.3166666825612385,
+      "id": "17182-15585",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15585.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 9,
+      "known_name": null,
+      "last_name": "Gbinije",
+      "news": {
+        "latest": "2016-11-23T19:38:19Z"
+      },
+      "played": 6,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15585/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Marshall",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 7.349999904632568,
+      "id": "17182-15589",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/15589.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 40,
+      "known_name": null,
+      "last_name": "Plumlee",
+      "news": {
+        "latest": "2016-11-17T04:35:48Z"
+      },
+      "played": 2,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-15589/",
+      "position": "C",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "698"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Omri",
+      "fixture": {
+        "_members": [
+          "113925"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 10.769999694824218,
+      "id": "17182-9960",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9960.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 18,
+      "known_name": null,
+      "last_name": "Casspi",
+      "news": {
+        "latest": "2016-11-06T23:09:17Z"
+      },
+      "played": 10,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9960/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "704"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Stanley",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 8.899999830457899,
+      "id": "17182-58350",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/58350.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 7,
+      "known_name": null,
+      "last_name": "Johnson",
+      "news": {
+        "latest": "2016-11-25T22:56:09Z"
+      },
+      "played": 18,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-58350/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "686"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Jodie",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 16.200000762939453,
+      "id": "17182-9968",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9968.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 20,
+      "known_name": null,
+      "last_name": "Meeks",
+      "news": {
+        "latest": "2016-12-04T21:51:54Z"
+      },
+      "played": 1,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9968/",
+      "position": "SG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Paul",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 7.480000305175781,
+      "id": "17182-9459",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9459.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 34,
+      "known_name": null,
+      "last_name": "Pierce",
+      "news": {
+        "latest": "2016-11-30T12:03:55Z"
+      },
+      "played": 5,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9459/",
+      "position": "SF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Arinze",
+      "fixture": {
+        "_members": [
+          "114063"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 1.7333332697550456,
+      "id": "17182-42488",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/42488.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 21,
+      "known_name": null,
+      "last_name": "Onuaku",
+      "news": {
+        "latest": "2016-11-28T19:12:24Z"
+      },
+      "played": 3,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-42488/",
+      "position": "PF",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "700"
+        ],
+        "_ref": "teams.id"
+      }
+    },
+    {
+      "first_name": "Raymond",
+      "fixture": {
+        "_members": [
+          "114885"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "fppg": 10.628571283249627,
+      "id": "17182-9465",
+      "images": {
+        "default": {
+          "height": 200,
+          "url": "https://d17odppiik753x.cloudfront.net/playerimages/nba/9465.png",
+          "width": 200
+        }
+      },
+      "injured": false,
+      "injury_details": null,
+      "injury_status": null,
+      "jersey_number": 2,
+      "known_name": null,
+      "last_name": "Felton",
+      "news": {
+        "latest": "2016-12-03T00:56:03Z"
+      },
+      "played": 21,
+      "player_card_url": "https://www.fanduel.com/mobile/games/17182/players/17182-9465/",
+      "position": "PG",
+      "removed": false,
+      "salary": 3500,
+      "sport_specific": {},
+      "starting_order": null,
+      "team": {
+        "_members": [
+          "690"
+        ],
+        "_ref": "teams.id"
+      }
+    }
+  ],
+  "teams": [
+    {
+      "city": "Detroit",
+      "code": "DET",
+      "colors": [],
+      "full_name": "Detroit Pistons",
+      "id": "686",
+      "name": "Pistons"
+    },
+    {
+      "city": "Indiana",
+      "code": "IND",
+      "colors": [],
+      "full_name": "Indiana Pacers",
+      "id": "689",
+      "name": "Pacers"
+    },
+    {
+      "city": "Los Angeles",
+      "code": "LAC",
+      "colors": [],
+      "full_name": "Los Angeles Clippers",
+      "id": "690",
+      "name": "Clippers"
+    },
+    {
+      "city": "New Orleans",
+      "code": "NO",
+      "colors": [],
+      "full_name": "New Orleans Pelicans",
+      "id": "697",
+      "name": "Pelicans"
+    },
+    {
+      "city": "New York",
+      "code": "NY",
+      "colors": [],
+      "full_name": "New York Knicks",
+      "id": "698",
+      "name": "Knicks"
+    },
+    {
+      "city": "Oklahoma City",
+      "code": "OKC",
+      "colors": [],
+      "full_name": "Oklahoma City Thunder",
+      "id": "699",
+      "name": "Thunder"
+    },
+    {
+      "city": "Orlando",
+      "code": "ORL",
+      "colors": [],
+      "full_name": "Orlando Magic",
+      "id": "700",
+      "name": "Magic"
+    },
+    {
+      "city": "Sacramento",
+      "code": "SAC",
+      "colors": [],
+      "full_name": "Sacramento Kings",
+      "id": "704",
+      "name": "Kings"
+    }
+  ]
+}
