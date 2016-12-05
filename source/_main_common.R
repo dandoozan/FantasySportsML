@@ -71,7 +71,7 @@ F.MINE = c('FP', 'AVG_FP', 'OPP_DVP_FPPG', 'OPP_DVP_RANK', 'TEAM_RG_points', 'TE
 F.PROJECTIONS.FANTASYPOINTS = c('NF_FP', 'RG_ceil', 'RG_floor', 'RG_points', 'RG_ppdk', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points51', 'RG_points58', 'TEAM_RG_points', 'TEAMMATES_RG_points')
 F.PROJECTIONS.STATS = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'RG_minutes')
 F.SALARIES = c('RG_salary20', 'RG_salary15', 'RG_salary19', 'RG_salary28', 'RG_salary43', 'RG_salary50', 'RG_salary58', 'RG_MW_dk_current', 'RG_MW_fa_current', 'RG_MW_y_current', 'RG_MW_dd_current', 'RG_MW_rstr_current', 'RG_MW_fdft_current')
-F.TOEXCLUDE = c(Y_NAME, F.ROTOGURU, F.NBA.TODAY, F.PROJECTIONS.FANTASYPOINTS, 'Name')
+F.TOEXCLUDE = c(Y_NAME, 'FP0', 'FP1', 'FP2', F.ROTOGURU, F.NBA.TODAY, 'Date', 'Name')
 
 # F.ALL = setdiff(c(F.FANDUEL, F.NUMBERFIRE, F.RG.PP, F.RG.ADVANCEDPLAYERSTATS, F.RG.MARKETWATCH, F.RG.OPTIMALLINEUP, F.RG.START, F.RG.DVP,
 #                     F.RG.OVD.BASIC, F.RG.OVD.OPP.BASIC, F.RG.BACK2BACK, F.RG.BACK2BACK.OPP, F.NBA.SEASON.PLAYER.TRADITIONAL,
