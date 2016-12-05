@@ -26,7 +26,7 @@ rf = function() {
       return(list(ntree=100))
     },
     doPlots = function(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename) {
-      if (prodRun || toPlot == 'fi') plotImportances(model, save=prodRun, filename=filename)
+      if (prodRun || toPlot == 'fi') rfObj$plotImportances(model, save=prodRun, filename=filename)
     },
 
     #I do not understand any of this code, I borrowed it from a kaggler

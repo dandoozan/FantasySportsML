@@ -105,7 +105,7 @@ getAllFeatures = function(d, featuresToExclude) {
   return(featuresToUse)
 }
 getFeaturesToUse = function(d) {
-  featuresToUse = c('RG_points', 'NF_FP', 'RG_B2B_Situation')
+  featuresToUse = c('RG_points', 'NF_FP', 'RG_points51', 'RG_B2B_Situation')
   #featuresToUse = c('RG_points', 'NF_FP', 'RG_points51', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points58')
   cat('Number of features to use: ', length(featuresToUse), '/', length(colnames(d)), '\n', sep='')
   return(featuresToUse)
@@ -114,10 +114,12 @@ getFeaturesToUse = function(d) {
 runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
   cat('Running algorithms...\n')
   #run avg
-  cat('---------------AVG---------------\n')
-  teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
-  if (PLOT_ALG == 'avg') {
-    makePlots(NULL, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+  if (PLOT_ALG == '' || PLOT_ALG == 'avg') {
+    cat('---------------AVG---------------\n')
+    teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
+    if (PLOT_ALG == 'avg') {
+      makePlots(NULL, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+    }
   }
 
   #run the specific algos
@@ -721,11 +723,11 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
   amountToAddToY = 3
 
   lm = ALGS[['lm']]
-  lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, lm$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
   rf = ALGS[['rf']]
-  rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, rf$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
   xgb = ALGS[['xgb']]
-  xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, xgb$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
 
   test$Pred = round(createTeamPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg), 2)
   test$lmPred = round(lmPrediction, 2)

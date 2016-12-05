@@ -15,6 +15,13 @@
   #-lm: 8.806513/0.5585873, 8.696876/9.224006/8.799298, Inf, -$4, 7/9, 8.835524/9.575473/10.0197, 0.9381837
   #-rf: 79.60645/54.68033, 7.198116/9.281684/7.459201, Inf, $12, 11/5, 9.037646/9.813199/8.677962, 0.9525361
   #-xgb: 8.493006/8.84734, 8.420464/9.224434/8.552002, Inf, -$8, 6/10, 8.931399/9.738053/9.080101, 0.9281627
+#-Add RG_points51 (RG_points, NF_FP, RG_points51, RG_B2B_Situation)
+  #-avg lm,rf,xgb: Inf, $8, 10/6, 8.859164/9.570095/8.718923, 0.952706
+  #-lm: 8.802173/0.5590222, 8.68019/9.277117/8.793932, Inf, $0, 8/8, 8.831599/9.562031/9.941354, 0.9599604
+  #-rf: 79.69754/54.62847, 6.451548/9.284669/6.571532, Inf, $4, 9/7, 9.011746/9.743199/10.11509, 0.9554723
+  #-xgb: 8.428096/8.818812, 8.40789/9.254731/8.490972, Inf, $8, 10/6, 8.907157/9.658218/9.265066, 0.9672632
+
+
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -41,7 +48,7 @@ NAME = 'retune'
 ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
 
 PLOT_ALG = ''
-PLOT = 'bal' #fi, bal, scores, cv, rmses
+PLOT = 'fi' #fi, bal, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
 PLOT_START_DATE = '2016-11-07'
@@ -51,7 +58,7 @@ NUM_HILL_CLIMBING_TEAMS = 10
 CONTESTS_TO_PLOT = list(
   #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
   list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
-MAKE_TEAMS = T#PROD_RUN || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+MAKE_TEAMS = PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 FILENAME = paste0(NUMBER, '_', NAME)
 STARTING_BALANCE = 25
 
