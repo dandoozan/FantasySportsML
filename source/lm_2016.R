@@ -3,11 +3,13 @@
 lm = function() {
   return(list(
     createModel = function(d, yName, xNames, hyperParams, amountToAddToY) {
+      #d[[yName]] = log(d[[yName]] + amountToAddToY)
       set.seed(754)
       return(stats::lm(formula=getFormula(yName, xNames), data=d))
     },
     createPrediction = function(model, newData, xNames, amountToAddToY) {
       return(predict(model, newData, type='response'))
+      #return(exp(predict(model, newData, type='response')) - amountToAddToY)
     },
     computeError = function(y, yhat, amountToAddToY) {
       return(rmse(y, yhat))
