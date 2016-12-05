@@ -1,11 +1,12 @@
 import _util as util
+import _fanDuelCommon as fd
 
 DATA_DIR = 'data'
 OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = util.getDate(2016, 10, 25)
 ONE_DAY = util.getOneDay()
-END_DATE = util.getDate(2016, 11, 23)# util.getYesterdayAsDate()
+END_DATE = util.getDate(2016, 12, 4)# util.getYesterdayAsDate()
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -502,43 +503,51 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
     '2016-11-22': {
         'anthony brown',
     },
-    'never': {
-        'alec burks', #no games
-        'brandan wright',
-        'brice johnson', #no games
-        'bruno caboclo', #no games
-        'cameron jones',
-        'caris levert', #no games
-        'chasson randle',
-        'chinanu onuaku', #no games
-        'chris johnson',
-        'cory jefferson',
-        'dahntay jones',
-        'damian jones', #no games
-        'damien inglis',
-        'devin harris', #no games
-        'elliot williams',
-        'festus ezeli', #no games
-        'grant jerrett',
-        'greg stiemsma',
-        'henry sims',
+    '2016-11-26': {
         'ian mahinmi',
-        'j.p. tokoto',
-        'joel anthony',
-        'john holland',
-        'jonathan holmes',
-        'josh huestis', #no games
-        'livio jean-charles',
-        'louis amundson',
-        'markel brown',
-        'mike scott', #no games
-        'nerlens noel', #no games
-        'patricio garino',
-        'phil pressey',
+    },
+    '2016-11-28': {
+        'bruno caboclo',
+        'wayne ellington',
+    },
+    '2016-11-30': {
+        'devin harris',
+        'mike scott',
+    },
+    '2016-12-04': {
         'reggie jackson',
+    },
+    'never': {
+        'louis amundson', #historical
+        'joel anthony', #historical
+        'markel brown', #historical
+        'alec burks', #no games
+        'tyreke evans', #no games
+        'festus ezeli', #no games
+        'patricio garino', #not on nba.com
+        'john holland', #no games
+        'jonathan holmes', #not on nba.com
+        'josh huestis', #no games
+        'damien inglis', #historical
+        'livio jean-charles', #not on nba.com
+        'cory jefferson', #historical
+        'grant jerrett', #historical
+        'brice johnson', #no games
+        'chris johnson', #there are 2 chris johnsons, both historical
+        'cameron jones', #not on nba.com
+        'dahntay jones', #historical
+        'damian jones', #no games
+        'caris levert', #not on nba.com
+        'nerlens noel', #no games
+        'chinanu onuaku', #no games
+        'phil pressey', #historical
+        'chasson randle', #not on nba.com, only in 10/25 in fanduel
+        'henry sims', #not on nba.com
         'tiago splitter', #no games
-        'tyreke evans',
-        'wayne ellington', #no games
+        'greg stiemsma', #not on nba.com
+        'j.p. tokoto', #not on nba.com, only in 10/25 in fanduel
+        'elliot williams', #not on nba.com, only in 10/25 in fanduel
+        'brandan wright', #no games
     }
 }
 
@@ -578,6 +587,9 @@ ROTOGRINDER_KNOWN_MISSING = {
 
     #2016-11-23
     'anthony brown',
+
+    #2016-11-25
+    'ryan kelly',
 }
 
 TBX_MISSING_PLAYERS = {}
@@ -610,7 +622,7 @@ def replaceAllOccurrences(obj, oldValue, newValue):
 def findCsvFile(fullPathToDir, dateStr):
     return util.createFullPathFilename(fullPathToDir, util.createCsvFilename(dateStr))
 def findJsonFile(fullPathToDir, dateStr):
-    return util.createFullPathFilename(fullPathToDir, util.createJsonFilename(dateStr))
+    return util.createFullPathFilename(fullPathToDir, util.findLatestDatetimeFileForDate(fullPathToDir, dateStr))
 def findNbaFile(fullPathToDir, dateStr):
     #get previous day's file
     usedDiffFile = False
@@ -739,6 +751,10 @@ def parseRotoGrinderPlayerProjectionsRow(row, dateStr, prefix):
             row['RG_salary' + siteId] = float(dataObj['salary'])
     return row['RG_player_name'].strip().lower(), row
 def parseRotoGrinderAdvancedPlayerStatsRow(row, dateStr, prefix):
+    #check for Name == '&nbsp;', and if so return None
+    if getValue(row, 'PLAYER', prefix) == '&nbsp;':
+        return None, None
+
     #remove percent signs
     removePercentSigns(row, ['EFGPCT', 'TSPCT', 'USGPCT', 'POW_AST', 'POW_BLK', 'POW_PTS', 'POW_REB', 'POW_STL'], prefix)
 
@@ -916,15 +932,16 @@ def loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRow
         rows = loadFileFunction(fullPathFilename, keyRenameMap, prefix, delimiter)
         for row in rows:
             playerName, playerData = parseRowFunction(row, dateStr, prefix)
-            if playerName in data:
-                if handleDuplicates:
-                    util.headsUp('Found duplicate name: ' + playerName)
-                    playerData = handleDuplicates(data[playerName], playerData)
-                    if not playerData:
-                        util.stop('Handle duplicates failed to give back new data')
-                else:
-                    util.stop('Got a duplicate name and no handleDuplicates function, name=' + playerName)
-            data[playerName] = util.filterObj(features, playerData)
+            if playerName != None:
+                if playerName in data:
+                    if handleDuplicates:
+                        util.headsUp('Found duplicate name: ' + playerName)
+                        playerData = handleDuplicates(data[playerName], playerData)
+                        if not playerData:
+                            util.stop('Handle duplicates failed to give back new data')
+                    else:
+                        util.stop('Got a duplicate name and no handleDuplicates function, name=' + playerName)
+                data[playerName] = util.filterObj(features, playerData)
     else:
         util.stop('File not found for date=' + dateStr)
         pass
@@ -936,7 +953,8 @@ def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowF
     currDate = startDate
     while currDate <= endDate:
         currDateStr = util.formatDate(currDate)
-        data[currDateStr] = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
+        if currDateStr not in fd.DATES_WITH_NO_GAMES:
+            data[currDateStr] = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
         currDate = currDate + ONE_DAY
     return data
 
@@ -1639,6 +1657,11 @@ DATA_SOURCES = [
         ],
         'findFileFunction': findJsonFile,
         'fullPathToDir': util.joinDirs(DATA_DIR, 'rawDataFromStatsNba', 'Season', 'PlayerBios', '2016'),
+        'knownMissingObj': {
+            '2016-12-04': {
+                'reggie jackson',
+            },
+        },
         'loadFileFunction': loadNbaJsonFile,
         'parseRowFunction': parseNbaRow,
         'prefix': 'NBA_PB_',

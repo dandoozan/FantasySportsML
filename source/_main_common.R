@@ -105,7 +105,7 @@ getAllFeatures = function(d, featuresToExclude) {
   return(featuresToUse)
 }
 getFeaturesToUse = function(d) {
-  featuresToUse = c('RG_points', 'NF_FP', 'RG_points51', 'RG_B2B_Situation')
+  featuresToUse = c('RG_points', 'NF_FP')
   #featuresToUse = c('RG_points', 'NF_FP', 'RG_points51', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points58')
   cat('Number of features to use: ', length(featuresToUse), '/', length(colnames(d)), '\n', sep='')
   return(featuresToUse)

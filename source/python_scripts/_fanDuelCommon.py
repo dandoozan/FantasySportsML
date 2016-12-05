@@ -11,6 +11,9 @@ CONTEST_TYPES = {
     'tripleUp': 'TRIPLE_UP',
     'tripleDouble': 'TRIPLE_DOUBLE',
 }
+DATES_WITH_NO_GAMES = {
+    '2016-11-24',
+}
 
 #------------ Getters ------------
 def getEntryFee(contest):

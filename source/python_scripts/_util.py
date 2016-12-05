@@ -14,6 +14,13 @@ def getLastFileInDir(fullPathToDir):
         filenames.sort()
         return filenames[-1]
     return None
+def findLatestDatetimeFileForDate(fullPathToDir, dateStr):
+    filenames = getFilesInDir(fullPathToDir)
+    filenames.reverse() #go in reverse direction so that I find the latest contest file when there are multiple for one day
+    for filename in filenames:
+        if parseBaseFilename(filename) == dateStr \
+                or parseDateFromDateTimeFilename(filename) == dateStr:
+            return filename
 def createFullPathFilename(fullPathToParentDir, filename):
     import os
     return os.path.join(fullPathToParentDir, filename)
