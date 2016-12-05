@@ -33,6 +33,9 @@ filterData = function(d, startDate, endDate) {
   #remove players who are not in RG and NF
   d = d[!is.na(d$RG_points) & !is.na(d$NF_FP),]
 
+  #remove 3in4, 3in4-B2B, 4in5-B2B
+  #d = d[d$RG_B2B_Situation != '3in4-B2B' & d$RG_B2B_Situation != '4in5-B2B',]
+
   return(d)
 }
 

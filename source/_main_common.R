@@ -88,6 +88,9 @@ F.BORUTA.CONFIRMED = c('FPPG', 'GamesPlayed', 'Salary', 'Team', 'NF_Min', 'NF_Pt
 F.BORUTA.TENTATIVE = c('Date', 'Position', 'RG_saldiff', 'RG_MW_fd_change', 'RG_OVD_AST', 'RG_OVD_OPP_AST', 'RG_OVD_OPP_FGM', 'NBA_S_P_TRAD_BLKA', 'NBA_S_P_TRAD_DD2', 'NBA_PB_DRAFT_ROUND', 'NBA_S_T_TRAD_GP', 'NBA_S_T_TRAD_L', 'NBA_S_T_TRAD_W_PCT', 'NBA_S_T_TRAD_MIN', 'NBA_S_T_TRAD_FGA', 'NBA_S_T_TRAD_FT_PCT', 'NBA_S_T_TRAD_OREB', 'NBA_S_T_TRAD_DREB', 'NBA_S_T_TRAD_REB', 'NBA_S_T_TRAD_BLK', 'NBA_S_T_TRAD_BLKA', 'NBA_S_T_TRAD_PFD', 'NBA_S_OPPT_TRAD_GP', 'NBA_S_OPPT_TRAD_AST', 'NBA_S_OPPT_TRAD_STL')
 F.BORUTA.REJECTED = c('Home', 'Opponent', 'InjuryIndicator', 'InjuryDetails', 'RG_movement', 'RG_rankdiff', 'RG_rank_diff20', 'RG_START_Status', 'RG_MW_dk_change', 'RG_MW_fa_change', 'RG_MW_y_change', 'RG_MW_rstr_change', 'RG_MW_fdft_change', 'RG_OL_OnTeam', 'RG_OPP_DVP_CFPPG', 'RG_OPP_DVP_CRK', 'RG_OPP_DVP_PFFPPG', 'RG_OPP_DVP_PFRK', 'RG_OPP_DVP_PGFPPG', 'RG_OPP_DVP_PGRK', 'RG_OPP_DVP_SFFPPG', 'RG_OPP_DVP_SFRK', 'RG_OPP_DVP_SGFPPG', 'RG_OPP_DVP_SGRK', 'RG_OVD_STL', 'RG_OVD_FGM', 'RG_OVD_TO', 'RG_OVD_3PM', 'RG_OVD_BLK', 'RG_OVD_FGPCT', 'RG_OVD_REB', 'RG_OVD_PTS', 'RG_OVD_FGA', 'RG_OVD_OPP_STL', 'RG_OVD_OPP_TO', 'RG_OVD_OPP_3PM', 'RG_OVD_OPP_BLK', 'RG_OVD_OPP_FGPCT', 'RG_OVD_OPP_REB', 'RG_OVD_OPP_PTS', 'RG_OVD_OPP_FGA', 'RG_B2B_Situation', 'RG_B2B_OPP_Situation', 'NBA_S_P_TRAD_TD3', 'NBA_PB_COUNTRY', 'NBA_S_T_TRAD_W', 'NBA_S_OPPT_TRAD_W', 'NBA_S_OPPT_TRAD_L', 'NBA_S_OPPT_TRAD_W_PCT', 'NBA_S_OPPT_TRAD_MIN', 'NBA_S_OPPT_TRAD_FGA', 'NBA_S_OPPT_TRAD_FG_PCT', 'NBA_S_OPPT_TRAD_FG3M', 'NBA_S_OPPT_TRAD_FG3A', 'NBA_S_OPPT_TRAD_FG3_PCT', 'NBA_S_OPPT_TRAD_FTM', 'NBA_S_OPPT_TRAD_FTA', 'NBA_S_OPPT_TRAD_FT_PCT', 'NBA_S_OPPT_TRAD_OREB', 'NBA_S_OPPT_TRAD_DREB', 'NBA_S_OPPT_TRAD_REB', 'NBA_S_OPPT_TRAD_TOV', 'NBA_S_OPPT_TRAD_BLK', 'NBA_S_OPPT_TRAD_BLKA', 'NBA_S_OPPT_TRAD_PF', 'NBA_S_OPPT_TRAD_PFD', 'NBA_S_OPPT_TRAD_PTS', 'NBA_S_OPPT_TRAD_PLUS_MINUS', 'InNumberFire', 'OPP_DVP_FPPG', 'OPP_DVP_RANK')
 
+computeError = function(y, yhat, amountToAddToY) {
+  return(rmse(y, yhat))
+}
 setup = function(startDate, endDate, prodRun, filename) {
   if (prodRun) cat('PROD RUN: ', filename, '\n', sep='')
 
@@ -102,7 +105,7 @@ getAllFeatures = function(d, featuresToExclude) {
   return(featuresToUse)
 }
 getFeaturesToUse = function(d) {
-  featuresToUse = c('RG_points', 'NF_FP')
+  featuresToUse = c('RG_points', 'NF_FP', 'RG_B2B_Situation')
   #featuresToUse = c('RG_points', 'NF_FP', 'RG_points51', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points58')
   cat('Number of features to use: ', length(featuresToUse), '/', length(colnames(d)), '\n', sep='')
   return(featuresToUse)
@@ -110,14 +113,26 @@ getFeaturesToUse = function(d) {
 
 runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
   cat('Running algorithms...\n')
+  #run avg
+  cat('---------------AVG---------------\n')
+  teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
+  if (PLOT_ALG == 'avg') {
+    makePlots(NULL, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+  }
+
+  #run the specific algos
   for (algName in names(algs)) {
-    cat('---------------', toupper(algName), '---------------\n')
-    obj = algs[[algName]]
-    hyperParams = obj$findBestHyperParams(d, Y_NAME, featuresToUse, amountToAddToY)
-    baseModel = createBaseModel(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
-    printErrors(obj, baseModel, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
-    teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN) else list()
-    #makePlots(obj, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+    if (PLOT_ALG == '' || PLOT_ALG == algName) {
+      cat('---------------', toupper(algName), '---------------\n')
+      obj = algs[[algName]]
+      hyperParams = obj$findBestHyperParams(d, Y_NAME, featuresToUse, amountToAddToY)
+      baseModel = createBaseModel(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
+      printErrors(obj, baseModel, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
+      teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
+      if (PLOT_ALG == algName) {
+        makePlots(obj, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
+      }
+    }
   }
 }
 
@@ -139,19 +154,19 @@ printErrors = function(obj, model, data, yName, xNames, hyperParams, amountToAdd
   cv = split$cv
 
   trnModel = obj$createModel(trn, yName, xNames, hyperParams, amountToAddToY)
-  trnError = obj$computeError(trn[[yName]], obj$createPrediction(trnModel, trn, xNames, amountToAddToY), amountToAddToY)
+  trnError = computeError(trn[[yName]], obj$createPrediction(trnModel, trn, xNames, amountToAddToY), amountToAddToY)
   cvPrediction = obj$createPrediction(trnModel, cv, xNames, amountToAddToY)
-  cvError = obj$computeError(cv[[yName]], cvPrediction, amountToAddToY)
-  trainError = obj$computeError(data[[yName]], obj$createPrediction(model, data, xNames, amountToAddToY), amountToAddToY)
+  cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
+  trainError = computeError(data[[yName]], obj$createPrediction(model, data, xNames, amountToAddToY), amountToAddToY)
   cat('    Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
 
   #print rg error
   cvWithRGData = cv[cv$InRotoGrinders == 1,]
-  cat('    CV RG/Mine: ', obj$computeError(cvWithRGData[[yName]], cvWithRGData$RG_points, amountToAddToY), '/', obj$computeError(cvWithRGData[[yName]], cvPrediction[which(cv$InRotoGrinders == 1)], amountToAddToY), '\n', sep='')
+  cat('    CV RG/Mine: ', computeError(cvWithRGData[[yName]], cvWithRGData$RG_points, amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvPrediction[which(cv$InRotoGrinders == 1)], amountToAddToY), '\n', sep='')
 
   #print nf error
   cvWithNFData = cv[cv$InNumberFire == 1,]
-  cat('    CV NF/Mine: ', obj$computeError(cvWithNFData[[yName]], cvWithNFData$NF_FP, amountToAddToY), '/', obj$computeError(cvWithNFData[[yName]], cvPrediction[which(cv$InNumberFire == 1)], amountToAddToY), '\n', sep='')
+  cat('    CV NF/Mine: ', computeError(cvWithNFData[[yName]], cvWithNFData$NF_FP, amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvPrediction[which(cv$InNumberFire == 1)], amountToAddToY), '\n', sep='')
 }
 
 findFirstIndexOfDate = function(data, date) {
@@ -353,17 +368,17 @@ plotRmseByFP = function(d, prediction, yName, dateStr='') {
   for (i in seq(0, max(d[[yName]]), interval)) {
     rows = which(d[[yName]] >= i)# which((d[[yName]] >= i) & (d[[yName]] < (i + interval)))
     #cat('num rows at i=', i, ': ', length(rows), '\n')
-    rmses = c(rmses, obj$computeError(d[[yName]][rows], prediction[rows], amountToAddToY))
+    rmses = c(rmses, computeError(d[[yName]][rows], prediction[rows], amountToAddToY))
 
     rgRows = intersect(rows, which(d$InRotoGrinders==1))
-    rgRmses = c(rgRmses, obj$computeError(d[[yName]][rgRows], d$RG_points[rgRows], amountToAddToY))
+    rgRmses = c(rgRmses, computeError(d[[yName]][rgRows], d$RG_points[rgRows], amountToAddToY))
   }
   #cat('Max FP=', max(d[[yName]]), ', ', '\n')
   plot(rmses, xlab='Fantasy Points', main=dateStr)
   points(rgRmses, col='orange')
 }
 
-makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun) {
+makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
   contestData = getContestData()
@@ -407,16 +422,16 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
     train = trainTest$train
     test = trainTest$test
 
-    prediction = createTeamPrediction(obj, train, test, yName, xNames, hyperParams, amountToAddToY)
+    prediction = createTeamPrediction(obj, train, test, yName, xNames, hyperParams, amountToAddToY, useAvg)
     test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, yName, date=dateStr)
 
-    myRmse = obj$computeError(test[[yName]], test[[predictionName]], amountToAddToY)
+    myRmse = computeError(test[[yName]], test[[predictionName]], amountToAddToY)
     test15 = test[test[[predictionName]] >= 15,]
-    myRmse15 = obj$computeError(test15[[yName]], test15[[predictionName]], amountToAddToY)
-    nfRmse = obj$computeError(test[[yName]], test$NF_FP, amountToAddToY)
-    rgRmse = obj$computeError(test[[yName]], test$RG_points, amountToAddToY)
-    fdRmse = obj$computeError(test[[yName]], test$FPPG, amountToAddToY)
+    myRmse15 = computeError(test15[[yName]], test15[[predictionName]], amountToAddToY)
+    nfRmse = computeError(test[[yName]], test$NF_FP, amountToAddToY)
+    rgRmse = computeError(test[[yName]], test$RG_points, amountToAddToY)
+    fdRmse = computeError(test[[yName]], test$FPPG, amountToAddToY)
 
     #create my teams for today
     myTeamGreedy = createTeam_Greedy(test, predictionName, maxCovs=maxCovs)
@@ -430,7 +445,7 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
     myTeamUsingRGPoints = createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs)
     foundMyTeamUsingRGPoints = if (is.null(myTeamUsingRGPoints)) FALSE else TRUE
     myTeamUsingRGPointsActualFP = if(foundMyTeamUsingRGPoints) computeTeamFP(myTeamUsingRGPoints, yName) else NA
-    myTeamRmse = if (foundTeam) obj$computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]], amountToAddToY) else NA
+    myTeamRmse = if (foundTeam) computeError(myTeamGreedy[[yName]], myTeamGreedy[[predictionName]], amountToAddToY) else NA
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
     #   for (i in 1:numHillClimbingTeams) {
@@ -542,8 +557,9 @@ makePlots = function(obj, toPlot, data, yName, xNames, model, amountToAddToY, fi
     #if (prodRun || toPlot == 'rmse_scoreratios') plotByDate2Axis(teamStats$dateStrs, teamStats$myRmses, ylab='RMSE', ylim=c(5, 12), y2=teamStats$scoreRatios, y2lim=c(0, 1.5), y2lab='Score Ratio', main='RMSEs and Score Ratios', save=prodRun, name='RMSE_ScoreRatios', filename=filename)
     #if (prodRun || toPlot == 'rmses') plotLinesByDate(teamStats$dateStrs, list(teamStats$myRmses, teamStats$fdRmses, teamStats$nfRmses, teamStats$rgRmses), ylab='RMSEs', labels=c('Me', 'FanDuel', 'NumberFire', 'RotoGrinder'), main='My Prediction Vs Other Sites', save=prodRun, name='RMSEs', filename=filename)
   }
-
-  obj$doPlots(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename)
+  if (!is.null(obj)) {
+    obj$doPlots(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename)
+  }
 }
 
 computeAmountToAddToY = function(d, yName) {
@@ -565,7 +581,7 @@ plotBucketRmses = function(obj, d, yName, predName, amountToAddToY, interval) {
     high = i
     subset = d[d[[predName]] > low & d[[predName]] <= high,]
     #rmse = rmse(subset[[yName]], subset[[predName]])
-    rmse = obj$computeError(subset[[yName]], subset[[predName]], amountToAddToY)
+    rmse = computeError(subset[[yName]], subset[[predName]], amountToAddToY)
     cat(i, ', ', rmse, '\n')
     rmses = c(rmses, rmse)
   }
@@ -590,10 +606,10 @@ getCvPrediction = function(obj, d, yName) {
   cv = split$cv
 
   trnModel = obj$createModel(trn, yName, featuresToUse, hyperParams, amountToAddToY)
-  trnError = obj$computeError(trn[[yName]], obj$createPrediction(trnModel, trn, featuresToUse, amountToAddToY), amountToAddToY)
+  trnError = computeError(trn[[yName]], obj$createPrediction(trnModel, trn, featuresToUse, amountToAddToY), amountToAddToY)
   cvPrediction = obj$createPrediction(trnModel, cv, featuresToUse, amountToAddToY)
-  cvError = obj$computeError(cv[[yName]], cvPrediction, amountToAddToY)
-  #trainError = obj$computeError(d[[yName]], obj$createPrediction(model, data, featuresToUse, amountToAddToY), amountToAddToY)
+  cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
+  #trainError = computeError(d[[yName]], obj$createPrediction(model, data, featuresToUse, amountToAddToY), amountToAddToY)
 
   cv$Pred = cvPrediction
   cv$Diff = abs(cv[[yName]] - cv$Pred)
@@ -603,7 +619,7 @@ getCvPrediction = function(obj, d, yName) {
   # intervals = seq(interval, nrow(cv), interval)
   # for (i in intervals) {
   #   subset = cv[cv$Pred > low & cv$Pred <= high,]
-  #   rmse = obj$computeError(subset[[yName]], subset$Pred, amountToAddToY)
+  #   rmse = computeError(subset[[yName]], subset$Pred, amountToAddToY)
   #   rmses = c(rmses, rmse)
   # }
 
@@ -628,7 +644,7 @@ getDataPrediction = function(d, yName) {
   #plot(PctDiff~RG_B2B_Situation, d[d$Pred > 15,])
 }
 
-getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
+getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf) {
   maxCovs = list(C=maxCov, SF=maxCov, SG=maxCov, PF=maxCov, PG=maxCov)
   #Dates investigated:
     #-11/22:
@@ -650,10 +666,14 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
       #-Brandon Knight (25.36 -> 11.7 (-53.86)):
         #-b2b: could be 3-in-4, or multiple away games in a row, or flight from east to west coast, something along those lines
         #-cov: is high (0.41)
+        #-powpct: was only 1%
       #-Josh Richardson (24.36 -> 11.9 (-51.15)):
         #-away game?: it was the 2nd away game in a row
         #-injury?: he had an injury at the start of the season so missed the first 4 games
         #-cov: is somewhat high (0.34)
+      #-Andrew Wiggins (31.28 -> 18.3 (-41.5))
+        #-cov: is high at 0.40
+        #-min: he did play a lot of minutes (more than expected) at 39
     #-11/19
       #-Markieff Morris (26.42 -> 6.0 (-77.29))
         #-Injury: he got injured in the second quarter, so didnt play after that
@@ -693,13 +713,26 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
 
 
 
-  featuresToUse = getFeaturesToUse(d)
+  xNames = getFeaturesToUse(d)
 
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test
 
-  test$Pred = round(createTeamPrediction(obj, train, test, yName, featuresToUse, amountToAddToY), 2)
+  amountToAddToY = 3
+  hyperParams = obj$findBestHyperParams(train, yName, xNames, amountToAddToY)
+
+  lm = ALGS[['lm']]
+  lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, lm$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  rf = ALGS[['rf']]
+  rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, rf$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  xgb = ALGS[['xgb']]
+  xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, xgb$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+
+  test$Pred = round(createTeamPrediction(obj, train, test, yName, xNames, hyperParams, amountToAddToY), 2)
+  test$lmPred = round(lmPrediction, 2)
+  test$rfPred = round(rfPrediction, 2)
+  test$xgbPred = round(xgbPrediction, 2)
   test$Diff = test[[yName]] - test$Pred
   test$PctDiff = round(test$Diff / test$Pred * 100, 2)
 
@@ -713,13 +746,13 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
     name = team[i, 'Name']
     trainFPs = train[train$Name == name, yName]
     if (length(trainFPs) > 0) {
-      team[i, 'minFP'] = min(trainFPs)
-      team[i, 'meanFP'] = round(mean(trainFPs), 2)
-      team[i, 'stDev'] = round(psd(trainFPs), 2)
-      team[i, 'avgMins'] = mean(train[train$Name == name, 'NBA_TODAY_MIN'])
+      #team[i, 'minFP'] = min(trainFPs)
+      #team[i, 'meanFP'] = round(mean(trainFPs), 2)
+      #team[i, 'stDev'] = round(psd(trainFPs), 2)
+      team[i, 'avgMins'] = round(mean(train[train$Name == name, 'NBA_TODAY_MIN']), 2)
     }
   }
-  team$myCov = round(team$stDev / team$meanFP, 2)
+  #team$myCov = round(team$stDev / team$meanFP, 2)
 
   #rename some cols
   team$pos = team$Position
@@ -737,6 +770,8 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
   team$ppdk = round(team$PPD, 2)
   team$b2b = team$RG_B2B_Situation
   team$gp = team$NBA_S_P_TRAD_GP
+  team$pownp = team$RG_pownpct
+
   team$MeanFP = round(team$MeanFP, 2)
   team$StDevFP = round(team$StDevFP, 2)
   team$COV = round(team$COV, 2)
@@ -744,5 +779,5 @@ getTeamForDate = function(d, dateStr, yName, rg=F, maxCov=Inf) {
   return(team[order(team$PctDiff),])
 
   #print
-  #t[, c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'rgPred', 'nfPred', 'meanFP', 'MeanFP', 'minFP', 'MinFP', 'stDev', 'StDevFP', 'myCov', 'COV', 'ovrundr', 'line', 'total', 'rgMins', 'nfMins', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'gp', 'b2b', 'RG_START_Order')]
+  #t[, c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'lmPred', 'rfPred', 'xgbPred', 'rgPred', 'nfPred', 'MeanFP', 'MinFP', 'StDevFP', 'COV', 'ovrundr', 'line', 'total', 'rgMins', 'nfMins', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'gp', 'b2b', 'pownp')]
 }

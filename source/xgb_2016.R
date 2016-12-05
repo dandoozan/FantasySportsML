@@ -57,10 +57,6 @@ xgb = function() {
       return(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames))))
       #return(exp(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames)))) - amountToAddToY)
     },
-    computeError = function(y, yhat, amountToAddToY) {
-      return(rmse(y, yhat))
-      #return(rmse(log(y + amountToAddToY), log(yhat + amountToAddToY)))
-    },
 
     createCvModel = function(d, yName, xNames, hyperParams, amountToAddToY) {
       dataAsDMatrix = xgbObj$getDMatrix(d, yName, xNames, amountToAddToY)

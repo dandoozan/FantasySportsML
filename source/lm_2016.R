@@ -11,9 +11,6 @@ lm = function() {
       return(predict(model, newData, type='response'))
       #return(exp(predict(model, newData, type='response')) - amountToAddToY)
     },
-    computeError = function(y, yhat, amountToAddToY) {
-      return(rmse(y, yhat))
-    },
     printModelResults = function(model, hyperParams, d, yName, xNames, amountToAddToY) {
       modelSummary = summary(model)
       cat('    ResidualStErr/Adj-R-Squared: ', modelSummary$sigma, '/', modelSummary$adj.r.squared, '\n', sep='')
