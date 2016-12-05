@@ -96,34 +96,6 @@ imputeMissingValues = function(d) {
   d = fillNAsInCols(d, 'RG_START_Status', 'B')
   d$RG_START_Status = factor(d$RG_START_Status)
 
-  #----------F.RG.OVD.BASIC-----------
-  #RotoGrinder was missing the Offense=LAL/Defense=GSW pairing on 11/25 for some reason, but the two
-  #teams actually played on 11/23, so the OVD stats would be the same (or very close)
-  #so I'll just impute the 11/25 stats with those from 11/23
-  dNov23LAL = d[d$Date == '2016-11-23' & d$Team == 'LAL',]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_AST'] = dNov23LAL$RG_OVD_AST[1] #just take the first one, they're all the same
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_STL'] = dNov23LAL$RG_OVD_STL[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_FGM'] = dNov23LAL$RG_OVD_FGM[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_TO'] = dNov23LAL$RG_OVD_TO[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_3PM'] = dNov23LAL$RG_OVD_3PM[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_BLK'] = dNov23LAL$RG_OVD_BLK[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_FGPCT'] = dNov23LAL$RG_OVD_FGPCT[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_REB'] = dNov23LAL$RG_OVD_REB[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_PTS'] = dNov23LAL$RG_OVD_PTS[1]
-  d[d$Date == '2016-11-25' & d$Team == 'LAL', 'RG_OVD_FGA'] = dNov23LAL$RG_OVD_FGA[1]
-
-  dNov23GS = d[d$Date == '2016-11-23' & d$Team == 'GS',]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_AST'] = dNov23GS$RG_OVD_OPP_AST[1] #just take the first one, they're all the same
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_STL'] = dNov23GS$RG_OVD_OPP_STL[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_FGM'] = dNov23GS$RG_OVD_OPP_FGM[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_TO'] = dNov23GS$RG_OVD_OPP_TO[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_3PM'] = dNov23GS$RG_OVD_OPP_3PM[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_BLK'] = dNov23GS$RG_OVD_OPP_BLK[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_FGPCT'] = dNov23GS$RG_OVD_OPP_FGPCT[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_REB'] = dNov23GS$RG_OVD_OPP_REB[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_PTS'] = dNov23GS$RG_OVD_OPP_PTS[1]
-  d[d$Date == '2016-11-25' & d$Team == 'GS', 'RG_OVD_OPP_FGA'] = dNov23GS$RG_OVD_OPP_FGA[1]
-
   #----------F.NBA.SEASON.PLAYER.[X]-----------
   #Set all NBA col NAs to 0.  These all have the same 754 NA rows
   d = fillNAsInCols(d, F.NBA.SEASON.PLAYER.TRADITIONAL, 0)
