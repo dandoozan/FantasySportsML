@@ -3,6 +3,7 @@
   #-lm: 8.80294/0.5589454, 8.704673/9.173929/8.79985, Inf, -$8, 6/10, 8.830848/9.546116/10.05835, 0.9280507
   #-rf: 87.61809/50.11933, 5.025854/9.693496/5.134203, Inf, $8, 10/6, 9.410472/10.19983/9.351791, 0.9394312
   #-xgb: 8.502619/8.841369, 8.419662/9.240263/8.552652, Inf, $0, 8/8, 8.921783/9.705028/8.938733, 0.941946
+  #-avg: Inf, $0, 8/8, 8.911384/9.724416/8.850527, 0.9430924
 #-Use rmse, logy (RG_points, NF_FP):
   #-lm: 0.5631245/0.4433804, 10.36607/10.85297/10.36518, Inf, -$8, 6/10, 10.40135/12.62814/18.09946, 0.9195618
   #-rf: 0.3303115/42.00708, 5.427849/9.789181/5.56946, Inf, $0, 8/8, 9.702848/10.49211/9.877602, 0.9344018
@@ -52,9 +53,18 @@ source('source/_main_common.R')
 #================= Functions =================
 
 createTeamPrediction = function(obj, train, test, yName, xNames, hyperParams, amountToAddToY) {
-  prediction = obj$createPrediction(obj$createModel(train, yName, xNames, hyperParams, amountToAddToY), test, xNames, amountToAddToY)
-  floor = pmax(prediction - test$StDevFP, 0)
-  ceil = prediction + test$StDevFP
+  #get prediction for each algo
+  lm = ALGS[['lm']]
+  lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, lm$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  rf = ALGS[['rf']]
+  rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, rf$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  xgb = ALGS[['xgb']]
+  xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, xgb$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+  prediction = rowMeans(cbind(lmPrediction, rfPrediction, xgbPrediction))
+
+  # prediction = obj$createPrediction(obj$createModel(train, yName, xNames, hyperParams, amountToAddToY), test, xNames, amountToAddToY)
+  # floor = pmax(prediction - test$StDevFP, 0)
+  # ceil = prediction + test$StDevFP
   return(prediction)
 }
 
