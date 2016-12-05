@@ -7,11 +7,11 @@ library(randomForest) #randomForest
 #============== Functions ===============
 rf = function() {
   return(list(
-    createModel = function(data, yName, xNames, hyperParams, amountToAddToY) {
+    createModel = function(d, yName, xNames, hyperParams, amountToAddToY) {
       set.seed(754)
-      return(randomForest(x=data[, xNames],
-                          y=data[[yName]],
-                          #y=log(data[[yName]] + amountToAddToY),
+      return(randomForest(x=d[, xNames],
+                          y=d[[yName]],
+                          #y=log(d[[yName]] + amountToAddToY),
                           ntree=hyperParams$ntree))
     },
     createPrediction = function(model, newData, xNames, amountToAddToY) {

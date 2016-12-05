@@ -1,5 +1,6 @@
 #todo:
 #-Use rmse, y (RG_points, NF_FP):
+  #-lm: 8.80294/0.5589454, 8.704673/9.173929/8.79985, Inf, -$8, 6/10, 8.830848/9.546116/10.05835, 0.9280507
   #-rf: 87.61809/50.11933, 5.025854/9.693496/5.134203, Inf, $8, 10/6, 9.410472/10.19983/9.351791, 0.9394312
   #-xgb: 8.502619/8.841369, 8.419662/9.240263/8.552652, Inf, $0, 8/8, 8.921783/9.705028/8.938733, 0.941946
 #-Use rmse, logy (RG_points, NF_FP):
@@ -21,15 +22,15 @@
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
-source('source/xgb_2016.R')
+source('source/lm_2016.R')
 source('source/rf_2016.R')
-source('source/glm_2016.R')
+source('source/xgb_2016.R')
 
 #Globals
 PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
-ALGS = list(rf=rf(), xgb=xgb())
+ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
 
 PLOT = 'fi' #fi, bal, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
