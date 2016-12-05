@@ -9,11 +9,12 @@
   #-lm: 8.80294/0.5589454, 8.704673/9.173929/8.79985, Inf, -$8, 6/10, 8.830848/9.546116/10.05835, 0.9280507
   #-rf: 87.61809/50.11933, 5.025854/9.693496/5.134203, Inf, $8, 10/6, 9.410472/10.19983/9.351791, 0.9394312
   #-xgb: 8.502619/8.841369, 8.419662/9.240263/8.552652, Inf, $0, 8/8, 8.921783/9.705028/8.938733, 0.941946
-#-Add RG_B2B_Situation
+#-Add RG_B2B_Situation (RG_points, NF_FP, RG_B2B_Situation)
+  #-avg lm,rf,xgb: Inf, $4, 9/7, 8.879408/9.647899/8.858755, 0.9620178
   #-avg rf,xgb: Inf, $8, 10/6, 8.946522/9.769628/8.768158, 0.9656892
   #-lm: 8.806513/0.5585873, 8.696876/9.224006/8.799298, Inf, -$4, 7/9, 8.835524/9.575473/10.0197, 0.9381837
   #-rf: 79.60645/54.68033, 7.198116/9.281684/7.459201, Inf, $12, 11/5, 9.037646/9.813199/8.677962, 0.9525361
-  #-xgb: 8.493006/8.84734, 8.403247/9.227028/8.552002, Inf, -$4, 7/9, 8.925328/9.697265/9.215699, 0.9280637
+  #-xgb: 8.493006/8.84734, 8.420464/9.224434/8.552002, Inf, -$8, 6/10, 8.931399/9.738053/9.080101, 0.9281627
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -39,7 +40,7 @@ NUMBER = '87'
 NAME = 'retune'
 ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
 
-PLOT_ALG = 'avg'
+PLOT_ALG = ''
 PLOT = 'bal' #fi, bal, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-11-23'
@@ -58,18 +59,18 @@ source('source/_main_common.R')
 
 #================= Functions =================
 
-createTeamPrediction = function(obj, train, test, yName, xNames, hyperParams, amountToAddToY, useAvg=F) {
+createTeamPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {
   #get prediction for each algo
   if (useAvg) {
     lm = ALGS[['lm']]
-    lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, lm$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+    lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
     rf = ALGS[['rf']]
-    rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, rf$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
+    rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
     xgb = ALGS[['xgb']]
-    xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, xgb$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
-    prediction = rowMeans(cbind(rfPrediction, xgbPrediction))
+    xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
+    prediction = rowMeans(cbind(lmPrediction, rfPrediction, xgbPrediction))
   } else {
-    prediction = obj$createPrediction(obj$createModel(train, yName, xNames, hyperParams, amountToAddToY), test, xNames, amountToAddToY)
+    prediction = obj$createPrediction(obj$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
     floor = pmax(prediction - test$StDevFP, 0)
     ceil = prediction + test$StDevFP
   }

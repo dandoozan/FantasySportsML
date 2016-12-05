@@ -115,7 +115,7 @@ runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
   cat('Running algorithms...\n')
   #run avg
   cat('---------------AVG---------------\n')
-  teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
+  teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
   if (PLOT_ALG == 'avg') {
     makePlots(NULL, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
   }
@@ -125,10 +125,9 @@ runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
     if (PLOT_ALG == '' || PLOT_ALG == algName) {
       cat('---------------', toupper(algName), '---------------\n')
       obj = algs[[algName]]
-      hyperParams = obj$findBestHyperParams(d, Y_NAME, featuresToUse, amountToAddToY)
-      baseModel = createBaseModel(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
-      printErrors(obj, baseModel, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY)
-      teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, hyperParams, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
+      baseModel = createBaseModel(obj, d, Y_NAME, featuresToUse, amountToAddToY)
+      printErrors(obj, baseModel, d, Y_NAME, featuresToUse, amountToAddToY)
+      teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
       if (PLOT_ALG == algName) {
         makePlots(obj, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
       }
@@ -136,16 +135,16 @@ runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
   }
 }
 
-createBaseModel = function(obj, d, yName, xNames, hyperParams, amountToAddToY) {
+createBaseModel = function(obj, d, yName, xNames, amountToAddToY) {
   #create model
   cat('Creating Model...\n', sep='')
-  timeElapsed = system.time(baseModel <- obj$createModel(d, yName, xNames, hyperParams, amountToAddToY))
+  timeElapsed = system.time(baseModel <- obj$createModel(d, yName, xNames, amountToAddToY))
   cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
-  obj$printModelResults(baseModel, hyperParams, d, yName, xNames, amountToAddToY)
+  obj$printModelResults(baseModel, d, yName, xNames, amountToAddToY)
   return(baseModel)
 }
 
-printErrors = function(obj, model, data, yName, xNames, hyperParams, amountToAddToY) {
+printErrors = function(obj, model, data, yName, xNames, amountToAddToY) {
   cat('Computing Errors...\n')
 
   #split data into trn, cv
@@ -153,7 +152,7 @@ printErrors = function(obj, model, data, yName, xNames, hyperParams, amountToAdd
   trn = split$train
   cv = split$cv
 
-  trnModel = obj$createModel(trn, yName, xNames, hyperParams, amountToAddToY)
+  trnModel = obj$createModel(trn, yName, xNames, amountToAddToY)
   trnError = computeError(trn[[yName]], obj$createPrediction(trnModel, trn, xNames, amountToAddToY), amountToAddToY)
   cvPrediction = obj$createPrediction(trnModel, cv, xNames, amountToAddToY)
   cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
@@ -378,7 +377,7 @@ plotRmseByFP = function(d, prediction, yName, dateStr='') {
   points(rgRmses, col='orange')
 }
 
-makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
+makeTeams = function(obj, data, yName, xNames, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
   contestData = getContestData()
@@ -422,7 +421,7 @@ makeTeams = function(obj, data, yName, xNames, hyperParams, amountToAddToY, pred
     train = trainTest$train
     test = trainTest$test
 
-    prediction = createTeamPrediction(obj, train, test, yName, xNames, hyperParams, amountToAddToY, useAvg)
+    prediction = createTeamPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg)
     test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, yName, date=dateStr)
 
@@ -605,7 +604,7 @@ getCvPrediction = function(obj, d, yName) {
   trn = split$train
   cv = split$cv
 
-  trnModel = obj$createModel(trn, yName, featuresToUse, hyperParams, amountToAddToY)
+  trnModel = obj$createModel(trn, yName, featuresToUse, amountToAddToY)
   trnError = computeError(trn[[yName]], obj$createPrediction(trnModel, trn, featuresToUse, amountToAddToY), amountToAddToY)
   cvPrediction = obj$createPrediction(trnModel, cv, featuresToUse, amountToAddToY)
   cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
@@ -644,7 +643,7 @@ getDataPrediction = function(d, yName) {
   #plot(PctDiff~RG_B2B_Situation, d[d$Pred > 15,])
 }
 
-getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf) {
+getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
   maxCovs = list(C=maxCov, SF=maxCov, SG=maxCov, PF=maxCov, PG=maxCov)
   #Dates investigated:
     #-11/22:
@@ -720,7 +719,6 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf) {
   test = sp$test
 
   amountToAddToY = 3
-  hyperParams = obj$findBestHyperParams(train, yName, xNames, amountToAddToY)
 
   lm = ALGS[['lm']]
   lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, lm$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
@@ -729,7 +727,7 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf) {
   xgb = ALGS[['xgb']]
   xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, xgb$findBestHyperParams(train, yName, xNames, amountToAddToY), amountToAddToY), test, xNames, amountToAddToY)
 
-  test$Pred = round(createTeamPrediction(obj, train, test, yName, xNames, hyperParams, amountToAddToY), 2)
+  test$Pred = round(createTeamPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg), 2)
   test$lmPred = round(lmPrediction, 2)
   test$rfPred = round(rfPrediction, 2)
   test$xgbPred = round(xgbPrediction, 2)

@@ -6,22 +6,23 @@ library(randomForest) #randomForest
 
 #============== Functions ===============
 rf = function() {
-  return(list(
-    createModel = function(d, yName, xNames, hyperParams, amountToAddToY) {
+  rfObj = list(
+    createModel = function(d, yName, xNames, amountToAddToY) {
       set.seed(754)
       return(randomForest(x=d[, xNames],
                           y=d[[yName]],
                           #y=log(d[[yName]] + amountToAddToY),
-                          ntree=hyperParams$ntree))
+                          ntree=rfObj$findBestHyperParams()$ntree))
     },
     createPrediction = function(model, newData, xNames, amountToAddToY) {
       return(predict(model, newData))
       #return(exp(predict(model, newData)) - amountToAddToY)
     },
-    printModelResults = function(model, hyperParams, d, yName, xNames, amountToAddToY) {
+    printModelResults = function(model, d, yName, xNames, amountToAddToY) {
+      hyperParams = rfObj$findBestHyperParams()
       cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
     },
-    findBestHyperParams = function(d, yName, xNames, amountToAddToY) {
+    findBestHyperParams = function() {
       return(list(ntree=100))
     },
     doPlots = function(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename) {
@@ -56,5 +57,6 @@ rf = function() {
               theme_few())
       if (save) endSavePlot()
     }
-  ))
+  )
+  return(rfObj)
 }

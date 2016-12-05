@@ -44,9 +44,10 @@ library(xgboost) #xgb.train, xgb.cv
 #================= Functions ===================
 xgb = function() {
   xgbObj = list(
-    createModel = function(data, yName, xNames, hyperParams, amountToAddToY) {
+    createModel = function(data, yName, xNames, amountToAddToY) {
       #compute dataAsDMatrix before setting the seed to get exact same result as findBestSeedAndNrounds
       dataAsDMatrix = xgbObj$getDMatrix(data, yName, xNames, amountToAddToY)
+      hyperParams = xgbObj$findBestHyperParams(data, yName, xNames, amountToAddToY)
       set.seed(hyperParams$seed)
       return(xgb.train(data=dataAsDMatrix,
                        params=xgbObj$getHyperParams(),
@@ -58,8 +59,9 @@ xgb = function() {
       #return(exp(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames)))) - amountToAddToY)
     },
 
-    createCvModel = function(d, yName, xNames, hyperParams, amountToAddToY) {
+    createCvModel = function(d, yName, xNames, amountToAddToY) {
       dataAsDMatrix = xgbObj$getDMatrix(d, yName, xNames, amountToAddToY)
+      hyperParams = xgbObj$findBestHyperParams(data, yName, xNames, amountToAddToY)
       set.seed(hyperParams$seed)
       cvRes = xgb.cv(data=dataAsDMatrix,
                      params=xgbObj$getHyperParams(),
@@ -129,7 +131,7 @@ xgb = function() {
       cat('    Plotting CV Error Rates...\n')
 
       dataAsDMatrix = xgbObj$getDMatrix(data, yName, xNames, amountToAddToY)
-
+      hyperParams = xgbObj$findBestHyperParams(data, yName, xNames, amountToAddToY)
       set.seed(hyperParams$seed)
       cvRes = xgb.cv(data=dataAsDMatrix,
                      params=xgbObj$getHyperParams(),
@@ -139,7 +141,7 @@ xgb = function() {
       trainErrors = cvRes[[1]]
       cvErrors = cvRes[[3]]
 
-      cvRes = createCvModel(data, yName, xNames, hyperParams, amountToAddToY)
+      cvRes = createCvModel(data, yName, xNames, amountToAddToY)
 
       if (is.null(ylim)) {
         ylim = c(0, max(cvErrors, trainErrors))
@@ -219,8 +221,8 @@ xgb = function() {
       return(data.frame(predict(dmy, dataToUse)))
     },
 
-    printModelResults = function(model, hyperParams, d, yName, xNames, amountToAddToY) {
-      cvRes = xgbObj$createCvModel(d, yName, xNames, hyperParams, amountToAddToY)
+    printModelResults = function(model, d, yName, xNames, amountToAddToY) {
+      cvRes = xgbObj$createCvModel(d, yName, xNames, amountToAddToY)
       cat('    Train/CV Errors=', cvRes[[1]][nrow(cvRes)], '/', cvRes[[3]][nrow(cvRes)], '\n', sep='')
     },
     findBestHyperParams = function(data, yName, xNames, amountToAddToY) {
