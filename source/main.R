@@ -65,7 +65,7 @@ source('source/_main_common.R')
 
 #================= Functions =================
 
-createTeamPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {
+createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, model=NULL, useAvg=F) {
   #get prediction for each algo
   if (useAvg) {
     lm = ALGS[['lm']]
@@ -76,10 +76,13 @@ createTeamPrediction = function(obj, train, test, yName, xNames, amountToAddToY,
     xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
     prediction = rowMeans(cbind(lmPrediction, rfPrediction, xgbPrediction))
   } else {
-    prediction = obj$createPrediction(obj$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
-    floor = pmax(prediction - test$StDevFP, 0)
-    ceil = prediction + test$StDevFP
+    if (is.null(model)) {
+      model = obj$createModel(train, yName, xNames, amountToAddToY)
+    }
+    prediction = obj$createPrediction(model, test, xNames, amountToAddToY)
   }
+  floor = pmax(prediction - test$StDevFP, 0)
+  ceil = prediction + test$StDevFP
   return(prediction)
 }
 

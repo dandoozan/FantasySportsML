@@ -118,7 +118,7 @@ runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
       obj = algs[[algName]]
       baseModel = createBaseModel(obj, d, Y_NAME, featuresToUse, amountToAddToY)
       printErrors(obj, baseModel, d, Y_NAME, featuresToUse, amountToAddToY)
-      teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
+      teamStats = if (MAKE_TEAMS) makeTeams(obj, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
       if (PLOT_ALG == algName) {
         makePlots(obj, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
       }
@@ -128,7 +128,7 @@ runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
   #now run the avg
   if (PLOT_ALG == '' || PLOT_ALG == 'avg') {
     cat('---------------AVG---------------\n')
-    teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
+    teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
     if (PLOT_ALG == 'avg') {
       makePlots(NULL, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
     }
@@ -153,10 +153,10 @@ printErrors = function(obj, model, data, yName, xNames, amountToAddToY) {
   cv = split$cv
 
   trnModel = obj$createModel(trn, yName, xNames, amountToAddToY)
-  trnError = computeError(trn[[yName]], obj$createPrediction(trnModel, trn, xNames, amountToAddToY), amountToAddToY)
-  cvPrediction = obj$createPrediction(trnModel, cv, xNames, amountToAddToY)
+  trnError = computeError(trn[[yName]], createPrediction(obj, trn, trn, yName, xNames, amountToAddToY, model=trnModel), amountToAddToY)
+  cvPrediction = createPrediction(obj, trn, cv, yName, xNames, amountToAddToY, model=trnModel)
   cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
-  trainError = computeError(data[[yName]], obj$createPrediction(model, data, xNames, amountToAddToY), amountToAddToY)
+  trainError = computeError(data[[yName]], createPrediction(obj, data, data, yName, xNames, amountToAddToY, model=model), amountToAddToY)
   cat('    Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
 
   #print rg error
@@ -377,7 +377,7 @@ plotRmseByFP = function(d, prediction, yName, dateStr='') {
   points(rgRmses, col='orange')
 }
 
-makeTeams = function(obj, data, yName, xNames, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createTeamPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
+makeTeams = function(obj, data, yName, xNames, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
   cat('Now let\'s see how I would\'ve done each day...\n')
 
   contestData = getContestData()
@@ -421,7 +421,7 @@ makeTeams = function(obj, data, yName, xNames, amountToAddToY, predictionName, m
     train = trainTest$train
     test = trainTest$test
 
-    prediction = createTeamPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg)
+    prediction = createPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg)
     test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, yName, date=dateStr)
 
@@ -593,7 +593,7 @@ getPredictionForDate = function(dateStr, yName) {
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test
-  return(getPredictionDF(createTeamPrediction(obj, train, test, yName, featuresToUse), test, yName, amountToAddToY))
+  return(getPredictionDF(createPrediction(obj, train, test, yName, featuresToUse), test, yName, amountToAddToY))
 }
 getCvPrediction = function(obj, d, yName) {
   featuresToUse = getFeaturesToUse(d)
@@ -604,11 +604,8 @@ getCvPrediction = function(obj, d, yName) {
   trn = split$train
   cv = split$cv
 
-  trnModel = obj$createModel(trn, yName, featuresToUse, amountToAddToY)
-  trnError = computeError(trn[[yName]], obj$createPrediction(trnModel, trn, featuresToUse, amountToAddToY), amountToAddToY)
-  cvPrediction = obj$createPrediction(trnModel, cv, featuresToUse, amountToAddToY)
+  cvPrediction = createPrediction(obj, trn, cv, yName, featuresToUse, amountToAddToY)
   cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
-  #trainError = computeError(d[[yName]], obj$createPrediction(model, data, featuresToUse, amountToAddToY), amountToAddToY)
 
   cv$Pred = cvPrediction
   cv$Diff = abs(cv[[yName]] - cv$Pred)
@@ -631,8 +628,7 @@ getDataPrediction = function(d, yName) {
   featuresToUse = getFeaturesToUse(d)
   amountToAddToY = computeAmountToAddToY(d, yName)
 
-  model = obj$createModel(d, yName, featuresToUse, amountToAddToY)
-  prediction = obj$createPrediction(model, d, featuresToUse, amountToAddToY)
+  prediction = createPrediction(obj, d, d, yName, featuresToUse, amountToAddToY)
 
   d$Pred = prediction
   d$Diff = d[[yName]] - d$Pred
@@ -727,7 +723,7 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
   xgb = ALGS[['xgb']]
   xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
 
-  test$Pred = round(createTeamPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg), 2)
+  test$Pred = round(createPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg), 2)
   test$lmPred = round(lmPrediction, 2)
   test$rfPred = round(rfPrediction, 2)
   test$xgbPred = round(xgbPrediction, 2)
