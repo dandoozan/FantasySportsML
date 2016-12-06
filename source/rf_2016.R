@@ -18,15 +18,16 @@ rf = function() {
       return(predict(model, newData))
       #return(exp(predict(model, newData)) - amountToAddToY)
     },
-    printModelResults = function(model, d, yName, xNames, amountToAddToY) {
+    printModelResults = function(d, yName, xNames, amountToAddToY) {
       hyperParams = rfObj$findBestHyperParams()
+      model = rfObj$createModel(d, yName, xNames, amountToAddToY)
       cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
     },
     findBestHyperParams = function() {
       return(list(ntree=100))
     },
-    doPlots = function(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename) {
-      if (prodRun || toPlot == 'fi') rfObj$plotImportances(model, save=prodRun, filename=filename)
+    doPlots = function(toPlot, prodRun, d, yName, xNames, amountToAddToY, filename) {
+      if (prodRun || toPlot == 'fi') rfObj$plotImportances(rfObj$createModel(d, yName, xNames, amountToAddToY), save=prodRun, filename=filename)
     },
 
     #I do not understand any of this code, I borrowed it from a kaggler

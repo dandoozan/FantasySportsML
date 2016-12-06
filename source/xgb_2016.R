@@ -221,7 +221,7 @@ xgb = function() {
       return(data.frame(predict(dmy, dataToUse)))
     },
 
-    printModelResults = function(model, d, yName, xNames, amountToAddToY) {
+    printModelResults = function(d, yName, xNames, amountToAddToY) {
       cvRes = xgbObj$createCvModel(d, yName, xNames, amountToAddToY)
       cat('    Train/CV Errors=', cvRes[[1]][nrow(cvRes)], '/', cvRes[[3]][nrow(cvRes)], '\n', sep='')
     },
@@ -230,9 +230,9 @@ xgb = function() {
       return(xgbObj$findBestSeedAndNrounds(data, yName, xNames, amountToAddToY))
     },
 
-    doPlots = function(toPlot, prodRun, data, yName, xNames, model, amountToAddToY, filename) {
-      if (prodRun || toPlot=='cv') xgbObj$plotCVErrorRates(data, yName, xNames, amountToAddToY, ylim=c(0, 15), save=prodRun, filename=filename)
-      if (prodRun || toPlot == 'fi') xgbObj$plotImportances(model, xNames, save=prodRun, filename=filename)
+    doPlots = function(toPlot, prodRun, d, yName, xNames, amountToAddToY, filename) {
+      if (prodRun || toPlot=='cv') xgbObj$plotCVErrorRates(d, yName, xNames, amountToAddToY, ylim=c(0, 15), save=prodRun, filename=filename)
+      if (prodRun || toPlot == 'fi') xgbObj$plotImportances(xgbObj$createModel(d, yName, xNames, amountToAddToY), xNames, save=prodRun, filename=filename)
     }
   )
   return(xgbObj)

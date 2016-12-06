@@ -41,9 +41,9 @@ source('source/rf_2016.R')
 source('source/xgb_2016.R')
 
 #Globals
-MAKE_TEAMS = F #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 PLOT_ALG = ''
-PLOT = 'fi' #fi, bal, scores, cv, rmses
+PLOT = 'bal' #fi, bal, scores, cv, rmses
 
 PROD_RUN = F
 NUMBER = '87'
@@ -65,7 +65,10 @@ source('source/_main_common.R')
 
 #================= Functions =================
 
-createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, model=NULL, useAvg=F) {
+createPrediction = function(obj, train, test, amountToAddToY, model=NULL, useAvg=F) {
+  yName = FP_NAME
+  xNames = getFeaturesToUse()
+
   #get prediction for each algo
   if (useAvg) {
     lm = ALGS[['lm']]
@@ -85,13 +88,17 @@ createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, mod
   ceil = prediction + test$StDevFP
   return(prediction)
 }
-
+printModelResults = function(obj, d, amountToAddToY) {
+  cat('Model Results...\n', sep='')
+  yName = FP_NAME
+  featuresToUse = getFeaturesToUse()
+  obj$printModelResults(d, yName, featuresToUse, amountToAddToY)
+}
 #================= Main =================
 
 data = setup(START_DATE, END_DATE, PROD_RUN, FILENAME)
-amountToAddToY = computeAmountToAddToY(data, Y_NAME)
-featuresToUse = getFeaturesToUse(data)
-runAlgs(ALGS, data, amountToAddToY, featuresToUse)
+amountToAddToY = 0#computeAmountToAddToY(data, Y_NAME)
+runAlgs(ALGS, data, FP_NAME, getFeaturesToUse(), amountToAddToY)
 cat('Done!\n')
 
 nov23 = function() {
