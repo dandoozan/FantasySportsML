@@ -105,24 +105,13 @@ getAllFeatures = function(d, featuresToExclude) {
   return(featuresToUse)
 }
 getFeaturesToUse = function(d) {
-  featuresToUse = c('RG_points', 'NF_FP')
-  #featuresToUse = c('RG_points', 'NF_FP', 'RG_points51', 'RG_points15', 'RG_points19', 'RG_points20', 'RG_points28', 'RG_points43', 'RG_points50', 'RG_points58')
+  featuresToUse = c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL)
   cat('Number of features to use: ', length(featuresToUse), '/', length(colnames(d)), '\n', sep='')
   return(featuresToUse)
 }
 
 runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
   cat('Running algorithms...\n')
-  #run avg
-  if (PLOT_ALG == '' || PLOT_ALG == 'avg') {
-    cat('---------------AVG---------------\n')
-    teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
-    if (PLOT_ALG == 'avg') {
-      makePlots(NULL, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
-    }
-  }
-
-  #run the specific algos
   for (algName in names(algs)) {
     if (PLOT_ALG == '' || PLOT_ALG == algName) {
       cat('---------------', toupper(algName), '---------------\n')
@@ -133,6 +122,15 @@ runAlgs = function(algs, d, amountToAddToY, featuresToUse) {
       if (PLOT_ALG == algName) {
         makePlots(obj, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
       }
+    }
+  }
+
+  #now run the avg
+  if (PLOT_ALG == '' || PLOT_ALG == 'avg') {
+    cat('---------------AVG---------------\n')
+    teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, Y_NAME, featuresToUse, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createTeamPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
+    if (PLOT_ALG == 'avg') {
+      makePlots(NULL, PLOT, d, Y_NAME, featuresToUse, baseModel, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
     }
   }
 }
@@ -737,6 +735,7 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
   test$PctDiff = round(test$Diff / test$Pred * 100, 2)
 
   team = if (rg) createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs) else createTeam_Greedy(test, 'Pred', maxCovs=maxCovs)
+  if (is.null(team)) return(NULL)
 
   #set minFP, meanFP, and stdevFP
   team$minFP = 0

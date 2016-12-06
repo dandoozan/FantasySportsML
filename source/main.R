@@ -1,9 +1,26 @@
-#todo:
-#-RG_points, NF_FP:
+#dec3:
+#-RG_points, NF_FP (2/271)
+  #-lm: 8.838534/0.5591056, -$10, 10/15, 8.82233/9.59527/10.46505, 0.9163022
+  #-rf: 89.63814/49.40082, -$2, 12/13, 9.434458/10.21069/10.11951, 0.9142227
+  #-xgb: 8.611697/8.892585, -$2, 12/13, 8.911271/9.646003/9.649063, 0.9287583
   #-avg: Inf, -$6, 11/14, 8.914961/9.747728/9.599471, 0.9237973
-  #-lm: 8.838534/0.5591056, 8.84015/8.821344/8.836197, -$10, 10/15, 8.82233/9.59527/10.46505, 0.9163022
-  #-rf: 89.63814/49.40082, 5.161912/9.493231/5.263421, -$2, 12/13, 9.434458/10.21069/10.11951, 0.9142227
-  #-xgb: 8.611697/8.892585, 8.585446/8.890046/8.65314, -$2, 12/13, 8.911271/9.646003/9.649063, 0.9287583
+#-Add MeanFP (RG_points, NF_FP, MeanFP) (3/271)
+  #-lm: 8.83662/0.5592965, -$14, 9/16, 8.818794/9.586027/10.38676, 0.9120051
+  #-rf: 85.19914/51.90656, $10, 15/10, 9.193771/9.921919/10.12282, 0.9175458
+  #-xgb: 8.551663/8.887115, -$14, 9/16, 8.905399/9.701911/10.28306, 0.9077574
+  #-avg: Inf, $10, 15/10, 8.879686/9.650462/9.831637, 0.9321043
+#-Add F.NBA.SEASON.PLAYER.TRADITIONAL (31/271)
+  #-lm: 8.816786/0.5612726, -$2, 12/13, 8.834068/9.534255/10.38203, 0.9325422
+  #-rf: 81.8228/53.81245, -$6, 11/14, 9.023319/9.686758/11.83352, 0.9224867
+  #-xgb: 8.342935/8.853405, -$14, 9/16, 8.920149/9.693552/11.32844, 0.9130069
+  #-avg: Inf, $6, 14/11, 8.836431/9.543674/10.88744, 0.9370972
+#-Add F.RG.PP (63/271)
+  #-lm: 8.772657/0.5656534, -$10, 10/15, 8.832806/9.546179/9.90277, 0.9177266
+  #-rf: 80.26987/54.68904, -$14, 9/16, 8.925519/9.656749/10.53727, 0.9113018
+  #-xgb: 8.26889/8.819944, -$2, 12/13, 8.881534/9.625615/10.51673, 0.9052283
+  #-avg: Inf, -$2, 12/13, 8.80162/9.521793/10.58487, 0.9019284
+  #-.MAX_COV=0.35: lm=-$8 (10/14), rf=-$12 (9/15), xgb=-$12 (9/15), avg=$0 (12/12)
+  #-.MAX_COV=0.25: lm=-$8 (6/10), rf=$0 (8/8), xgb=-$8 (6/10), avg=-$12 (5/11)
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -13,9 +30,9 @@
 #-rescrape all nba data to get updated stats
 #-make sure 11/20 has all data for all players and teams that played that day since I scraped it late
 #-maybe only use data from 11/5 onward or only the last X (2?) weeks
-#-add back projected points features
-#-run findBestSeedAndNrounds for every date rather than once at beginning on all data
 #-use RG_points51 as a feature
+#-only play on days that I am highly confident that I'll win
+#-only play players who have greater than X (5%?) pownpct level
 
 rm(list = ls())
 setwd('/Users/dan/Desktop/ML/df')
@@ -24,13 +41,14 @@ source('source/rf_2016.R')
 source('source/xgb_2016.R')
 
 #Globals
+MAKE_TEAMS = F #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+PLOT_ALG = ''
+PLOT = 'fi' #fi, bal, scores, cv, rmses
+
 PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
 ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
-
-PLOT_ALG = ''
-PLOT = 'fi' #fi, bal, scores, cv, rmses
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-12-03'
 PLOT_START_DATE = '2016-11-07'
@@ -40,7 +58,6 @@ NUM_HILL_CLIMBING_TEAMS = 10
 CONTESTS_TO_PLOT = list(
   #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
   list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
-MAKE_TEAMS = PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 FILENAME = paste0(NUMBER, '_', NAME)
 STARTING_BALANCE = 25
 

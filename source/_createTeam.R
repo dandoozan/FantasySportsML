@@ -87,9 +87,11 @@ replacePlayer = function(team, oldPlayer, newPlayer) {
 }
 getWorseTeam = function(data, yName, team, amountOverBudget, verbose=F) {
   cnt = 1
-  while (amountOverBudget > 0) {
+  foundBetterPlayer = T
+  while (amountOverBudget > 0 && foundBetterPlayer) {
     if (verbose) print(paste('Iteration', cnt, ', amountOverBudget=', amountOverBudget))
 
+    foundBetterPlayer = F
     bestPpdg = Inf
     bestOldPlayer = NULL
     bestNewPlayer = NULL
@@ -115,6 +117,7 @@ getWorseTeam = function(data, yName, team, amountOverBudget, verbose=F) {
           ppdg = computePPD(fpDiff, salaryDiff)
           minPpdg = min(ppdg, na.rm=T)
           if (minPpdg < bestPpdg) {
+            foundBetterPlayer = T
             bestPpdg = minPpdg
             bestOldPlayer = teamPlayer
             bestNewPlayer = players[which.min(ppdg), ]
@@ -124,11 +127,15 @@ getWorseTeam = function(data, yName, team, amountOverBudget, verbose=F) {
     }
 
     #i now have the next best player, replace him
-    if (verbose) cat('Replacing', oldPlayer$Name, '<-', newPlayer$Name, '\n')
+    #if (verbose) cat('Replacing', oldPlayer$Name, '<-', newPlayer$Name, '\n')
     team = replacePlayer(team, bestOldPlayer, bestNewPlayer)
 
     amountOverBudget = computeAmountOverBudget(team)
     cnt = cnt + 1
+  }
+
+  if (computeAmountOverBudget(team) > 0) {
+    return(NULL)
   }
   return(team)
 }
