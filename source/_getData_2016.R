@@ -141,6 +141,9 @@ getUniqueDates = function(d) {
 computeFP = function(pts, ast, blk, reb, stl, tov) {
   return(pts + (ast*1.5) + (blk*2) + (reb*1.2) + (stl*2) + (tov*-1))
 }
+computeFpPerMin = function(fp, min) {
+  return(fp/min)#ifelse(fp == 0 && min == 0, 0, fp / min))
+}
 featureEngineer = function(d) {
   cat('    Feature engineering...\n')
 
@@ -151,10 +154,19 @@ featureEngineer = function(d) {
   d$FP2 = d$FP + runif(length(d$FP), -2, 2) #add random +/-2
   d$AVG_FP = computeFP(d$NBA_S_P_TRAD_PTS, d$NBA_S_P_TRAD_AST, d$NBA_S_P_TRAD_BLK, d$NBA_S_P_TRAD_REB, d$NBA_S_P_TRAD_STL, d$NBA_S_P_TRAD_TOV)
 
+  d$FP_PER_MIN = computeFpPerMin(d$FP, d$NBA_TODAY_MIN)
+  #add this ifelse to handle the 5 cases where RG predicts some FP for players, but also predicts that they'll play 0 minutes, which causes Inf when doing fp/min
+  d$RG_FpPerMin = ifelse(d$RG_minutes == 0, 0, computeFpPerMin(d$RG_points, d$RG_minutes))
+  d$NF_FpPerMin = computeFpPerMin(d$NF_FP, d$NF_Min)
+
+
   #compute MeanFP, StDevFP, MinFP, COV
   d$MeanFP = 0
   d$StDevFP = 0
   d$MinFP = 0
+  d$MeanFPPerMin = 0
+  d$StDevFPPerMin = 0
+  d$MinFPPerMin = 0
   names = unique(d$Name)
   for (name in names) {
     playerData = d[d$Name == name,]
@@ -162,12 +174,20 @@ featureEngineer = function(d) {
     for (dateStr in dateStrs) {
       rows = which(d$Name == name & d$Date == dateStr)
       fpsUpToDate = playerData[playerData$Date < dateStr, 'FP']
+      minutesUpToDate = playerData[playerData$Date < dateStr, 'NBA_TODAY_MIN']
+      fpPerMinutesUpToDate = fpsUpToDate / minutesUpToDate
+
       d[rows, 'MeanFP'] = mean(fpsUpToDate)
       d[rows, 'StDevFP'] = psd(fpsUpToDate)
       d[rows, 'MinFP'] = min(fpsUpToDate)
+
+      d[rows, 'MeanFPPerMin'] = mean(fpPerMinutesUpToDate)
+      d[rows, 'StDevFPPerMin'] = psd(fpPerMinutesUpToDate)
+      d[rows, 'MinFPPerMin'] = min(fpPerMinutesUpToDate)
     }
   }
   d$COV = ifelse(d$MeanFP == 0, Inf, d$StDevFP / d$MeanFP)
+  d$COV_FPPerMin = ifelse(d$MeanFPPerMin == 0, Inf, d$StDevFPPerMin / d$MeanFPPerMin)
 
   #----------F.RG.PP-----------
   #add team RG expected points and teammates' RG expected scores

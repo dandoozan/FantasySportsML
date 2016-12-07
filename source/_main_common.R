@@ -42,6 +42,8 @@ source('source/_createTeam.R')
 # RG_ADV_USGPCT, NBA_S_P_ADV_USG_PCT <-- no
 
 FP_NAME = 'FP'
+FP_PER_MIN_NAME = 'FP_PER_MIN'
+MINUTES_NAME = 'NBA_TODAY_MIN'
 PREDICTION_NAME = 'Prediction'
 
 #features excluded: FantasyPoints, Minutes, Date, Name
@@ -104,13 +106,8 @@ getAllFeatures = function(d, featuresToExclude) {
   cat('All features to use: ', length(allFeatures), '/', length(colnames(d)), '\n', sep='')
   return(allFeatures)
 }
-getFeaturesToUse = function() {
-  featuresToUse = c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL)
-  #cat('Number of features to use: ', length(featuresToUse), '/', length(colnames(d)), '\n', sep='')
-  return(featuresToUse)
-}
 
-runAlgs = function(algs, d, yNameToPlot, xNamesToPlot, amountToAddToY) {
+runAlgs = function(algs, d, printModelResults, createPrediction, yNameToPlot, xNamesToPlot, amountToAddToY) {
   cat('Running algorithms...\n')
   for (algName in names(algs)) {
     if (PLOT_ALG == '' || PLOT_ALG == algName) {

@@ -41,7 +41,7 @@ source('source/rf_2016.R')
 source('source/xgb_2016.R')
 
 #Globals
-MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+MAKE_TEAMS = F #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 PLOT_ALG = ''
 PLOT = 'bal' #fi, bal, scores, cv, rmses
 
@@ -51,7 +51,7 @@ NAME = 'retune'
 ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-12-03'
-PLOT_START_DATE = '2016-11-07'
+PLOT_START_DATE = '2016-12-01'
 .MAX_COV = Inf
 MAX_COVS = list(C=.MAX_COV, SF=.MAX_COV, SG=.MAX_COV, PF=.MAX_COV, PG=.MAX_COV)
 NUM_HILL_CLIMBING_TEAMS = 10
@@ -65,12 +65,19 @@ source('source/_main_common.R')
 
 #================= Functions =================
 
-createPrediction = function(obj, train, test, amountToAddToY, model=NULL, useAvg=F) {
-  yName = FP_NAME
-  xNames = getFeaturesToUse()
+getFeaturesToUseFp = function() {
+  return(c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL))
+}
+getFeaturesToUseFpPerMin = function() {
+  return(c('RG_FpPerMin'))
+}
+# getFeaturesToUseMinutes = function() {
+#   return(c('RG_minutes'))
+# }
 
-  #get prediction for each algo
+.createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {
   if (useAvg) {
+    #get prediction for each algo
     lm = ALGS[['lm']]
     lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
     rf = ALGS[['rf']]
@@ -79,26 +86,43 @@ createPrediction = function(obj, train, test, amountToAddToY, model=NULL, useAvg
     xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
     prediction = rowMeans(cbind(lmPrediction, rfPrediction, xgbPrediction))
   } else {
-    if (is.null(model)) {
-      model = obj$createModel(train, yName, xNames, amountToAddToY)
-    }
-    prediction = obj$createPrediction(model, test, xNames, amountToAddToY)
+    prediction = obj$createPrediction(obj$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
   }
   floor = pmax(prediction - test$StDevFP, 0)
   ceil = prediction + test$StDevFP
   return(prediction)
 }
-printModelResults = function(obj, d, amountToAddToY) {
-  cat('Model Results...\n', sep='')
-  yName = FP_NAME
-  featuresToUse = getFeaturesToUse()
-  obj$printModelResults(d, yName, featuresToUse, amountToAddToY)
+createPredictionFp =function(obj, train, test, amountToAddToY, useAvg=F) {
+  return(.createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg))
 }
+createPredictionFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
+  #remove players who didn't play any minutes from train
+  train = train[train[[MINUTES_NAME]] != 0,]
+
+  predictionFpPerMin = .createPrediction(obj, train, test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg)
+  predictionMin = test$RG_minutes# .createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg)
+  prediction = predictionFpPerMin * predictionMin
+  return(prediction)
+}
+
+printModelResultsFp = function(obj, d, amountToAddToY) {
+  cat('Model Results...\n', sep='')
+  obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
+}
+printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
+  cat('Model Results...\n', sep='')
+
+  #remove players who didn't play any minutes from train
+  d = d[d[[MINUTES_NAME]] != 0,]
+  obj$printModelResults(d, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY)
+  #obj$printModelResults(d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY)
+}
+
 #================= Main =================
 
 data = setup(START_DATE, END_DATE, PROD_RUN, FILENAME)
 amountToAddToY = 0#computeAmountToAddToY(data, Y_NAME)
-runAlgs(ALGS, data, FP_NAME, getFeaturesToUse(), amountToAddToY)
+runAlgs(ALGS, data, printModelResultsFpPerMin, createPredictionFpPerMin, yNameToPlot=FP_NAME, xNamesToPlot=getFeaturesToUse(), amountToAddToY)
 cat('Done!\n')
 
 nov23 = function() {

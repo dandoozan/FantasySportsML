@@ -9,7 +9,7 @@ rf = function() {
   rfObj = list(
     createModel = function(d, yName, xNames, amountToAddToY) {
       set.seed(754)
-      return(randomForest(x=d[, xNames],
+      return(randomForest(x=convertToDataFrame(d[, xNames], xNames),
                           y=d[[yName]],
                           #y=log(d[[yName]] + amountToAddToY),
                           ntree=rfObj$findBestHyperParams()$ntree))

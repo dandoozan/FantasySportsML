@@ -44,10 +44,10 @@ library(xgboost) #xgb.train, xgb.cv
 #================= Functions ===================
 xgb = function() {
   xgbObj = list(
-    createModel = function(data, yName, xNames, amountToAddToY) {
+    createModel = function(d, yName, xNames, amountToAddToY) {
       #compute dataAsDMatrix before setting the seed to get exact same result as findBestSeedAndNrounds
-      dataAsDMatrix = xgbObj$getDMatrix(data, yName, xNames, amountToAddToY)
-      hyperParams = xgbObj$findBestHyperParams(data, yName, xNames, amountToAddToY)
+      dataAsDMatrix = xgbObj$getDMatrix(d, yName, xNames, amountToAddToY)
+      hyperParams = xgbObj$findBestHyperParams(d, yName, xNames, amountToAddToY)
       set.seed(hyperParams$seed)
       return(xgb.train(data=dataAsDMatrix,
                        params=xgbObj$getHyperParams(),
@@ -61,7 +61,7 @@ xgb = function() {
 
     createCvModel = function(d, yName, xNames, amountToAddToY) {
       dataAsDMatrix = xgbObj$getDMatrix(d, yName, xNames, amountToAddToY)
-      hyperParams = xgbObj$findBestHyperParams(data, yName, xNames, amountToAddToY)
+      hyperParams = xgbObj$findBestHyperParams(d, yName, xNames, amountToAddToY)
       set.seed(hyperParams$seed)
       cvRes = xgb.cv(data=dataAsDMatrix,
                      params=xgbObj$getHyperParams(),
@@ -127,11 +127,11 @@ xgb = function() {
     },
 
 
-    plotCVErrorRates = function(data, yName, xNames, amountToAddToY, ylim=NULL, save=FALSE, filename='') {
+    plotCVErrorRates = function(d, yName, xNames, amountToAddToY, ylim=NULL, save=FALSE, filename='') {
       cat('    Plotting CV Error Rates...\n')
 
-      dataAsDMatrix = xgbObj$getDMatrix(data, yName, xNames, amountToAddToY)
-      hyperParams = xgbObj$findBestHyperParams(data, yName, xNames, amountToAddToY)
+      dataAsDMatrix = xgbObj$getDMatrix(d, yName, xNames, amountToAddToY)
+      hyperParams = xgbObj$findBestHyperParams(d, yName, xNames, amountToAddToY)
       set.seed(hyperParams$seed)
       cvRes = xgb.cv(data=dataAsDMatrix,
                      params=xgbObj$getHyperParams(),
@@ -141,7 +141,7 @@ xgb = function() {
       trainErrors = cvRes[[1]]
       cvErrors = cvRes[[3]]
 
-      cvRes = createCvModel(data, yName, xNames, amountToAddToY)
+      cvRes = createCvModel(d, yName, xNames, amountToAddToY)
 
       if (is.null(ylim)) {
         ylim = c(0, max(cvErrors, trainErrors))
@@ -153,10 +153,10 @@ xgb = function() {
       addLegend(labels=c('train', 'cv'), colors=c('blue', 'red'))
       if (save) endSavePlot()
     },
-    plotImportances = function(model, xNames, maxFeatures=50, save=FALSE, filename='') {
+    plotImportances = function(model, d, xNames, maxFeatures=50, save=FALSE, filename='') {
       cat('    Plotting Feature Importances...\n')
 
-      featureNames = colnames(xgbObj$oneHotEncode(data, xNames))
+      featureNames = colnames(xgbObj$oneHotEncode(d, xNames))
 
       importances = xgb.importance(feature_names=featureNames, model=model)
       importances = importances[1:min(nrow(importances), maxFeatures), ]
@@ -165,10 +165,10 @@ xgb = function() {
       if (save) endSavePlot()
     },
 
-    findBestSeedAndNrounds = function(data, yName, xNames, amountToAddToY, earlyStopRound=10, numSeedsToTry=1) {
+    findBestSeedAndNrounds = function(d, yName, xNames, amountToAddToY, earlyStopRound=10, numSeedsToTry=1) {
       #cat('Finding best seed and nrounds.  Trying ', numSeedsToTry, ' seeds...\n', sep='')
 
-      dataAsDMatrix = xgbObj$getDMatrix(data, yName, xNames, amountToAddToY)
+      dataAsDMatrix = xgbObj$getDMatrix(d, yName, xNames, amountToAddToY)
       initialNrounds = 10000
       maximize = FALSE
       bestSeed = 1
@@ -209,14 +209,14 @@ xgb = function() {
       return(list(seed=bestSeed, nrounds=bestNrounds))
     },
 
-    getDMatrix = function(data, yName, xNames, amountToAddToY) {
+    getDMatrix = function(d, yName, xNames, amountToAddToY) {
       set.seed(634)
       #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
-      return(xgb.DMatrix(data.matrix(xgbObj$oneHotEncode(data, xNames)), label=data[, yName]))
-      #return(xgb.DMatrix(data.matrix(xgbObj$oneHotEncode(data, xNames)), label=log(data[, yName] + amountToAddToY)))
+      return(xgb.DMatrix(data=data.matrix(xgbObj$oneHotEncode(d, xNames)), label=d[, yName]))
+      #return(xgb.DMatrix(data=data.matrix(xgbObj$oneHotEncode(d, xNames)), label=log(d[, yName] + amountToAddToY)))
     },
     oneHotEncode = function(d, xNames) {
-      dataToUse = if(length(xNames) == 1) convertToDataFrame(d[[xNames]], xNames) else d[, xNames]
+      dataToUse = convertToDataFrame(d[, xNames], xNames)
       dmy = caret::dummyVars('~.', dataToUse, fullRank=T)
       return(data.frame(predict(dmy, dataToUse)))
     },
@@ -225,14 +225,14 @@ xgb = function() {
       cvRes = xgbObj$createCvModel(d, yName, xNames, amountToAddToY)
       cat('    Train/CV Errors=', cvRes[[1]][nrow(cvRes)], '/', cvRes[[3]][nrow(cvRes)], '\n', sep='')
     },
-    findBestHyperParams = function(data, yName, xNames, amountToAddToY) {
+    findBestHyperParams = function(d, yName, xNames, amountToAddToY) {
       #find best seed and nrounds
-      return(xgbObj$findBestSeedAndNrounds(data, yName, xNames, amountToAddToY))
+      return(xgbObj$findBestSeedAndNrounds(d, yName, xNames, amountToAddToY))
     },
 
     doPlots = function(toPlot, prodRun, d, yName, xNames, amountToAddToY, filename) {
       if (prodRun || toPlot=='cv') xgbObj$plotCVErrorRates(d, yName, xNames, amountToAddToY, ylim=c(0, 15), save=prodRun, filename=filename)
-      if (prodRun || toPlot == 'fi') xgbObj$plotImportances(xgbObj$createModel(d, yName, xNames, amountToAddToY), xNames, save=prodRun, filename=filename)
+      if (prodRun || toPlot == 'fi') xgbObj$plotImportances(xgbObj$createModel(d, yName, xNames, amountToAddToY), d, xNames, save=prodRun, filename=filename)
     }
   )
   return(xgbObj)
