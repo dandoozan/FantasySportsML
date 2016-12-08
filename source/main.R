@@ -144,18 +144,15 @@ printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
 
   trn = createPrediction(obj, trn, trn, amountToAddToY)
   cv = createPrediction(obj, trn, cv, amountToAddToY)
-  d = createPrediction(obj, d, d, amountToAddToY)
 
   if (shouldRemovePlayersWhoDidNotPlay) {
     trn = removePlayersWhoDidNotPlay(trn)
     cv = removePlayersWhoDidNotPlay(cv)
-    d = removePlayersWhoDidNotPlay(d)
   }
 
   trnError = computeError(trn[[yName]], trn[[PREDICTION_NAME]], amountToAddToY)
   cvError = computeError(cv[[yName]], cv[[PREDICTION_NAME]], amountToAddToY)
-  trainError = computeError(d[[yName]], d[[PREDICTION_NAME]], amountToAddToY)
-  cat('        Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
+  cat('        Trn/CV: ', trnError, '/', cvError, '\n', sep='')
 
   #print rg error
   cvWithRGData = cv[cv$InRotoGrinders == 1,]
@@ -181,8 +178,8 @@ printErrorsFpPerMin = function(obj, d, amountToAddToY) {
   cat('    Errors of FP using FP/Min:\n')
   .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionOfFpUsingFpPerMin)
 
-  # cat('    Errors of FP:\n')
-  # .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
+  cat('    Errors of FP:\n')
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
 }
 
 #================= Main =================
