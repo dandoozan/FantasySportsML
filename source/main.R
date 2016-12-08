@@ -42,7 +42,7 @@ source('source/xgb_2016.R')
 
 #Globals
 MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
-PLOT_ALG = ''
+PLOT_ALG = 'lm'
 PLOT = 'bal' #fi, bal, scores, cv, rmses
 
 PROD_RUN = F
@@ -51,7 +51,7 @@ NAME = 'retune'
 ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
 START_DATE = '2016-10-26' #'2016-11-05'
 END_DATE = '2016-12-03'
-PLOT_START_DATE = '2016-12-01'
+PLOT_START_DATE = '2016-11-07'
 .MAX_COV = Inf
 MAX_COVS = list(C=.MAX_COV, SF=.MAX_COV, SG=.MAX_COV, PF=.MAX_COV, PG=.MAX_COV)
 NUM_HILL_CLIMBING_TEAMS = 10
@@ -128,15 +128,15 @@ printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   cat('Model Results...\n', sep='')
 
   #remove players who didn't play any minutes from data
-  cat('    Fp/Min: ')
+  cat('    FP/Min: ')
   obj$printModelResults(removePlayersWhoDidNotPlay(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY)
   cat('    Minutes: ')
   obj$printModelResults(d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY)
-  cat('    Fp: ')
+  cat('    FP: ')
   obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
 }
 
-.printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, shouldRemovePlayersWhoDidNotPlay=F) {
+.printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, prefix='', shouldRemovePlayersWhoDidNotPlay=F) {
   #split data into trn, cv
   split = splitData(d, yName)
   trn = split$train
@@ -152,33 +152,33 @@ printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
 
   trnError = computeError(trn[[yName]], trn[[PREDICTION_NAME]], amountToAddToY)
   cvError = computeError(cv[[yName]], cv[[PREDICTION_NAME]], amountToAddToY)
-  cat('        Trn/CV: ', trnError, '/', cvError, '\n', sep='')
+  cat(prefix, trnError, '/', cvError, sep='')
 
   #print rg error
   cvWithRGData = cv[cv$InRotoGrinders == 1,]
-  cat('        CV RG/Mine: ', computeError(cvWithRGData[[yName]], cvWithRGData[[yNameRG]], amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvWithRGData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
+  cat(', ', computeError(cvWithRGData[[yName]], cvWithRGData[[yNameRG]], amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvWithRGData[[PREDICTION_NAME]], amountToAddToY), sep='')
 
   #print nf error
   cvWithNFData = cv[cv$InNumberFire == 1,]
-  cat('        CV NF/Mine: ', computeError(cvWithNFData[[yName]], cvWithNFData[[yNameNF]], amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvWithNFData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
+  cat(', ', computeError(cvWithNFData[[yName]], cvWithNFData[[yNameNF]], amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvWithNFData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
 }
 printErrorsFp = function(obj, d, amountToAddToY) {
   cat('Computing Errors...\n')
   .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
 }
 printErrorsFpPerMin = function(obj, d, amountToAddToY) {
-  cat('Computing Errors...\n')
+  cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
 
-  cat('    Errors of FP/Min:\n')
+  cat('    FP/Min: ')
   .printErrors(obj, d, FP_PER_MIN_NAME, 'RG_FpPerMin', 'NF_FpPerMin', amountToAddToY, createPredictionFpPerMin, shouldRemovePlayersWhoDidNotPlay=T)
 
-  cat('    Errors of Minutes:\n')
+  cat('    Minutes: ')
   .printErrors(obj, d, MINUTES_NAME, 'RG_minutes', 'NF_Min', amountToAddToY, createPredictionMinutes)
 
-  cat('    Errors of FP using FP/Min:\n')
+  cat('    FP using FP/Min: ')
   .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionOfFpUsingFpPerMin)
 
-  cat('    Errors of FP:\n')
+  cat('    FP: ')
   .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
 }
 

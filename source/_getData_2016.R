@@ -236,7 +236,7 @@ getData = function(startDate='2016-10-26', endDate=as.character(Sys.Date())) {
 }
 
 getContestData = function() {
-  cat('Getting contest data...\n')
+  cat('    Getting contest data...\n')
   return(read.csv(paste0('data/data_contests_2016.csv'), stringsAsFactors=F, na.strings=c('')))
 }
 

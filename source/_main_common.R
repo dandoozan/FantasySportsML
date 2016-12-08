@@ -351,16 +351,16 @@ plotRmseByFP = function(d, prediction, fpName, dateStr='') {
 }
 
 makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
-  cat('Now let\'s see how I would\'ve done each day...\n')
+  cat('Creating teams with max covs:', paste0(paste0(names(maxCovs), '='), maxCovs, collapse=', '), '\n')
 
   contestData = getContestData()
 
-  cat('    Creating teams with max covs:', paste0(paste0(names(maxCovs), '='), maxCovs, collapse=', '), '\n')
   #these are arrays to plot later
   myRmses = c()
   myRmses15 = c()
-  nfRmses = c()
   rgRmses = c()
+  rgRmses15 = c()
+  nfRmses = c()
   fdRmses = c()
   teamRatios = c()
   myTeamExpectedFPs = c()
@@ -400,8 +400,11 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     myRmse = computeError(test[[fpName]], test[[predictionName]], amountToAddToY)
     test15 = test[test[[predictionName]] >= 15,]
     myRmse15 = computeError(test15[[fpName]], test15[[predictionName]], amountToAddToY)
-    nfRmse = computeError(test[[fpName]], test$NF_FP, amountToAddToY)
+
     rgRmse = computeError(test[[fpName]], test$RG_points, amountToAddToY)
+    rgRmse15 = computeError(test15[[fpName]], test15$RG_points, amountToAddToY)
+
+    nfRmse = computeError(test[[fpName]], test$NF_FP, amountToAddToY)
     fdRmse = computeError(test[[fpName]], test$FPPG, amountToAddToY)
 
     #create my teams for today
@@ -471,9 +474,10 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     #add data to arrays to plot
     myRmses = c(myRmses, myRmse)
     myRmses15 = c(myRmses15, myRmse15)
+    rgRmses = c(rgRmses, rgRmse)
+    rgRmses15 = c(rgRmses15, rgRmse15)
     fdRmses = c(fdRmses, fdRmse)
     nfRmses = c(nfRmses, nfRmse)
-    rgRmses = c(rgRmses, rgRmse)
     myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
     myTeamActualFPs = c(myTeamActualFPs, myTeamActualFP)
     myTeamUsingRGPointsActualFPs = c(myTeamUsingRGPointsActualFPs, myTeamUsingRGPointsActualFP)
@@ -491,7 +495,8 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
   cat('\n')
 
   #print mean of rmses
-  cat('Mean RMSE of all players/>15/team: ', mean(myRmses), '/', mean(myRmses15), '/', mean(myTeamRmses), '\n', sep='')
+  cat('Mean RMSE of all players/≥15/team: ', mean(myRmses), '/', mean(myRmses15), '/', mean(myTeamRmses), '\n', sep='')
+  cat('RG Mean RMSE of all players/≥15/team: ', mean(rgRmses), '/', mean(rgRmses15), '\n', sep='')
 
   #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
   scoreRatios = myTeamActualFPs/lowestWinningScores
