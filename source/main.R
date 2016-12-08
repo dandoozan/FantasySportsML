@@ -41,7 +41,7 @@ source('source/rf_2016.R')
 source('source/xgb_2016.R')
 
 #Globals
-MAKE_TEAMS = F #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 PLOT_ALG = ''
 PLOT = 'bal' #fi, bal, scores, cv, rmses
 
@@ -69,11 +69,11 @@ getFeaturesToUseFp = function() {
   return(c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL))
 }
 getFeaturesToUseFpPerMin = function() {
-  return(c('RG_FpPerMin'))
+  return(c('RG_FpPerMin', 'NF_FpPerMin'))
 }
-# getFeaturesToUseMinutes = function() {
-#   return(c('RG_minutes'))
-# }
+getFeaturesToUseMinutes = function() {
+  return(c('RG_minutes'))
+}
 
 .createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {
   if (useAvg) {
@@ -92,17 +92,32 @@ getFeaturesToUseFpPerMin = function() {
   ceil = prediction + test$StDevFP
   return(prediction)
 }
-createPredictionFp =function(obj, train, test, amountToAddToY, useAvg=F) {
-  return(.createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg))
+createPredictionFp = function(obj, train, test, amountToAddToY, useAvg=F) {
+  prediction = .createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg)
+  test[[PREDICTION_NAME]] = prediction
+  return(test)
 }
 createPredictionFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
   #remove players who didn't play any minutes from train
-  train = train[train[[MINUTES_NAME]] != 0,]
+  train = removePlayersWhoDidNotPlay(train)
 
-  predictionFpPerMin = .createPrediction(obj, train, test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg)
-  predictionMin = test$RG_minutes# .createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg)
-  prediction = predictionFpPerMin * predictionMin
-  return(prediction)
+  prediction = .createPrediction(obj, train, test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg)
+  test[[PREDICTION_NAME]] = prediction
+
+  return(test)
+}
+createPredictionMinutes = function(obj, train, test, amountToAddToY, useAvg=F) {
+  prediction = test$RG_minutes#.createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg)
+  test[[PREDICTION_NAME]] = prediction
+  return(test)
+}
+createPredictionOfFpUsingFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
+  predictionFpPerMin = createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
+  predictionMinutes = createPredictionMinutes(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
+  prediction = predictionFpPerMin * predictionMinutes
+
+  test[[PREDICTION_NAME]] = prediction
+  return(test)
 }
 
 printModelResultsFp = function(obj, d, amountToAddToY) {
@@ -112,17 +127,66 @@ printModelResultsFp = function(obj, d, amountToAddToY) {
 printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   cat('Model Results...\n', sep='')
 
-  #remove players who didn't play any minutes from train
-  d = d[d[[MINUTES_NAME]] != 0,]
-  obj$printModelResults(d, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY)
+  #remove players who didn't play any minutes from data
+  obj$printModelResults(removePlayersWhoDidNotPlay(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY)
   #obj$printModelResults(d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY)
 }
+
+.printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, shouldRemovePlayersWhoDidNotPlay=F) {
+  #split data into trn, cv
+  split = splitData(d, yName)
+  trn = split$train
+  cv = split$cv
+
+  trn = createPrediction(obj, trn, trn, amountToAddToY)
+  cv = createPrediction(obj, trn, cv, amountToAddToY)
+  d = createPrediction(obj, d, d, amountToAddToY)
+
+  if (shouldRemovePlayersWhoDidNotPlay) {
+    trn = removePlayersWhoDidNotPlay(trn)
+    cv = removePlayersWhoDidNotPlay(cv)
+    d = removePlayersWhoDidNotPlay(d)
+  }
+
+  trnError = computeError(trn[[yName]], trn[[PREDICTION_NAME]], amountToAddToY)
+  cvError = computeError(cv[[yName]], cv[[PREDICTION_NAME]], amountToAddToY)
+  trainError = computeError(d[[yName]], d[[PREDICTION_NAME]], amountToAddToY)
+  cat('        Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
+
+  #print rg error
+  cvWithRGData = cv[cv$InRotoGrinders == 1,]
+  cat('        CV RG/Mine: ', computeError(cvWithRGData[[yName]], cvWithRGData[[yNameRG]], amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvWithRGData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
+
+  #print nf error
+  cvWithNFData = cv[cv$InNumberFire == 1,]
+  cat('        CV NF/Mine: ', computeError(cvWithNFData[[yName]], cvWithNFData[[yNameNF]], amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvWithNFData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
+}
+printErrorsFp = function(obj, d, amountToAddToY) {
+  cat('Computing Errors...\n')
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
+}
+printErrorsFpPerMin = function(obj, d, amountToAddToY) {
+  cat('Computing Errors...\n')
+
+  cat('    Errors of FP/Min:\n')
+  .printErrors(obj, d, FP_PER_MIN_NAME, 'RG_FpPerMin', 'NF_FpPerMin', amountToAddToY, createPredictionFpPerMin, shouldRemovePlayersWhoDidNotPlay=T)
+
+  cat('    Errors of Minutes:\n')
+  .printErrors(obj, d, MINUTES_NAME, 'RG_minutes', 'NF_Min', amountToAddToY, createPredictionMinutes)
+
+  cat('    Errors of FP using FP/Min:\n')
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionOfFpUsingFpPerMin)
+
+  # cat('    Errors of FP:\n')
+  # .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
+}
+
 
 #================= Main =================
 
 data = setup(START_DATE, END_DATE, PROD_RUN, FILENAME)
 amountToAddToY = 0#computeAmountToAddToY(data, Y_NAME)
-runAlgs(ALGS, data, printModelResultsFpPerMin, createPredictionFpPerMin, yNameToPlot=FP_NAME, xNamesToPlot=getFeaturesToUse(), amountToAddToY)
+runAlgs(ALGS, data, printModelResultsFpPerMin, createPredictionOfFpUsingFpPerMin, printErrorsFpPerMin, yNameToPlot=FP_PER_MIN_NAME, xNamesToPlot=getFeaturesToUseFpPerMin(), amountToAddToY)
 cat('Done!\n')
 
 nov23 = function() {

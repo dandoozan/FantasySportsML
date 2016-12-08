@@ -107,14 +107,14 @@ getAllFeatures = function(d, featuresToExclude) {
   return(allFeatures)
 }
 
-runAlgs = function(algs, d, printModelResults, createPrediction, yNameToPlot, xNamesToPlot, amountToAddToY) {
+runAlgs = function(algs, d, printModelResults, createPrediction, printErrors, yNameToPlot, xNamesToPlot, amountToAddToY) {
   cat('Running algorithms...\n')
   for (algName in names(algs)) {
     if (PLOT_ALG == '' || PLOT_ALG == algName) {
       cat('---------------', toupper(algName), '---------------\n')
       obj = algs[[algName]]
       printModelResults(obj, d, amountToAddToY)
-      #printErrors(obj, baseModel, d, yName, amountToAddToY)
+      printErrors(obj, d, amountToAddToY)
       teamStats = if (MAKE_TEAMS) makeTeams(obj, d, FP_NAME, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
       if (PLOT_ALG == algName) {
         makePlots(obj, PLOT, d, yNameToPlot, xNamesToPlot, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
@@ -139,30 +139,6 @@ runAlgs = function(algs, d, printModelResults, createPrediction, yNameToPlot, xN
 #   cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
 #   obj$printModelResults(baseModel, d, yName, amountToAddToY)
 #   return(baseModel)
-# }
-
-# printErrors = function(obj, model, data, yName, amountToAddToY) {
-#   cat('Computing Errors...\n')
-#
-#   #split data into trn, cv
-#   split = splitData(data, yName)
-#   trn = split$train
-#   cv = split$cv
-#
-#   trnModel = obj$createModel(trn, yName, amountToAddToY)
-#   trnError = computeError(trn[[yName]], createPrediction(obj, trn, trn, yName, amountToAddToY, model=trnModel), amountToAddToY)
-#   cvPrediction = createPrediction(obj, trn, cv, yName, amountToAddToY, model=trnModel)
-#   cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
-#   trainError = computeError(data[[yName]], createPrediction(obj, data, data, yName, amountToAddToY, model=model), amountToAddToY)
-#   cat('    Trn/CV/Train: ', trnError, '/', cvError, '/', trainError, '\n', sep='')
-#
-#   #print rg error
-#   cvWithRGData = cv[cv$InRotoGrinders == 1,]
-#   cat('    CV RG/Mine: ', computeError(cvWithRGData[[yName]], cvWithRGData$RG_points, amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvPrediction[which(cv$InRotoGrinders == 1)], amountToAddToY), '\n', sep='')
-#
-#   #print nf error
-#   cvWithNFData = cv[cv$InNumberFire == 1,]
-#   cat('    CV NF/Mine: ', computeError(cvWithNFData[[yName]], cvWithNFData$NF_FP, amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvPrediction[which(cv$InNumberFire == 1)], amountToAddToY), '\n', sep='')
 # }
 
 findFirstIndexOfDate = function(data, date) {
@@ -418,8 +394,7 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     train = trainTest$train
     test = trainTest$test
 
-    prediction = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
-    test[[predictionName]] = prediction
+    test = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
     #plotRmseByFP(test, prediction, fpName, date=dateStr)
 
     myRmse = computeError(test[[fpName]], test[[predictionName]], amountToAddToY)
@@ -566,6 +541,9 @@ computeAmountToAddToY = function(d, yName) {
   amountToAddToY = abs(minValue) + 1
   cat('Adding ', amountToAddToY, ' to Y\n', sep='')
   return(amountToAddToY)
+}
+removePlayersWhoDidNotPlay = function(d) {
+  return(d[d[[MINUTES_NAME]] != 0,])
 }
 
 #----------------- utility functions ----------------
