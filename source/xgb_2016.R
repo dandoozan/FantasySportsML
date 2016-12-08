@@ -221,9 +221,9 @@ xgb = function() {
       return(data.frame(predict(dmy, dataToUse)))
     },
 
-    printModelResults = function(d, yName, xNames, amountToAddToY) {
+    printModelResults = function(d, yName, xNames, amountToAddToY, prefix='') {
       cvRes = xgbObj$createCvModel(d, yName, xNames, amountToAddToY)
-      cat('    Train/CV Errors=', cvRes[[1]][nrow(cvRes)], '/', cvRes[[3]][nrow(cvRes)], '\n', sep='')
+      cat(prefix, 'Train/CV Errors=', cvRes[[1]][nrow(cvRes)], '/', cvRes[[3]][nrow(cvRes)], '\n', sep='')
     },
     findBestHyperParams = function(d, yName, xNames, amountToAddToY) {
       #find best seed and nrounds

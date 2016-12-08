@@ -11,10 +11,10 @@ lm = function() {
       return(predict(model, newData, type='response'))
       #return(exp(predict(model, newData, type='response')) - amountToAddToY)
     },
-    printModelResults = function(d, yName, xNames, amountToAddToY) {
+    printModelResults = function(d, yName, xNames, amountToAddToY, prefix='') {
       model = lmObj$createModel(d, yName, xNames, amountToAddToY)
       modelSummary = summary(model)
-      cat('    ResidualStErr/Adj-R-Squared: ', modelSummary$sigma, '/', modelSummary$adj.r.squared, '\n', sep='')
+      cat(prefix, 'ResidualStErr/Adj-R-Squared: ', modelSummary$sigma, '/', modelSummary$adj.r.squared, '\n', sep='')
     },
     findBestHyperParams = function(d, yName, xNames, amountToAddToY) {
       return()

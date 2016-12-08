@@ -18,10 +18,10 @@ rf = function() {
       return(predict(model, newData))
       #return(exp(predict(model, newData)) - amountToAddToY)
     },
-    printModelResults = function(d, yName, xNames, amountToAddToY) {
+    printModelResults = function(d, yName, xNames, amountToAddToY, prefix='') {
       hyperParams = rfObj$findBestHyperParams()
       model = rfObj$createModel(d, yName, xNames, amountToAddToY)
-      cat('    MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
+      cat(prefix, 'MeanOfSquaredResiduals / %VarExplained: ', model$mse[hyperParams$ntree], '/', model$rsq[hyperParams$ntree]*100, '\n', sep='')
     },
     findBestHyperParams = function() {
       return(list(ntree=100))
