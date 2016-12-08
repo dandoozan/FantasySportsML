@@ -428,6 +428,12 @@ makeTeams = function(obj, data, fpName, fpPerMinName, minutesName, amountToAddTo
     foundMyTeamUsingRGPoints = if (is.null(myTeamUsingRGPoints)) FALSE else TRUE
     myTeamUsingRGPointsActualFP = if(foundMyTeamUsingRGPoints) computeTeamFP(myTeamUsingRGPoints, fpName) else NA
     rmseMatrix[dateStr, 'myTeamRmses'] = if (foundTeam) computeError(myTeamGreedy[[fpName]], myTeamGreedy[[fpPredictionName]], amountToAddToY) else NA
+    rmseMatrix[dateStr, 'fpPerMinTeamRmses'] = if (foundTeam) computeError(myTeamGreedy[[fpPerMinName]], myTeamGreedy[[fpPerMinPredictionName]], amountToAddToY) else NA
+    rmseMatrix[dateStr, 'minutesTeamRmses'] = if (foundTeam) computeError(myTeamGreedy[[minutesName]], myTeamGreedy[[minutesPredictionName]], amountToAddToY) else NA
+    rmseMatrix[dateStr, 'rgTeamRmses'] = if (foundTeam) computeError(myTeamGreedy[[fpName]], myTeamGreedy$RG_points, amountToAddToY) else NA
+    rmseMatrix[dateStr, 'rgFpPerMinTeamRmses'] = if (foundTeam) computeError(myTeamGreedy[[fpPerMinName]], myTeamGreedy$RG_FpPerMin, amountToAddToY) else NA
+    rmseMatrix[dateStr, 'rgMinutesTeamRmses'] = if (foundTeam) computeError(myTeamGreedy[[minutesName]], myTeamGreedy$RG_minutes, amountToAddToY) else NA
+
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
     #   for (i in 1:numHillClimbingTeams) {
