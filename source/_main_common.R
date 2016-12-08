@@ -44,7 +44,6 @@ source('source/_createTeam.R')
 FP_NAME = 'FP'
 FP_PER_MIN_NAME = 'FP_PER_MIN'
 MINUTES_NAME = 'NBA_TODAY_MIN'
-PREDICTION_NAME = 'Prediction'
 
 ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
 START_DATE = '2016-10-26' #'2016-11-05'
@@ -122,7 +121,7 @@ runAlgs = function(algs, d, printModelResults, createPrediction, printErrors, yN
       obj = algs[[algName]]
       printModelResults(obj, d, amountToAddToY)
       printErrors(obj, d, amountToAddToY)
-      teamStats = if (MAKE_TEAMS) makeTeams(obj, d, FP_NAME, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
+      teamStats = if (MAKE_TEAMS) makeTeams(obj, d, FP_NAME, FP_PER_MIN_NAME, MINUTES_NAME, amountToAddToY, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
       if (PLOT_ALG == algName) {
         makePlots(obj, PLOT, d, yNameToPlot, xNamesToPlot, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
       }
@@ -348,22 +347,23 @@ plotRmseByFP = function(d, prediction, fpName, dateStr='') {
   points(rgRmses, col='orange')
 }
 
-makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs, numHillClimbingTeams, createPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
+makeTeams = function(obj, data, fpName, fpPerMinName, minutesName, amountToAddToY, maxCovs, numHillClimbingTeams, createPrediction, contestsToPlot, startingBalance, toPlot, prodRun, useAvg) {
   cat('Creating teams with max covs:', paste0(paste0(names(maxCovs), '='), maxCovs, collapse=', '), '\n')
 
   contestData = getContestData()
+  dateStrs = getUniqueDates(data)
+  dateStrs = dateStrs[(dateStrs>=PLOT_START_DATE) & (dateStrs<=END_DATE)]
 
   #these are arrays to plot later
-  myRmses = c()
-  myRmses15 = c()
-  rgRmses = c()
-  rgRmses15 = c()
+  rmseNames = c('myRmses', 'myRmses15', 'myTeamRmses', 'fpPerMinRmses', 'fpPerMinRmses15', 'fpPerMinTeamRmses', 'minutesRmses', 'minutesRmses15', 'minutesTeamRmses',
+               'rgRmses', 'rgRmses15', 'rgTeamRmses', 'rgFpPerMinRmses', 'rgFpPerMinRmses15', 'rgFpPerMinTeamRmses', 'rgMinutesRmses', 'rgMinutesRmses15', 'rgMinutesTeamRmses')
+  rmseMatrix = matrix(nrow=length(dateStrs), ncol=length(rmseNames), dimnames=list(dateStrs, rmseNames))
+
   nfRmses = c()
   fdRmses = c()
   teamRatios = c()
   myTeamExpectedFPs = c()
   myTeamActualFPs = c()
-  myTeamRmses = c()
   myTeamGreedyExpectedFPs = c()
   myTeamHillClimbingExpectedFPs = c()
   myTeamUsingRGPointsActualFPs = c()
@@ -382,8 +382,6 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
   numWins = 0
   numLosses = 0
 
-  dateStrs = getUniqueDates(data)
-  dateStrs = dateStrs[(dateStrs>=PLOT_START_DATE) & (dateStrs<=END_DATE)]
   for (dateStr in dateStrs) {
     cat('    ', dateStr, ': ', sep='')
 
@@ -392,24 +390,35 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     train = trainTest$train
     test = trainTest$test
 
-    prediction = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
-    test[[predictionName]] = prediction
+    fpPredictionName = 'fpPrediction'
+    fpPerMinPredictionName = 'fpPerMinPrediction'
+    minutesPredictionName = 'minutesPrediction'
+    test[[fpPredictionName]] = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
+    test[[fpPerMinPredictionName]] = createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg=useAvg)
+    test[[minutesPredictionName]] = createPredictionMinutes(obj, train, test, amountToAddToY, useAvg=useAvg)
+    test15 = test[test[[fpPredictionName]] >= 15,]
     #plotRmseByFP(test, prediction, fpName, date=dateStr)
 
-    myRmse = computeError(test[[fpName]], test[[predictionName]], amountToAddToY)
-    test15 = test[test[[predictionName]] >= 15,]
-    myRmse15 = computeError(test15[[fpName]], test15[[predictionName]], amountToAddToY)
-
-    rgRmse = computeError(test[[fpName]], test$RG_points, amountToAddToY)
-    rgRmse15 = computeError(test15[[fpName]], test15$RG_points, amountToAddToY)
+    rmseMatrix[dateStr, 'myRmses'] = computeError(test[[fpName]], test[[fpPredictionName]], amountToAddToY)
+    rmseMatrix[dateStr, 'myRmses15'] = computeError(test15[[fpName]], test15[[fpPredictionName]], amountToAddToY)
+    rmseMatrix[dateStr, 'fpPerMinRmses'] = computeError(test[[fpPerMinName]], test[[fpPerMinPredictionName]])
+    rmseMatrix[dateStr, 'fpPerMinRmses15'] = computeError(test15[[fpPerMinName]], test15[[fpPerMinPredictionName]])
+    rmseMatrix[dateStr, 'minutesRmses'] = computeError(test[[minutesName]], test[[minutesPredictionName]])
+    rmseMatrix[dateStr, 'minutesRmses15'] = computeError(test15[[minutesName]], test15[[minutesPredictionName]])
+    rmseMatrix[dateStr, 'rgRmses'] = computeError(test[[fpName]], test$RG_points, amountToAddToY)
+    rmseMatrix[dateStr, 'rgRmses15'] = computeError(test15[[fpName]], test15$RG_points, amountToAddToY)
+    rmseMatrix[dateStr, 'rgFpPerMinRmses'] = computeError(test[[fpPerMinName]], test$RG_FpPerMin, amountToAddToY)
+    rmseMatrix[dateStr, 'rgFpPerMinRmses15'] = computeError(test15[[fpPerMinName]], test15$RG_FpPerMin, amountToAddToY)
+    rmseMatrix[dateStr, 'rgMinutesRmses'] = computeError(test[[minutesName]], test$RG_minutes, amountToAddToY)
+    rmseMatrix[dateStr, 'rgMinutesRmses15'] = computeError(test15[[minutesName]], test15$RG_minutes, amountToAddToY)
 
     nfRmse = computeError(test[[fpName]], test$NF_FP, amountToAddToY)
     fdRmse = computeError(test[[fpName]], test$FPPG, amountToAddToY)
 
     #create my teams for today
-    myTeamGreedy = createTeam_Greedy(test, predictionName, maxCovs=maxCovs)
+    myTeamGreedy = createTeam_Greedy(test, fpPredictionName, maxCovs=maxCovs)
     foundTeam = if (is.null(myTeamGreedy)) FALSE else TRUE
-    myTeamExpectedFP = if(foundTeam) computeTeamFP(myTeamGreedy, predictionName) else NA
+    myTeamExpectedFP = if(foundTeam) computeTeamFP(myTeamGreedy, fpPredictionName) else NA
     myTeamActualFP = if(foundTeam) computeTeamFP(myTeamGreedy, fpName) else NA
     rgTeam = getRgTeam(test, fpName)
     foundRGTeam = if (is.null(rgTeam)) FALSE else TRUE
@@ -418,7 +427,7 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     myTeamUsingRGPoints = createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs)
     foundMyTeamUsingRGPoints = if (is.null(myTeamUsingRGPoints)) FALSE else TRUE
     myTeamUsingRGPointsActualFP = if(foundMyTeamUsingRGPoints) computeTeamFP(myTeamUsingRGPoints, fpName) else NA
-    myTeamRmse = if (foundTeam) computeError(myTeamGreedy[[fpName]], myTeamGreedy[[predictionName]], amountToAddToY) else NA
+    rmseMatrix[dateStr, 'myTeamRmses'] = if (foundTeam) computeError(myTeamGreedy[[fpName]], myTeamGreedy[[fpPredictionName]], amountToAddToY) else NA
     allMyTeamActualFPs = c(myTeamActualFP)
     # if (prodRun || toPlot == 'multiscores') {
     #   for (i in 1:numHillClimbingTeams) {
@@ -453,10 +462,12 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     }
 
     #print results
-    cat('allRmse=', round(myRmse, 2), sep='')
-    #cat(', rgRmse=', round(rgRmse, 2), sep='')
-    cat(', rmse≥15=', round(myRmse15, 2), sep='')
-    cat(', teamRmse=', round(myTeamRmse, 2), sep='')
+    cat('allRmse=', round(rmseMatrix[dateStr, 'myRmses'], 2), sep='')
+    #cat(', rgRmse=', round(rmseMatrix[dateStr, 'rgRmses'], 2), sep='')
+    cat(', rmse≥15=', round(rmseMatrix[dateStr, 'myRmses15'], 2), sep='')
+    cat(', teamRmse=', round(rmseMatrix[dateStr, 'myTeamRmses'], 2), sep='')
+    #cat(', fpPerMinRmse=', round(rmseMatrix[dateStr, 'fpPerMinRmses'], 2), sep='')
+    #cat(', minuteRmse=', round(rmseMatrix[dateStr, 'minutesRmses'], 2), sep='')
     #cat(', minFpOnTeam=', min(myTeamGreedy[[predictionName]]), sep='')
     #cat(', expected=', round(myTeamExpectedFP, 2), sep='')
     #cat(', actual=', round(myTeamActualFP, 2), sep='')
@@ -471,10 +482,6 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     cat('\n')
 
     #add data to arrays to plot
-    myRmses = c(myRmses, myRmse)
-    myRmses15 = c(myRmses15, myRmse15)
-    rgRmses = c(rgRmses, rgRmse)
-    rgRmses15 = c(rgRmses15, rgRmse15)
     fdRmses = c(fdRmses, fdRmse)
     nfRmses = c(nfRmses, nfRmse)
     myTeamExpectedFPs = c(myTeamExpectedFPs, myTeamExpectedFP)
@@ -482,7 +489,6 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     myTeamUsingRGPointsActualFPs = c(myTeamUsingRGPointsActualFPs, myTeamUsingRGPointsActualFP)
     rgTeamExpectedFPs = c(rgTeamExpectedFPs, rgTeamExpectedFP)
     rgTeamActualFPs = c(rgTeamActualFPs, rgTeamActualFP)
-    myTeamRmses = c(myTeamRmses, myTeamRmse)
     highestWinningScores = c(highestWinningScores, highestWinningScore)
     lowestWinningScores = c(lowestWinningScores, lowestWinningScore)
   }
@@ -494,8 +500,9 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
   cat('\n')
 
   #print mean of rmses
-  cat('Mean RMSE of all players/≥15/team: ', mean(myRmses), '/', mean(myRmses15), '/', mean(myTeamRmses), '\n', sep='')
-  cat('RG Mean RMSE of all players/≥15/team: ', mean(rgRmses), '/', mean(rgRmses15), '\n', sep='')
+  cat('FP: all/≥15/team (RG/Mine): ', mean(rmseMatrix[,'rgRmses']), '/', mean(rmseMatrix[,'myRmses']), ', ', mean(rmseMatrix[,'rgRmses15']), '/', mean(rmseMatrix[,'myRmses15']), ', ', mean(rmseMatrix[,'rgTeamRmses']), '/', mean(rmseMatrix[,'myTeamRmses']), '\n', sep='')
+  cat('FP/Min: all/≥15/team (RG/Mine): ', mean(rmseMatrix[,'rgFpPerMinRmses']), '/', mean(rmseMatrix[,'fpPerMinRmses']), ', ', mean(rmseMatrix[,'rgFpPerMinRmses15']), '/', mean(rmseMatrix[,'fpPerMinRmses15']), ', ', mean(rmseMatrix[,'rgFpPerMinTeamRmses']), '/', mean(rmseMatrix[,'fpPerMinTeamRmses']), '\n', sep='')
+  cat('Minutes: all/≥15/team (RG/Mine): ', mean(rmseMatrix[,'rgMinutesRmses']), '/', mean(rmseMatrix[,'minutesRmses']), ', ', mean(rmseMatrix[,'rgMinutesRmses15']), '/', mean(rmseMatrix[,'minutesRmses15']), ', ', mean(rmseMatrix[,'rgMinutesTeamRmses']), '/', mean(rmseMatrix[,'minutesTeamRmses']), '\n', sep='')
 
   #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
   scoreRatios = myTeamActualFPs/lowestWinningScores
@@ -503,10 +510,10 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
 
   return(list(
     dateStrs=dateStrs,
-    myRmses=myRmses,
+    myRmses=rmseMatrix[,'myRmses'],
     fdRmses=fdRmses,
     nfRmses=nfRmses,
-    rgRmses=rgRmses,
+    rgRmses=rmseMatrix[,'rgRmses'],
     myTeamExpectedFPs=myTeamExpectedFPs,
     myTeamActualFPs=myTeamActualFPs,
     myTeamHillClimbingActualFPs=myTeamHillClimbingActualFPs,
@@ -514,7 +521,7 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     rgTeamExpectedFPs=rgTeamExpectedFPs,
     rgTeamActualFPs=rgTeamActualFPs,
     myTeamUsingRGPointsActualFPs=myTeamUsingRGPointsActualFPs,
-    myTeamRmses=myTeamRmses,
+    myTeamRmses=rmseMatrix[,'myTeamRmses'],
     scoreRatios=scoreRatios,
     highestWinningScores=highestWinningScores,
     lowestWinningScores=lowestWinningScores,
@@ -549,7 +556,6 @@ computeAmountToAddToY = function(d, yName) {
 removePlayersWhoDidNotPlay = function(d) {
   return(d[d[[MINUTES_NAME]] != 0,])
 }
-
 
 
 getFeaturesToUseFp = function() {
@@ -621,25 +627,26 @@ printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   trn = split$train
   cv = split$cv
 
-  trn[[PREDICTION_NAME]] = createPrediction(obj, trn, trn, amountToAddToY)
-  cv[[PREDICTION_NAME]] = createPrediction(obj, trn, cv, amountToAddToY)
+  predictionName = 'pred'
+  trn[[predictionName]] = createPrediction(obj, trn, trn, amountToAddToY)
+  cv[[predictionName]] = createPrediction(obj, trn, cv, amountToAddToY)
 
   if (shouldRemovePlayersWhoDidNotPlay) {
     trn = removePlayersWhoDidNotPlay(trn)
     cv = removePlayersWhoDidNotPlay(cv)
   }
 
-  trnError = computeError(trn[[yName]], trn[[PREDICTION_NAME]], amountToAddToY)
-  cvError = computeError(cv[[yName]], cv[[PREDICTION_NAME]], amountToAddToY)
+  trnError = computeError(trn[[yName]], trn[[predictionName]], amountToAddToY)
+  cvError = computeError(cv[[yName]], cv[[predictionName]], amountToAddToY)
   cat(prefix, trnError, '/', cvError, sep='')
 
   #print rg error
   cvWithRGData = cv[cv$InRotoGrinders == 1,]
-  cat(', ', computeError(cvWithRGData[[yName]], cvWithRGData[[yNameRG]], amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvWithRGData[[PREDICTION_NAME]], amountToAddToY), sep='')
+  cat(', ', computeError(cvWithRGData[[yName]], cvWithRGData[[yNameRG]], amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvWithRGData[[predictionName]], amountToAddToY), sep='')
 
   #print nf error
   cvWithNFData = cv[cv$InNumberFire == 1,]
-  cat(', ', computeError(cvWithNFData[[yName]], cvWithNFData[[yNameNF]], amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvWithNFData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
+  cat(', ', computeError(cvWithNFData[[yName]], cvWithNFData[[yNameNF]], amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvWithNFData[[predictionName]], amountToAddToY), '\n', sep='')
 }
 printErrorsFp = function(obj, d, amountToAddToY) {
   cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
