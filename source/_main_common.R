@@ -46,6 +46,20 @@ FP_PER_MIN_NAME = 'FP_PER_MIN'
 MINUTES_NAME = 'NBA_TODAY_MIN'
 PREDICTION_NAME = 'Prediction'
 
+ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
+START_DATE = '2016-10-26' #'2016-11-05'
+END_DATE = '2016-12-03'
+PLOT_START_DATE = '2016-11-07'
+.MAX_COV = Inf
+MAX_COVS = list(C=.MAX_COV, SF=.MAX_COV, SG=.MAX_COV, PF=.MAX_COV, PG=.MAX_COV)
+NUM_HILL_CLIMBING_TEAMS = 10
+CONTESTS_TO_PLOT = list(
+  #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
+  list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
+
+STARTING_BALANCE = 25
+
+
 #features excluded: FantasyPoints, Minutes, Date, Name
 F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent')
 F.FANDUEL = c('Date', 'Name', 'Position', 'FPPG', 'GamesPlayed', 'Salary', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
@@ -92,13 +106,6 @@ F.BORUTA.REJECTED = c('Home', 'Opponent', 'InjuryIndicator', 'InjuryDetails', 'R
 
 computeError = function(y, yhat, amountToAddToY) {
   return(rmse(y, yhat))
-}
-setup = function(startDate, endDate, prodRun, filename) {
-  if (prodRun) cat('PROD RUN: ', filename, '\n', sep='')
-
-  #load data
-  data = getData(startDate, endDate)
-  return(data)
 }
 
 getAllFeatures = function(d, featuresToExclude) {
@@ -550,6 +557,127 @@ computeAmountToAddToY = function(d, yName) {
 removePlayersWhoDidNotPlay = function(d) {
   return(d[d[[MINUTES_NAME]] != 0,])
 }
+
+
+
+getFeaturesToUseFp = function() {
+  return(c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL))
+}
+getFeaturesToUseFpPerMin = function() {
+  return(c('RG_FpPerMin', 'NF_FpPerMin'))
+}
+getFeaturesToUseMinutes = function() {
+  return(c('RG_minutes', 'NF_Min'))
+}
+
+.createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {
+  if (useAvg) {
+    #get prediction for each algo
+    lm = ALGS[['lm']]
+    lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
+    rf = ALGS[['rf']]
+    rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
+    xgb = ALGS[['xgb']]
+    xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
+    prediction = rowMeans(cbind(lmPrediction, rfPrediction, xgbPrediction))
+  } else {
+    prediction = obj$createPrediction(obj$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
+  }
+  floor = pmax(prediction - test$StDevFP, 0)
+  ceil = prediction + test$StDevFP
+  return(prediction)
+}
+createPredictionFp = function(obj, train, test, amountToAddToY, useAvg=F) {
+  prediction = .createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg)
+  test[[PREDICTION_NAME]] = prediction
+  return(test)
+}
+createPredictionFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
+  #remove players who didn't play any minutes from train
+  train = removePlayersWhoDidNotPlay(train)
+
+  prediction = .createPrediction(obj, train, test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg)
+  test[[PREDICTION_NAME]] = prediction
+
+  return(test)
+}
+createPredictionMinutes = function(obj, train, test, amountToAddToY, useAvg=F) {
+  prediction = .createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg)
+  test[[PREDICTION_NAME]] = prediction
+  return(test)
+}
+createPredictionOfFpUsingFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
+  predictionFpPerMin = createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
+  predictionMinutes = createPredictionMinutes(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
+  prediction = predictionFpPerMin * predictionMinutes
+
+  test[[PREDICTION_NAME]] = prediction
+  return(test)
+}
+
+printModelResultsFp = function(obj, d, amountToAddToY) {
+  cat('Model Results...\n', sep='')
+  obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
+}
+printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
+  cat('Model Results...\n', sep='')
+
+  #remove players who didn't play any minutes from data
+  cat('    FP/Min: ')
+  obj$printModelResults(removePlayersWhoDidNotPlay(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY)
+  cat('    Minutes: ')
+  obj$printModelResults(d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY)
+  cat('    FP: ')
+  obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
+}
+
+.printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, prefix='', shouldRemovePlayersWhoDidNotPlay=F) {
+  #split data into trn, cv
+  split = splitData(d, yName)
+  trn = split$train
+  cv = split$cv
+
+  trn = createPrediction(obj, trn, trn, amountToAddToY)
+  cv = createPrediction(obj, trn, cv, amountToAddToY)
+
+  if (shouldRemovePlayersWhoDidNotPlay) {
+    trn = removePlayersWhoDidNotPlay(trn)
+    cv = removePlayersWhoDidNotPlay(cv)
+  }
+
+  trnError = computeError(trn[[yName]], trn[[PREDICTION_NAME]], amountToAddToY)
+  cvError = computeError(cv[[yName]], cv[[PREDICTION_NAME]], amountToAddToY)
+  cat(prefix, trnError, '/', cvError, sep='')
+
+  #print rg error
+  cvWithRGData = cv[cv$InRotoGrinders == 1,]
+  cat(', ', computeError(cvWithRGData[[yName]], cvWithRGData[[yNameRG]], amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvWithRGData[[PREDICTION_NAME]], amountToAddToY), sep='')
+
+  #print nf error
+  cvWithNFData = cv[cv$InNumberFire == 1,]
+  cat(', ', computeError(cvWithNFData[[yName]], cvWithNFData[[yNameNF]], amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvWithNFData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
+}
+printErrorsFp = function(obj, d, amountToAddToY) {
+  cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp, prefix='    ')
+}
+printErrorsFpPerMin = function(obj, d, amountToAddToY) {
+  cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
+
+  cat('    FP/Min: ')
+  .printErrors(obj, d, FP_PER_MIN_NAME, 'RG_FpPerMin', 'NF_FpPerMin', amountToAddToY, createPredictionFpPerMin, shouldRemovePlayersWhoDidNotPlay=T)
+
+  cat('    Minutes: ')
+  .printErrors(obj, d, MINUTES_NAME, 'RG_minutes', 'NF_Min', amountToAddToY, createPredictionMinutes)
+
+  cat('    FP using FP/Min: ')
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionOfFpUsingFpPerMin)
+
+  cat('    FP: ')
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
+}
+
+
 
 #----------------- utility functions ----------------
 plotBucketRmses = function(obj, d, yName, predName, amountToAddToY, interval) {

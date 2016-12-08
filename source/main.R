@@ -15,12 +15,40 @@
   #-xgb: 8.342935/8.853405, -$14, 9/16, 8.920149/9.693552/11.32844, 0.9130069
   #-avg: Inf, $6, 14/11, 8.836431/9.543674/10.88744, 0.9370972
 #-Add F.RG.PP (63/271)
-  #-lm: 8.772657/0.5656534, -$10, 10/15, 8.832806/9.546179/9.90277, 0.9177266
-  #-rf: 80.26987/54.68904, -$14, 9/16, 8.925519/9.656749/10.53727, 0.9113018
-  #-xgb: 8.26889/8.819944, -$2, 12/13, 8.881534/9.625615/10.51673, 0.9052283
-  #-avg: Inf, -$2, 12/13, 8.80162/9.521793/10.58487, 0.9019284
+  #-lm: 8.772657/0.5656534, 8.734317/8.758157, 8.932131/8.758157, 9.140356/8.758157, -$10, 10/15, 8.832806/9.546179/9.90277, 8.92712/9.636422, 0.9177266
+  #-rf: 80.26987/54.68904, 3.641312/8.999028, 8.932131/8.999028, 9.140356/8.999028, -$14, 9/16, 8.925519/9.656749/10.53727, 8.92712/9.650876, 0.9113018
+  #-xgb: 8.26889/8.819944, 8.277696/8.811168, 8.932131/8.811168, 9.140356/8.811168, -$2, 12/13, 8.881534/9.625615/10.51673, 8.92712/9.663916, 0.9052283
+  #-avg: Inf, -$2, 12/13, 8.80162/9.521793/10.58487, 8.92712/9.638649, 0.9019284
   #-.MAX_COV=0.35: lm=-$8 (10/14), rf=-$12 (9/15), xgb=-$12 (9/15), avg=$0 (12/12)
   #-.MAX_COV=0.25: lm=-$8 (6/10), rf=$0 (8/8), xgb=-$8 (6/10), avg=-$12 (5/11)
+
+#-Fp/Min (FP/Min=RG_FpPerMin, NF_FpPerMin) (Minutes=RG_minutes, NF_Min)
+  #-lm:
+    #-Model results: FP/Min=0.3263294/0.1583437, Minutes=6.927592/0.5865868, FP=8.772657/0.5656534
+    #-Errors:
+      #-FP/Min: 0.3263911/0.3258793, 0.3347037/0.3258793, 5.299697/0.3258793
+      #-Minutes: 6.995589/6.64174, 7.186872/6.64174, 6.988188/6.64174
+      #-FP using FP/Min: 9.057701/9.04586, 8.932131/9.04586, 9.140356/9.04586
+      #-FP: 8.734317/8.758157, 8.932131/8.758157, 9.140356/8.758157
+    #-Inf, $10, 15/10, 9.17186/9.932789/11.37652, 8.92712/9.570126, 0.9296103
+  #-rf:
+    #-Model results: FP/Min=0.1131711/10.53782, Minutes=54.40954/53.12176, FP=80.26987/54.68904
+    #-Errors:
+      #-FP/Min: 0.1638347/0.332865, 0.3347037/0.332865, 5.299697/0.332865
+      #-Minutes: 4.129312/7.037514, 7.186872/7.037514, 6.988188/7.037514
+      #-FP using FP/Min: 5.028544/9.452267, 8.932131/9.452267, 9.140356/9.452267
+      #-FP: 3.641312/8.999028, 8.932131/8.999028, 9.140356/8.999028
+    #-Inf, -$18, 8/17, 9.567574/10.46954/12.04222, 8.92712/9.709872, 0.8728239
+  #-xgb:
+    #-Model results: FP/Min=0.306749/0.31692, Minutes=6.689288/6.921686, FP=8.26889/8.819944
+    #-Errors:
+      #-FP/Min: 0.3089345/0.3157977, 0.3347037/0.3157977, 5.299697/0.3157977
+      #-Minutes: 6.727826/6.611779, 7.186872/6.611779, 6.988188/6.611779
+      #-FP using FP/Min: 8.816118/8.966542, 8.932131/8.966542, 9.140356/8.966542
+      #-FP: 8.277696/8.811168, 8.932131/8.811168, 9.140356/8.811168
+    #-Inf, -$22, 7/18, 9.08395/9.973668/10.02179, 8.92712/9.684731, 0.8759778
+  #-avg:
+    #-Inf, -$18, 8/17, 9.10792/9.973058/10.13355, 8.92712/9.680534, 0.8855454
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -40,153 +68,41 @@ source('source/lm_2016.R')
 source('source/rf_2016.R')
 source('source/xgb_2016.R')
 
-#Globals
-MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
-PLOT_ALG = 'lm'
-PLOT = 'bal' #fi, bal, scores, cv, rmses
+source('source/_main_common.R')
 
+#Globals
 PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
-ALGS = list(lm=lm(), rf=rf(), xgb=xgb())
-START_DATE = '2016-10-26' #'2016-11-05'
-END_DATE = '2016-12-03'
-PLOT_START_DATE = '2016-11-07'
-.MAX_COV = Inf
-MAX_COVS = list(C=.MAX_COV, SF=.MAX_COV, SG=.MAX_COV, PF=.MAX_COV, PG=.MAX_COV)
-NUM_HILL_CLIMBING_TEAMS = 10
-CONTESTS_TO_PLOT = list(
-  #list(type='FIFTY_FIFTY', entryFee=2, maxEntries=100, maxEntriesPerUser=1, winAmount=1.8, label='50/50, $2, 100, Single-Entry', color='red' ),
-  list(type='DOUBLE_UP', entryFee=2, maxEntries=568, maxEntriesPerUser=1, winAmount=2, label='DoubleUp, $2, 568, Single-Entry', color='blue' ))
 FILENAME = paste0(NUMBER, '_', NAME)
-STARTING_BALANCE = 25
+METHOD = 'FpPerMin'
 
-source('source/_main_common.R')
+MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+PLOT_ALG = ''
+PLOT = 'bal' #fi, bal, scores, cv, rmses
 
-#================= Functions =================
-
-getFeaturesToUseFp = function() {
-  return(c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL))
-}
-getFeaturesToUseFpPerMin = function() {
-  return(c('RG_FpPerMin', 'NF_FpPerMin'))
-}
-getFeaturesToUseMinutes = function() {
-  return(c('RG_minutes', 'NF_Min'))
-}
-
-.createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {
-  if (useAvg) {
-    #get prediction for each algo
-    lm = ALGS[['lm']]
-    lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
-    rf = ALGS[['rf']]
-    rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
-    xgb = ALGS[['xgb']]
-    xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
-    prediction = rowMeans(cbind(lmPrediction, rfPrediction, xgbPrediction))
-  } else {
-    prediction = obj$createPrediction(obj$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
-  }
-  floor = pmax(prediction - test$StDevFP, 0)
-  ceil = prediction + test$StDevFP
-  return(prediction)
-}
-createPredictionFp = function(obj, train, test, amountToAddToY, useAvg=F) {
-  prediction = .createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg)
-  test[[PREDICTION_NAME]] = prediction
-  return(test)
-}
-createPredictionFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
-  #remove players who didn't play any minutes from train
-  train = removePlayersWhoDidNotPlay(train)
-
-  prediction = .createPrediction(obj, train, test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg)
-  test[[PREDICTION_NAME]] = prediction
-
-  return(test)
-}
-createPredictionMinutes = function(obj, train, test, amountToAddToY, useAvg=F) {
-  prediction = .createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg)
-  test[[PREDICTION_NAME]] = prediction
-  return(test)
-}
-createPredictionOfFpUsingFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
-  predictionFpPerMin = createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
-  predictionMinutes = createPredictionMinutes(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
-  prediction = predictionFpPerMin * predictionMinutes
-
-  test[[PREDICTION_NAME]] = prediction
-  return(test)
-}
-
-printModelResultsFp = function(obj, d, amountToAddToY) {
-  cat('Model Results...\n', sep='')
-  obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
-}
-printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
-  cat('Model Results...\n', sep='')
-
-  #remove players who didn't play any minutes from data
-  cat('    FP/Min: ')
-  obj$printModelResults(removePlayersWhoDidNotPlay(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY)
-  cat('    Minutes: ')
-  obj$printModelResults(d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY)
-  cat('    FP: ')
-  obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
-}
-
-.printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, prefix='', shouldRemovePlayersWhoDidNotPlay=F) {
-  #split data into trn, cv
-  split = splitData(d, yName)
-  trn = split$train
-  cv = split$cv
-
-  trn = createPrediction(obj, trn, trn, amountToAddToY)
-  cv = createPrediction(obj, trn, cv, amountToAddToY)
-
-  if (shouldRemovePlayersWhoDidNotPlay) {
-    trn = removePlayersWhoDidNotPlay(trn)
-    cv = removePlayersWhoDidNotPlay(cv)
-  }
-
-  trnError = computeError(trn[[yName]], trn[[PREDICTION_NAME]], amountToAddToY)
-  cvError = computeError(cv[[yName]], cv[[PREDICTION_NAME]], amountToAddToY)
-  cat(prefix, trnError, '/', cvError, sep='')
-
-  #print rg error
-  cvWithRGData = cv[cv$InRotoGrinders == 1,]
-  cat(', ', computeError(cvWithRGData[[yName]], cvWithRGData[[yNameRG]], amountToAddToY), '/', computeError(cvWithRGData[[yName]], cvWithRGData[[PREDICTION_NAME]], amountToAddToY), sep='')
-
-  #print nf error
-  cvWithNFData = cv[cv$InNumberFire == 1,]
-  cat(', ', computeError(cvWithNFData[[yName]], cvWithNFData[[yNameNF]], amountToAddToY), '/', computeError(cvWithNFData[[yName]], cvWithNFData[[PREDICTION_NAME]], amountToAddToY), '\n', sep='')
-}
-printErrorsFp = function(obj, d, amountToAddToY) {
-  cat('Computing Errors...\n')
-  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
-}
-printErrorsFpPerMin = function(obj, d, amountToAddToY) {
-  cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
-
-  cat('    FP/Min: ')
-  .printErrors(obj, d, FP_PER_MIN_NAME, 'RG_FpPerMin', 'NF_FpPerMin', amountToAddToY, createPredictionFpPerMin, shouldRemovePlayersWhoDidNotPlay=T)
-
-  cat('    Minutes: ')
-  .printErrors(obj, d, MINUTES_NAME, 'RG_minutes', 'NF_Min', amountToAddToY, createPredictionMinutes)
-
-  cat('    FP using FP/Min: ')
-  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionOfFpUsingFpPerMin)
-
-  cat('    FP: ')
-  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
-}
+METHODS = list(
+  FP=list(
+    printModelResults=printModelResultsFp,
+    createPrediction=createPredictionFp,
+    printErrors=printErrorsFp,
+    yNameToPlot=FP_NAME,
+    xNamesToPlot=getFeaturesToUseFp()
+  ),
+  FpPerMin=list(
+    printModelResults=printModelResultsFpPerMin,
+    createPrediction=createPredictionOfFpUsingFpPerMin,
+    printErrors=printErrorsFpPerMin,
+    yNameToPlot=FP_PER_MIN_NAME,
+    xNamesToPlot=getFeaturesToUseFpPerMin()
+  )
+)
 
 #================= Main =================
 
-data = setup(START_DATE, END_DATE, PROD_RUN, FILENAME)
+data = getData(START_DATE, END_DATE)
 amountToAddToY = 0#computeAmountToAddToY(data, Y_NAME)
-runAlgs(ALGS, data, printModelResultsFpPerMin, createPredictionOfFpUsingFpPerMin, printErrorsFpPerMin, yNameToPlot=FP_PER_MIN_NAME, xNamesToPlot=getFeaturesToUseFpPerMin(), amountToAddToY)
+runAlgs(ALGS, data, METHODS[[METHOD]]$printModelResults, METHODS[[METHOD]]$createPrediction, METHODS[[METHOD]]$printErrors, yNameToPlot=METHODS[[METHOD]]$yNameToPlot, xNamesToPlot=METHODS[[METHOD]]$xNamesToPlot, amountToAddToY)
 cat('Done!\n')
 
 nov23 = function() {
