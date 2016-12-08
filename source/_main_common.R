@@ -139,15 +139,6 @@ runAlgs = function(algs, d, printModelResults, createPrediction, printErrors, yN
   }
 }
 
-# createBaseModel = function(obj, d, yName, amountToAddToY) {
-#   #create model
-#   cat('Creating Model...\n', sep='')
-#   timeElapsed = system.time(baseModel <- obj$createModel(d, yName, amountToAddToY))
-#   cat('    Time to compute model: ', timeElapsed[3], '\n', sep='')
-#   obj$printModelResults(baseModel, d, yName, amountToAddToY)
-#   return(baseModel)
-# }
-
 findFirstIndexOfDate = function(data, date) {
   index = which(data$Date == date)
   if (length(index) > 0) {
@@ -401,7 +392,8 @@ makeTeams = function(obj, data, fpName, amountToAddToY, predictionName, maxCovs,
     train = trainTest$train
     test = trainTest$test
 
-    test = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
+    prediction = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
+    test[[predictionName]] = prediction
     #plotRmseByFP(test, prediction, fpName, date=dateStr)
 
     myRmse = computeError(test[[fpName]], test[[predictionName]], amountToAddToY)
@@ -588,31 +580,23 @@ getFeaturesToUseMinutes = function() {
   return(prediction)
 }
 createPredictionFp = function(obj, train, test, amountToAddToY, useAvg=F) {
-  prediction = .createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg)
-  test[[PREDICTION_NAME]] = prediction
-  return(test)
+  return(.createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg))
 }
 createPredictionFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
   #remove players who didn't play any minutes from train
   train = removePlayersWhoDidNotPlay(train)
-
   prediction = .createPrediction(obj, train, test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg)
-  test[[PREDICTION_NAME]] = prediction
-
-  return(test)
+  return(prediction)
 }
 createPredictionMinutes = function(obj, train, test, amountToAddToY, useAvg=F) {
-  prediction = .createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg)
-  test[[PREDICTION_NAME]] = prediction
-  return(test)
+  return(.createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg))
 }
 createPredictionOfFpUsingFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
-  predictionFpPerMin = createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
-  predictionMinutes = createPredictionMinutes(obj, train, test, amountToAddToY, useAvg)[[PREDICTION_NAME]]
+  predictionFpPerMin = createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg)
+  predictionMinutes = createPredictionMinutes(obj, train, test, amountToAddToY, useAvg)
   prediction = predictionFpPerMin * predictionMinutes
 
-  test[[PREDICTION_NAME]] = prediction
-  return(test)
+  return(prediction)
 }
 
 printModelResultsFp = function(obj, d, amountToAddToY) {
@@ -637,8 +621,8 @@ printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   trn = split$train
   cv = split$cv
 
-  trn = createPrediction(obj, trn, trn, amountToAddToY)
-  cv = createPrediction(obj, trn, cv, amountToAddToY)
+  trn[[PREDICTION_NAME]] = createPrediction(obj, trn, trn, amountToAddToY)
+  cv[[PREDICTION_NAME]] = createPrediction(obj, trn, cv, amountToAddToY)
 
   if (shouldRemovePlayersWhoDidNotPlay) {
     trn = removePlayersWhoDidNotPlay(trn)
