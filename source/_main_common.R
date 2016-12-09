@@ -394,8 +394,8 @@ makeTeams = function(obj, data, fpName, fpPerMinName, minutesName, amountToAddTo
     fpPerMinPredictionName = 'fpPerMinPrediction'
     minutesPredictionName = 'minutesPrediction'
     test[[fpPredictionName]] = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
-    test[[fpPerMinPredictionName]] = createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg=useAvg)
-    test[[minutesPredictionName]] = createPredictionMinutes(obj, train, test, amountToAddToY, useAvg=useAvg)
+    test[[fpPerMinPredictionName]] = 0# createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg=useAvg)
+    test[[minutesPredictionName]] = 0#createPredictionMinutes(obj, train, test, amountToAddToY, useAvg=useAvg)
     test15 = test[test[[fpPredictionName]] >= 15,]
     #plotRmseByFP(test, prediction, fpName, date=dateStr)
 

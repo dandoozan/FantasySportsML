@@ -18,6 +18,11 @@
   #-rf: 0.09896127/21.77077, 54.40954/53.12176, -$6, 11/14, 9.131757/9.951739/10.23862, 8.92712/9.729632/9.642496, 0.8981058
   #-xgb: 0.289744/0.310105, 6.689288/6.921686, -$2, 12/13, 8.916472/9.781384/10.33825, 8.92712/9.754432/10.57708, 0.92216
   #-avg: $2, 13/12, 8.864286/9.690189/9.740105, 8.92712/9.74107/9.989341, 0.9328839
+#-Add F.NBA.SEASON.PLAYER.ADVANCED to Fp/Min
+  #-lm: 0.3069433/0.2553731, 6.927592/0.5865868, $10, 15/10, 10.87088/NaN/9.923913, 8.92712/NaN/9.988081, 0.9139522
+  #-rf: 0.09811024/22.44351, 54.40954/53.12176, -$10, 10/15, 9.102982/9.9795/10.91552, 8.92712/9.773677/10.476, 0.8860085
+  #-xgb: 0.285829/0.309365, 6.689288/6.921686, -$6, 11/14, 8.899078/9.740801/10.15012, 8.92712/9.737229/10.43631, 0.9206591
+  #-avg: -$6, 11/14, 9.367456/NaN/10.40028, 8.92712/NaN/9.934606
 
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
@@ -49,8 +54,8 @@ FILENAME = paste0(NUMBER, '_', NAME)
 METHOD = 'FpPerMin'
 
 PLOT_ALG = ''
-PLOT = 'fi' #fi, bal, scores, cv, rmses
-MAKE_TEAMS = T#PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
+PLOT = 'bal' #fi, bal, scores, cv, rmses
+MAKE_TEAMS = F#PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 
 METHODS = list(
   FP=list(
