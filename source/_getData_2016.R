@@ -159,35 +159,31 @@ featureEngineer = function(d) {
   d$RG_FpPerMin = ifelse(d$RG_minutes == 0, 0, computeFpPerMin(d$RG_points, d$RG_minutes))
   d$NF_FpPerMin = computeFpPerMin(d$NF_FP, d$NF_Min)
 
-
   #compute MeanFP, StDevFP, MinFP, COV
   d$MeanFP = 0
   d$StDevFP = 0
   d$MinFP = 0
-  # d$MeanFPPerMin = 0
-  # d$StDevFPPerMin = 0
-  # d$MinFPPerMin = 0
+  d$MeanFpPerMin = 0
   names = unique(d$Name)
   for (name in names) {
     playerData = d[d$Name == name,]
+
+    #add MeanFP, StDevFP, MinFP
     dateStrs = getUniqueDates(playerData)[-1]
     for (dateStr in dateStrs) {
-      rows = which(d$Name == name & d$Date == dateStr)
+      row = which(d$Name == name & d$Date == dateStr)
       fpsUpToDate = playerData[playerData$Date < dateStr, 'FP']
-      #minutesUpToDate = playerData[playerData$Date < dateStr, 'NBA_TODAY_MIN']
-      #fpPerMinutesUpToDate = fpsUpToDate / minutesUpToDate
+      d[row, 'MeanFP'] = mean(fpsUpToDate)
+      d[row, 'StDevFP'] = psd(fpsUpToDate)
+      d[row, 'MinFP'] = min(fpsUpToDate)
 
-      d[rows, 'MeanFP'] = mean(fpsUpToDate)
-      d[rows, 'StDevFP'] = psd(fpsUpToDate)
-      d[rows, 'MinFP'] = min(fpsUpToDate)
-
-      # d[rows, 'MeanFPPerMin'] = mean(fpPerMinutesUpToDate)
-      # d[rows, 'StDevFPPerMin'] = psd(fpPerMinutesUpToDate)
-      # d[rows, 'MinFPPerMin'] = min(fpPerMinutesUpToDate)
+      fpsPerMinUpToDateWhenPlayed = playerData[playerData$Date < dateStr & playerData$NBA_TODAY_MIN > 0, 'FP_PER_MIN']
+      if (length(fpsPerMinUpToDateWhenPlayed) > 0) {
+        d[row, 'MeanFpPerMin'] = mean(fpsPerMinUpToDateWhenPlayed)
+      }
     }
   }
   d$COV = ifelse(d$MeanFP == 0, Inf, d$StDevFP / d$MeanFP)
-  #d$COV_FPPerMin = ifelse(d$MeanFPPerMin == 0, Inf, d$StDevFPPerMin / d$MeanFPPerMin)
 
   #----------F.RG.PP-----------
   #add team RG expected points and teammates' RG expected scores

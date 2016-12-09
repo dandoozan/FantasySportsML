@@ -120,7 +120,7 @@ runAlgs = function(algs, d, printModelResults, createPrediction, printErrors, yN
       cat('---------------', toupper(algName), '---------------\n')
       obj = algs[[algName]]
       printModelResults(obj, d, amountToAddToY)
-      printErrors(obj, d, amountToAddToY)
+      #printErrors(obj, d, amountToAddToY)
       teamStats = if (MAKE_TEAMS) makeTeams(obj, d, FP_NAME, FP_PER_MIN_NAME, MINUTES_NAME, amountToAddToY, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
       if (PLOT_ALG == algName) {
         makePlots(obj, PLOT, d, yNameToPlot, xNamesToPlot, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
@@ -568,7 +568,7 @@ getFeaturesToUseFp = function() {
   return(c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL))
 }
 getFeaturesToUseFpPerMin = function() {
-  return(c('RG_FpPerMin', 'NF_FpPerMin'))
+  return(c('RG_FpPerMin', 'NF_FpPerMin', 'MeanFpPerMin'))
 }
 getFeaturesToUseMinutes = function() {
   return(c('RG_minutes', 'NF_Min'))
