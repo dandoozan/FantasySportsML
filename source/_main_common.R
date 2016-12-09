@@ -394,7 +394,7 @@ makeTeams = function(obj, data, fpName, fpPerMinName, minutesName, amountToAddTo
     fpPerMinPredictionName = 'fpPerMinPrediction'
     minutesPredictionName = 'minutesPrediction'
     test[[fpPredictionName]] = createPrediction(obj, train, test, amountToAddToY, useAvg=useAvg)
-    test[[fpPerMinPredictionName]] = 0# createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg=useAvg)
+    test[[fpPerMinPredictionName]] = 0#createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg=useAvg)
     test[[minutesPredictionName]] = 0#createPredictionMinutes(obj, train, test, amountToAddToY, useAvg=useAvg)
     test15 = test[test[[fpPredictionName]] >= 15,]
     #plotRmseByFP(test, prediction, fpName, date=dateStr)
@@ -571,7 +571,7 @@ getFeaturesToUseFpPerMin = function() {
   return(c('RG_FpPerMin', 'NF_FpPerMin', 'MeanFpPerMin', F.NBA.SEASON.PLAYER.TRADITIONAL, F.RG.PP))
 }
 getFeaturesToUseMinutes = function() {
-  return(c('RG_minutes', 'NF_Min'))
+  return(c(F.RG.PP, 'NF_Min', 'MeanMinutes', F.NBA.SEASON.PLAYER.TRADITIONAL))
 }
 
 .createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {

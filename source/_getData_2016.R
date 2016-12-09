@@ -164,6 +164,7 @@ featureEngineer = function(d) {
   d$StDevFP = 0
   d$MinFP = 0
   d$MeanFpPerMin = 0
+  d$MeanMinutes = 0
   names = unique(d$Name)
   for (name in names) {
     playerData = d[d$Name == name,]
@@ -177,9 +178,10 @@ featureEngineer = function(d) {
       d[row, 'StDevFP'] = psd(fpsUpToDate)
       d[row, 'MinFP'] = min(fpsUpToDate)
 
-      fpsPerMinUpToDateWhenPlayed = playerData[playerData$Date < dateStr & playerData$NBA_TODAY_MIN > 0, 'FP_PER_MIN']
-      if (length(fpsPerMinUpToDateWhenPlayed) > 0) {
-        d[row, 'MeanFpPerMin'] = mean(fpsPerMinUpToDateWhenPlayed)
+      playerDataUpToDateWhenPlayed = playerData[playerData$Date < dateStr & playerData$NBA_TODAY_MIN > 0,]
+      if (nrow(playerDataUpToDateWhenPlayed) > 0) {
+        d[row, 'MeanFpPerMin'] = mean(playerDataUpToDateWhenPlayed$FP_PER_MIN)
+        d[row, 'MeanMinutes'] = mean(playerDataUpToDateWhenPlayed$NBA_TODAY_MIN)
       }
     }
   }
