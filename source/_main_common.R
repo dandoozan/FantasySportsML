@@ -568,7 +568,7 @@ getFeaturesToUseFp = function() {
   return(c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL))
 }
 getFeaturesToUseFpPerMin = function() {
-  return(c('RG_FpPerMin', 'NF_FpPerMin', 'MeanFpPerMin'))
+  return(c('RG_FpPerMin', 'NF_FpPerMin', 'MeanFpPerMin', F.NBA.SEASON.PLAYER.TRADITIONAL, F.RG.PP))
 }
 getFeaturesToUseMinutes = function() {
   return(c('RG_minutes', 'NF_Min'))
@@ -611,20 +611,19 @@ createPredictionOfFpUsingFpPerMin = function(obj, train, test, amountToAddToY, u
   return(prediction)
 }
 
+.printModelResults = function(obj, d, yName, xNames, amountToAddToY, description) {
+  cat('    ', description, ' (', yName, '~', length(xNames), ' features): ', sep='')
+  obj$printModelResults(d, yName, xNames, amountToAddToY)
+}
 printModelResultsFp = function(obj, d, amountToAddToY) {
   cat('Model Results...\n', sep='')
-  obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
+  .printModelResults(obj, d, FP_NAME, getFeaturesToUseFp(), amountToAddToY, 'FP')
 }
 printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   cat('Model Results...\n', sep='')
-
-  #remove players who didn't play any minutes from data
-  cat('    FP/Min: ')
-  obj$printModelResults(removePlayersWhoDidNotPlay(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY)
-  cat('    Minutes: ')
-  obj$printModelResults(d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY)
-  cat('    FP: ')
-  obj$printModelResults(d, FP_NAME, getFeaturesToUseFp(), amountToAddToY)
+  .printModelResults(obj, removePlayersWhoDidNotPlay(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, 'FP/Min')
+  .printModelResults(obj, d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, 'Minutes')
+  #.printModelResults(obj, d, FP_NAME, getFeaturesToUseFp(), amountToAddToY, 'FP')
 }
 
 .printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, prefix='', shouldRemovePlayersWhoDidNotPlay=F) {
