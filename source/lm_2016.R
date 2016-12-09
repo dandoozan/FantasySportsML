@@ -5,7 +5,7 @@ lm = function() {
     createModel = function(d, yName, xNames, amountToAddToY) {
       #d[[yName]] = log(d[[yName]] + amountToAddToY)
       set.seed(754)
-      return(stats::lm(formula=getFormula(yName, xNames), data=d))
+      return(stats::lm(formula=getFormula(yName), data=oneHotEncode(d, c(yName, xNames))))
     },
     createPrediction = function(model, newData, xNames, amountToAddToY) {
       return(predict(model, newData, type='response'))

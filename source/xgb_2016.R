@@ -55,8 +55,8 @@ xgb = function() {
                        verbose=0))
     },
     createPrediction = function(model, newData, xNames, amountToAddToY) {
-      return(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames))))
-      #return(exp(predict(model, data.matrix(xgbObj$oneHotEncode(newData, xNames)))) - amountToAddToY)
+      return(predict(model, data.matrix(oneHotEncode(newData, xNames))))
+      #return(exp(predict(model, data.matrix(oneHotEncode(newData, xNames)))) - amountToAddToY)
     },
 
     createCvModel = function(d, yName, xNames, amountToAddToY) {
@@ -156,7 +156,7 @@ xgb = function() {
     plotImportances = function(model, d, xNames, maxFeatures=50, save=FALSE, filename='') {
       cat('    Plotting Feature Importances...\n')
 
-      featureNames = colnames(xgbObj$oneHotEncode(d, xNames))
+      featureNames = colnames(oneHotEncode(d, xNames))
 
       importances = xgb.importance(feature_names=featureNames, model=model)
       importances = importances[1:min(nrow(importances), maxFeatures), ]
@@ -212,13 +212,8 @@ xgb = function() {
     getDMatrix = function(d, yName, xNames, amountToAddToY) {
       set.seed(634)
       #return(xgb.DMatrix(data=data[, xNames], label=data[, yName]))
-      return(xgb.DMatrix(data=data.matrix(xgbObj$oneHotEncode(d, xNames)), label=d[, yName]))
-      #return(xgb.DMatrix(data=data.matrix(xgbObj$oneHotEncode(d, xNames)), label=log(d[, yName] + amountToAddToY)))
-    },
-    oneHotEncode = function(d, xNames) {
-      dataToUse = convertToDataFrame(d[, xNames], xNames)
-      dmy = caret::dummyVars('~.', dataToUse, fullRank=T)
-      return(data.frame(predict(dmy, dataToUse)))
+      return(xgb.DMatrix(data=data.matrix(oneHotEncode(d, xNames)), label=d[, yName]))
+      #return(xgb.DMatrix(data=data.matrix(oneHotEncode(d, xNames)), label=log(d[, yName] + amountToAddToY)))
     },
 
     printModelResults = function(d, yName, xNames, amountToAddToY, prefix='') {
