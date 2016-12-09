@@ -131,7 +131,7 @@ runAlgs = function(algs, d, printModelResults, createPrediction, printErrors, yN
   #now run the avg
   if (PLOT_ALG == '' || PLOT_ALG == 'avg') {
     cat('---------------AVG---------------\n')
-    teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, FP_NAME, amountToAddToY, PREDICTION_NAME, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
+    teamStats = if (MAKE_TEAMS) makeTeams(NULL, d, FP_NAME, FP_PER_MIN_NAME, MINUTES_NAME, amountToAddToY, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, T) else list()
     if (PLOT_ALG == 'avg') {
       makePlots(NULL, PLOT, d, yNameToPlot, xNamesToPlot, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
     }
@@ -506,9 +506,9 @@ makeTeams = function(obj, data, fpName, fpPerMinName, minutesName, amountToAddTo
   cat('\n')
 
   #print mean of rmses
-  cat('FP: all/≥15/team (RG/Mine): ', mean(rmseMatrix[,'rgRmses']), '/', mean(rmseMatrix[,'myRmses']), ', ', mean(rmseMatrix[,'rgRmses15']), '/', mean(rmseMatrix[,'myRmses15']), ', ', mean(rmseMatrix[,'rgTeamRmses']), '/', mean(rmseMatrix[,'myTeamRmses']), '\n', sep='')
-  cat('FP/Min: all/≥15/team (RG/Mine): ', mean(rmseMatrix[,'rgFpPerMinRmses']), '/', mean(rmseMatrix[,'fpPerMinRmses']), ', ', mean(rmseMatrix[,'rgFpPerMinRmses15']), '/', mean(rmseMatrix[,'fpPerMinRmses15']), ', ', mean(rmseMatrix[,'rgFpPerMinTeamRmses']), '/', mean(rmseMatrix[,'fpPerMinTeamRmses']), '\n', sep='')
-  cat('Minutes: all/≥15/team (RG/Mine): ', mean(rmseMatrix[,'rgMinutesRmses']), '/', mean(rmseMatrix[,'minutesRmses']), ', ', mean(rmseMatrix[,'rgMinutesRmses15']), '/', mean(rmseMatrix[,'minutesRmses15']), ', ', mean(rmseMatrix[,'rgMinutesTeamRmses']), '/', mean(rmseMatrix[,'minutesTeamRmses']), '\n', sep='')
+  cat('FP: all/≥15/team (Mine, RG): ', mean(rmseMatrix[,'myRmses']), '/', mean(rmseMatrix[,'myRmses15']), '/', mean(rmseMatrix[,'myTeamRmses']), ', ', mean(rmseMatrix[,'rgRmses']), '/', mean(rmseMatrix[,'rgRmses15']), '/', mean(rmseMatrix[,'rgTeamRmses']), '\n', sep='')
+  cat('FP/Min: all/≥15/team (Mine, RG): ', mean(rmseMatrix[,'fpPerMinRmses']), '/', mean(rmseMatrix[,'fpPerMinRmses15']), '/', mean(rmseMatrix[,'fpPerMinTeamRmses']), ', ', mean(rmseMatrix[,'rgFpPerMinRmses']), '/', mean(rmseMatrix[,'rgFpPerMinRmses15']), '/', mean(rmseMatrix[,'rgFpPerMinTeamRmses']), '\n', sep='')
+  cat('Minutes: all/≥15/team (Mine, RG): ', mean(rmseMatrix[,'minutesRmses']), '/', mean(rmseMatrix[,'minutesRmses15']), '/', mean(rmseMatrix[,'minutesTeamRmses']), ', ', mean(rmseMatrix[,'rgMinutesRmses']), '/', mean(rmseMatrix[,'rgMinutesRmses15']), '/', mean(rmseMatrix[,'rgMinutesTeamRmses']), '\n', sep='')
 
   #print myteam score / lowestWinningScore ratio, call it "scoreRatios"
   scoreRatios = myTeamActualFPs/lowestWinningScores
@@ -673,8 +673,6 @@ printErrorsFpPerMin = function(obj, d, amountToAddToY) {
   cat('    FP: ')
   .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
 }
-
-
 
 #----------------- utility functions ----------------
 plotBucketRmses = function(obj, d, yName, predName, amountToAddToY, interval) {
