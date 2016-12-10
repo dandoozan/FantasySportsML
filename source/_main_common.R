@@ -119,8 +119,8 @@ runAlgs = function(algs, d, printModelResults, createPrediction, printErrors, yN
     if (PLOT_ALG == '' || PLOT_ALG == algName) {
       cat('---------------', toupper(algName), '---------------\n')
       obj = algs[[algName]]
-      printModelResults(obj, d, amountToAddToY)
-      #printErrors(obj, d, amountToAddToY)
+      if (!is.null(printModelResults)) printModelResults(obj, d, amountToAddToY)
+      #if (!is.null(printErrors)) printErrors(obj, d, amountToAddToY)
       teamStats = if (MAKE_TEAMS) makeTeams(obj, d, FP_NAME, FP_PER_MIN_NAME, MINUTES_NAME, amountToAddToY, MAX_COVS, NUM_HILL_CLIMBING_TEAMS, createPrediction, CONTESTS_TO_PLOT, STARTING_BALANCE, PLOT, PROD_RUN, F) else list()
       if (PLOT_ALG == algName) {
         makePlots(obj, PLOT, d, yNameToPlot, xNamesToPlot, amountToAddToY, FILENAME, CONTESTS_TO_PLOT, teamStats, PROD_RUN)
@@ -559,9 +559,6 @@ computeAmountToAddToY = function(d, yName) {
   cat('Adding ', amountToAddToY, ' to Y\n', sep='')
   return(amountToAddToY)
 }
-removePlayersWhoDidNotPlay = function(d) {
-  return(d[d[[MINUTES_NAME]] != 0,])
-}
 
 
 getFeaturesToUseFp = function() {
@@ -572,6 +569,13 @@ getFeaturesToUseFpPerMin = function() {
 }
 getFeaturesToUseMinutes = function() {
   return(c(F.RG.PP, 'NF_Min', 'MeanMinutes', F.NBA.SEASON.PLAYER.TRADITIONAL))
+}
+getFeaturesToUseFpByPlayer = function() {
+  return(c('RG_points', 'NF_FP'))
+}
+
+transformDataFpPerMin = function(d) {
+  return(d[d[[MINUTES_NAME]] >= 5,])
 }
 
 .createPrediction = function(obj, train, test, yName, xNames, amountToAddToY, useAvg=F) {
@@ -595,10 +599,7 @@ createPredictionFp = function(obj, train, test, amountToAddToY, useAvg=F) {
   return(.createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg))
 }
 createPredictionFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
-  #remove players who didn't play any minutes from train
-  train = removePlayersWhoDidNotPlay(train)
-  prediction = .createPrediction(obj, train, test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg)
-  return(prediction)
+  return(.createPrediction(obj, transformDataFpPerMin(train), test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg))
 }
 createPredictionMinutes = function(obj, train, test, amountToAddToY, useAvg=F) {
   return(.createPrediction(obj, train, test, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, useAvg))
@@ -609,6 +610,23 @@ createPredictionOfFpUsingFpPerMin = function(obj, train, test, amountToAddToY, u
   prediction = predictionFpPerMin * predictionMinutes
 
   return(prediction)
+}
+createPredictionFpByPlayer = function(obj, train, test, amountToAddToY, useAvg=F) {
+  predictionName = 'Pred'
+  xNames = getFeaturesToUseFpByPlayer()
+
+  #set prediction to RG_points by default, which it will be if i dont have any previous data for the player
+  test[[predictionName]] = test$RG_points
+
+  for (name in test$Name) {
+    row = which(test$Name == name)
+    trainDataForPlayer = train[train$Name == name & train$NBA_TODAY_MIN > 0,]
+    if (nrow(trainDataForPlayer) > 10) {
+      test[row, predictionName] = .createPrediction(obj, trainDataForPlayer, test[row,], FP_NAME, xNames, amountToAddToY, useAvg)
+      #cat('\n***name, meanfp, prediction=', name, ', ', test[row, 'MeanFP'], ', ', test[row, predictionName], '\n')
+    }
+  }
+  return(test[[predictionName]])
 }
 
 .printModelResults = function(obj, d, yName, xNames, amountToAddToY, description) {
@@ -621,12 +639,12 @@ printModelResultsFp = function(obj, d, amountToAddToY) {
 }
 printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   cat('Model Results...\n', sep='')
-  .printModelResults(obj, removePlayersWhoDidNotPlay(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, 'FP/Min')
+  .printModelResults(obj, transformDataFpPerMin(d), FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, 'FP/Min')
   .printModelResults(obj, d, MINUTES_NAME, getFeaturesToUseMinutes(), amountToAddToY, 'Minutes')
   #.printModelResults(obj, d, FP_NAME, getFeaturesToUseFp(), amountToAddToY, 'FP')
 }
 
-.printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, prefix='', shouldRemovePlayersWhoDidNotPlay=F) {
+.printErrors = function(obj, d, yName, yNameRG, yNameNF, amountToAddToY, createPrediction, prefix='', transformData=NULL) {
   #split data into trn, cv
   split = splitData(d, yName)
   trn = split$train
@@ -636,9 +654,9 @@ printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   trn[[predictionName]] = createPrediction(obj, trn, trn, amountToAddToY)
   cv[[predictionName]] = createPrediction(obj, trn, cv, amountToAddToY)
 
-  if (shouldRemovePlayersWhoDidNotPlay) {
-    trn = removePlayersWhoDidNotPlay(trn)
-    cv = removePlayersWhoDidNotPlay(cv)
+  if (!is.null(transformData)) {
+    trn = transformData(trn)
+    cv = transformData(cv)
   }
 
   trnError = computeError(trn[[yName]], trn[[predictionName]], amountToAddToY)
@@ -661,7 +679,7 @@ printErrorsFpPerMin = function(obj, d, amountToAddToY) {
   cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
 
   cat('    FP/Min: ')
-  .printErrors(obj, d, FP_PER_MIN_NAME, 'RG_FpPerMin', 'NF_FpPerMin', amountToAddToY, createPredictionFpPerMin, shouldRemovePlayersWhoDidNotPlay=T)
+  .printErrors(obj, d, FP_PER_MIN_NAME, 'RG_FpPerMin', 'NF_FpPerMin', amountToAddToY, createPredictionFpPerMin, transformData=transformDataFpPerMin)
 
   cat('    Minutes: ')
   .printErrors(obj, d, MINUTES_NAME, 'RG_minutes', 'NF_Min', amountToAddToY, createPredictionMinutes)
@@ -697,34 +715,19 @@ getPredictionForDate = function(dateStr, yName) {
   test = sp$test
   return(getPredictionDF(createPrediction(obj, train, test, yName, featuresToUse), test, yName, amountToAddToY))
 }
-getCvPrediction = function(obj, d, yName) {
-  featuresToUse = getFeaturesToUse(d)
-  amountToAddToY = computeAmountToAddToY(d, yName)
-  hyperParams = obj$findBestHyperParams(d, yName, featuresToUse, amountToAddToY)
+addPredCols = function(obj, d, yName, xNames, amountToAddToY) {
 
-  split = splitData(d, yName)
-  trn = split$train
-  cv = split$cv
+  d$pred = obj$createPrediction(obj$createModel(d, yName, xNames, amountToAddToY), d, xNames, amountToAddToY)
+  d$diff = d[[yName]] - d$pred
+  d$absDiff = abs(d$diff)
+  d$pctDiff = d$diff / d$pred * 100
 
-  cvPrediction = createPrediction(obj, trn, cv, yName, featuresToUse, amountToAddToY)
-  cvError = computeError(cv[[yName]], cvPrediction, amountToAddToY)
+  d$predBuckets = cut(d$pred, breaks=10)
+  d$minutesBuckets = cut(d$NBA_TODAY_MIN, breaks=seq(round(min(d$NBA_TODAY_MIN)), max(d$NBA_TODAY_MIN), 2))
+  #plot(diff~predBuckets, d)
+  #plot(diff~minutesBuckets, d)
 
-  cv$Pred = cvPrediction
-  cv$Diff = abs(cv[[yName]] - cv$Pred)
-  cv$PctDiff = cv$Diff / cv$Pred * 100
-
-  # interval = 5
-  # intervals = seq(interval, nrow(cv), interval)
-  # for (i in intervals) {
-  #   subset = cv[cv$Pred > low & cv$Pred <= high,]
-  #   rmse = computeError(subset[[yName]], subset$Pred, amountToAddToY)
-  #   rmses = c(rmses, rmse)
-  # }
-
-  cv$PredBuckets = cut(cv$Pred, breaks=10)
-  #plot(Diff~PredBuckets, cv)
-
-  return(cv)
+  return(d)
 }
 getDataPrediction = function(d, yName) {
   featuresToUse = getFeaturesToUse(d)
