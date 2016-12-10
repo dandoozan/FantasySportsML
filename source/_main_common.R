@@ -326,7 +326,7 @@ plotScores = function(dateStrs, bandLow=c(), bandHigh=c(), contestLowests=list()
   addLegend(rev(labels), rev(colors))
 
   #add date axis
-  axis.Date(side=1, dates, format="%m/%d")
+  axis.Date(side=1, at=dates, format="%m/%d")
 
   if (save) endSavePlot()
 }
@@ -741,7 +741,7 @@ getDataPrediction = function(d, yName) {
   #plot(PctDiff~RG_B2B_Situation, d[d$Pred > 15,])
 }
 
-getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
+getTeamForDate = function(method, obj, d, dateStr, rg=F, maxCov=Inf, useAvg=F) {
   maxCovs = list(C=maxCov, SF=maxCov, SG=maxCov, PF=maxCov, PG=maxCov)
   #Dates investigated:
     #-11/22:
@@ -808,46 +808,52 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
         #-dvp: 18
 
 
-  xNames = getFeaturesToUse(d)
+  #xNames = getFeaturesToUse()
 
   sp = splitDataIntoTrainTest(d, 'start', dateStr)
   train = sp$train
   test = sp$test
 
-  amountToAddToY = 3
+  yName = FP_NAME
+  amountToAddToY = 0
 
-  lm = ALGS[['lm']]
-  lmPrediction = lm$createPrediction(lm$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
-  rf = ALGS[['rf']]
-  rfPrediction = rf$createPrediction(rf$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
-  xgb = ALGS[['xgb']]
-  xgbPrediction = xgb$createPrediction(xgb$createModel(train, yName, xNames, amountToAddToY), test, xNames, amountToAddToY)
 
-  test$Pred = round(createPrediction(obj, train, test, yName, xNames, amountToAddToY, useAvg), 2)
-  test$lmPred = round(lmPrediction, 2)
-  test$rfPred = round(rfPrediction, 2)
-  test$xgbPred = round(xgbPrediction, 2)
-  test$Diff = test[[yName]] - test$Pred
+  cat('Creating predictions...\n')
+  #predict fp
+  test$Pred = round(METHODS[[method]]$createPrediction(obj, train, test, amountToAddToY, useAvg), 2)
+  #test$avgPred = round(METHODS[[method]]$createPrediction(NULL, train, test, amountToAddToY, useAvg=T), 2)
+  #test$lmPred = round(METHODS[[method]]$createPrediction(ALGS[['lm']], train, test, amountToAddToY), 2)
+  #test$rfPred = round(METHODS[[method]]$createPrediction(ALGS[['rf']], train, test, amountToAddToY), 2)
+  #test$xgbPred = round(METHODS[[method]]$createPrediction(ALGS[['xgb']], train, test, amountToAddToY), 2)
+  test$Diff = test[[FP_NAME]] - test$Pred
   test$PctDiff = round(test$Diff / test$Pred * 100, 2)
 
+  #predict fp/min
+  test$PredFPM = round(createPredictionFpPerMin(obj, train, test, amountToAddToY, useAvg), 2)
+
+  #predict minutes
+  test$PredMins = round(createPredictionMinutes(obj, train, test, amountToAddToY, useAvg), 2)
+
+
+  cat('Creating team...\n')
   team = if (rg) createTeam_Greedy(test, 'RG_points', maxCovs=maxCovs) else createTeam_Greedy(test, 'Pred', maxCovs=maxCovs)
   if (is.null(team)) return(NULL)
 
   #set minFP, meanFP, and stdevFP
   team$minFP = 0
   team$meanFP = 0
-  team$stDev = 0
+  team$stDevFP = 0
   for (i in 1:nrow(team)) {
     name = team[i, 'Name']
     trainFPs = train[train$Name == name, yName]
     if (length(trainFPs) > 0) {
-      #team[i, 'minFP'] = min(trainFPs)
-      #team[i, 'meanFP'] = round(mean(trainFPs), 2)
-      #team[i, 'stDev'] = round(psd(trainFPs), 2)
+      team[i, 'minFP'] = min(trainFPs)
+      team[i, 'meanFP'] = round(mean(trainFPs), 2)
+      team[i, 'stDevFP'] = round(psd(trainFPs), 2)
       team[i, 'avgMins'] = round(mean(train[train$Name == name, 'NBA_TODAY_MIN']), 2)
     }
   }
-  #team$myCov = round(team$stDev / team$meanFP, 2)
+  team$myCov = round(team$stDevFP / team$meanFP, 2)
 
   #rename some cols
   team$pos = team$Position
@@ -856,7 +862,7 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
   team$rgStDev = round(team$RG_deviation, 2)
   team$rgMins = team$RG_minutes
   team$nfMins = team$NF_Min
-  team$mins = team$NBA_TODAY_MIN
+  team$MINS = team$NBA_TODAY_MIN
   team$ovrundr = team$RG_overunder
   team$line = team$RG_line
   team$total = team$RG_total
@@ -866,6 +872,8 @@ getTeamForDate = function(obj, d, dateStr, yName, rg=F, maxCov=Inf, useAvg=F) {
   team$b2b = team$RG_B2B_Situation
   team$gp = team$NBA_S_P_TRAD_GP
   team$pownp = team$RG_pownpct
+  team$FPM = round(team$FP_PER_MIN, 2)
+  team$rgFPM = round(team$RG_FpPerMin, 2)
 
   team$MeanFP = round(team$MeanFP, 2)
   team$StDevFP = round(team$StDevFP, 2)
