@@ -60,7 +60,7 @@ STARTING_BALANCE = 25
 
 
 #features excluded: FantasyPoints, Minutes, Date, Name
-F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent')
+F.ID = c('Date', 'Name', 'Position', 'Team', 'Opponent', FP_NAME, MINUTES_NAME, FP_PER_MIN_NAME)
 F.FANDUEL = c('Date', 'Name', 'Position', 'FPPG', 'GamesPlayed', 'Salary', 'Home', 'Team', 'Opponent', 'InjuryIndicator', 'InjuryDetails')
 F.ROTOGURU = c('FantasyPoints', 'Minutes')
 F.NUMBERFIRE = c('NF_Min', 'NF_Pts', 'NF_Reb', 'NF_Ast', 'NF_Stl', 'NF_Blk', 'NF_TO', 'NF_FP')
