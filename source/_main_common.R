@@ -575,6 +575,9 @@ getFeaturesToUseFpByPlayer = function() {
   return(c('RG_points', 'NF_FP'))
 }
 
+transformDataFp = function(d) {
+  return(d[d[[MINUTES_NAME]] > 0,])
+}
 transformDataFpPerMin = function(d) {
   return(d[d[[MINUTES_NAME]] >= 5,])
 }
@@ -597,7 +600,7 @@ transformDataFpPerMin = function(d) {
   return(prediction)
 }
 createPredictionFp = function(obj, train, test, amountToAddToY, useAvg=F) {
-  return(.createPrediction(obj, train, test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg))
+  return(.createPrediction(obj, transformDataFp(train), test, FP_NAME, getFeaturesToUseFp(), amountToAddToY, useAvg))
 }
 createPredictionFpPerMin = function(obj, train, test, amountToAddToY, useAvg=F) {
   return(.createPrediction(obj, transformDataFpPerMin(train), test, FP_PER_MIN_NAME, getFeaturesToUseFpPerMin(), amountToAddToY, useAvg))
@@ -636,7 +639,7 @@ createPredictionFpByPlayer = function(obj, train, test, amountToAddToY, useAvg=F
 }
 printModelResultsFp = function(obj, d, amountToAddToY) {
   cat('Model Results...\n', sep='')
-  .printModelResults(obj, d, FP_NAME, getFeaturesToUseFp(), amountToAddToY, 'FP')
+  .printModelResults(obj, transformDataFp(d), FP_NAME, getFeaturesToUseFp(), amountToAddToY, 'FP')
 }
 printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
   cat('Model Results...\n', sep='')
@@ -674,7 +677,7 @@ printModelResultsFpPerMin = function(obj, d, amountToAddToY) {
 }
 printErrorsFp = function(obj, d, amountToAddToY) {
   cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
-  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp, prefix='    ')
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp, transformData=transformDataFp, prefix='    ')
 }
 printErrorsFpPerMin = function(obj, d, amountToAddToY) {
   cat('Computing Errors (Trn/CV, CV RG/Mine, CV NF/Mine)...\n')
@@ -689,7 +692,7 @@ printErrorsFpPerMin = function(obj, d, amountToAddToY) {
   .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionOfFpUsingFpPerMin)
 
   cat('    FP: ')
-  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp)
+  .printErrors(obj, d, FP_NAME, 'RG_points', 'NF_FP', amountToAddToY, createPredictionFp, transformData=transformDataFp)
 }
 
 #----------------- utility functions ----------------
@@ -879,6 +882,7 @@ addPredCols = function(obj, d, model, yName, xNames, amountToAddToY) {
   d$diff = d[[yName]] - d$pred
   d$absDiff = abs(d$diff)
   d$pctDiff = d$diff / d$pred * 100
+  d$absPctDiff = d$absDiff / d$pred * 100
 
   d$predBuckets = cut(d$pred, breaks=10)
   d$minutesBuckets = cut(d$NBA_TODAY_MIN, breaks=seq(round(min(d$NBA_TODAY_MIN)), max(d$NBA_TODAY_MIN), 2))
