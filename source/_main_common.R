@@ -565,6 +565,7 @@ getFeaturesToUseFp = function() {
   return(c(F.RG.PP, 'NF_FP', 'MeanFP', F.NBA.SEASON.PLAYER.TRADITIONAL))
 }
 getFeaturesToUseFpPerMin = function() {
+  #return(c('NBA_S_P_TRAD_MIN', 'MeanFpPerMin', 'NBA_S_P_TRAD_FGA', 'RG_FpPerMin', 'NBA_S_P_ADV_USG_PCT', 'NBA_S_P_ADV_EFG_PCT', 'NBA_S_P_DEF_DEF_RATING', 'NBA_S_P_DEF_PCT_DREB', 'NBA_PB_PLAYER_WEIGHT', 'OPP_DVP_FPPG', 'OPP_DVP_RANK', 'Position', 'Salary', 'Home', 'Opponent', 'RG_line', 'RG_overunder', 'RG_total', 'RG_salary15', 'RG_salary28', 'RG_salary43', 'RG_ADV_TSPCT', 'RG_START_Starter'))
   return(c('RG_FpPerMin', 'NF_FpPerMin', 'MeanFpPerMin', F.NBA.SEASON.PLAYER.TRADITIONAL, F.RG.PP))
 }
 getFeaturesToUseMinutes = function() {
@@ -714,20 +715,6 @@ getPredictionForDate = function(dateStr, yName) {
   train = sp$train
   test = sp$test
   return(getPredictionDF(createPrediction(obj, train, test, yName, featuresToUse), test, yName, amountToAddToY))
-}
-addPredCols = function(obj, d, yName, xNames, amountToAddToY) {
-
-  d$pred = obj$createPrediction(obj$createModel(d, yName, xNames, amountToAddToY), d, xNames, amountToAddToY)
-  d$diff = d[[yName]] - d$pred
-  d$absDiff = abs(d$diff)
-  d$pctDiff = d$diff / d$pred * 100
-
-  d$predBuckets = cut(d$pred, breaks=10)
-  d$minutesBuckets = cut(d$NBA_TODAY_MIN, breaks=seq(round(min(d$NBA_TODAY_MIN)), max(d$NBA_TODAY_MIN), 2))
-  #plot(diff~predBuckets, d)
-  #plot(diff~minutesBuckets, d)
-
-  return(d)
 }
 getDataPrediction = function(d, yName) {
   featuresToUse = getFeaturesToUse(d)
@@ -886,4 +873,17 @@ getTeamForDate = function(method, obj, d, dateStr, rg=F, maxCov=Inf, useAvg=F) {
 
   #print
   #t[, c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'lmPred', 'rfPred', 'xgbPred', 'rgPred', 'nfPred', 'MeanFP', 'MinFP', 'StDevFP', 'COV', 'ovrundr', 'line', 'total', 'rgMins', 'nfMins', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'gp', 'b2b', 'pownp')]
+}
+addPredCols = function(obj, d, model, yName, xNames, amountToAddToY) {
+  d$pred = obj$createPrediction(model, d, xNames, amountToAddToY)
+  d$diff = d[[yName]] - d$pred
+  d$absDiff = abs(d$diff)
+  d$pctDiff = d$diff / d$pred * 100
+
+  d$predBuckets = cut(d$pred, breaks=10)
+  d$minutesBuckets = cut(d$NBA_TODAY_MIN, breaks=seq(round(min(d$NBA_TODAY_MIN)), max(d$NBA_TODAY_MIN), 2))
+  #plot(diff~predBuckets, d)
+  #plot(diff~minutesBuckets, d)
+
+  return(d)
 }

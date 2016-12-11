@@ -172,14 +172,15 @@ featureEngineer = function(d) {
     #add MeanFP, StDevFP, MinFP
     dateStrs = getUniqueDates(playerData)[-1]
     for (dateStr in dateStrs) {
-      row = which(d$Name == name & d$Date == dateStr)
-      fpsUpToDate = playerData[playerData$Date < dateStr, 'FP']
-      d[row, 'MeanFP'] = mean(fpsUpToDate)
-      d[row, 'StDevFP'] = psd(fpsUpToDate)
-      d[row, 'MinFP'] = min(fpsUpToDate)
-
       playerDataUpToDateWhenPlayed = playerData[playerData$Date < dateStr & playerData$NBA_TODAY_MIN > 0,]
       if (nrow(playerDataUpToDateWhenPlayed) > 0) {
+        row = which(d$Name == name & d$Date == dateStr)
+
+        fpsUpToDate = playerDataUpToDateWhenPlayed$FP
+        d[row, 'MeanFP'] = mean(fpsUpToDate)
+        d[row, 'StDevFP'] = psd(fpsUpToDate)
+        d[row, 'MinFP'] = min(fpsUpToDate)
+
         d[row, 'MeanFpPerMin'] = mean(playerDataUpToDateWhenPlayed$FP_PER_MIN)
         d[row, 'MeanMinutes'] = mean(playerDataUpToDateWhenPlayed$NBA_TODAY_MIN)
       }
