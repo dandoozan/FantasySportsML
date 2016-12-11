@@ -566,7 +566,7 @@ getFeaturesToUseFp = function() {
 }
 getFeaturesToUseFpPerMin = function() {
   #return(c('NBA_S_P_TRAD_MIN', 'MeanFpPerMin', 'NBA_S_P_TRAD_FGA', 'RG_FpPerMin', 'NBA_S_P_ADV_USG_PCT', 'NBA_S_P_ADV_EFG_PCT', 'NBA_S_P_DEF_DEF_RATING', 'NBA_S_P_DEF_PCT_DREB', 'NBA_PB_PLAYER_WEIGHT', 'OPP_DVP_FPPG', 'OPP_DVP_RANK', 'Position', 'Salary', 'Home', 'Opponent', 'RG_line', 'RG_overunder', 'RG_total', 'RG_salary15', 'RG_salary28', 'RG_salary43', 'RG_ADV_TSPCT', 'RG_START_Starter'))
-  return(c('RG_FpPerMin', 'NF_FpPerMin', 'MeanFpPerMin', F.NBA.SEASON.PLAYER.TRADITIONAL, F.RG.PP))
+  return(c('RG_FpPerMin', 'NF_FpPerMin', 'MeanFpPerMin', 'PrevGameFpPerMin', F.NBA.SEASON.PLAYER.TRADITIONAL, F.RG.PP))
 }
 getFeaturesToUseMinutes = function() {
   return(c(F.RG.PP, 'NF_Min', 'MeanMinutes', F.NBA.SEASON.PLAYER.TRADITIONAL))

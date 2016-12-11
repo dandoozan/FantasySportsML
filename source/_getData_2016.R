@@ -154,7 +154,7 @@ featureEngineer = function(d) {
   d$FP2 = d$FP + runif(length(d$FP), -2, 2) #add random +/-2
   d$AVG_FP = computeFP(d$NBA_S_P_TRAD_PTS, d$NBA_S_P_TRAD_AST, d$NBA_S_P_TRAD_BLK, d$NBA_S_P_TRAD_REB, d$NBA_S_P_TRAD_STL, d$NBA_S_P_TRAD_TOV)
 
-  d$FP_PER_MIN = computeFpPerMin(d$FP, d$NBA_TODAY_MIN)
+  d$FP_PER_MIN = computeFpPerMin(d[[FP_NAME]], d[[MINUTES_NAME]])
   #add this ifelse to handle the 5 cases where RG predicts some FP for players, but also predicts that they'll play 0 minutes, which causes Inf when doing fp/min
   d$RG_FpPerMin = ifelse(d$RG_minutes == 0, 0, computeFpPerMin(d$RG_points, d$RG_minutes))
   d$NF_FpPerMin = computeFpPerMin(d$NF_FP, d$NF_Min)
@@ -165,14 +165,13 @@ featureEngineer = function(d) {
   d$MinFP = 0
   d$MeanFpPerMin = 0
   d$MeanMinutes = 0
+  d$PrevGameFpPerMin = 0
   names = unique(d$Name)
   for (name in names) {
     playerData = d[d$Name == name,]
-
-    #add MeanFP, StDevFP, MinFP
     dateStrs = getUniqueDates(playerData)[-1]
     for (dateStr in dateStrs) {
-      playerDataUpToDateWhenPlayed = playerData[playerData$Date < dateStr & playerData$NBA_TODAY_MIN > 0,]
+      playerDataUpToDateWhenPlayed = playerData[playerData$Date < dateStr & playerData[[MINUTES_NAME]] > 0,]
       if (nrow(playerDataUpToDateWhenPlayed) > 0) {
         row = which(d$Name == name & d$Date == dateStr)
 
@@ -181,8 +180,13 @@ featureEngineer = function(d) {
         d[row, 'StDevFP'] = psd(fpsUpToDate)
         d[row, 'MinFP'] = min(fpsUpToDate)
 
-        d[row, 'MeanFpPerMin'] = mean(playerDataUpToDateWhenPlayed$FP_PER_MIN)
-        d[row, 'MeanMinutes'] = mean(playerDataUpToDateWhenPlayed$NBA_TODAY_MIN)
+        d[row, 'MeanFpPerMin'] = mean(playerDataUpToDateWhenPlayed[[FP_PER_MIN_NAME]])
+        d[row, 'MeanMinutes'] = mean(playerDataUpToDateWhenPlayed[[MINUTES_NAME]])
+
+        #add prev game features
+        prevDateStr = tail(playerDataUpToDateWhenPlayed$Date, 1)
+        prevGameRow = which(d$Name == name & d$Date == prevDateStr)
+        d[row, 'PrevGameFpPerMin'] = d[prevGameRow, FP_PER_MIN_NAME]
       }
     }
   }
