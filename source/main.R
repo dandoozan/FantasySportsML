@@ -8,7 +8,11 @@
   #-rf: 0.0845719/24.73987, 47.87341/58.75317, -$10, 10/15, 8.902686/9.684892/10.11594, 8.92712/9.674423/10.51112, 0.9133617
   #-xgb: 0.265894/0.286838, 6.262178/6.826598, -$14, 9/16, 8.912096/9.697419/9.499563, 8.92712/9.69795/9.493515, 0.9118579
   #-avg: $10, 15/10, 8.816461/9.609102/10.67949, 8.92712/9.703994/11.04303, 0.9259971
-
+#-FpByPlayer (using RG_points, NF_FP, MeanFP)
+  #-lm: -$22, 7/18, 9.702675/10.54757/13.08406, 8.92712/9.71835/10.3474, 0.8767937
+  #-rf: -$22, 7/18, 9.186798/10.03747/10.69983, 8.92712/9.708439/10.13881, 0.8824331
+  #xgb: -$22, 7/18, 10.06826/10.77279/11.6521, 8.92712/9.868881/9.89087, 0.8861515
+  #-avg: -$22, 7/18, 9.34987/10.24476/10.58908, 8.92712/9.776938/9.873608, 0.8914785
 
 #-use combination of MAX_COVS, floor, ceil, hillClimbing numTries, startDate to get good prediction
 #-gblinear might be slightly better but it takes longer and plotImportances doesn't work, so use gbtree for now
@@ -36,7 +40,7 @@ PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
 FILENAME = paste0(NUMBER, '_', NAME)
-METHOD = 'FP'
+METHOD = 'FpByPlayer'
 
 PLOT_ALG = ''
 PLOT = 'bal' #fi, bal, scores, cv, rmses
@@ -56,6 +60,13 @@ METHODS = list(
     printErrors=printErrorsFpPerMin,
     yNameToPlot=MINUTES_NAME,
     xNamesToPlot=getFeaturesToUseMinutes()
+  ),
+  FpByPlayer=list(
+    printModelResults=NULL,
+    createPrediction=createPredictionFpByPlayer,
+    printErrors=NULL,
+    yNameToPlot=FP_NAME,
+    xNamesToPlot=getFeaturesToUseFpByPlayer()
   )
 )
 

@@ -572,7 +572,7 @@ getFeaturesToUseMinutes = function() {
   return(c(F.RG.PP, 'NF_Min', 'MeanMinutes', F.NBA.SEASON.PLAYER.TRADITIONAL))
 }
 getFeaturesToUseFpByPlayer = function() {
-  return(c('RG_points', 'NF_FP'))
+  return(c('RG_points', 'NF_FP', 'MeanFP'))
 }
 
 transformDataFp = function(d) {
@@ -623,9 +623,10 @@ createPredictionFpByPlayer = function(obj, train, test, amountToAddToY, useAvg=F
   test[[predictionName]] = test$RG_points
 
   for (name in test$Name) {
+    #cat('    On name:', name, '\n')
     row = which(test$Name == name)
-    trainDataForPlayer = train[train$Name == name & train$NBA_TODAY_MIN > 0,]
-    if (nrow(trainDataForPlayer) > 10) {
+    trainDataForPlayer = train[train$Name == name & train[[MINUTES_NAME]] > 0,]
+    if (nrow(trainDataForPlayer) > 8) {
       test[row, predictionName] = .createPrediction(obj, trainDataForPlayer, test[row,], FP_NAME, xNames, amountToAddToY, useAvg)
       #cat('\n***name, meanfp, prediction=', name, ', ', test[row, 'MeanFP'], ', ', test[row, predictionName], '\n')
     }
@@ -877,6 +878,7 @@ getTeamForDate = function(method, obj, d, dateStr, rg=F, maxCov=Inf, useAvg=F) {
   #print
   #t[, c('Name', 'pos', 'Team', 'FP', 'Pred', 'PctDiff', 'lmPred', 'rfPred', 'xgbPred', 'rgPred', 'nfPred', 'MeanFP', 'MinFP', 'StDevFP', 'COV', 'ovrundr', 'line', 'total', 'rgMins', 'nfMins', 'avgMins', 'mins', 'dvp', 'sal', 'ppdk', 'gp', 'b2b', 'pownp')]
 }
+
 addPredCols = function(obj, d, model, yName, xNames, amountToAddToY) {
   d$pred = obj$createPrediction(model, d, xNames, amountToAddToY)
   d$diff = d[[yName]] - d$pred
@@ -886,8 +888,40 @@ addPredCols = function(obj, d, model, yName, xNames, amountToAddToY) {
 
   d$predBuckets = cut(d$pred, breaks=10)
   d$minutesBuckets = cut(d$NBA_TODAY_MIN, breaks=seq(round(min(d$NBA_TODAY_MIN)), max(d$NBA_TODAY_MIN), 2))
+  d$gpBuckets = cut(d$NBA_S_P_TRAD_GP, breaks=seq(round(min(d$NBA_S_P_TRAD_GP)), max(d$NBA_S_P_TRAD_GP), 2))
   #plot(diff~predBuckets, d)
   #plot(diff~minutesBuckets, d)
+  #plot(diff~gpBuckets, d)
+
+  return(d)
+}
+#EG:
+#d=getData(START_DATE, END_DATE)
+#dlm = addPredColsFpByPlayer(lm(), d, 0)
+addPredColsFpByPlayer = function(obj, d, amountToAddToY) {
+  dateStrs = getUniqueDates(d)[-1]
+  for (dateStr in dateStrs) {
+    cat('On date:', dateStr, ', ')
+    train = d[d$Date < dateStr,]
+    testRows = which(d$Date == dateStr)
+    test = d[testRows,]
+    test$pred = createPredictionFpByPlayer(obj, train, test, amountToAddToY, useAvg=F)
+    cat('rmse=', rmse(test[[FP_NAME]], test$pred), '\n')
+
+    d[testRows, 'pred'] = test$pred
+  }
+
+  d$diff = d[[FP_NAME]] - d$pred
+  d$absDiff = abs(d$diff)
+  d$pctDiff = d$diff / d$pred * 100
+  d$absPctDiff = d$absDiff / d$pred * 100
+
+  d$predBuckets = cut(d$pred, breaks=10)
+  d$minutesBuckets = cut(d$NBA_TODAY_MIN, breaks=seq(round(min(d$NBA_TODAY_MIN)), max(d$NBA_TODAY_MIN), 2))
+  d$gpBuckets = cut(d$NBA_S_P_TRAD_GP, breaks=seq(round(min(d$NBA_S_P_TRAD_GP)), max(d$NBA_S_P_TRAD_GP), 2))
+  #plot(diff~predBuckets, d)
+  #plot(diff~minutesBuckets, d)
+  #plot(diff~gpBuckets, d)
 
   return(d)
 }
