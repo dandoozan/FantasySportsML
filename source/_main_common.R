@@ -620,6 +620,7 @@ createPredictionFpByPlayer = function(obj, train, test, amountToAddToY, useAvg=F
   xNames = getFeaturesToUseFpByPlayer()
 
   #set prediction to RG_points by default, which it will be if i dont have any previous data for the player
+  #however, maybe i should use fp prediction here (meaning using createPredictionFp())
   test[[predictionName]] = test$RG_points
 
   for (name in test$Name) {
@@ -899,17 +900,21 @@ addPredCols = function(obj, d, model, yName, xNames, amountToAddToY) {
 #d=getData(START_DATE, END_DATE)
 #dlm = addPredColsFpByPlayer(lm(), d, 0)
 addPredColsFpByPlayer = function(obj, d, amountToAddToY) {
-  dateStrs = getUniqueDates(d)[-1]
+  dateStrs = getUniqueDates(d[d$Date >= PLOT_START_DATE,])
   for (dateStr in dateStrs) {
     cat('On date:', dateStr, ', ')
     train = d[d$Date < dateStr,]
     testRows = which(d$Date == dateStr)
     test = d[testRows,]
     test$pred = createPredictionFpByPlayer(obj, train, test, amountToAddToY, useAvg=F)
-    cat('rmse=', rmse(test[[FP_NAME]], test$pred), '\n')
+    test$fpPred = createPredictionFp(obj, train, test, amountToAddToY, useAvg=F)
+    cat('rmse: fpbyplyr=', rmse(test[[FP_NAME]], test$pred), ', fp=', rmse(test[[FP_NAME]], test$fpPred), '\n')
 
     d[testRows, 'pred'] = test$pred
+    d[testRows, 'fpPred'] = test$fpPred
   }
+
+  cat('rmse: fpbyplyer=', rmse(d[[FP_NAME]], d$pred), ', fp=', rmse(d[[FP_NAME]], d$fpPred))
 
   d$diff = d[[FP_NAME]] - d$pred
   d$absDiff = abs(d$diff)
