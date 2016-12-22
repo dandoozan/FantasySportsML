@@ -6,7 +6,7 @@ OUTPUT_FILE = util.createFullPathFilename(DATA_DIR, 'data_2016.csv')
 DATE_FORMAT = '%Y-%m-%d'
 SEASON_START_DATE = util.getDate(2016, 10, 25)
 ONE_DAY = util.getOneDay()
-END_DATE = util.getDate(2016, 12, 4)# util.getYesterdayAsDate()
+END_DATE = util.getDate(2016, 12, 20)# util.getYesterdayAsDate()
 
 Y_NAME = 'FantasyPoints'
 X_NAMES = []
@@ -33,6 +33,7 @@ KNOWN_ALIASES = {
     'maurice ndour': 'maurice n\'dour',
     'wesley matthews': 'wes matthews',
     'john lucas iii': 'john lucas',
+    'james ennis iii': 'james ennis',
 
     #nba
     'nene hilario': 'nene',
@@ -517,6 +518,9 @@ PLAYERS_WHO_DID_NOT_PLAY_UP_TO = {
     '2016-12-04': {
         'reggie jackson',
     },
+    '2016-12-10': {
+        'reggie williams',
+    },
     'never': {
         'louis amundson', #historical
         'joel anthony', #historical
@@ -590,6 +594,9 @@ ROTOGRINDER_KNOWN_MISSING = {
 
     #2016-11-25
     'ryan kelly',
+
+    #2016-12-12
+    'spencer dinwiddie',
 }
 
 TBX_MISSING_PLAYERS = {}
@@ -1268,6 +1275,9 @@ DATA_SOURCES = [
 
             #2016-11-23
             'anthony brown',
+
+            #2016-12-13
+            'reggie williams',
         },
         'parseRowFunction': parseNumberFireRow,
         'prefix': 'NF_',

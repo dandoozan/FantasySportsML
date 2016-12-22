@@ -1,5 +1,6 @@
 
 #How to add dates (up to date before yesterday)
+  #-change END_DATE in createDataFile_2016.py
   #-create data_2016.csv (python source/python_scripts/createDataFile_2016.py)
     #-recheck the 'never' played names
     #-Resolve missing names
