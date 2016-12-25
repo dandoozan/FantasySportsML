@@ -14,6 +14,7 @@ END_DATE = util.getYesterdayAsDate()
 KNOWN_MISSING_DATES = {
     '2016-11-20',
     '2016-11-24',
+    '2016-12-24',
 }
 
 def getContestId(contest):

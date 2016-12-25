@@ -13,6 +13,7 @@ CONTEST_TYPES = {
 }
 DATES_WITH_NO_GAMES = {
     '2016-11-24',
+    '2016-12-24',
 }
 
 #------------ Getters ------------
