@@ -5,7 +5,7 @@ PYTHON_SOURCE_DIR = util.joinDirs('source', 'python_scripts')
 
 xAuthToken = util.readInput('Enter X-Auth-Token: ')
 filesToRun = [
-    { 'baseFilename': 'downloadFanDuelJson', 'args': [xAuthToken] },
+    #{ 'baseFilename': 'downloadFanDuelJson', 'args': [xAuthToken] },
     { 'baseFilename': 'scrapeFanDuel', 'args': [xAuthToken] },
     { 'baseFilename': 'downloadFanDuelContestResults', 'args': [xAuthToken] },
     { 'baseFilename': 'scrapeRotoGuruDay', },
