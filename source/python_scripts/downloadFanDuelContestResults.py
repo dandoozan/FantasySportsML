@@ -75,7 +75,8 @@ def findContestsToDownload():
                             'dateStr': currDateStr,
                         })
                         numContests += 1
-                print '    Found %d contests in file: %s' % (numContests, fullPathFilename)
+                if numContests > 0:
+                    print '    Found %d contests in file: %s' % (numContests, fullPathFilename)
             else:
                 util.headsUp('File doesn\'t exist: ' + fullPathFilename)
         currDate = currDate + ONE_DAY
