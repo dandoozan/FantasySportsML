@@ -3,7 +3,7 @@ import _util as util
 
 PYTHON_SOURCE_DIR = util.joinDirs('source', 'python_scripts')
 
-xAuthToken = util.readInput('Enter X-Auth-Token: ')
+xAuthToken = util.getCommandLineArgument()
 filesToRun = [
     { 'baseFilename': 'scrapeNumberFire' },
     { 'baseFilename': 'scrapeRotoGrindersHtml' },
