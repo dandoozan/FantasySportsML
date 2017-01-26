@@ -13,4 +13,4 @@ There are 4 main components to this program (designated in the diagram below):
 
 Once you have the lineup, you're ready to play on your favorite fantasy site!
 
-[[https://github.com/dandoozan/FantasySportsPro/blob/master/ProgramDesign.png|alt=program design]]
+![Design flow diagram](/ProgramDesign.png)
