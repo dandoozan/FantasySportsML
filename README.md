@@ -1,4 +1,4 @@
-# FantasySportsPro
+# FantasySportsML
 
 Play fantasy sports using machine learning!
 
@@ -6,9 +6,9 @@ Play fantasy sports using machine learning!
 
 There are 4 main components to this program (designated in the diagram below):
 
-1. **Downloader**: Downloads fantasy player data from a Fantasy Site (e.g. Yahoo) and other raw data from third-party sites
+1. **Downloader**: Downloads fantasy data and historical data/extra features from third-party sites
 1. **Assimilator**: Assimilates the raw data into tabular format and outputs it to `data.csv`
-1. **Machine Learning**: Inputs `data.csv` and uses machine learning to make fantasy point predictions for each player
+1. **Machine Learning**: Builds model based on historical data, then predicts each player's fantasy points
 1. **Lineup Generator**: Generates an optimal lineup based on the fantasy point predictions
 
 Once you have the lineup, you're ready to play on your favorite fantasy site!
