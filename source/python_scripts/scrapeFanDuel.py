@@ -79,20 +79,8 @@ def parseContestGroup(contest):
 
 def createHeaders(contest, xAuthToken):
     contestGroup = parseContestGroup(contest)
-    return {
-        'Accept': 'application/json, text/plain, */*',
-        #'Accept-Encoding': 'gzip, deflate, sdch, br',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Authorization': 'Basic N2U3ODNmMTE4OTIzYzE2NzVjNWZhYWFmZTYwYTc5ZmM6',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-        'Host': 'api.fanduel.com',
-        'Origin': 'https://www.fanduel.com',
-        'Pragma': 'no-cache',
-        'Referer': 'https://www.fanduel.com/games/%s/contests/%s/scoring' % (contestGroup, contest),
-        'X-Auth-Token': xAuthToken,
-    }
-
+    referer = 'https://www.fanduel.com/games/%s/contests/%s/scoring' % (contestGroup, contest)
+    return fd.getHeaders(referer, xAuthToken)
 
 #=============== Main ================
 

@@ -11,19 +11,7 @@ PARENT_DIR = util.joinDirs('data', 'rawDataFromFanDuel')
 SLEEP = 10
 
 def createHeaders(xAuthToken, referer, customHeaders={}):
-    headers = {
-        'Accept': 'application/json, text/plain, */*',
-        #'Accept-Encoding': 'gzip, deflate, sdch, br',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Authorization': 'Basic N2U3ODNmMTE4OTIzYzE2NzVjNWZhYWFmZTYwYTc5ZmM6',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-        'Host': 'api.fanduel.com',
-        'Origin': 'https://www.fanduel.com',
-        'Pragma': 'no-cache',
-        'Referer': referer,
-        'X-Auth-Token': xAuthToken,
-    }
+    headers = fd.getHeaders(referer, xAuthToken)
     headers.update(customHeaders)
     return headers
 def downloadData(url, xAuthToken, referer, customHeaders={}):

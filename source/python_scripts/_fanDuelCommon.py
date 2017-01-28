@@ -1,5 +1,6 @@
 import _util as util
 
+PRIVATE_DATA = util.loadJsonFile(util.createFullPathFilename('private', 'fanduel.json'))
 CONTEST_TYPES = {
     '5050': 'FIFTY_FIFTY',
     'doubleUp': 'DOUBLE_UP',
@@ -15,6 +16,21 @@ DATES_WITH_NO_GAMES = {
     '2016-11-24',
     '2016-12-24',
 }
+
+def getHeaders(referer, xAuthToken):
+    return {
+        'Accept': 'application/json, text/plain, */*',
+        #'Accept-Encoding': 'gzip, deflate, sdch, br',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Authorization': PRIVATE_DATA['Authorization'],
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Host': 'api.fanduel.com',
+        'Origin': 'https://www.fanduel.com',
+        'Pragma': 'no-cache',
+        'Referer': referer,
+        'X-Auth-Token': xAuthToken,
+    }
 
 #------------ Getters ------------
 def getEntryFee(contest):
