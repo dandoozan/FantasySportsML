@@ -1,5 +1,6 @@
 .DS_Store
 .RData
 .Rhistory
+private
 data/rawDataFrom*
 source/python_scripts/createTeamBruteForce.py
