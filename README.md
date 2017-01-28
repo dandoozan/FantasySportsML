@@ -13,4 +13,8 @@ There are 4 main components to this program (designated in the diagram below):
 
 Once you have the lineup, you're ready to play on your favorite fantasy site!
 
-![Design flow diagram](/ProgramDesign.png)
+![Design flow diagram](/README_files/ProgramDesign.png)
+
+## Results
+
+![Lineup Performance](/README_files/LineupPerformance.png)

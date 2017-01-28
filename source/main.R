@@ -25,7 +25,7 @@
 #-use meanFpWhenPlayed instead of meanFpWhenAvailableToPlay
 
 rm(list = ls())
-setwd('/Users/dan/Desktop/ML/df')
+setwd('~/Desktop/GitRepos/FantasySportsML')
 source('source/lm_2016.R')
 source('source/rf_2016.R')
 source('source/xgb_2016.R')
@@ -37,9 +37,9 @@ PROD_RUN = F
 NUMBER = '87'
 NAME = 'retune'
 FILENAME = paste0(NUMBER, '_', NAME)
-METHOD = 'FpPerMin'
+METHOD = 'FP'
 
-PLOT_ALG = 'avg'
+PLOT_ALG = 'lm'
 PLOT = 'bal' #fi, bal, scores, cv, rmses
 MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 
