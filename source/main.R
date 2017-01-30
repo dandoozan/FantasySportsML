@@ -39,7 +39,7 @@ NAME = 'retune'
 FILENAME = paste0(NUMBER, '_', NAME)
 METHOD = 'FP'
 
-PLOT_ALG = 'lm'
+PLOT_ALG = 'avg'
 PLOT = 'bal' #fi, bal, scores, cv, rmses
 MAKE_TEAMS = T #PROD_RUN || PLOT_ALG == '' || PLOT == 'scores' || PLOT == 'multiscores' || PLOT == 'bal'
 
