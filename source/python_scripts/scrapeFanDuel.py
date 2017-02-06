@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import scraper
 import _util as util
+import _fanDuelCommon as fd
 
 #This file does the following:
 #1. scrape 'Daily Fantasy Tournament Links - [Date]' url from https://rotogrinders.com/threads/category/main
@@ -86,7 +87,7 @@ def createHeaders(contest, xAuthToken):
 
 xAuthToken = util.getCommandLineArgument()
 
-print 'Scraping contest results for yesterday: ', YESTERDAY
+print 'Scraping contest results for yesterday:', YESTERDAY
 
 #make dir
 util.createDirIfNecessary(PARENT_DIR)

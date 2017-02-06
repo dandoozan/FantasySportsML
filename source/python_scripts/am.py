@@ -6,8 +6,11 @@ PYTHON_SOURCE_DIR = util.joinDirs('source', 'python_scripts')
 xAuthToken = util.getCommandLineArgument()
 filesToRun = [
     { 'baseFilename': 'downloadFanDuelJson', 'args': [xAuthToken] },
+
+    #NOTE: you MUST run this every day because it looks only for yesterday's results
     { 'baseFilename': 'scrapeFanDuel', 'args': [xAuthToken] },
-    { 'baseFilename': 'downloadFanDuelContestResults', 'args': [xAuthToken] },
+
+    #these are unnecessary to run every day
     #{ 'baseFilename': 'scrapeRotoGuruDay', },
     { 'baseFilename': 'scrapeStatsNba', 'args': ['Daily', 'Player', 'Traditional', '2016']},
     { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Player', 'Traditional', '2016']},
@@ -15,6 +18,7 @@ filesToRun = [
     { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Player', 'Defense', '2016']},
     { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Player', 'PlayerBios', '2016']},
     { 'baseFilename': 'scrapeStatsNba', 'args': ['Season', 'Team', 'Traditional', '2016']},
+    { 'baseFilename': 'downloadFanDuelContestResults', 'args': [xAuthToken] },
 ]
 
 

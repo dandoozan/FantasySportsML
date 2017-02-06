@@ -15,6 +15,7 @@ KNOWN_MISSING_DATES = {
     '2016-11-20',
     '2016-11-24',
     '2016-12-24',
+    '2017-02-05',
 }
 
 def getContestId(contest):
@@ -91,7 +92,10 @@ for contest in contestsToDownload:
 
     print 'Downloading contest (%d / %d): %s' % (cnt, numContests, contestId)
 
-    fullPathFilename = util.createFullPathFilename(util.joinDirs(CONTEST_RESULTS_DIR, dateStr), util.createJsonFilename(contestId))
+    fullPathToDir = util.joinDirs(CONTEST_RESULTS_DIR, dateStr)
+    util.createDirIfNecessary(fullPathToDir)
+
+    fullPathFilename = util.createFullPathFilename(fullPathToDir, util.createJsonFilename(contestId))
     if util.fileExists(fullPathFilename):
         print('    Skipping contest because file exists: ' + fullPathFilename)
     else:
@@ -101,4 +105,3 @@ for contest in contestsToDownload:
     cnt += 1
 
 print 'Done!'
-
