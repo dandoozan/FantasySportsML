@@ -1,0 +1,431 @@
+{
+  "_meta": {
+    "_primary_document": "contests"
+  },
+  "contests": [
+    {
+      "_url": "https://api.fanduel.com/contests/18021-207516050",
+      "cancellation": null,
+      "display_name": {
+        "_object_type": "string_formatter",
+        "format": "$100K Thu NBA Slam ($100K Guaranteed)",
+        "placeholders": []
+      },
+      "enter_url": "https://api.fanduel.com/contests/18021-207516050/entries",
+      "entries": {
+        "_url": "https://api.fanduel.com/contests/18021-207516050/entries",
+        "count": 4705
+      },
+      "entry_fee": 25,
+      "entry_fee_fdp": 60000,
+      "features": null,
+      "final": true,
+      "fixture_list": {
+        "_members": [
+          "18021"
+        ],
+        "_ref": "fixture_lists.id",
+        "ids": [
+          "18021"
+        ],
+        "ref": "fixture_lists.id"
+      },
+      "guaranteed": true,
+      "h2h": null,
+      "id": "18021-207516050",
+      "instructions": null,
+      "invite_url": "https://www.fanduel.com/entry/18021-207516050",
+      "made_free": false,
+      "max_entries_per_user": 140,
+      "name": "$100K Thu NBA Slam ($100K Guaranteed)",
+      "notice": null,
+      "private": false,
+      "prizes": {
+        "count": 940,
+        "groups": [
+          {
+            "count": 1,
+            "end_rank": 1,
+            "name": "$10,000",
+            "start_rank": 1,
+            "value": 10000
+          },
+          {
+            "count": 1,
+            "end_rank": 2,
+            "name": "$6,000",
+            "start_rank": 2,
+            "value": 6000
+          },
+          {
+            "count": 1,
+            "end_rank": 3,
+            "name": "$3,000",
+            "start_rank": 3,
+            "value": 3000
+          },
+          {
+            "count": 1,
+            "end_rank": 4,
+            "name": "$2,000",
+            "start_rank": 4,
+            "value": 2000
+          },
+          {
+            "count": 2,
+            "end_rank": 6,
+            "name": "$1,500",
+            "start_rank": 5,
+            "value": 1500
+          },
+          {
+            "count": 2,
+            "end_rank": 8,
+            "name": "$1,000",
+            "start_rank": 7,
+            "value": 1000
+          },
+          {
+            "count": 3,
+            "end_rank": 11,
+            "name": "$750",
+            "start_rank": 9,
+            "value": 750
+          },
+          {
+            "count": 4,
+            "end_rank": 15,
+            "name": "$500",
+            "start_rank": 12,
+            "value": 500
+          },
+          {
+            "count": 5,
+            "end_rank": 20,
+            "name": "$400",
+            "start_rank": 16,
+            "value": 400
+          },
+          {
+            "count": 10,
+            "end_rank": 30,
+            "name": "$300",
+            "start_rank": 21,
+            "value": 300
+          },
+          {
+            "count": 15,
+            "end_rank": 45,
+            "name": "$250",
+            "start_rank": 31,
+            "value": 250
+          },
+          {
+            "count": 25,
+            "end_rank": 70,
+            "name": "$200",
+            "start_rank": 46,
+            "value": 200
+          },
+          {
+            "count": 30,
+            "end_rank": 100,
+            "name": "$150",
+            "start_rank": 71,
+            "value": 150
+          },
+          {
+            "count": 40,
+            "end_rank": 140,
+            "name": "$125",
+            "start_rank": 101,
+            "value": 125
+          },
+          {
+            "count": 60,
+            "end_rank": 200,
+            "name": "$100",
+            "start_rank": 141,
+            "value": 100
+          },
+          {
+            "count": 75,
+            "end_rank": 275,
+            "name": "$75",
+            "start_rank": 201,
+            "value": 75
+          },
+          {
+            "count": 100,
+            "end_rank": 375,
+            "name": "$60",
+            "start_rank": 276,
+            "value": 60
+          },
+          {
+            "count": 125,
+            "end_rank": 500,
+            "name": "$55",
+            "start_rank": 376,
+            "value": 55
+          },
+          {
+            "count": 440,
+            "end_rank": 940,
+            "name": "$50",
+            "start_rank": 501,
+            "value": 50
+          }
+        ],
+        "summary": "$100,000",
+        "total": 100000.0
+      },
+      "restricted": null,
+      "roster_positions": [
+        {
+          "abbr": "PG",
+          "full": "Point Guard",
+          "valid_player_positions": [
+            "PG"
+          ]
+        },
+        {
+          "abbr": "PG",
+          "full": "Point Guard",
+          "valid_player_positions": [
+            "PG"
+          ]
+        },
+        {
+          "abbr": "SG",
+          "full": "Shooting Guard",
+          "valid_player_positions": [
+            "SG"
+          ]
+        },
+        {
+          "abbr": "SG",
+          "full": "Shooting Guard",
+          "valid_player_positions": [
+            "SG"
+          ]
+        },
+        {
+          "abbr": "SF",
+          "full": "Small Forward",
+          "valid_player_positions": [
+            "SF"
+          ]
+        },
+        {
+          "abbr": "SF",
+          "full": "Small Forward",
+          "valid_player_positions": [
+            "SF"
+          ]
+        },
+        {
+          "abbr": "PF",
+          "full": "Power Forward",
+          "valid_player_positions": [
+            "PF"
+          ]
+        },
+        {
+          "abbr": "PF",
+          "full": "Power Forward",
+          "valid_player_positions": [
+            "PF"
+          ]
+        },
+        {
+          "abbr": "C",
+          "full": "Center",
+          "valid_player_positions": [
+            "C"
+          ]
+        }
+      ],
+      "salary_cap": 60000,
+      "scoring": {
+        "highest_score": 292.0,
+        "last_winning_index": 950,
+        "last_winning_rank": 940,
+        "last_winning_score": 255.0,
+        "lowest_score": 182.9
+      },
+      "scoring_rules": {
+        "groups": [
+          {
+            "name": "All",
+            "rules": [
+              {
+                "abbr": "A",
+                "full": "Assists",
+                "points": 1.5
+              },
+              {
+                "abbr": "B",
+                "full": "Blocks",
+                "points": 2
+              },
+              {
+                "abbr": "P",
+                "full": "Points",
+                "points": 1
+              },
+              {
+                "abbr": "R",
+                "full": "Rebounds",
+                "points": 1.2
+              },
+              {
+                "abbr": "S",
+                "full": "Steals",
+                "points": 2
+              },
+              {
+                "abbr": "T",
+                "full": "Turnovers",
+                "points": -1
+              }
+            ]
+          }
+        ],
+        "notes": []
+      },
+      "size": {
+        "max": 4705,
+        "min": 2
+      },
+      "sport": "NBA",
+      "start_date": "2017-02-17T00:00:00Z",
+      "started": true,
+      "user_created": false
+    }
+  ],
+  "fixture_lists": [
+    {
+      "_url": "https://api.fanduel.com/fixture-lists/18021",
+      "fixtures": {
+        "_members": [
+          "114312",
+          "114975"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "id": "18021",
+      "label": "Main",
+      "players": {
+        "_url": "https://api.fanduel.com/fixture-lists/18021/players"
+      },
+      "salary_cap": 60000,
+      "sport": "NBA",
+      "start_date": "2017-02-17T00:00:00Z",
+      "status": {
+        "final": true,
+        "started": true
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "away_team": {
+        "score": 103,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "680"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 104,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "682"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "114312",
+      "sport": "NBA",
+      "start_date": "2017-02-17T01:00:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "started": true
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 111,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "708"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 98,
+        "sport_specific": {},
+        "team": {
+          "_members": [
+            "689"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "114975",
+      "sport": "NBA",
+      "start_date": "2017-02-17T00:00:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "started": true
+      },
+      "weather": null
+    }
+  ],
+  "players": [],
+  "teams": [
+    {
+      "city": "Washington",
+      "code": "WAS",
+      "colors": [],
+      "full_name": "Washington Wizards",
+      "id": "708",
+      "name": "Wizards"
+    },
+    {
+      "city": "Indiana",
+      "code": "IND",
+      "colors": [],
+      "full_name": "Indiana Pacers",
+      "id": "689",
+      "name": "Pacers"
+    },
+    {
+      "city": "Boston",
+      "code": "BOS",
+      "colors": [],
+      "full_name": "Boston Celtics",
+      "id": "680",
+      "name": "Celtics"
+    },
+    {
+      "city": "Chicago",
+      "code": "CHI",
+      "colors": [],
+      "full_name": "Chicago Bulls",
+      "id": "682",
+      "name": "Bulls"
+    }
+  ],
+  "users": []
+}

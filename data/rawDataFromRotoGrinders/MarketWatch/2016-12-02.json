@@ -1,0 +1,7772 @@
+{
+  "1000": {
+    "dd": {
+      "change": -50,
+      "current": 6950
+    },
+    "dk": {
+      "change": -100,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1000,
+    "opp": "@ BOS",
+    "player": "Arron Afflalo",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7900
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1001": {
+    "dd": {
+      "change": 0,
+      "current": 12900
+    },
+    "dk": {
+      "change": -200,
+      "current": 4900
+    },
+    "fa": {
+      "change": 0,
+      "current": 4800
+    },
+    "fd": {
+      "change": 0,
+      "current": 5600
+    },
+    "fdft": {
+      "change": -400,
+      "current": 9800
+    },
+    "id": 1001,
+    "opp": "@ NYK",
+    "player": "Ricky Rubio",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 8800
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 25
+    }
+  },
+  "1012": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 300,
+      "current": 3800
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1012,
+    "opp": "@ PHI",
+    "player": "C.J. Watson",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6700
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1014": {
+    "dd": {
+      "change": -450,
+      "current": 7650
+    },
+    "dk": {
+      "change": 0,
+      "current": 3500
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3800
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7000
+    },
+    "id": 1014,
+    "opp": "vs. ORL",
+    "player": "Gerald Henderson",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 8500
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1015": {
+    "dd": {
+      "change": -100,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1015,
+    "opp": "@ SAS",
+    "player": "Marcus Thornton",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6500
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1030": {
+    "dd": {
+      "change": 450,
+      "current": 9500
+    },
+    "dk": {
+      "change": 0,
+      "current": 4700
+    },
+    "fa": {
+      "change": 0,
+      "current": 4300
+    },
+    "fd": {
+      "change": 0,
+      "current": 4300
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9200
+    },
+    "id": 1030,
+    "opp": "@ NOP",
+    "player": "J.J. Redick",
+    "pos": "SG",
+    "rstr": {
+      "change": 400,
+      "current": 8800
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 17
+    }
+  },
+  "1037": {
+    "dd": {
+      "change": 0,
+      "current": 25000
+    },
+    "dk": {
+      "change": -100,
+      "current": 11900
+    },
+    "fa": {
+      "change": 250,
+      "current": 8350
+    },
+    "fd": {
+      "change": 200,
+      "current": 11500
+    },
+    "fdft": {
+      "change": -100,
+      "current": 21400
+    },
+    "id": 1037,
+    "opp": "@ DEN",
+    "player": "James Harden",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 15900
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 56
+    }
+  },
+  "1044": {
+    "dd": {
+      "change": -850,
+      "current": 8750
+    },
+    "dk": {
+      "change": 100,
+      "current": 5800
+    },
+    "fa": {
+      "change": 0,
+      "current": 4400
+    },
+    "fd": {
+      "change": 200,
+      "current": 5200
+    },
+    "fdft": {
+      "change": 400,
+      "current": 11600
+    },
+    "id": 1044,
+    "opp": "@ TOR",
+    "player": "Louis Williams",
+    "pos": "SG",
+    "rstr": {
+      "change": 500,
+      "current": 8700
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 22
+    }
+  },
+  "1049": {
+    "dd": {
+      "change": 900,
+      "current": 7150
+    },
+    "dk": {
+      "change": 200,
+      "current": 4900
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 300,
+      "current": 4400
+    },
+    "fdft": {
+      "change": 500,
+      "current": 9700
+    },
+    "id": 1049,
+    "opp": "vs. HOU",
+    "player": "Jameer Nelson",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7200
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1050": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1050,
+    "opp": "@ ATL",
+    "player": "Beno Udrih",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6400
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1053": {
+    "dd": {
+      "change": 1600,
+      "current": 17850
+    },
+    "dk": {
+      "change": 300,
+      "current": 8300
+    },
+    "fa": {
+      "change": 200,
+      "current": 6600
+    },
+    "fd": {
+      "change": -100,
+      "current": 8900
+    },
+    "fdft": {
+      "change": 600,
+      "current": 15300
+    },
+    "id": 1053,
+    "opp": "vs. LAL",
+    "player": "DeMar DeRozan",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 13000
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 43
+    }
+  },
+  "1057": {
+    "dd": {
+      "change": 1750,
+      "current": 17600
+    },
+    "dk": {
+      "change": 200,
+      "current": 8100
+    },
+    "fa": {
+      "change": 0,
+      "current": 6000
+    },
+    "fd": {
+      "change": 400,
+      "current": 8700
+    },
+    "fdft": {
+      "change": 400,
+      "current": 15000
+    },
+    "id": 1057,
+    "opp": "vs. LAL",
+    "player": "Kyle Lowry",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 12100
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 38
+    }
+  },
+  "1060": {
+    "dd": {
+      "change": -1200,
+      "current": 9800
+    },
+    "dk": {
+      "change": 100,
+      "current": 5400
+    },
+    "fa": {
+      "change": 0,
+      "current": 4900
+    },
+    "fd": {
+      "change": 0,
+      "current": 5800
+    },
+    "fdft": {
+      "change": 100,
+      "current": 10600
+    },
+    "id": 1060,
+    "opp": "@ BOS",
+    "player": "Darren Collison",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 8500
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 22
+    }
+  },
+  "1064": {
+    "dd": {
+      "change": 300,
+      "current": 7850
+    },
+    "dk": {
+      "change": 0,
+      "current": 4600
+    },
+    "fa": {
+      "change": 500,
+      "current": 4000
+    },
+    "fd": {
+      "change": 300,
+      "current": 4000
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9100
+    },
+    "id": 1064,
+    "opp": "@ PHI",
+    "player": "D.J. Augustin",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7400
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 11
+    }
+  },
+  "1071": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": -200,
+      "current": 3500
+    },
+    "fa": {
+      "change": 0,
+      "current": 3900
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -400,
+      "current": 6900
+    },
+    "id": 1071,
+    "opp": "@ TOR",
+    "player": "Jose Calderon",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1073": {
+    "dd": {
+      "change": -1850,
+      "current": 14350
+    },
+    "dk": {
+      "change": 100,
+      "current": 6900
+    },
+    "fa": {
+      "change": 0,
+      "current": 5500
+    },
+    "fd": {
+      "change": 0,
+      "current": 7300
+    },
+    "fdft": {
+      "change": 200,
+      "current": 12900
+    },
+    "id": 1073,
+    "opp": "vs. LAC",
+    "player": "Jrue Holiday",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 10000
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 2,
+      "current": 28
+    }
+  },
+  "1075": {
+    "dd": {
+      "change": 550,
+      "current": 7150
+    },
+    "dk": {
+      "change": 0,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 3950
+    },
+    "fd": {
+      "change": 0,
+      "current": 3800
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7700
+    },
+    "id": 1075,
+    "opp": "@ NOP",
+    "player": "Jamal Crawford",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7900
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 13
+    }
+  },
+  "1077": {
+    "dd": {
+      "change": 650,
+      "current": 10900
+    },
+    "dk": {
+      "change": 100,
+      "current": 5200
+    },
+    "fa": {
+      "change": 0,
+      "current": 4300
+    },
+    "fd": {
+      "change": 0,
+      "current": 5000
+    },
+    "fdft": {
+      "change": 100,
+      "current": 10200
+    },
+    "id": 1077,
+    "opp": "@ DEN",
+    "player": "Eric Gordon",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 9200
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 20
+    }
+  },
+  "1078": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6300
+    },
+    "id": 1078,
+    "opp": "@ NOP",
+    "player": "Raymond Felton",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6900
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1084": {
+    "dd": {
+      "change": -1400,
+      "current": 17250
+    },
+    "dk": {
+      "change": -900,
+      "current": 8400
+    },
+    "fa": {
+      "change": 0,
+      "current": 6600
+    },
+    "fd": {
+      "change": -300,
+      "current": 8900
+    },
+    "fdft": {
+      "change": -1600,
+      "current": 15600
+    },
+    "id": 1084,
+    "opp": "@ SAS",
+    "player": "John Wall",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 13100
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 46
+    }
+  },
+  "1085": {
+    "dd": {
+      "change": -1100,
+      "current": 12250
+    },
+    "dk": {
+      "change": 0,
+      "current": 6500
+    },
+    "fa": {
+      "change": 0,
+      "current": 5100
+    },
+    "fd": {
+      "change": 100,
+      "current": 5900
+    },
+    "fdft": {
+      "change": 0,
+      "current": 12300
+    },
+    "id": 1085,
+    "opp": "vs. CLE",
+    "player": "Rajon Rondo",
+    "pos": "PG",
+    "rstr": {
+      "change": -600,
+      "current": 9500
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 25
+    }
+  },
+  "1086": {
+    "dd": {
+      "change": -100,
+      "current": 12650
+    },
+    "dk": {
+      "change": -400,
+      "current": 6100
+    },
+    "fa": {
+      "change": 0,
+      "current": 4950
+    },
+    "fd": {
+      "change": -300,
+      "current": 6400
+    },
+    "fdft": {
+      "change": -300,
+      "current": 12000
+    },
+    "id": 1086,
+    "opp": "vs. MIN",
+    "player": "Derrick Rose",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 8900
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 25
+    }
+  },
+  "1087": {
+    "dd": {
+      "change": 500,
+      "current": 18050
+    },
+    "dk": {
+      "change": -300,
+      "current": 8800
+    },
+    "fa": {
+      "change": 0,
+      "current": 6700
+    },
+    "fd": {
+      "change": 300,
+      "current": 9400
+    },
+    "fdft": {
+      "change": -600,
+      "current": 16300
+    },
+    "id": 1087,
+    "opp": "@ NOP",
+    "player": "Chris Paul",
+    "pos": "PG",
+    "rstr": {
+      "change": 400,
+      "current": 14100
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 43
+    }
+  },
+  "1091": {
+    "dd": {
+      "change": -50,
+      "current": 16700
+    },
+    "dk": {
+      "change": -200,
+      "current": 7300
+    },
+    "fa": {
+      "change": 0,
+      "current": 6350
+    },
+    "fd": {
+      "change": -200,
+      "current": 7600
+    },
+    "fdft": {
+      "change": -100,
+      "current": 13700
+    },
+    "id": 1091,
+    "opp": "vs. MIN",
+    "player": "Carmelo Anthony",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 12400
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 37
+    }
+  },
+  "1106": {
+    "dd": {
+      "change": 650,
+      "current": 5650
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1106,
+    "opp": "vs. SAC",
+    "player": "Jonas Jerebko",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1172": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1172,
+    "opp": "@ CHI",
+    "player": "James Jones",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1187": {
+    "dd": {
+      "change": -50,
+      "current": 8250
+    },
+    "dk": {
+      "change": -200,
+      "current": 4100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": 0,
+      "current": 3800
+    },
+    "fdft": {
+      "change": -300,
+      "current": 8100
+    },
+    "id": 1187,
+    "opp": "@ BOS",
+    "player": "Matt Barnes",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 7800
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 13
+    }
+  },
+  "1193": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3550
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1193,
+    "opp": "@ CHI",
+    "player": "Richard Jefferson",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1227": {
+    "dd": {
+      "change": 1200,
+      "current": 21300
+    },
+    "dk": {
+      "change": 100,
+      "current": 9400
+    },
+    "fa": {
+      "change": 0,
+      "current": 7750
+    },
+    "fd": {
+      "change": 0,
+      "current": 9700
+    },
+    "fdft": {
+      "change": 100,
+      "current": 17300
+    },
+    "id": 1227,
+    "opp": "@ CHI",
+    "player": "LeBron James",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 14800
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 54
+    }
+  },
+  "1235": {
+    "dd": {
+      "change": 1150,
+      "current": 6450
+    },
+    "dk": {
+      "change": 0,
+      "current": 3800
+    },
+    "fa": {
+      "change": 0,
+      "current": 3700
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7400
+    },
+    "id": 1235,
+    "opp": "@ NOP",
+    "player": "Marreese Speights",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1260": {
+    "dd": {
+      "change": 1050,
+      "current": 7700
+    },
+    "dk": {
+      "change": 200,
+      "current": 4200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3900
+    },
+    "fd": {
+      "change": 200,
+      "current": 4400
+    },
+    "fdft": {
+      "change": 600,
+      "current": 8400
+    },
+    "id": 1260,
+    "opp": "vs. LAL",
+    "player": "Patrick Patterson",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7600
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 12
+    }
+  },
+  "1263": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1263,
+    "opp": "@ BOS",
+    "player": "Anthony Tolliver",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1267": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1267,
+    "opp": "vs. HOU",
+    "player": "Darrell Arthur",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6600
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1268": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1268,
+    "opp": "@ NYK",
+    "player": "Jordan Hill",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1269": {
+    "dd": {
+      "change": -1050,
+      "current": 6450
+    },
+    "dk": {
+      "change": -200,
+      "current": 3600
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": -100,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -400,
+      "current": 7000
+    },
+    "id": 1269,
+    "opp": "vs. DET",
+    "player": "Kyle Korver",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7300
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 11
+    }
+  },
+  "1270": {
+    "dd": {
+      "change": -50,
+      "current": 7700
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1270,
+    "opp": "@ BOS",
+    "player": "Omri Casspi",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7400
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1271": {
+    "dd": {
+      "change": -850,
+      "current": 6100
+    },
+    "dk": {
+      "change": 100,
+      "current": 4100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3700
+    },
+    "fd": {
+      "change": 100,
+      "current": 4300
+    },
+    "fdft": {
+      "change": 300,
+      "current": 8100
+    },
+    "id": 1271,
+    "opp": "vs. DET",
+    "player": "Thabo Sefolosha",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6700
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1277": {
+    "dd": {
+      "change": -1750,
+      "current": 9200
+    },
+    "dk": {
+      "change": 200,
+      "current": 5700
+    },
+    "fa": {
+      "change": 0,
+      "current": 4500
+    },
+    "fd": {
+      "change": 200,
+      "current": 5800
+    },
+    "fdft": {
+      "change": 400,
+      "current": 11200
+    },
+    "id": 1277,
+    "opp": "vs. CLE",
+    "player": "Taj Gibson",
+    "pos": "PF",
+    "rstr": {
+      "change": -200,
+      "current": 8900
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 20
+    }
+  },
+  "1278": {
+    "dd": {
+      "change": 50,
+      "current": 5050
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1278,
+    "opp": "@ DEN",
+    "player": "Corey Brewer",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1280": {
+    "dd": {
+      "change": 400,
+      "current": 5400
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1280,
+    "opp": "@ NOP",
+    "player": "Wesley Johnson",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6800
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1281": {
+    "dd": {
+      "change": -600,
+      "current": 11200
+    },
+    "dk": {
+      "change": 0,
+      "current": 4600
+    },
+    "fa": {
+      "change": 0,
+      "current": 4400
+    },
+    "fd": {
+      "change": 0,
+      "current": 4400
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9100
+    },
+    "id": 1281,
+    "opp": "@ DEN",
+    "player": "Ryan Anderson",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 9000
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 19
+    }
+  },
+  "1285": {
+    "dd": {
+      "change": 450,
+      "current": 8100
+    },
+    "dk": {
+      "change": 0,
+      "current": 3400
+    },
+    "fa": {
+      "change": 0,
+      "current": 3400
+    },
+    "fd": {
+      "change": 100,
+      "current": 3600
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6700
+    },
+    "id": 1285,
+    "opp": "vs. SAC",
+    "player": "Amir Johnson",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7700
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1294": {
+    "dd": {
+      "change": 2100,
+      "current": 13200
+    },
+    "dk": {
+      "change": 300,
+      "current": 6200
+    },
+    "fa": {
+      "change": 0,
+      "current": 4900
+    },
+    "fd": {
+      "change": 0,
+      "current": 6300
+    },
+    "fdft": {
+      "change": 700,
+      "current": 12300
+    },
+    "id": 1294,
+    "opp": "@ PHI",
+    "player": "Serge Ibaka",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 9900
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 25
+    }
+  },
+  "1301": {
+    "dd": {
+      "change": -450,
+      "current": 8500
+    },
+    "dk": {
+      "change": 0,
+      "current": 4700
+    },
+    "fa": {
+      "change": 0,
+      "current": 4100
+    },
+    "fd": {
+      "change": 0,
+      "current": 4600
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9200
+    },
+    "id": 1301,
+    "opp": "vs. ORL",
+    "player": "Ersan Ilyasova",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 16
+    }
+  },
+  "1310": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1310,
+    "opp": "vs. DET",
+    "player": "Kris Humphries",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1314": {
+    "dd": {
+      "change": 500,
+      "current": 7200
+    },
+    "dk": {
+      "change": 0,
+      "current": 3100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1314,
+    "opp": "@ PHI",
+    "player": "Jeff Green",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 7100
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1323": {
+    "dd": {
+      "change": 300,
+      "current": 12000
+    },
+    "dk": {
+      "change": 100,
+      "current": 5500
+    },
+    "fa": {
+      "change": 0,
+      "current": 4650
+    },
+    "fd": {
+      "change": 0,
+      "current": 5200
+    },
+    "fdft": {
+      "change": 300,
+      "current": 10900
+    },
+    "id": 1323,
+    "opp": "@ DEN",
+    "player": "Trevor Ariza",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8600
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 21
+    }
+  },
+  "1327": {
+    "dd": {
+      "change": 1500,
+      "current": 11900
+    },
+    "dk": {
+      "change": -200,
+      "current": 6800
+    },
+    "fa": {
+      "change": 0,
+      "current": 5200
+    },
+    "fd": {
+      "change": -100,
+      "current": 6300
+    },
+    "fdft": {
+      "change": -600,
+      "current": 12700
+    },
+    "id": 1327,
+    "opp": "vs. HOU",
+    "player": "Wilson Chandler",
+    "pos": "SF",
+    "rstr": {
+      "change": 300,
+      "current": 10200
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 23
+    }
+  },
+  "1328": {
+    "dd": {
+      "change": -500,
+      "current": 7900
+    },
+    "dk": {
+      "change": 0,
+      "current": 3800
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": 0,
+      "current": 3700
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7400
+    },
+    "id": 1328,
+    "opp": "@ TOR",
+    "player": "Luol Deng",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 7500
+    },
+    "team": "LAL",
+    "y!": {
+      "change": -2,
+      "current": 10
+    }
+  },
+  "1329": {
+    "dd": {
+      "change": 1650,
+      "current": 12900
+    },
+    "dk": {
+      "change": 100,
+      "current": 5800
+    },
+    "fa": {
+      "change": 0,
+      "current": 4550
+    },
+    "fd": {
+      "change": 0,
+      "current": 6000
+    },
+    "fdft": {
+      "change": 300,
+      "current": 11600
+    },
+    "id": 1329,
+    "opp": "vs. HOU",
+    "player": "Danilo Gallinari",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 10900
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 26
+    }
+  },
+  "13296": {
+    "dd": {
+      "change": 2400,
+      "current": 14900
+    },
+    "dk": {
+      "change": 600,
+      "current": 6800
+    },
+    "fa": {
+      "change": 0,
+      "current": 5700
+    },
+    "fd": {
+      "change": 200,
+      "current": 7100
+    },
+    "fdft": {
+      "change": 400,
+      "current": 12700
+    },
+    "id": 13296,
+    "opp": "@ PHI",
+    "player": "Nikola Vucevic",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 10600
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 26
+    }
+  },
+  "13301": {
+    "dd": {
+      "change": 1600,
+      "current": 14500
+    },
+    "dk": {
+      "change": -300,
+      "current": 5500
+    },
+    "fa": {
+      "change": 0,
+      "current": 4850
+    },
+    "fd": {
+      "change": -300,
+      "current": 5800
+    },
+    "fdft": {
+      "change": -700,
+      "current": 10800
+    },
+    "id": 13301,
+    "opp": "vs. LAL",
+    "player": "Jonas Valanciunas",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 10300
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 26
+    }
+  },
+  "13308": {
+    "dd": {
+      "change": 400,
+      "current": 11000
+    },
+    "dk": {
+      "change": 0,
+      "current": 5200
+    },
+    "fa": {
+      "change": 0,
+      "current": 4100
+    },
+    "fd": {
+      "change": 0,
+      "current": 5000
+    },
+    "fdft": {
+      "change": 0,
+      "current": 10200
+    },
+    "id": 13308,
+    "opp": "@ CHI",
+    "player": "Tristan Thompson",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 7500
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 2,
+      "current": 18
+    }
+  },
+  "13310": {
+    "dd": {
+      "change": 400,
+      "current": 16800
+    },
+    "dk": {
+      "change": 100,
+      "current": 8200
+    },
+    "fa": {
+      "change": 0,
+      "current": 6350
+    },
+    "fd": {
+      "change": -300,
+      "current": 8100
+    },
+    "fdft": {
+      "change": 100,
+      "current": 15100
+    },
+    "id": 13310,
+    "opp": "vs. WAS",
+    "player": "Kawhi Leonard",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 13700
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 44
+    }
+  },
+  "13312": {
+    "dd": {
+      "change": 1600,
+      "current": 10050
+    },
+    "dk": {
+      "change": 0,
+      "current": 4300
+    },
+    "fa": {
+      "change": 400,
+      "current": 4200
+    },
+    "fd": {
+      "change": 0,
+      "current": 4200
+    },
+    "fdft": {
+      "change": 0,
+      "current": 8400
+    },
+    "id": 13312,
+    "opp": "@ PHI",
+    "player": "Bismack Biyombo",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 7300
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 12
+    }
+  },
+  "13313": {
+    "dd": {
+      "change": 250,
+      "current": 9800
+    },
+    "dk": {
+      "change": 0,
+      "current": 5600
+    },
+    "fa": {
+      "change": 500,
+      "current": 4900
+    },
+    "fd": {
+      "change": 0,
+      "current": 5900
+    },
+    "fdft": {
+      "change": 0,
+      "current": 11200
+    },
+    "id": 13313,
+    "opp": "vs. HOU",
+    "player": "Kenneth Faried",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 8200
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 20
+    }
+  },
+  "13314": {
+    "dd": {
+      "change": -1150,
+      "current": 9550
+    },
+    "dk": {
+      "change": -100,
+      "current": 5000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4500
+    },
+    "fd": {
+      "change": 200,
+      "current": 4800
+    },
+    "fdft": {
+      "change": -300,
+      "current": 9800
+    },
+    "id": 13314,
+    "opp": "@ SAS",
+    "player": "Markieff Morris",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 9100
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 24
+    }
+  },
+  "13316": {
+    "dd": {
+      "change": -600,
+      "current": 9350
+    },
+    "dk": {
+      "change": 400,
+      "current": 5000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4450
+    },
+    "fd": {
+      "change": 200,
+      "current": 4900
+    },
+    "fdft": {
+      "change": 800,
+      "current": 9900
+    },
+    "id": 13316,
+    "opp": "@ ATL",
+    "player": "Marcus Morris",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8100
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 20
+    }
+  },
+  "13317": {
+    "dd": {
+      "change": 100,
+      "current": 8400
+    },
+    "dk": {
+      "change": 0,
+      "current": 4400
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": 100,
+      "current": 4500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 8700
+    },
+    "id": 13317,
+    "opp": "@ ATL",
+    "player": "Jon Leuer",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7100
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 15
+    }
+  },
+  "13327": {
+    "dd": {
+      "change": -2900,
+      "current": 15700
+    },
+    "dk": {
+      "change": -300,
+      "current": 8700
+    },
+    "fa": {
+      "change": 0,
+      "current": 6600
+    },
+    "fd": {
+      "change": -200,
+      "current": 8800
+    },
+    "fdft": {
+      "change": -500,
+      "current": 16000
+    },
+    "id": 13327,
+    "opp": "vs. CLE",
+    "player": "Jimmy Butler",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 12800
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 43
+    }
+  },
+  "13328": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 13328,
+    "opp": "@ CHI",
+    "player": "DeAndre Liggins",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13332": {
+    "dd": {
+      "change": -750,
+      "current": 11650
+    },
+    "dk": {
+      "change": 200,
+      "current": 5900
+    },
+    "fa": {
+      "change": 0,
+      "current": 4700
+    },
+    "fd": {
+      "change": 400,
+      "current": 5700
+    },
+    "fdft": {
+      "change": 300,
+      "current": 11600
+    },
+    "id": 13332,
+    "opp": "@ ATL",
+    "player": "Tobias Harris",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 9300
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 25
+    }
+  },
+  "13334": {
+    "dd": {
+      "change": 1100,
+      "current": 17000
+    },
+    "dk": {
+      "change": 0,
+      "current": 7400
+    },
+    "fa": {
+      "change": 0,
+      "current": 5700
+    },
+    "fd": {
+      "change": 0,
+      "current": 7400
+    },
+    "fdft": {
+      "change": 0,
+      "current": 14000
+    },
+    "id": 13334,
+    "opp": "@ CHI",
+    "player": "Kyrie Irving",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 12000
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 37
+    }
+  },
+  "13339": {
+    "dd": {
+      "change": 750,
+      "current": 7100
+    },
+    "dk": {
+      "change": 100,
+      "current": 3500
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 200,
+      "current": 4000
+    },
+    "fdft": {
+      "change": 300,
+      "current": 7000
+    },
+    "id": 13339,
+    "opp": "vs. LAL",
+    "player": "Cory Joseph",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13344": {
+    "dd": {
+      "change": 1000,
+      "current": 16250
+    },
+    "dk": {
+      "change": -100,
+      "current": 7500
+    },
+    "fa": {
+      "change": 0,
+      "current": 5900
+    },
+    "fd": {
+      "change": -100,
+      "current": 8100
+    },
+    "fdft": {
+      "change": -100,
+      "current": 13800
+    },
+    "id": 13344,
+    "opp": "vs. SAC",
+    "player": "Isaiah Thomas",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 11500
+    },
+    "team": "BOS",
+    "y!": {
+      "change": -2,
+      "current": 39
+    }
+  },
+  "1335": {
+    "dd": {
+      "change": -350,
+      "current": 14800
+    },
+    "dk": {
+      "change": -300,
+      "current": 7200
+    },
+    "fa": {
+      "change": 0,
+      "current": 5700
+    },
+    "fd": {
+      "change": 0,
+      "current": 7500
+    },
+    "fdft": {
+      "change": -200,
+      "current": 13600
+    },
+    "id": 1335,
+    "opp": "vs. DET",
+    "player": "Paul Millsap",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 12900
+    },
+    "team": "ATL",
+    "y!": {
+      "change": -2,
+      "current": 33
+    }
+  },
+  "13350": {
+    "dd": {
+      "change": 400,
+      "current": 7150
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 13350,
+    "opp": "@ CHI",
+    "player": "Iman Shumpert",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6900
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13374": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 13374,
+    "opp": "vs. SAC",
+    "player": "Gerald Green",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7200
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13382": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 13382,
+    "opp": "@ NOP",
+    "player": "Alan Anderson",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1340": {
+    "dd": {
+      "change": 0,
+      "current": 5100
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1340,
+    "opp": "@ NOP",
+    "player": "Paul Pierce",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6800
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1341": {
+    "dd": {
+      "change": -100,
+      "current": 14600
+    },
+    "dk": {
+      "change": 0,
+      "current": 6900
+    },
+    "fa": {
+      "change": 0,
+      "current": 5600
+    },
+    "fd": {
+      "change": 0,
+      "current": 7200
+    },
+    "fdft": {
+      "change": 0,
+      "current": 12900
+    },
+    "id": 1341,
+    "opp": "@ BOS",
+    "player": "Rudy Gay",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 11000
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 31
+    }
+  },
+  "1347": {
+    "dd": {
+      "change": 650,
+      "current": 16150
+    },
+    "dk": {
+      "change": 0,
+      "current": 8000
+    },
+    "fa": {
+      "change": 0,
+      "current": 6450
+    },
+    "fd": {
+      "change": 0,
+      "current": 8300
+    },
+    "fdft": {
+      "change": 0,
+      "current": 14700
+    },
+    "id": 1347,
+    "opp": "@ CHI",
+    "player": "Kevin Love",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 12400
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 2,
+      "current": 41
+    }
+  },
+  "1349": {
+    "dd": {
+      "change": -450,
+      "current": 13450
+    },
+    "dk": {
+      "change": -100,
+      "current": 6300
+    },
+    "fa": {
+      "change": 0,
+      "current": 5700
+    },
+    "fd": {
+      "change": -400,
+      "current": 6600
+    },
+    "fdft": {
+      "change": -100,
+      "current": 12600
+    },
+    "id": 1349,
+    "opp": "vs. WAS",
+    "player": "LaMarcus Aldridge",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 10900
+    },
+    "team": "SAS",
+    "y!": {
+      "change": -2,
+      "current": 28
+    }
+  },
+  "1385": {
+    "dd": {
+      "change": 0,
+      "current": 7200
+    },
+    "dk": {
+      "change": 0,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7700
+    },
+    "id": 1385,
+    "opp": "@ NYK",
+    "player": "Cole Aldrich",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1386": {
+    "dd": {
+      "change": -500,
+      "current": 5200
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1386,
+    "opp": "@ BOS",
+    "player": "Kosta Koufos",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 7200
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13895": {
+    "dd": {
+      "change": -1150,
+      "current": 21900
+    },
+    "dk": {
+      "change": 100,
+      "current": 11700
+    },
+    "fa": {
+      "change": 150,
+      "current": 8400
+    },
+    "fd": {
+      "change": 300,
+      "current": 12300
+    },
+    "fdft": {
+      "change": 100,
+      "current": 20900
+    },
+    "id": 13895,
+    "opp": "vs. LAC",
+    "player": "Anthony Davis",
+    "pos": "PF",
+    "rstr": {
+      "change": 300,
+      "current": 15900
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 56
+    }
+  },
+  "13898": {
+    "dd": {
+      "change": -1300,
+      "current": 10500
+    },
+    "dk": {
+      "change": -300,
+      "current": 7000
+    },
+    "fa": {
+      "change": 100,
+      "current": 4950
+    },
+    "fd": {
+      "change": -100,
+      "current": 6900
+    },
+    "fdft": {
+      "change": -400,
+      "current": 13300
+    },
+    "id": 13898,
+    "opp": "@ SAS",
+    "player": "Bradley Beal",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 11000
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 26
+    }
+  },
+  "13899": {
+    "dd": {
+      "change": -400,
+      "current": 6450
+    },
+    "dk": {
+      "change": -100,
+      "current": 3100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": -100,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -300,
+      "current": 6000
+    },
+    "id": 13899,
+    "opp": "@ TOR",
+    "player": "Thomas Robinson",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7600
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13902": {
+    "dd": {
+      "change": 450,
+      "current": 6350
+    },
+    "dk": {
+      "change": -200,
+      "current": 3600
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": -200,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -400,
+      "current": 7000
+    },
+    "id": 13902,
+    "opp": "vs. LAL",
+    "player": "Terrence Ross",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6600
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13903": {
+    "dd": {
+      "change": 200,
+      "current": 6350
+    },
+    "dk": {
+      "change": 0,
+      "current": 3300
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3600
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6400
+    },
+    "id": 13903,
+    "opp": "@ NOP",
+    "player": "Austin Rivers",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13904": {
+    "dd": {
+      "change": 100,
+      "current": 16350
+    },
+    "dk": {
+      "change": 300,
+      "current": 7700
+    },
+    "fa": {
+      "change": 0,
+      "current": 6250
+    },
+    "fd": {
+      "change": -200,
+      "current": 7900
+    },
+    "fdft": {
+      "change": 300,
+      "current": 14300
+    },
+    "id": 13904,
+    "opp": "@ ATL",
+    "player": "Andre Drummond",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 12600
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 32
+    }
+  },
+  "13911": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": -300,
+      "current": 3100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": -100,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -700,
+      "current": 6000
+    },
+    "id": 13911,
+    "opp": "vs. SAC",
+    "player": "Tyler Zeller",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6900
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13912": {
+    "dd": {
+      "change": -1100,
+      "current": 8250
+    },
+    "dk": {
+      "change": -300,
+      "current": 4600
+    },
+    "fa": {
+      "change": 0,
+      "current": 4650
+    },
+    "fd": {
+      "change": -100,
+      "current": 4700
+    },
+    "fdft": {
+      "change": -700,
+      "current": 9100
+    },
+    "id": 13912,
+    "opp": "vs. LAC",
+    "player": "Terrence Jones",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7500
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 18
+    }
+  },
+  "13913": {
+    "dd": {
+      "change": 850,
+      "current": 12850
+    },
+    "dk": {
+      "change": 200,
+      "current": 6000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4650
+    },
+    "fd": {
+      "change": 0,
+      "current": 5800
+    },
+    "fdft": {
+      "change": 400,
+      "current": 11900
+    },
+    "id": 13913,
+    "opp": "@ PHI",
+    "player": "Evan Fournier",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 9900
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 22
+    }
+  },
+  "13914": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 13914,
+    "opp": "@ SAS",
+    "player": "Andrew Nicholson",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7400
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13934": {
+    "dd": {
+      "change": 50,
+      "current": 6300
+    },
+    "dk": {
+      "change": 200,
+      "current": 3800
+    },
+    "fa": {
+      "change": 0,
+      "current": 3400
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 400,
+      "current": 7400
+    },
+    "id": 13934,
+    "opp": "vs. MIN",
+    "player": "Kyle O'Quinn",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6600
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13942": {
+    "dd": {
+      "change": 1700,
+      "current": 11950
+    },
+    "dk": {
+      "change": 300,
+      "current": 5800
+    },
+    "fa": {
+      "change": 0,
+      "current": 4400
+    },
+    "fd": {
+      "change": 100,
+      "current": 5300
+    },
+    "fdft": {
+      "change": 700,
+      "current": 11600
+    },
+    "id": 13942,
+    "opp": "vs. SAC",
+    "player": "Jae Crowder",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8700
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 20
+    }
+  },
+  "13958": {
+    "dd": {
+      "change": 550,
+      "current": 9050
+    },
+    "dk": {
+      "change": 100,
+      "current": 5000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4500
+    },
+    "fd": {
+      "change": 300,
+      "current": 5500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9800
+    },
+    "id": 13958,
+    "opp": "@ ATL",
+    "player": "Ish Smith",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 8100
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 18
+    }
+  },
+  "13975": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 13975,
+    "opp": "@ TOR",
+    "player": "Metta World Peace",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "13977": {
+    "dd": {
+      "change": 400,
+      "current": 8200
+    },
+    "dk": {
+      "change": 100,
+      "current": 4000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": 100,
+      "current": 4200
+    },
+    "fdft": {
+      "change": 100,
+      "current": 7800
+    },
+    "id": 13977,
+    "opp": "vs. WAS",
+    "player": "Patty Mills",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7500
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 11
+    }
+  },
+  "13982": {
+    "dd": {
+      "change": 1600,
+      "current": 11950
+    },
+    "dk": {
+      "change": -100,
+      "current": 4400
+    },
+    "fa": {
+      "change": 0,
+      "current": 4350
+    },
+    "fd": {
+      "change": 0,
+      "current": 4800
+    },
+    "fdft": {
+      "change": -100,
+      "current": 8700
+    },
+    "id": 13982,
+    "opp": "vs. HOU",
+    "player": "Will Barton",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 8300
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 21
+    }
+  },
+  "13987": {
+    "dd": {
+      "change": -1200,
+      "current": 9200
+    },
+    "dk": {
+      "change": 200,
+      "current": 5300
+    },
+    "fa": {
+      "change": 0,
+      "current": 3900
+    },
+    "fd": {
+      "change": 300,
+      "current": 5200
+    },
+    "fdft": {
+      "change": 400,
+      "current": 10500
+    },
+    "id": 13987,
+    "opp": "vs. DET",
+    "player": "Kent Bazemore",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8900
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 20
+    }
+  },
+  "13999": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 13999,
+    "opp": "vs. DET",
+    "player": "Mike Scott",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "14026": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 14026,
+    "opp": "@ NOP",
+    "player": "Luc Richard Mbah a Moute",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6800
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1404": {
+    "dd": {
+      "change": 0,
+      "current": 10300
+    },
+    "dk": {
+      "change": -100,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 4600
+    },
+    "fd": {
+      "change": 0,
+      "current": 4300
+    },
+    "fdft": {
+      "change": -100,
+      "current": 7700
+    },
+    "id": 1404,
+    "opp": "vs. MIN",
+    "player": "Joakim Noah",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 8000
+    },
+    "team": "NYK",
+    "y!": {
+      "change": -2,
+      "current": 13
+    }
+  },
+  "14077": {
+    "dd": {
+      "change": -500,
+      "current": 5000
+    },
+    "dk": {
+      "change": -100,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 14077,
+    "opp": "@ BOS",
+    "player": "Garrett Temple",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "14108": {
+    "dd": {
+      "change": 250,
+      "current": 10250
+    },
+    "dk": {
+      "change": 0,
+      "current": 4600
+    },
+    "fa": {
+      "change": 300,
+      "current": 4550
+    },
+    "fd": {
+      "change": 0,
+      "current": 4400
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9100
+    },
+    "id": 14108,
+    "opp": "@ DEN",
+    "player": "Patrick Beverley",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7800
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 18
+    }
+  },
+  "14113": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 14113,
+    "opp": "@ CHI",
+    "player": "Chris Andersen",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6400
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "14114": {
+    "dd": {
+      "change": 100,
+      "current": 5250
+    },
+    "dk": {
+      "change": 0,
+      "current": 3800
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7400
+    },
+    "id": 14114,
+    "opp": "@ ATL",
+    "player": "Aron Baynes",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6600
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1447": {
+    "dd": {
+      "change": -650,
+      "current": 7900
+    },
+    "dk": {
+      "change": -100,
+      "current": 3200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3900
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -100,
+      "current": 6300
+    },
+    "id": 1447,
+    "opp": "@ TOR",
+    "player": "Timofey Mozgov",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 8300
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "14559": {
+    "dd": {
+      "change": -50,
+      "current": 5200
+    },
+    "dk": {
+      "change": 400,
+      "current": 3600
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 400,
+      "current": 3900
+    },
+    "fdft": {
+      "change": 800,
+      "current": 7100
+    },
+    "id": 14559,
+    "opp": "vs. MIN",
+    "player": "Justin Holiday",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6500
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1457": {
+    "dd": {
+      "change": -300,
+      "current": 5550
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": 200,
+      "current": 3700
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1457,
+    "opp": "vs. LAC",
+    "player": "Omer Asik",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6800
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1466": {
+    "dd": {
+      "change": -1700,
+      "current": 9000
+    },
+    "dk": {
+      "change": 100,
+      "current": 5600
+    },
+    "fa": {
+      "change": 0,
+      "current": 4750
+    },
+    "fd": {
+      "change": 300,
+      "current": 5300
+    },
+    "fdft": {
+      "change": 300,
+      "current": 11200
+    },
+    "id": 1466,
+    "opp": "vs. CLE",
+    "player": "Robin Lopez",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 8300
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 21
+    }
+  },
+  "1467": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1467,
+    "opp": "@ SAS",
+    "player": "Jason Smith",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1477": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 1477,
+    "opp": "@ NOP",
+    "player": "Brandon Bass",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1479": {
+    "dd": {
+      "change": -400,
+      "current": 11050
+    },
+    "dk": {
+      "change": -600,
+      "current": 5200
+    },
+    "fa": {
+      "change": 0,
+      "current": 5100
+    },
+    "fd": {
+      "change": 0,
+      "current": 6000
+    },
+    "fdft": {
+      "change": -1300,
+      "current": 10200
+    },
+    "id": 1479,
+    "opp": "@ SAS",
+    "player": "Marcin Gortat",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 9700
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 25
+    }
+  },
+  "1484": {
+    "dd": {
+      "change": 300,
+      "current": 8300
+    },
+    "dk": {
+      "change": 200,
+      "current": 3600
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3900
+    },
+    "fdft": {
+      "change": 400,
+      "current": 7000
+    },
+    "id": 1484,
+    "opp": "@ CHI",
+    "player": "Channing Frye",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7300
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 13
+    }
+  },
+  "1486": {
+    "dd": {
+      "change": 3000,
+      "current": 16150
+    },
+    "dk": {
+      "change": 0,
+      "current": 6500
+    },
+    "fa": {
+      "change": 0,
+      "current": 5550
+    },
+    "fd": {
+      "change": 200,
+      "current": 7200
+    },
+    "fdft": {
+      "change": -100,
+      "current": 12300
+    },
+    "id": 1486,
+    "opp": "@ NOP",
+    "player": "DeAndre Jordan",
+    "pos": "C",
+    "rstr": {
+      "change": 500,
+      "current": 11900
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 27
+    }
+  },
+  "1490": {
+    "dd": {
+      "change": -2050,
+      "current": 20900
+    },
+    "dk": {
+      "change": -100,
+      "current": 10700
+    },
+    "fa": {
+      "change": 0,
+      "current": 7900
+    },
+    "fd": {
+      "change": 0,
+      "current": 10900
+    },
+    "fdft": {
+      "change": 0,
+      "current": 19200
+    },
+    "id": 1490,
+    "opp": "@ BOS",
+    "player": "DeMarcus Cousins",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 14800
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 50
+    }
+  },
+  "1499": {
+    "dd": {
+      "change": 500,
+      "current": 14150
+    },
+    "dk": {
+      "change": -100,
+      "current": 6500
+    },
+    "fa": {
+      "change": 0,
+      "current": 5900
+    },
+    "fd": {
+      "change": -200,
+      "current": 7300
+    },
+    "fdft": {
+      "change": 0,
+      "current": 12300
+    },
+    "id": 1499,
+    "opp": "vs. SAC",
+    "player": "Al Horford",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 11200
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 33
+    }
+  },
+  "1500": {
+    "dd": {
+      "change": -250,
+      "current": 5900
+    },
+    "dk": {
+      "change": -100,
+      "current": 3700
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": -300,
+      "current": 3600
+    },
+    "fdft": {
+      "change": -100,
+      "current": 7300
+    },
+    "id": 1500,
+    "opp": "vs. WAS",
+    "player": "David Lee",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7100
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "1501": {
+    "dd": {
+      "change": -400,
+      "current": 14150
+    },
+    "dk": {
+      "change": 100,
+      "current": 7300
+    },
+    "fa": {
+      "change": 0,
+      "current": 5550
+    },
+    "fd": {
+      "change": -100,
+      "current": 7800
+    },
+    "fdft": {
+      "change": 100,
+      "current": 13700
+    },
+    "id": 1501,
+    "opp": "vs. DET",
+    "player": "Dwight Howard",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 12500
+    },
+    "team": "ATL",
+    "y!": {
+      "change": -2,
+      "current": 33
+    }
+  },
+  "1502": {
+    "dd": {
+      "change": -350,
+      "current": 12750
+    },
+    "dk": {
+      "change": -200,
+      "current": 5100
+    },
+    "fa": {
+      "change": 0,
+      "current": 5750
+    },
+    "fd": {
+      "change": -200,
+      "current": 5900
+    },
+    "fdft": {
+      "change": -400,
+      "current": 10100
+    },
+    "id": 1502,
+    "opp": "vs. WAS",
+    "player": "Pau Gasol",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 10300
+    },
+    "team": "SAS",
+    "y!": {
+      "change": -2,
+      "current": 23
+    }
+  },
+  "1503": {
+    "dd": {
+      "change": 3300,
+      "current": 18000
+    },
+    "dk": {
+      "change": -200,
+      "current": 8500
+    },
+    "fa": {
+      "change": 0,
+      "current": 6550
+    },
+    "fd": {
+      "change": 0,
+      "current": 9000
+    },
+    "fdft": {
+      "change": -400,
+      "current": 15600
+    },
+    "id": 1503,
+    "opp": "@ NOP",
+    "player": "Blake Griffin",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 13800
+    },
+    "team": "LAC",
+    "y!": {
+      "change": 0,
+      "current": 41
+    }
+  },
+  "16804": {
+    "dd": {
+      "change": -300,
+      "current": 5050
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 16804,
+    "opp": "vs. ORL",
+    "player": "Hollis Thompson",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "16822": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 16822,
+    "opp": "@ BOS",
+    "player": "Ben McLemore",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7200
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "16845": {
+    "dd": {
+      "change": 550,
+      "current": 9050
+    },
+    "dk": {
+      "change": -200,
+      "current": 4000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 100,
+      "current": 3800
+    },
+    "fdft": {
+      "change": -600,
+      "current": 7800
+    },
+    "id": 16845,
+    "opp": "vs. SAC",
+    "player": "Kelly Olynyk",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 7400
+    },
+    "team": "BOS",
+    "y!": {
+      "change": -2,
+      "current": 10
+    }
+  },
+  "16863": {
+    "dd": {
+      "change": -900,
+      "current": 8150
+    },
+    "dk": {
+      "change": 100,
+      "current": 3700
+    },
+    "fa": {
+      "change": 0,
+      "current": 3600
+    },
+    "fd": {
+      "change": 0,
+      "current": 3800
+    },
+    "fdft": {
+      "change": 300,
+      "current": 7300
+    },
+    "id": 16863,
+    "opp": "vs. LAC",
+    "player": "Solomon Hill",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 7700
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "16869": {
+    "dd": {
+      "change": 450,
+      "current": 9650
+    },
+    "dk": {
+      "change": 200,
+      "current": 5200
+    },
+    "fa": {
+      "change": 0,
+      "current": 4500
+    },
+    "fd": {
+      "change": 600,
+      "current": 5600
+    },
+    "fdft": {
+      "change": 400,
+      "current": 10200
+    },
+    "id": 16869,
+    "opp": "@ ATL",
+    "player": "Kentavious Caldwell-Pope",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7900
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 21
+    }
+  },
+  "16874": {
+    "dd": {
+      "change": -600,
+      "current": 10850
+    },
+    "dk": {
+      "change": 0,
+      "current": 4600
+    },
+    "fa": {
+      "change": 0,
+      "current": 4500
+    },
+    "fd": {
+      "change": 0,
+      "current": 4500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9100
+    },
+    "id": 16874,
+    "opp": "vs. ORL",
+    "player": "Robert Covington",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8000
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 17
+    }
+  },
+  "16875": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": -100,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 16875,
+    "opp": "vs. CLE",
+    "player": "Isaiah Canaan",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "16879": {
+    "dd": {
+      "change": -650,
+      "current": 5000
+    },
+    "dk": {
+      "change": 100,
+      "current": 3500
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 200,
+      "current": 3700
+    },
+    "fdft": {
+      "change": 300,
+      "current": 7000
+    },
+    "id": 16879,
+    "opp": "vs. DET",
+    "player": "Tim Hardaway Jr.",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "16919": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 16919,
+    "opp": "@ NYK",
+    "player": "Shabazz Muhammad",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "16939": {
+    "dd": {
+      "change": -50,
+      "current": 12000
+    },
+    "dk": {
+      "change": -200,
+      "current": 5900
+    },
+    "fa": {
+      "change": 0,
+      "current": 4900
+    },
+    "fd": {
+      "change": -100,
+      "current": 6000
+    },
+    "fdft": {
+      "change": -400,
+      "current": 11600
+    },
+    "id": 16939,
+    "opp": "@ NYK",
+    "player": "Gorgui Dieng",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 10100
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 23
+    }
+  },
+  "16975": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 16975,
+    "opp": "@ PHI",
+    "player": "Arinze Onuaku",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "17029": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 17029,
+    "opp": "@ SAS",
+    "player": "Trey Burke",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6900
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "17069": {
+    "dd": {
+      "change": -1400,
+      "current": 10700
+    },
+    "dk": {
+      "change": -500,
+      "current": 6000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4800
+    },
+    "fd": {
+      "change": 0,
+      "current": 6100
+    },
+    "fdft": {
+      "change": -1000,
+      "current": 12000
+    },
+    "id": 17069,
+    "opp": "@ SAS",
+    "player": "Otto Porter",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 9600
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 2,
+      "current": 30
+    }
+  },
+  "17095": {
+    "dd": {
+      "change": -200,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 17095,
+    "opp": "vs. LAC",
+    "player": "Alexis Ajinca",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "17321": {
+    "dd": {
+      "change": -350,
+      "current": 7400
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 17321,
+    "opp": "@ DEN",
+    "player": "Nene Hilario",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 7400
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "17354": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 17354,
+    "opp": "vs. MIN",
+    "player": "Sasha Vujacic",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "17379": {
+    "dd": {
+      "change": -250,
+      "current": 5950
+    },
+    "dk": {
+      "change": 200,
+      "current": 4200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": -200,
+      "current": 3700
+    },
+    "fdft": {
+      "change": 600,
+      "current": 8400
+    },
+    "id": 17379,
+    "opp": "vs. DET",
+    "player": "Mike Muscala",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6900
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18565": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18565,
+    "opp": "vs. SAC",
+    "player": "James Young",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18567": {
+    "dd": {
+      "change": 650,
+      "current": 11550
+    },
+    "dk": {
+      "change": -100,
+      "current": 5000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4300
+    },
+    "fd": {
+      "change": 0,
+      "current": 5100
+    },
+    "fdft": {
+      "change": -300,
+      "current": 9900
+    },
+    "id": 18567,
+    "opp": "vs. SAC",
+    "player": "Marcus Smart",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 8100
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 18
+    }
+  },
+  "18578": {
+    "dd": {
+      "change": -100,
+      "current": 12750
+    },
+    "dk": {
+      "change": 200,
+      "current": 6700
+    },
+    "fa": {
+      "change": 0,
+      "current": 5450
+    },
+    "fd": {
+      "change": 0,
+      "current": 6200
+    },
+    "fdft": {
+      "change": 200,
+      "current": 12600
+    },
+    "id": 18578,
+    "opp": "vs. ORL",
+    "player": "Joel Embiid",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 8900
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 26
+    }
+  },
+  "18579": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18579,
+    "opp": "@ DEN",
+    "player": "K.J. McDaniels",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18580": {
+    "dd": {
+      "change": 850,
+      "current": 6950
+    },
+    "dk": {
+      "change": -300,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -700,
+      "current": 7700
+    },
+    "id": 18580,
+    "opp": "vs. LAL",
+    "player": "Lucas Nogueira",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 7300
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18581": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18581,
+    "opp": "vs. LAL",
+    "player": "Bruno Caboclo",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18582": {
+    "dd": {
+      "change": -1200,
+      "current": 7750
+    },
+    "dk": {
+      "change": 0,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": -100,
+      "current": 4100
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7700
+    },
+    "id": 18582,
+    "opp": "vs. LAC",
+    "player": "E'Twaun Moore",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7500
+    },
+    "team": "NOP",
+    "y!": {
+      "change": -2,
+      "current": 13
+    }
+  },
+  "18584": {
+    "dd": {
+      "change": -1850,
+      "current": 10100
+    },
+    "dk": {
+      "change": 200,
+      "current": 4600
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": 0,
+      "current": 4200
+    },
+    "fdft": {
+      "change": 300,
+      "current": 9100
+    },
+    "id": 18584,
+    "opp": "vs. CLE",
+    "player": "Nikola Mirotic",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 8300
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 17
+    }
+  },
+  "18590": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18590,
+    "opp": "@ PHI",
+    "player": "Damjan Rudez",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18594": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18594,
+    "opp": "@ NYK",
+    "player": "Adreian Payne",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18595": {
+    "dd": {
+      "change": -1250,
+      "current": 12500
+    },
+    "dk": {
+      "change": 100,
+      "current": 6000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4750
+    },
+    "fd": {
+      "change": 300,
+      "current": 5900
+    },
+    "fdft": {
+      "change": 300,
+      "current": 11900
+    },
+    "id": 18595,
+    "opp": "vs. DET",
+    "player": "Dennis Schroder",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 10400
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 23
+    }
+  },
+  "18601": {
+    "dd": {
+      "change": 850,
+      "current": 12400
+    },
+    "dk": {
+      "change": 0,
+      "current": 4300
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": 0,
+      "current": 4000
+    },
+    "fdft": {
+      "change": 0,
+      "current": 8400
+    },
+    "id": 18601,
+    "opp": "@ PHI",
+    "player": "Aaron Gordon",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8600
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 19
+    }
+  },
+  "18602": {
+    "dd": {
+      "change": 500,
+      "current": 12150
+    },
+    "dk": {
+      "change": 0,
+      "current": 5000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4700
+    },
+    "fd": {
+      "change": 0,
+      "current": 5700
+    },
+    "fdft": {
+      "change": -100,
+      "current": 9800
+    },
+    "id": 18602,
+    "opp": "@ PHI",
+    "player": "Elfrid Payton",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 9800
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 21
+    }
+  },
+  "18607": {
+    "dd": {
+      "change": -450,
+      "current": 5200
+    },
+    "dk": {
+      "change": -100,
+      "current": 3100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": -200,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -300,
+      "current": 6000
+    },
+    "id": 18607,
+    "opp": "@ TOR",
+    "player": "Tarik Black",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18610": {
+    "dd": {
+      "change": -650,
+      "current": 12500
+    },
+    "dk": {
+      "change": 0,
+      "current": 5700
+    },
+    "fa": {
+      "change": 0,
+      "current": 4900
+    },
+    "fd": {
+      "change": 0,
+      "current": 5900
+    },
+    "fdft": {
+      "change": 0,
+      "current": 11200
+    },
+    "id": 18610,
+    "opp": "@ DEN",
+    "player": "Clint Capela",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 8700
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 23
+    }
+  },
+  "18615": {
+    "dd": {
+      "change": 250,
+      "current": 7050
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18615,
+    "opp": "vs. WAS",
+    "player": "Kyle Anderson",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8000
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18619": {
+    "dd": {
+      "change": 200,
+      "current": 11450
+    },
+    "dk": {
+      "change": -200,
+      "current": 4400
+    },
+    "fa": {
+      "change": 0,
+      "current": 4450
+    },
+    "fd": {
+      "change": -200,
+      "current": 4400
+    },
+    "fdft": {
+      "change": -400,
+      "current": 8700
+    },
+    "id": 18619,
+    "opp": "vs. HOU",
+    "player": "Jusuf Nurkic",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 9200
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 18
+    }
+  },
+  "18620": {
+    "dd": {
+      "change": 50,
+      "current": 13050
+    },
+    "dk": {
+      "change": 100,
+      "current": 6600
+    },
+    "fa": {
+      "change": 0,
+      "current": 5250
+    },
+    "fd": {
+      "change": 100,
+      "current": 6000
+    },
+    "fdft": {
+      "change": -100,
+      "current": 12300
+    },
+    "id": 18620,
+    "opp": "@ NYK",
+    "player": "Andrew Wiggins",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 11200
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 33
+    }
+  },
+  "18622": {
+    "dd": {
+      "change": -50,
+      "current": 11800
+    },
+    "dk": {
+      "change": -300,
+      "current": 6000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4850
+    },
+    "fd": {
+      "change": -200,
+      "current": 6000
+    },
+    "fdft": {
+      "change": -600,
+      "current": 11900
+    },
+    "id": 18622,
+    "opp": "@ NYK",
+    "player": "Zach LaVine",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 10300
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 25
+    }
+  },
+  "18630": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18630,
+    "opp": "@ PHI",
+    "player": "C.J. Wilcox",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18631": {
+    "dd": {
+      "change": -1200,
+      "current": 10950
+    },
+    "dk": {
+      "change": -400,
+      "current": 6000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4750
+    },
+    "fd": {
+      "change": -200,
+      "current": 5500
+    },
+    "fdft": {
+      "change": -800,
+      "current": 11900
+    },
+    "id": 18631,
+    "opp": "@ TOR",
+    "player": "Jordan Clarkson",
+    "pos": "SG",
+    "rstr": {
+      "change": 600,
+      "current": 9600
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 2,
+      "current": 23
+    }
+  },
+  "18632": {
+    "dd": {
+      "change": -750,
+      "current": 11800
+    },
+    "dk": {
+      "change": 200,
+      "current": 6800
+    },
+    "fa": {
+      "change": 0,
+      "current": 4950
+    },
+    "fd": {
+      "change": 100,
+      "current": 6600
+    },
+    "fdft": {
+      "change": 400,
+      "current": 12700
+    },
+    "id": 18632,
+    "opp": "@ TOR",
+    "player": "Julius Randle",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 10500
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 27
+    }
+  },
+  "18633": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -1900,
+      "current": 6000
+    },
+    "id": 18633,
+    "opp": "@ DEN",
+    "player": "Tyler Ennis",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18636": {
+    "dd": {
+      "change": -350,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3700
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": 0,
+      "current": 3900
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7400
+    },
+    "id": 18636,
+    "opp": "vs. ORL",
+    "player": "Nik Stauskas",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18717": {
+    "dd": {
+      "change": -1000,
+      "current": 6450
+    },
+    "dk": {
+      "change": -100,
+      "current": 3200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": -100,
+      "current": 3600
+    },
+    "fdft": {
+      "change": -100,
+      "current": 6300
+    },
+    "id": 18717,
+    "opp": "vs. LAC",
+    "player": "Langston Galloway",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6500
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18743": {
+    "dd": {
+      "change": -1650,
+      "current": 10450
+    },
+    "dk": {
+      "change": 100,
+      "current": 5600
+    },
+    "fa": {
+      "change": 0,
+      "current": 5000
+    },
+    "fd": {
+      "change": -200,
+      "current": 4900
+    },
+    "fdft": {
+      "change": 300,
+      "current": 11200
+    },
+    "id": 18743,
+    "opp": "vs. LAC",
+    "player": "Tim Frazier",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 8300
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 24
+    }
+  },
+  "18772": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18772,
+    "opp": "@ CHI",
+    "player": "Jordan McRae",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18894": {
+    "dd": {
+      "change": 250,
+      "current": 5250
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3700
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18894,
+    "opp": "vs. SAC",
+    "player": "Terry Rozier",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18895": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18895,
+    "opp": "vs. CLE",
+    "player": "R.J. Hunter",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18899": {
+    "dd": {
+      "change": 100,
+      "current": 15200
+    },
+    "dk": {
+      "change": 200,
+      "current": 7900
+    },
+    "fa": {
+      "change": 0,
+      "current": 5800
+    },
+    "fd": {
+      "change": 400,
+      "current": 7900
+    },
+    "fdft": {
+      "change": 400,
+      "current": 14700
+    },
+    "id": 18899,
+    "opp": "vs. MIN",
+    "player": "Kristaps Porzingis",
+    "pos": "PF",
+    "rstr": {
+      "change": 600,
+      "current": 11700
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 2,
+      "current": 35
+    }
+  },
+  "18900": {
+    "dd": {
+      "change": -700,
+      "current": 6300
+    },
+    "dk": {
+      "change": 0,
+      "current": 3600
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7000
+    },
+    "id": 18900,
+    "opp": "vs. CLE",
+    "player": "Jerian Grant",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7800
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18901": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": -100,
+      "current": 3300
+    },
+    "fa": {
+      "change": 500,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -200,
+      "current": 6400
+    },
+    "id": 18901,
+    "opp": "vs. MIN",
+    "player": "Guillermo Hernangomez",
+    "pos": "C",
+    "rstr": {
+      "change": 6200,
+      "current": 6200
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 10,
+      "current": 10
+    }
+  },
+  "18902": {
+    "dd": {
+      "change": -50,
+      "current": 10050
+    },
+    "dk": {
+      "change": 0,
+      "current": 4900
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": 0,
+      "current": 4400
+    },
+    "fdft": {
+      "change": 0,
+      "current": 9800
+    },
+    "id": 18902,
+    "opp": "vs. ORL",
+    "player": "Jahlil Okafor",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 8600
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 16
+    }
+  },
+  "18905": {
+    "dd": {
+      "change": -450,
+      "current": 6100
+    },
+    "dk": {
+      "change": 0,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3800
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7700
+    },
+    "id": 18905,
+    "opp": "vs. ORL",
+    "player": "Richaun Holmes",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6400
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18908": {
+    "dd": {
+      "change": 600,
+      "current": 7450
+    },
+    "dk": {
+      "change": -200,
+      "current": 3200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": -200,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -400,
+      "current": 6300
+    },
+    "id": 18908,
+    "opp": "vs. LAL",
+    "player": "Norman Powell",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6800
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18909": {
+    "dd": {
+      "change": -1150,
+      "current": 5700
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18909,
+    "opp": "vs. CLE",
+    "player": "Bobby Portis",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6600
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18913": {
+    "dd": {
+      "change": -650,
+      "current": 7150
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18913,
+    "opp": "@ ATL",
+    "player": "Stanley Johnson",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6500
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18914": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18914,
+    "opp": "@ ATL",
+    "player": "Darrun Hilliard",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18923": {
+    "dd": {
+      "change": 400,
+      "current": 6150
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18923,
+    "opp": "@ PHI",
+    "player": "Mario Hezonja",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "ORL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18925": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 100,
+      "current": 3100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 100,
+      "current": 3800
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18925,
+    "opp": "@ SAS",
+    "player": "Kelly Oubre",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18929": {
+    "dd": {
+      "change": 150,
+      "current": 5400
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3600
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18929,
+    "opp": "@ DEN",
+    "player": "Sam Dekker",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18930": {
+    "dd": {
+      "change": 0,
+      "current": 5900
+    },
+    "dk": {
+      "change": 0,
+      "current": 3300
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6400
+    },
+    "id": 18930,
+    "opp": "@ DEN",
+    "player": "Montrezl Harrell",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18936": {
+    "dd": {
+      "change": 1300,
+      "current": 11800
+    },
+    "dk": {
+      "change": 0,
+      "current": 5900
+    },
+    "fa": {
+      "change": 0,
+      "current": 4700
+    },
+    "fd": {
+      "change": 0,
+      "current": 5800
+    },
+    "fdft": {
+      "change": 0,
+      "current": 11600
+    },
+    "id": 18936,
+    "opp": "vs. HOU",
+    "player": "Emmanuel Mudiay",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 9100
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 24
+    }
+  },
+  "18937": {
+    "dd": {
+      "change": 250,
+      "current": 18300
+    },
+    "dk": {
+      "change": 600,
+      "current": 8900
+    },
+    "fa": {
+      "change": 0,
+      "current": 6450
+    },
+    "fd": {
+      "change": 600,
+      "current": 9400
+    },
+    "fdft": {
+      "change": 1200,
+      "current": 16400
+    },
+    "id": 18937,
+    "opp": "@ NYK",
+    "player": "Karl-Anthony Towns",
+    "pos": "C",
+    "rstr": {
+      "change": -600,
+      "current": 13600
+    },
+    "team": "MIN",
+    "y!": {
+      "change": -2,
+      "current": 39
+    }
+  },
+  "18938": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18938,
+    "opp": "@ NYK",
+    "player": "Tyus Jones",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7300
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18946": {
+    "dd": {
+      "change": -450,
+      "current": 7900
+    },
+    "dk": {
+      "change": 0,
+      "current": 4800
+    },
+    "fa": {
+      "change": 0,
+      "current": 3650
+    },
+    "fd": {
+      "change": 300,
+      "current": 4300
+    },
+    "fdft": {
+      "change": -100,
+      "current": 9400
+    },
+    "id": 18946,
+    "opp": "@ TOR",
+    "player": "Larry Nance",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7700
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 12
+    }
+  },
+  "18948": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 100,
+      "current": 3600
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18948,
+    "opp": "vs. LAC",
+    "player": "Anthony Brown",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18951": {
+    "dd": {
+      "change": -700,
+      "current": 6700
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18951,
+    "opp": "@ BOS",
+    "player": "Willie Cauley-Stein",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "SAC",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "18956": {
+    "dd": {
+      "change": -150,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3600
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 18956,
+    "opp": "vs. ORL",
+    "player": "T.J. McConnell",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 8000
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "31767": {
+    "dd": {
+      "change": -550,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 31767,
+    "opp": "vs. CLE",
+    "player": "Cristiano Da Silva Felicio",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "31807": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3300
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 31807,
+    "opp": "@ ATL",
+    "player": "Boban Marjanovic",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6400
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "31808": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": -100,
+      "current": 3200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": -200,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -100,
+      "current": 6300
+    },
+    "id": 31808,
+    "opp": "vs. WAS",
+    "player": "Jonathon Simmons",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 7200
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "31812": {
+    "dd": {
+      "change": 350,
+      "current": 10250
+    },
+    "dk": {
+      "change": 400,
+      "current": 5200
+    },
+    "fa": {
+      "change": 0,
+      "current": 4300
+    },
+    "fd": {
+      "change": 300,
+      "current": 5100
+    },
+    "fdft": {
+      "change": 800,
+      "current": 10200
+    },
+    "id": 31812,
+    "opp": "vs. HOU",
+    "player": "Nikola Jokic",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 9100
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 19
+    }
+  },
+  "31814": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 31814,
+    "opp": "@ NYK",
+    "player": "Nemanja Bjelica",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6600
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "31823": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 31823,
+    "opp": "@ TOR",
+    "player": "Marcelo Huertas",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35181": {
+    "dd": {
+      "change": 550,
+      "current": 5550
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35181,
+    "opp": "vs. SAC",
+    "player": "Jaylen Brown",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6700
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35186": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": -100,
+      "current": 3100
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": -300,
+      "current": 6000
+    },
+    "id": 35186,
+    "opp": "vs. LAL",
+    "player": "Pascal Siakam",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 7200
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35187": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35187,
+    "opp": "vs. LAL",
+    "player": "Jakob Poeltl",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6400
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35188": {
+    "dd": {
+      "change": -750,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35188,
+    "opp": "vs. CLE",
+    "player": "Denzel Valentine",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35190": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35190,
+    "opp": "@ ATL",
+    "player": "Michael Gbinije",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "DET",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35197": {
+    "dd": {
+      "change": 300,
+      "current": 5300
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35197,
+    "opp": "@ CHI",
+    "player": "Kay Felder",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35206": {
+    "dd": {
+      "change": -1450,
+      "current": 7200
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3700
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35206,
+    "opp": "vs. LAC",
+    "player": "Buddy Hield",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7600
+    },
+    "team": "NOP",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35209": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35209,
+    "opp": "vs. WAS",
+    "player": "Dejounte Murray",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35211": {
+    "dd": {
+      "change": 700,
+      "current": 7200
+    },
+    "dk": {
+      "change": -200,
+      "current": 4300
+    },
+    "fa": {
+      "change": 0,
+      "current": 4400
+    },
+    "fd": {
+      "change": 0,
+      "current": 4100
+    },
+    "fdft": {
+      "change": -300,
+      "current": 8500
+    },
+    "id": 35211,
+    "opp": "vs. HOU",
+    "player": "Jamal Murray",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7700
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 13
+    }
+  },
+  "35212": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3700
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35212,
+    "opp": "vs. HOU",
+    "player": "Juan Hernangomez",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35213": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35213,
+    "opp": "vs. HOU",
+    "player": "Malik Beasley",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35215": {
+    "dd": {
+      "change": -100,
+      "current": 6700
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35215,
+    "opp": "@ NYK",
+    "player": "Kris Dunn",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7400
+    },
+    "team": "MIN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35218": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35218,
+    "opp": "vs. DET",
+    "player": "Taurean Prince",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35227": {
+    "dd": {
+      "change": -450,
+      "current": 7950
+    },
+    "dk": {
+      "change": 100,
+      "current": 4400
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 200,
+      "current": 4000
+    },
+    "fdft": {
+      "change": 400,
+      "current": 8800
+    },
+    "id": 35227,
+    "opp": "@ TOR",
+    "player": "Brandon Ingram",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 8000
+    },
+    "team": "LAL",
+    "y!": {
+      "change": 0,
+      "current": 11
+    }
+  },
+  "35236": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35236,
+    "opp": "@ SAS",
+    "player": "Sheldon McClellan",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "35239": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 35239,
+    "opp": "vs. MIN",
+    "player": "Marshall Plumlee",
+    "pos": "C",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36001": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36001,
+    "opp": "vs. MIN",
+    "player": "Ron Baker",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36003": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36003,
+    "opp": "vs. MIN",
+    "player": "Mindaugas Kuzminskas",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36004": {
+    "dd": {
+      "change": -650,
+      "current": 8500
+    },
+    "dk": {
+      "change": 0,
+      "current": 4000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3700
+    },
+    "fd": {
+      "change": 0,
+      "current": 3800
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7800
+    },
+    "id": 36004,
+    "opp": "vs. ORL",
+    "player": "Dario Saric",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 8100
+    },
+    "team": "PHI",
+    "y!": {
+      "change": -2,
+      "current": 11
+    }
+  },
+  "36008": {
+    "dd": {
+      "change": -650,
+      "current": 9500
+    },
+    "dk": {
+      "change": 200,
+      "current": 4500
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": 0,
+      "current": 4400
+    },
+    "fdft": {
+      "change": 400,
+      "current": 8800
+    },
+    "id": 36008,
+    "opp": "vs. ORL",
+    "player": "Sergio Rodriguez",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 8000
+    },
+    "team": "PHI",
+    "y!": {
+      "change": 0,
+      "current": 17
+    }
+  },
+  "36011": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36011,
+    "opp": "vs. LAL",
+    "player": "Fred VanVleet",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "TOR",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36020": {
+    "dd": {
+      "change": -850,
+      "current": 5200
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36020,
+    "opp": "vs. DET",
+    "player": "Malcolm Delaney",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "ATL",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36030": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36030,
+    "opp": "@ SAS",
+    "player": "Daniel Ochefu",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36031": {
+    "dd": {
+      "change": -350,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3800
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7400
+    },
+    "id": 36031,
+    "opp": "@ SAS",
+    "player": "Tomas Satoransky ",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 6600
+    },
+    "team": "WAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36042": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36042,
+    "opp": "@ DEN",
+    "player": "Kyle Wiltjer",
+    "pos": "PF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "HOU",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36049": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36049,
+    "opp": "vs. WAS",
+    "player": "Nicolas Laprovittola",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "36051": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 36051,
+    "opp": "vs. WAS",
+    "player": "Davis Bertans",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "906": {
+    "dd": {
+      "change": -1100,
+      "current": 8800
+    },
+    "dk": {
+      "change": 0,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 3700
+    },
+    "fd": {
+      "change": 0,
+      "current": 4100
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7700
+    },
+    "id": 906,
+    "opp": "@ BOS",
+    "player": "Ty Lawson",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 6500
+    },
+    "team": "SAC",
+    "y!": {
+      "change": -2,
+      "current": 13
+    }
+  },
+  "907": {
+    "dd": {
+      "change": 0,
+      "current": 5000
+    },
+    "dk": {
+      "change": 0,
+      "current": 3000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3500
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6000
+    },
+    "id": 907,
+    "opp": "vs. HOU",
+    "player": "Alonzo Gee",
+    "pos": "SF",
+    "rstr": {
+      "change": 0,
+      "current": 6000
+    },
+    "team": "DEN",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "915": {
+    "dd": {
+      "change": 550,
+      "current": 9300
+    },
+    "dk": {
+      "change": 0,
+      "current": 3900
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": 0,
+      "current": 3700
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7700
+    },
+    "id": 915,
+    "opp": "@ CHI",
+    "player": "J.R. Smith",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 8500
+    },
+    "team": "CLE",
+    "y!": {
+      "change": 0,
+      "current": 17
+    }
+  },
+  "924": {
+    "dd": {
+      "change": 100,
+      "current": 9200
+    },
+    "dk": {
+      "change": 0,
+      "current": 4000
+    },
+    "fa": {
+      "change": 0,
+      "current": 3800
+    },
+    "fd": {
+      "change": 100,
+      "current": 4100
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7800
+    },
+    "id": 924,
+    "opp": "vs. MIN",
+    "player": "Brandon Jennings",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7300
+    },
+    "team": "NYK",
+    "y!": {
+      "change": 1,
+      "current": 11
+    }
+  },
+  "940": {
+    "dd": {
+      "change": 150,
+      "current": 9150
+    },
+    "dk": {
+      "change": -100,
+      "current": 4100
+    },
+    "fa": {
+      "change": 0,
+      "current": 4000
+    },
+    "fd": {
+      "change": -200,
+      "current": 3900
+    },
+    "fdft": {
+      "change": -200,
+      "current": 8100
+    },
+    "id": 940,
+    "opp": "vs. WAS",
+    "player": "Danny Green",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7600
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 13
+    }
+  },
+  "941": {
+    "dd": {
+      "change": 850,
+      "current": 14600
+    },
+    "dk": {
+      "change": -200,
+      "current": 6000
+    },
+    "fa": {
+      "change": 0,
+      "current": 5000
+    },
+    "fd": {
+      "change": -100,
+      "current": 6500
+    },
+    "fdft": {
+      "change": -400,
+      "current": 11900
+    },
+    "id": 941,
+    "opp": "vs. SAC",
+    "player": "Avery Bradley",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 10900
+    },
+    "team": "BOS",
+    "y!": {
+      "change": 0,
+      "current": 30
+    }
+  },
+  "965": {
+    "dd": {
+      "change": 300,
+      "current": 6700
+    },
+    "dk": {
+      "change": 0,
+      "current": 3200
+    },
+    "fa": {
+      "change": 0,
+      "current": 3500
+    },
+    "fd": {
+      "change": 200,
+      "current": 3900
+    },
+    "fdft": {
+      "change": 0,
+      "current": 6300
+    },
+    "id": 965,
+    "opp": "vs. WAS",
+    "player": "Manu Ginobili",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 7000
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 10
+    }
+  },
+  "967": {
+    "dd": {
+      "change": -1150,
+      "current": 12000
+    },
+    "dk": {
+      "change": -300,
+      "current": 6400
+    },
+    "fa": {
+      "change": 0,
+      "current": 5550
+    },
+    "fd": {
+      "change": 0,
+      "current": 6900
+    },
+    "fdft": {
+      "change": 0,
+      "current": 12600
+    },
+    "id": 967,
+    "opp": "vs. CLE",
+    "player": "Dwyane Wade",
+    "pos": "SG",
+    "rstr": {
+      "change": 0,
+      "current": 10600
+    },
+    "team": "CHI",
+    "y!": {
+      "change": 0,
+      "current": 28
+    }
+  },
+  "982": {
+    "dd": {
+      "change": 250,
+      "current": 8650
+    },
+    "dk": {
+      "change": 0,
+      "current": 4000
+    },
+    "fa": {
+      "change": 0,
+      "current": 4300
+    },
+    "fd": {
+      "change": -200,
+      "current": 4300
+    },
+    "fdft": {
+      "change": 0,
+      "current": 7800
+    },
+    "id": 982,
+    "opp": "vs. WAS",
+    "player": "Tony Parker",
+    "pos": "PG",
+    "rstr": {
+      "change": 0,
+      "current": 7800
+    },
+    "team": "SAS",
+    "y!": {
+      "change": 0,
+      "current": 11
+    }
+  }
+}
