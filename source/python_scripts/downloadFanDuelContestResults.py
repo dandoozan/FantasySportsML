@@ -11,10 +11,8 @@ SLEEP = 30
 ONE_DAY = util.getOneDay()
 START_DATE = util.getDate(2016, 11, 7)
 END_DATE = util.getYesterdayAsDate()
-KNOWN_MISSING_DATES = {
+KNOWN_MISSING_DATES = { #these are the dates that i forgot to scrape
     '2016-11-20',
-    '2016-11-24',
-    '2016-12-24',
     '2017-02-05',
 }
 
@@ -41,6 +39,10 @@ def findFilename(fullPathToDir, dateStr):
         if util.parseBaseFilename(filename) == dateStr \
                 or util.parseDateFromDateTimeFilename(filename) == dateStr:
             return filename
+
+def dateKnownToBeMissing(currDateStr):
+    return currDateStr in KNOWN_MISSING_DATES or currDateStr in fd.DATES_WITH_NO_GAMES
+
 def findContestsToDownload():
     print 'Finding contests to download...'
     contestsToDownload = []
@@ -48,7 +50,7 @@ def findContestsToDownload():
     currDate = START_DATE
     while currDate <= END_DATE:
         currDateStr = util.formatDate(currDate)
-        if currDateStr not in KNOWN_MISSING_DATES:
+        if not dateKnownToBeMissing(currDateStr):
             fullPathFilename = util.createFullPathFilename(CONTESTS_DIR, findFilename(CONTESTS_DIR, currDateStr))
             if util.fileExists(fullPathFilename):
                 jsonDataFromFile = util.loadJsonFile(fullPathFilename)
