@@ -8,6 +8,7 @@ TEST = False
 
 FILENAME = util.formatDatetime(util.getTodayAsDatetime())
 PARENT_DIR = util.joinDirs('data', 'rawDataFromFanDuel')
+CONTEST_LABEL = 'Main'
 SLEEP = 10
 
 def createHeaders(xAuthToken, referer, customHeaders={}):
@@ -28,7 +29,7 @@ def writeData(data, dirName):
 def parseFixtureList(jsonData):
     fixtureListObjs = jsonData['fixture_lists']
     for obj in fixtureListObjs:
-        if obj['sport'] == 'NBA' and obj['label'] == 'Main':
+        if obj['sport'] == 'NBA' and obj['label'] == CONTEST_LABEL:
             return obj['id']
     util.stop('No fixture list found')
 def downloadFixtureList(xAuthToken):
