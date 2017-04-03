@@ -960,7 +960,7 @@ def loadDataFromDir(fullPathToDir, findFileFunction, loadFileFunction, parseRowF
     currDate = startDate
     while currDate <= endDate:
         currDateStr = util.formatDate(currDate)
-        if currDateStr not in fd.DATES_WITH_NO_GAMES:
+        if currDateStr not in fd.DATES_WITH_NO_CONTESTS:
             data[currDateStr] = loadDataFromFile(fullPathToDir, findFileFunction, loadFileFunction, parseRowFunction, handleDuplicates, features, currDateStr, keyRenameMap, delimiter, prefix)
         currDate = currDate + ONE_DAY
     return data

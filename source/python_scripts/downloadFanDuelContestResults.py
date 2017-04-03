@@ -41,7 +41,7 @@ def findFilename(fullPathToDir, dateStr):
             return filename
 
 def dateKnownToBeMissing(currDateStr):
-    return currDateStr in KNOWN_MISSING_DATES or currDateStr in fd.DATES_WITH_NO_GAMES
+    return currDateStr in KNOWN_MISSING_DATES or currDateStr in fd.DATES_WITH_NO_CONTESTS
 
 def findContestsToDownload():
     print 'Finding contests to download...'

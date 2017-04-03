@@ -12,7 +12,7 @@ CONTEST_TYPES = {
     'tripleUp': 'TRIPLE_UP',
     'tripleDouble': 'TRIPLE_DOUBLE',
 }
-DATES_WITH_NO_GAMES = {
+DATES_WITH_NO_CONTESTS = { #these are dates with no fanduel contests (likely dates with no NBA games too, except 4/3 had a NBA game but no contest for some reason)
     '2016-11-24',
     '2016-12-24',
     '2017-02-17',
@@ -21,6 +21,7 @@ DATES_WITH_NO_GAMES = {
     '2017-02-20',
     '2017-02-21',
     '2017-02-22',
+    '2017-04-03',
 }
 
 def getHeaders(referer, xAuthToken):

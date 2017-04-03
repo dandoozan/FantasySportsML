@@ -5,7 +5,7 @@ PYTHON_SOURCE_DIR = util.joinDirs('source', 'python_scripts')
 
 xAuthToken = util.getCommandLineArgument()
 filesToRun = [
-    { 'baseFilename': 'downloadFanDuelJson', 'args': [xAuthToken] },
+    #{ 'baseFilename': 'downloadFanDuelJson', 'args': [xAuthToken] },
 
     #NOTE: you MUST run this every day because it looks only for yesterday's results
     { 'baseFilename': 'scrapeFanDuel', 'args': [xAuthToken] },
