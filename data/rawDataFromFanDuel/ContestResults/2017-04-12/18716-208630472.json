@@ -1,0 +1,878 @@
+{
+  "_meta": {
+    "_primary_document": "contests"
+  },
+  "contests": [
+    {
+      "_url": "https://api.fanduel.com/contests/18716-208630472",
+      "cancellation": null,
+      "display_name": {
+        "_object_type": "string_formatter",
+        "format": "$22K Wed MLB BIG $2 Double Up (Top 5500 Win)",
+        "placeholders": []
+      },
+      "enter_url": "https://api.fanduel.com/contests/18716-208630472/entries",
+      "entries": {
+        "_url": "https://api.fanduel.com/contests/18716-208630472/entries",
+        "count": 12634
+      },
+      "entry_fee": 2,
+      "entry_fee_fdp": 4800,
+      "features": null,
+      "final": true,
+      "fixture_list": {
+        "_members": [
+          "18716"
+        ],
+        "_ref": "fixture_lists.id",
+        "ids": [
+          "18716"
+        ],
+        "ref": "fixture_lists.id"
+      },
+      "guaranteed": true,
+      "h2h": null,
+      "id": "18716-208630472",
+      "instructions": null,
+      "invite_url": "https://www.fanduel.com/entry/18716-208630472",
+      "made_free": false,
+      "max_entries_per_user": 150,
+      "name": "$22K Wed MLB BIG $2 Double Up (Top 5500 Win)",
+      "notice": null,
+      "private": false,
+      "prizes": {
+        "count": 5500,
+        "groups": [
+          {
+            "count": 5500,
+            "end_rank": 5500,
+            "name": "$4",
+            "start_rank": 1,
+            "value": 4
+          }
+        ],
+        "summary": "$22,000",
+        "total": 22000.0
+      },
+      "restricted": null,
+      "roster_positions": [
+        {
+          "abbr": "P",
+          "full": "Pitcher",
+          "valid_player_positions": [
+            "P"
+          ]
+        },
+        {
+          "abbr": "C",
+          "full": "Catcher",
+          "valid_player_positions": [
+            "C"
+          ]
+        },
+        {
+          "abbr": "1B",
+          "full": "1st Base",
+          "valid_player_positions": [
+            "1B"
+          ]
+        },
+        {
+          "abbr": "2B",
+          "full": "2nd Base",
+          "valid_player_positions": [
+            "2B"
+          ]
+        },
+        {
+          "abbr": "3B",
+          "full": "3rd Base",
+          "valid_player_positions": [
+            "3B"
+          ]
+        },
+        {
+          "abbr": "SS",
+          "full": "Shortstop",
+          "valid_player_positions": [
+            "SS"
+          ]
+        },
+        {
+          "abbr": "OF",
+          "full": "Outfield",
+          "valid_player_positions": [
+            "OF",
+            "LF",
+            "RF",
+            "CF"
+          ]
+        },
+        {
+          "abbr": "OF",
+          "full": "Outfield",
+          "valid_player_positions": [
+            "OF",
+            "LF",
+            "RF",
+            "CF"
+          ]
+        },
+        {
+          "abbr": "OF",
+          "full": "Outfield",
+          "valid_player_positions": [
+            "OF",
+            "LF",
+            "RF",
+            "CF"
+          ]
+        }
+      ],
+      "salary_cap": 35000,
+      "scoring": {
+        "highest_score": 196.0,
+        "last_winning_index": 5520,
+        "last_winning_rank": 5370,
+        "last_winning_score": 114.0,
+        "lowest_score": 22.9
+      },
+      "scoring_rules": {
+        "groups": [
+          {
+            "name": "Hitters",
+            "rules": [
+              {
+                "abbr": "1B",
+                "full": "Singles",
+                "points": 3
+              },
+              {
+                "abbr": "2B",
+                "full": "Doubles",
+                "points": 6
+              },
+              {
+                "abbr": "3B",
+                "full": "Triples",
+                "points": 9
+              },
+              {
+                "abbr": "BB",
+                "full": "Walks",
+                "points": 3
+              },
+              {
+                "abbr": "HBP",
+                "full": "Hit by Pitches",
+                "points": 3
+              },
+              {
+                "abbr": "HR",
+                "full": "Home Runs",
+                "points": 12
+              },
+              {
+                "abbr": "R",
+                "full": "Runs",
+                "points": 3.2
+              },
+              {
+                "abbr": "RBI",
+                "full": "RBI",
+                "points": 3.5
+              },
+              {
+                "abbr": "SB",
+                "full": "Stolen Bases",
+                "points": 6
+              }
+            ]
+          },
+          {
+            "name": "Pitchers",
+            "rules": [
+              {
+                "abbr": "ER",
+                "full": "Earned Runs",
+                "points": -3
+              },
+              {
+                "abbr": "IP",
+                "full": "Innings Pitched",
+                "points": 3
+              },
+              {
+                "abbr": "QSTART",
+                "full": "Quality Start",
+                "points": 4
+              },
+              {
+                "abbr": "SO",
+                "full": "Strikeouts",
+                "points": 3
+              },
+              {
+                "abbr": "W",
+                "full": "Wins",
+                "points": 6
+              }
+            ]
+          }
+        ],
+        "notes": [
+          "IP: Fractional scoring per out.",
+          "Out: Calculated as at bats - hits.",
+          "QSTART: When a starting pitcher completes at least six innings and permits no more than three earned runs."
+        ]
+      },
+      "size": {
+        "max": 12634,
+        "min": 2
+      },
+      "sport": "MLB",
+      "start_date": "2017-04-12T23:05:00Z",
+      "started": true,
+      "user_created": false
+    }
+  ],
+  "fixture_lists": [
+    {
+      "_url": "https://api.fanduel.com/fixture-lists/18716",
+      "fixtures": {
+        "_members": [
+          "118621",
+          "118318",
+          "117673",
+          "119691",
+          "118283",
+          "117643",
+          "118911",
+          "118592",
+          "119553",
+          "118097"
+        ],
+        "_ref": "fixtures.id"
+      },
+      "id": "18716",
+      "label": "Main",
+      "late_swap": true,
+      "players": {
+        "_url": "https://api.fanduel.com/fixture-lists/18716/players"
+      },
+      "salary_cap": 35000,
+      "sport": "MLB",
+      "start_date": "2017-04-12T23:05:00Z",
+      "status": {
+        "final": true,
+        "started": true
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "away_team": {
+        "score": 2,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "616"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 6,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "620"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "118621",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-13T02:15:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 10,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "612"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 5,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "603"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "118318",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-13T02:10:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 12,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "591"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 5,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "592"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "117673",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-12T23:10:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 5,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "605"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 4,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "606"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "119691",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-12T23:10:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 5,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "607"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 4,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "608"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "118283",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-12T23:05:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 2,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "618"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 0,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "610"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "117643",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-13T00:05:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 9,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "611"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 2,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "614"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "118911",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-12T23:05:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 8,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "604"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 3,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "601"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "118592",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-13T02:07:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 8,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "602"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 3,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "599"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "119553",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-13T00:15:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    },
+    {
+      "away_team": {
+        "score": 2,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "613"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "home_team": {
+        "score": 0,
+        "sport_specific": {
+          "at_bat": null
+        },
+        "team": {
+          "_members": [
+            "595"
+          ],
+          "_ref": "teams.id"
+        }
+      },
+      "id": "118097",
+      "name": null,
+      "sport": "MLB",
+      "start_date": "2017-04-12T23:07:00Z",
+      "status": {
+        "final": true,
+        "label": "SETTLED",
+        "stadium_type": null,
+        "started": true,
+        "weather": null
+      },
+      "weather": null
+    }
+  ],
+  "players": [],
+  "teams": [
+    {
+      "city": "Baltimore",
+      "code": "BAL",
+      "colors": [
+        "#1F1F1F",
+        "#DF4601"
+      ],
+      "full_name": "Baltimore Orioles",
+      "id": "591",
+      "name": "Orioles"
+    },
+    {
+      "city": "Boston",
+      "code": "BOS",
+      "colors": [
+        "#193454",
+        "#CB172F"
+      ],
+      "full_name": "Boston Red Sox",
+      "id": "592",
+      "name": "Red Sox"
+    },
+    {
+      "city": "Toronto",
+      "code": "TOR",
+      "colors": [
+        "#134A8E",
+        "#E8291C"
+      ],
+      "full_name": "Toronto Blue Jays",
+      "id": "595",
+      "name": "Blue Jays"
+    },
+    {
+      "city": "Kansas City",
+      "code": "KAN",
+      "colors": [
+        "#004687",
+        "#FFFFFF"
+      ],
+      "full_name": "Kansas City Royals",
+      "id": "599",
+      "name": "Royals"
+    },
+    {
+      "city": "Los Angeles",
+      "code": "LAA",
+      "colors": [
+        "#BA0021",
+        "#003263"
+      ],
+      "full_name": "Los Angeles Angels",
+      "id": "601",
+      "name": "Angels"
+    },
+    {
+      "city": "Oakland",
+      "code": "OAK",
+      "colors": [
+        "#00483A",
+        "#F9B31D"
+      ],
+      "full_name": "Oakland Athletics",
+      "id": "602",
+      "name": "Athletics"
+    },
+    {
+      "city": "Seattle",
+      "code": "SEA",
+      "colors": [
+        "#0C2C56",
+        "#0A6D6D"
+      ],
+      "full_name": "Seattle Mariners",
+      "id": "603",
+      "name": "Mariners"
+    },
+    {
+      "city": "Texas",
+      "code": "TEX",
+      "colors": [
+        "#00307B",
+        "#C0111F"
+      ],
+      "full_name": "Texas Rangers",
+      "id": "604",
+      "name": "Rangers"
+    },
+    {
+      "city": "Atlanta",
+      "code": "ATL",
+      "colors": [
+        "#13274F",
+        "#CE1141"
+      ],
+      "full_name": "Atlanta Braves",
+      "id": "605",
+      "name": "Braves"
+    },
+    {
+      "city": "Miami",
+      "code": "MIA",
+      "colors": [
+        "#0077C8",
+        "#FF6600"
+      ],
+      "full_name": "Miami Marlins",
+      "id": "606",
+      "name": "Marlins"
+    },
+    {
+      "city": "New York",
+      "code": "NYM",
+      "colors": [
+        "#00357C",
+        "#F36700"
+      ],
+      "full_name": "New York Mets",
+      "id": "607",
+      "name": "Mets"
+    },
+    {
+      "city": "Philadelphia",
+      "code": "PHI",
+      "colors": [
+        "#BD061C",
+        "#062F6E"
+      ],
+      "full_name": "Philadelphia Phillies",
+      "id": "608",
+      "name": "Phillies"
+    },
+    {
+      "city": "Chicago",
+      "code": "CHC",
+      "colors": [
+        "#052E70",
+        "#CF0B26"
+      ],
+      "full_name": "Chicago Cubs",
+      "id": "610",
+      "name": "Cubs"
+    },
+    {
+      "city": "Cincinnati",
+      "code": "CIN",
+      "colors": [
+        "#B80B1D",
+        "#FFFFFF"
+      ],
+      "full_name": "Cincinnati Reds",
+      "id": "611",
+      "name": "Reds"
+    },
+    {
+      "city": "Houston",
+      "code": "HOU",
+      "colors": [
+        "#002B63",
+        "#E66C07"
+      ],
+      "full_name": "Houston Astros",
+      "id": "612",
+      "name": "Astros"
+    },
+    {
+      "city": "Milwaukee",
+      "code": "MIL",
+      "colors": [
+        "#08204C",
+        "#B6922E"
+      ],
+      "full_name": "Milwaukee Brewers",
+      "id": "613",
+      "name": "Brewers"
+    },
+    {
+      "city": "Pittsburgh",
+      "code": "PIT",
+      "colors": [
+        "#1F1F1F",
+        "#FFC324"
+      ],
+      "full_name": "Pittsburgh Pirates",
+      "id": "614",
+      "name": "Pirates"
+    },
+    {
+      "city": "Arizona",
+      "code": "ARI",
+      "colors": [
+        "#A71930",
+        "#E3D4AD"
+      ],
+      "full_name": "Arizona Diamondbacks",
+      "id": "616",
+      "name": "Diamondbacks"
+    },
+    {
+      "city": "Los Angeles",
+      "code": "LOS",
+      "colors": [
+        "#004587",
+        "#C09A5B"
+      ],
+      "full_name": "Los Angeles Dodgers",
+      "id": "618",
+      "name": "Dodgers"
+    },
+    {
+      "city": "San Francisco",
+      "code": "SFG",
+      "colors": [
+        "#E65E2C",
+        "#2F2F2F"
+      ],
+      "full_name": "San Francisco Giants",
+      "id": "620",
+      "name": "Giants"
+    }
+  ],
+  "users": []
+}
