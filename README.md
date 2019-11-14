@@ -1,4 +1,4 @@
-# FantasySportsML
+# Alley-oop
 
 Play fantasy sports using machine learning!
 
